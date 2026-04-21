@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import login from '../assets/login.png'
 import { Link, useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
-import axios from 'axios'
+import api from '@/utils/axios'
 const ForgotPassword = () => {
   const [email, setEmail] = useState('')
  const navigate = useNavigate()
@@ -12,7 +12,7 @@ const ForgotPassword = () => {
         if(!email){
             toast.error("insert email")
         }
-      const res = await axios.post('http://localhost:3000/auth/forgot-password', { email })
+      const res = await api.post(`${import.meta.env.VITE_BACKEND_URL}/auth/forgot-password`, { email })
          toast.success("OTP has been sent on your email")
         navigate(`/login/otp?email=${email}`)
     } catch (err) {

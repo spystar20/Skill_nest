@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import login from '../assets/login.png'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import toast from 'react-hot-toast'
-import axios from 'axios'
+import api from '@/utils/axios'
 const ResetPassword = () => {
   const [newpassword, setPassword] = useState('')
     const [ConfirmPassword, setConfirmPassword] = useState('')
@@ -19,7 +19,7 @@ const ResetPassword = () => {
       return toast.error("Passwords do not match")
     }
     try {
-      const res = await axios.post('http://localhost:3000/auth/reset-password', { email, otp,newpassword }, { withCredentials: true })
+      const res = await api.post('/auth/reset-password', { email, otp,newpassword }, { withCredentials: true })
       console.log(res)
    toast.success("Password updated successfully")
    setTimeout(()=>{

@@ -1,4 +1,4 @@
-import axios from 'axios';
+import api from '@/utils/axios';
 import React from 'react'
 import toast from 'react-hot-toast'
 import { IoIosMailUnread } from "react-icons/io";
@@ -14,8 +14,8 @@ const handleRes = async () => {
     return toast.error("Please provide email")
   }
     try {
-      await axios.post(
-        "http://localhost:3000/auth/resend-verification-email",
+      await api.post(
+        "/auth/resend-verification-email",
         { email }
       )
       toast.success("Verification email sent again")

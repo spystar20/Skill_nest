@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import signup from '../assets/signup.png'
-import axios from 'axios'
 import toast from 'react-hot-toast'
-import { Link, Navigate, useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import api from '@/utils/axios'
 
 const SignUp = () => {
   const [name,setName] = useState("")
@@ -18,7 +18,7 @@ const SignUp = () => {
 }
   try {
 
-    const res = await axios.post('http://localhost:3000/auth/sign',{name,email,password})
+    const res = await api.post('/auth/sign',{name,email,password})
     console.log(res)
       toast.success("Verify Your Email")
       setTimeout(() => {

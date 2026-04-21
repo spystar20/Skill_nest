@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import login from '../assets/login.png'
 import { Link, useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
-import axios from 'axios'
+import api from '@/utils/axios'
 const Login = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -11,7 +11,7 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault()
     try {
-      const res = await axios.post('http://localhost:3000/auth/login', { email, password, rememberme }, { withCredentials: true })
+      const res = await api.post('/auth/login', { email, password, rememberme }, { withCredentials: true })
       console.log(res)
       if (res.data.isEmailVerified !== true) {
         navigate('/pending-email-verification'),{state:{email:res.data.email}}

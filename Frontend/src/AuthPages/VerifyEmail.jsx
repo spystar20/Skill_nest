@@ -3,8 +3,8 @@ import { MdMarkEmailRead } from 'react-icons/md'
 import { ImCross } from "react-icons/im";
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
+import api from '@/utils/axios';
 const VerifyEmail = () => {
     const [state,setState] = useState("loading")
     const [searchParams] = useSearchParams()
@@ -19,7 +19,7 @@ if(!token){
     toast.error("token not found ")
     return
 }
- await axios.post("http://localhost:3000/auth/verify-email",{token})
+ await api.post("/auth/verify-email",{token})
  setState("success")
 setTimeout(() => {
     navigate('/login')
