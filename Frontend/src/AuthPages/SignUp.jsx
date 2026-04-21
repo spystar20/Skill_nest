@@ -26,6 +26,7 @@ const SignUp = () => {
       },2000)
   } catch (err) {
     console.log(err)
+    console.log(import.meta.env.VITE_BACKEND_URL);
   }}
   return (
     <div className='w-full  bg-black p-12 box-border'>
