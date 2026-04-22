@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
 import hero from '../assets/girl.png'
 import { TbBooks } from "react-icons/tb";
-import { FaCartArrowDown, FaChalkboardTeacher, FaClock, FaHeart } from "react-icons/fa";
-import {  GrCertificate, GrInstagram } from "react-icons/gr";
+import {  GrCertificate } from "react-icons/gr";
 import { FiTrendingUp } from "react-icons/fi";
 import { MdArrowOutward } from "react-icons/md";
 import { PiBookDuotone, PiVideoFill } from "react-icons/pi";
@@ -10,21 +9,12 @@ import { LiaCertificateSolid } from "react-icons/lia";
 import { MdSupportAgent } from "react-icons/md";
 import { GiTeacher } from "react-icons/gi";
 import { PiStudentFill } from "react-icons/pi";
-import { FaStar } from "react-icons/fa";
 import AutoScroll from 'embla-carousel-auto-scroll';
 import useEmblaCarousel from 'embla-carousel-react';
 import { useCallback, useEffect } from 'react';
-import { FaAws } from "react-icons/fa";
-import { SiCanva } from "react-icons/si";
-import { FaGoogle } from "react-icons/fa";
-import { SiSamsung } from "react-icons/si";
-import { FaApple } from "react-icons/fa";
-import { SiDuolingo } from "react-icons/si";
-import { FaGitAlt } from "react-icons/fa";
-import { FaLinkedin } from "react-icons/fa6";
+import { FaAws , FaGoogle , FaApple ,  FaGitAlt , FaLinkedin  , FaInstagram, FaCartArrowDown, FaChalkboardTeacher, FaHeart} from "react-icons/fa";
+import { SiDuolingo, SiSamsung , SiCanva } from "react-icons/si";
 import { TiVendorMicrosoft } from "react-icons/ti";
-import { FaSquareXTwitter } from "react-icons/fa6";
-import { FaInstagram } from "react-icons/fa";
 import { CiClock1 } from "react-icons/ci";
 import { popularCourses  } from '../Courses/popularCourse';
 import { featureCourses } from '../Courses/featuredCourse';
@@ -32,7 +22,7 @@ import { teachers } from '../Courses/teachers';
 import { testimonials } from '../Courses/testimonials';
 import Fade from "embla-carousel-fade";
 import Autoplay from "embla-carousel-autoplay";
-
+import { BsTwitterX } from 'react-icons/bs';
 const Home = () => {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [
     AutoScroll({ speed: 0.3, startDelay: 1000 })],
@@ -53,8 +43,7 @@ const Home = () => {
     emblaApi.on('select', () => setSelectedIndex(emblaApi.selectedScrollSnap()));
   }, [emblaApi]);
 
-//     const [emblaRef1, emblaApi1] = useEmblaCarousel({ loop: true,    slidesToScroll: 1
-//  },[AutoScroll({speed:0.3,startDelay:1000}),Fade()])
+
  const [emblaRef1, emblaApi1] = useEmblaCarousel(
   { loop: true },
   [Fade(), Autoplay({ delay: 4000 })]
@@ -126,7 +115,7 @@ const Home = () => {
         </div>
         {/* data */}
         <div className='data  my-10 flex flex-row gap-6 justify-center items-center'>
-          <div className='flex border-2 opacity-95 hover:opacity-100  border-rose-200 inset-shadow-rose-300 inset-shadow-2xs  cursor-pointer shadow-md shadow-black hover:-translate-y-4 -translate-y-0 transition-all justify-start p-5 rounded-xl  items-center gap-2 bg-white capitalize duration-300 ease-in hover:scale-105'>
+          <div className='flex flex-wrap border-2 opacity-95 hover:opacity-100  border-rose-200 inset-shadow-rose-300 inset-shadow-2xs  cursor-pointer shadow-md shadow-black hover:-translate-y-4 -translate-y-0 transition-all justify-start p-5 rounded-xl  items-center gap-2 bg-white capitalize duration-300 ease-in hover:scale-105'>
             <span>
               <TbBooks className='text-6xl  font-light icon' />
             </span>
@@ -189,35 +178,44 @@ const Home = () => {
 
   {/* feature cards (SMOOTH ANIMATION FIX) */}
   <div
-    className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full max-w-7xl transition-all duration-500 ease-in-out overflow-hidden ${
+    className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full max-w-7xl transition-all duration-500 ease-in-out ${
       show ? 'max-h-[1000px] opacity-100 mt-10' : 'max-h-0 opacity-0'
     }`}
   >
 
     {/* card 1 */}
-    <div className='group flex items-center shadow-xl cursor-pointer hover:scale-105 transition-all border-2 border-[#95b1ee] hover:bg-gradient-to-tr hover:from-[#95b1ee] hover:to-[#728ccd] hover:text-white rounded-2xl py-6 px-4 gap-3 flex-col text-center'>
-      <PiVideoFill className='text-6xl text-blue-300 group-hover:text-white' />
+    <div className='group flex items-center  cursor-pointer hover:scale-105 transition-all border-[#d1dff7] hover:border-[#95b1ee] hover:bg-gradient-to-tr hover:from-[#95b1ee] hover:to-[#728ccd] text-white  rounded-2xl py-6 px-4 gap-3 flex-col text-center bg-white/10 backdrop-blur-xl 
+border  
+shadow-xl shadow-black/10'>
+      <PiVideoFill className='text-6xl ' />
       <h2 className='text-2xl font-semibold'>Video lesson</h2>
       <p>Recorded lectures from professional instructors to boost your growth</p>
     </div>
 
     {/* card 2 */}
-    <div className='group flex items-center shadow-xl cursor-pointer hover:scale-105 transition-all border-2 border-[#95b1ee] hover:bg-gradient-to-tr hover:from-[#95b1ee] hover:to-[#728ccd] hover:text-white rounded-2xl py-6 px-4 gap-3 flex-col text-center'>
-      <LiaCertificateSolid className='text-6xl text-blue-300 group-hover:text-white' />
+    <div className='group flex items-center  cursor-pointer hover:scale-105 transition-all border-[#d1dff7] hover:border-[#95b1ee] hover:bg-gradient-to-tr hover:from-[#95b1ee] hover:to-[#728ccd] text-white  rounded-2xl py-6 px-4 gap-3 flex-col text-center bg-white/10 backdrop-blur-xl 
+border  
+shadow-xl shadow-black/10' >
+      <LiaCertificateSolid className='text-6xl' />
       <h2 className='text-2xl font-semibold'>Get Certificate</h2>
       <p>Add value to your profile and increase your hiring chances</p>
     </div>
 
     {/* card 3 */}
-    <div className='group flex items-center shadow-xl cursor-pointer hover:scale-105 transition-all border-2 border-[#95b1ee] hover:bg-gradient-to-tr hover:from-[#95b1ee] hover:to-[#728ccd] hover:text-white rounded-2xl py-6 px-4 gap-3 flex-col text-center'>
-      <MdSupportAgent className='text-6xl text-blue-300 group-hover:text-white' />
+    <div className='group flex items-center  cursor-pointer hover:scale-105 transition-all border-[#d1dff7] hover:border-[#95b1ee] hover:bg-gradient-to-tr hover:from-[#95b1ee] hover:to-[#728ccd] text-white  rounded-2xl py-6 px-4 gap-3 flex-col text-center bg-white/10 backdrop-blur-xl 
+border  
+shadow-xl shadow-black/10' >
+      <MdSupportAgent className='text-6xl' />
       <h2 className='text-2xl font-semibold'>Lifetime Support</h2>
       <p>Get lifetime access and support anytime you need</p>
     </div>
 
     {/* card 4 */}
-    <div className='group flex items-center shadow-xl cursor-pointer hover:scale-105 transition-all border-2 border-[#95b1ee] hover:bg-gradient-to-tr hover:from-[#95b1ee] hover:to-[#728ccd] hover:text-white rounded-2xl py-6 px-4 gap-3 flex-col text-center'>
-      <GiTeacher className='text-6xl text-blue-300 group-hover:text-white' />
+    <div className='group flex items-center  cursor-pointer hover:scale-105 transition-all border-[#d1dff7] hover:border-[#95b1ee] hover:bg-gradient-to-tr hover:from-[#95b1ee] hover:to-[#728ccd] text-white  rounded-2xl py-6 px-4 gap-3 flex-col text-center bg-white/10 backdrop-blur-xl 
+border  
+shadow-xl shadow-black/10' >
+        <GiTeacher className='text-6xl ' />
+
       <h2 className='text-2xl font-semibold'>Amazing Instructor</h2>
       <p>Learn from experienced mentors with real-world expertise</p>
     </div>
@@ -296,7 +294,7 @@ const Home = () => {
       {/* trusted by */}
       <div className='text-center w-full h-full px-10 py-5  '>
         <h2 className='text-xl font-light font-[Outfit]'>Trusted by over 16,000 companies and millions of learners around the world  </h2>
-        <div className='text-6xl logo font-light opacity-80 font-[Outfit] flex flex-row  justify-center gap-24 items-center mt-11'>
+        <div className='text-6xl logo font-light opacity-80 font-[Outfit] flex flex-row flex-wrap justify-center gap-24 items-center mt-11'>
           <span><FaAws /></span>
           <span><SiCanva /></span>
           <span><FaGoogle /></span>
@@ -316,7 +314,7 @@ const Home = () => {
             <h2 className='text-5xl text-white drop-shadow-lg  font-medium font-[outfit] capitalize text-center '>featured <span className='text-4xl border-b-2 font-[Merienda]  italic'>courses</span></h2>
             <p className='text-white text-lg'>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Saepe, nostrum!</p>
           </div>
-          <div className='grid grid-cols-4 gap-4 px-5 py-10'>
+          <div className='grid  grid-cols-1 md:grid-cols-2 gap-4 px-5 py-10'>
            
             {featureCourses.map((course,index)=>{return(
               <div key={index} className='cards  rounded-4xl p-5'>
@@ -370,7 +368,7 @@ const Home = () => {
             <h2 className='text-5xl text-white drop-shadow-lg  font-medium font-[outfit] capitalize text-center '>featured <span className='text-4xl border-b-2 font-[Merienda]  italic'>teachers</span></h2>
             <p className='text-white text-lg'>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Saepe, nostrum!</p>
           </div>
-          <div className='grid grid-cols-4 gap-4 px-5 py-10'>
+          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4  gap-4 px-5 py-10'>
             {teachers.map((teacher, index) => (
               <div className='flex bg-gradient-to-b from-blue-200 to-[#364c84] ease-in-out  flex-col cursor-pointer shadow-2xl bg-white  w-full gap-3 rounded-2xl   h-full px-6 py-6'>
                 <div className='text-2xl flex   flex-col font-[Roboto] capitalize text-slate-950 '>
@@ -387,7 +385,7 @@ const Home = () => {
                     <a href="/home"><FaInstagram /></a>
                   </span>
                   <span className='hover:text-black scale-100 hover:scale-110 transition-all'>
-                    <a href="/home"><FaSquareXTwitter /></a>
+                    <a href="/home"><BsTwitterX /></a>
                   </span>
                 </div>
               </div>

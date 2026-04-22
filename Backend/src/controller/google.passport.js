@@ -6,7 +6,7 @@ passport.use(
         {
             clientID:process.env.GOOGLE_CLIENT_ID,
             clientSecret:process.env.GOOGLE_CLIENT_SECRET,
-            callbackURL:'https://skill-nest-ji98.onrender.com/auth/google/callback'
+            callbackURL:`${process.env.URL}/auth/google/callback`
         }
         ,async (accessToken,refreshToken,profile,done) => {
             try{

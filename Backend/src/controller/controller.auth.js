@@ -224,7 +224,7 @@ res.cookie(
    "refreshToken",refreshToken,getrefreshCookieOptions(7*24*60*60*1000)
 )
 res.cookie("accessToken",accessToken,getaccessCookieOptions())
-res.redirect("https://skillnest-opal.vercel.app/")
+res.redirect(process.env.URL)
    }catch(Err){
       console.log(Err)
    }

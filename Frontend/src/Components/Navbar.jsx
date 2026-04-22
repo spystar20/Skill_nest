@@ -1,16 +1,21 @@
 import React from 'react'
-import { FaAngleDown } from "react-icons/fa";
+import { FaAngleDown, FaCross } from "react-icons/fa";
 import { GiNestBirds } from 'react-icons/gi';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Cross, MenuIcon } from 'lucide-react';
+import { IoCloseSharp } from 'react-icons/io5';
 const Navbar = () => {
 
   const [open, setopen] = useState(false)
-
+  const [openMenu , setOpenMenu] = useState(false)
+const toggleMenu = ()=>{
+  setOpenMenu(!openMenu)
+}
   return (
 
-    <div className='font-["Roboto"] fixed top-0 left-0 w-full z-[9999]  bg-transparent shadow-2xs border-b border-b-white/10 shadow-black'>
-      <div className="w-full py-6 font-heading flex justify-between px-12 items-cente text-white backdrop-blur-lg  bg-opacity-40 relative ">
+    <div className='font-["Roboto"] fixed top-0 left-0 w-full z-[9999]  bg-transparent shadow-2xs border-b  shadow-black'>
+      <div className="hidden  w-full py-6 font-heading md:flex justify-between px-12 items-cente text-white backdrop-blur-lg  bg-opacity-40 relative ">
         <div className="flex items-center gap-2">
           <GiNestBirds className="text-white text-4xl" />
           <span className="text-3xl font-semibold text-white flex gap-0">
@@ -161,7 +166,32 @@ transition-all duration-300 hover:scale-95  cursor-pointer box'>sign up</button>
 
         </div>
       </div>
+      {/* mobile-menu */}
+<div className="  w-full py-6 font-heading flex justify-between px-12 items-center text-white backdrop-blur-lg  bg-opacity-40 relative ">
+  <div className="flex items-center gap-2">
+          <GiNestBirds className="text-white text-4xl" />
+          <span className="text-3xl font-semibold text-white flex gap-0">
+            Skill <span className='font-span capitalize'>nest</span>
+          </span>
+          <span className="w-2 h-2 bg-[#1e3a8a] rounded-full mt-3"></span>
+        </div>
+      <MenuIcon onClick={toggleMenu} className='text-8xl font-semibold '/>
+   
+</div>
+   {openMenu && (
+  <div className="absolute top-0 right-0 bg-white shadow-lg rounded-bl-xl p-10 w-1/2 min-h-10/12 transition-all duration-300">
+    <span><IoCloseSharp onClick={toggleMenu}/></span>
+    <div className='text-blue-700 font-body font-medium text-xl'>
+      <h6>Login</h6>
+      <h6>Sign Up</h6>
+
     </div>
+  </div>
+)}
+
+    </div>
+
+    
 
   )
 }

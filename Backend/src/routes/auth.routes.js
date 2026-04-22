@@ -13,7 +13,7 @@ router.post("/forgot-password",forgotPassword)
 router.post("/reset-password",resetPassword)
 router.post("/resend-verification-email",resendVerificationEmail)
 router.get("/google",passport.authenticate("google",{scope:["profile","email"],session:false}))
-router.get('/google/callback',passport.authenticate("google",{session:false,failureRedirect:"https://skillnest-opal.vercel.app/"}),googleLogin)
+router.get('/google/callback',passport.authenticate("google",{session:false,failureRedirect:process.env.URL}),googleLogin)
 
 export default router
 
