@@ -5,7 +5,7 @@ import AppRoutes from './Routes/AppRoutes'
 
 const App = () => {
   return (
-    <div className='home-bg w-full h-screen'>
+    <div className='home-bg w-full '>
     <Toaster  containerStyle={{
     zIndex: 999999999999
   }}/>

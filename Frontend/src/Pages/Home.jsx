@@ -63,15 +63,15 @@ const Home = () => {
 
   return (
     <div >
-      <div className='w-full  py-10 font-["Roboto"] home-bg h-screen'>
-        <div className=' grid grid-cols-2 relative z-0 px-20 py-10 justify-between items-center'>
+      <div className='w-full  py-10 font-["Roboto"] home-bg  '>
+        <div className=' grid grid-cols-1 lg:grid-cols-2 relative z-0 p-4 lg:px-20 lg:py-10 justify-between items-center'>
           <div className='flex flex-col max-w-lg justify-center items-start gap-4'>
             <h1 className='text-5xl font-[Merienda] font-bold text-white'>Learn. Create. Thrive.</h1>
             <p className='text-white mt-4'>Learn in-demand skills from top mentors across tech, design, business, and more — all in one place. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptatem, magnam.</p>
              
             <button className=' transition-all bg-gradient-to-tr from-[#95b1ee] to-[#728ccd] font-[Comic_Relief]  cursor-pointe text-white rounded-lg py-2 px-6 text-xl box capitalize font-medium'>Explore courses</button>
           </div>
-          <div>
+          <div className='hidden lg:flex'>
             <div className='flex '>
               <img className='relative rounded-4xl left-[4rem] top-16 w-lg z-30' src={hero} alt="" />
             </div>
@@ -114,8 +114,8 @@ const Home = () => {
           </div>
         </div>
         {/* data */}
-        <div className='data  my-10 flex flex-row gap-6 justify-center items-center'>
-          <div className='flex flex-wrap border-2 opacity-95 hover:opacity-100  border-rose-200 inset-shadow-rose-300 inset-shadow-2xs  cursor-pointer shadow-md shadow-black hover:-translate-y-4 -translate-y-0 transition-all justify-start p-5 rounded-xl  items-center gap-2 bg-white capitalize duration-300 ease-in hover:scale-105'>
+        <div className='data  my-10 flex flex-row flex-wrap gap-6 justify-center items-center'>
+          <div className='flex flex-wrap border-2 opacity-95 hover:opacity-100  border-rose-200 inset-shadow-rose-300 inset-shadow-2xs  cursor-pointer shadow-md shadow-black hover:-translate-y-4 -translate-y-0 transition-all justify-start p-5 rounded-xl  items-center gap-2 bg-white capitalize duration-300 ease-in hover:scale-105 '>
             <span>
               <TbBooks className='text-6xl  font-light icon' />
             </span>
@@ -306,20 +306,20 @@ shadow-xl shadow-black/10' >
         </div>
       </div>
       {/* featured courses and teachers */}
-      <div className= 'box  grid grid-cols-1 gap-10  w-full h-full px-10 py-20 mt-12 '>
+      <div className= 'box  grid grid-cols-1 gap-10  w-full h-full p-4 md:px-10 md:py-20 mt-12 '>
         {/* featured courses */}
         <div>
-          <div className=' flex flex-col  justify-start  items-start gap-3 mt-10'>
-            <h4 className=' text-xl bg-linear-120 to-blue-200 from-white text-transparent  bg-clip-text text-left capitalize font-[Merienda] text-shadow-2xs'> “Editor’s Picks” </h4>
-            <h2 className='text-5xl text-white drop-shadow-lg  font-medium font-[outfit] capitalize text-center '>featured <span className='text-4xl border-b-2 font-[Merienda]  italic'>courses</span></h2>
-            <p className='text-white text-lg'>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Saepe, nostrum!</p>
+          <div className=' flex flex-col justify-center items-center md:justify-start  md:items-start gap-3 mt-10 text-center'>
+            <h4 className=' text-xl bg-linear-120 to-blue-200 from-white text-transparent  bg-clip-text capitalize font-[Merienda] text-shadow-2xs '> “Editor’s Picks” </h4>
+            <h2 className='text-5xl text-white drop-shadow-lg  font-medium font-[outfit] capitalize '>featured <span className='text-4xl border-b-2 font-[Merienda]  italic'>courses</span></h2>
+            <p className='text-white text-lg  '>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Saepe, nostrum!</p>
           </div>
-          <div className='grid  grid-cols-1 md:grid-cols-2 gap-4 px-5 py-10'>
+          <div className='grid  grid-cols-1 md:grid-cols-2 gap-4   md:px-5 py-10'>
            
             {featureCourses.map((course,index)=>{return(
-              <div key={index} className='cards  rounded-4xl p-5'>
+              <div key={index} className='cards  rounded-4xl p-3  md:p-5'>
              
-              <div className='relative group cursor-pointer '>
+              <div className='relative group cursor-pointer'>
                 <img src={course.img} className='aspect-square rounded-2xl shadow group-hover:brightness-50 transition-all ease-in duration-200' alt="" />
               <span className="py-2 px-4 text-sm shadow-lg bg-black/70 backdrop-blur rounded-full absolute top-3 left-3 text-white font-body">
       {course.category}
@@ -329,34 +329,34 @@ shadow-xl shadow-black/10' >
                   <FaHeart/></span><span className=' bg-white p-2 rounded-full hover:scale-110 ease-in duration-200 transition-all'><FaCartArrowDown/></span></div>
               </div>
               
-                <div className='p-3 flex flex-col gap-4'>
+                <div className='p-3 flex flex-col gap-2 md:gap-4'>
                     <div className='flex flex-col text-left flex-wrap '>
-                <h2 className='text-xl font-semibold font-heading text-gray-950'>{course.course_name}</h2>
-                <p className='text-sm mt-1 text-wrap font-body text-gray-800 line-clamp-2'>{course.course_desc}
+                <h2 className='text-sm md:text-xl font-bold font-heading text-gray-950'>{course.course_name}</h2>
+                <p className='text-xs md:text-sm mt-1 text-wrap font-body text-gray-800 line-clamp-2'>{course.course_desc}
                 </p>
               </div>
              
-<div className='flex items-center justify-start flex-wrap gap-3'>
-    <span className='py-2 px-4 text-sm shadow-sm  font-body rounded-full capitalize   bg-slate-100 text-slate-700 flex flex-row gap-2 items-center'><span><PiBookDuotone className='text-xl'/></span>{course.chapters}</span>
-      <span className='py-2 px-4 text-sm shadow-sm font-body rounded-full  bg-slate-100 text-slate-700 flex flex-row gap-2 items-center'><span><CiClock1 className='text-xl'/></span>{course.duration}</span>
-      <span className="py-2 px-4 text-sm shadow-sm rounded-full bg-indigo-300 text-white flex gap-2 items-center">
+<div className='flex items-center justify-start flex-wrap gap-2 md:gap-3'>
+    <span className=' py-1 px-3 md:py-2 md:px-4 text-sm shadow-sm  font-body rounded-full capitalize   bg-slate-100 text-slate-700 flex flex-row gap-1 md:gap-2 items-center'><span><PiBookDuotone className='text-xl'/></span>{course.chapters}</span>
+      <span className=' py-1 px-3 md:py-2 md:px-4 text-sm shadow-sm font-body rounded-full  bg-slate-100 text-slate-700 flex flex-row gap-1 md:gap-2 items-center'><span><CiClock1 className='text-xl'/></span>{course.duration}</span>
+      <span className=" py-1 px-3 md:py-2 md:px-4 text-sm shadow-sm rounded-full bg-indigo-300 text-white flex gap-1 md:gap-2 items-center">
         <FiTrendingUp className="text-lg" />
 {course.level}      </span>
 </div>
- <div className='flex justify-start items-center gap-3'>
-                <div><img src={course.instructor_img} className='w-12 rounded-full aspect-[1]' alt="" /></div>
-                <div className='flex flex-col justify-start items-start capitalize font-[outfit]'>
-                  <span className='text-lg font-medium'>{course.instructor_name}</span>
-                  <span className='font-medium text-sm '>instructor</span>
+ <div className='hidden md:flex justify-start items-center gap-3'>
+                <div><img src={course.instructor_img} className=' w-8 md:w-12 rounded-full aspect-[1]' alt="" /></div>
+                <div className=' flex flex-col justify-start items-start capitalize font-[outfit]'>
+                  <span className=' text-sm md:text-lg font-semibold md:font-medium'>{course.instructor_name}</span>
+                  <span className='font-medium text-xs  md:text-sm '>instructor</span>
                 </div>
               </div>
-              <div className='flex items-center justify-between'>
+              <div className='flex flex-col md:flex-row gap-2 items-center justify-between'>
               <div className="flex items-center gap-3">
       <span className="text-sm line-through text-gray-400">₹2000</span>
-      <span className="text-3xl font-semibold text-indigo-900">₹{course.price}</span>
+      <span className=" text-xl md:text-3xl font-semibold text-indigo-900">₹{course.price}</span>
     </div>
-    <div>
-        <button className=' transition-all bg-gradient-to-tr from-[#95b1ee] to-[#728ccd] font-[Comic_Relief]  cursor-pointer text-white rounded-full py-1.5 px-5 text-lg box capitalize font-medium hover:scale-95'>buy now</button></div></div>
+    <div className='w-full'>
+        <button className=' transition-all bg-gradient-to-tr from-[#95b1ee] to-[#728ccd] font-[Comic_Relief]  cursor-pointer text-white rounded-full md:py-1.5 py-1 px-5 w-full text-lg box capitalize font-medium hover:scale-95'>buy now</button></div></div>
                 </div>
             </div>
             )})}
@@ -394,23 +394,23 @@ shadow-xl shadow-black/10' >
         </div>
       </div>
       {/* testimonials */}
-      <div className='bg-black text-white  flex flex-col items-center justify-center gap-10  w-full h-full px-10 py-20'>
+      <div className='bg-black text-white  flex flex-col items-center justify-center gap-10  w-full h-full p-4 md:px-10 md:py-20'>
       <div className='flex flex-col gap-2 text-center items-center justify-center'>
         <h2 className='text-4xl capitalize  text-center  font-[outfit]'>what our students say about us ?</h2>
         <p>Lorem ipsum dolor sit amet, . Labore, libero!</p>
       </div>
-      < div className=' flex flex-col items-center justify-center'>
-<div className='embla1  overflow-hidden max-w-5xl mx-auto ' ref={emblaRef1}><div className='embla__container   '>      {testimonials.map((testimonials, index) => (
+      <div className=' flex flex-col items-center justify-center'>
+<div className='embla1  lg:overflow-hidden max-w-5xl mx-auto ' ref={emblaRef1}><div className='embla__container   '>      {testimonials.map((testimonials, index) => (
 <div
   key={index}
-  className="embla__slide transition-opacity duration-700 ease-in-out w-[70%] test   inset-0  flex items-center justify-center"
->     <div className='flex p-7 bg-white rounded-4xl w-full max-w-4xl justify-center item-center'>
-        <div className=' grid  shadow-2xl testimonials grid-cols-2  rounded-4xl justify-center p-5 items-center gap-3 '>
+  className="embla__slide transition-opacity duration-700 ease-in-out min-w-0 flex-[0_0_100%] lg:w-[70%] test   inset-0  flex items-center justify-center"
+>     <div className='flex p-3 md:p-7 bg-white rounded-4xl w-full lg:max-w-4xl justify-center item-center'>
+        <div className=' grid  shadow-2xl testimonials grid-cols-1 md:grid-cols-2  rounded-4xl justify-center p-2 md:p-5 items-center gap-3 '>
           <div className='flex flex-col  text-center justify-center items-center gap-3'>
-            <div className=' border-2 p-3 rounded-br-3xl rounded-tl-3xl'><img className='w-[10rem] rounded-tl-3xl rounded-br-3xl' src={testimonials.img} alt="" /></div>
-           <span className='text-lg text-black capitalize font-medium flex flex-col'> <span>{testimonials.name}</span><span> {testimonials.title}</span></span>
+            <div className=' border-2 md:p-3 rounded-br-3xl rounded-tl-3xl'><img className='md:w-[10rem] w-[5rem] rounded-tl-3xl rounded-br-3xl' src={testimonials.img} alt="" /></div>
+           <span className='text-lg text-black capitalize  flex flex-col font-bold font-body'> <span >{testimonials.name}</span><span className='text-xs'> {testimonials.title}</span></span>
             </div>
-            <div className='text-xl  font-[Merienda] italic text-white  drop-shadow-lg  font-medium  capitalize '>
+            <div className='text-sm text-shadow-2xs md:text-xl text-center font-[Merienda] italic text-white  drop-shadow-lg  font-medium  capitalize '>
               {testimonials.desc}
             </div>
         </div>
@@ -433,6 +433,8 @@ shadow-xl shadow-black/10' >
   ))}
 </div>
       </div>
+
+      
 </div>
 
     </div>

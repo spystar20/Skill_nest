@@ -167,7 +167,7 @@ transition-all duration-300 hover:scale-95  cursor-pointer box'>sign up</button>
         </div>
       </div>
       {/* mobile-menu */}
-<div className="  w-full py-6 font-heading flex justify-between px-12 items-center text-white backdrop-blur-lg  bg-opacity-40 relative ">
+<div className="lg:hidden  w-full py-6 font-heading flex justify-between px-12 items-center text-white backdrop-blur-lg  bg-opacity-40 relative ">
   <div className="flex items-center gap-2">
           <GiNestBirds className="text-white text-4xl" />
           <span className="text-3xl font-semibold text-white flex gap-0">

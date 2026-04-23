@@ -15,6 +15,9 @@
 --font-body:Roboto;
 --color-button:#0e0929;
 }
+*{
+  border: 2px solid red;
+}
 .home-bg{
   background: linear-gradient(135deg, #0f172a, #1e3a8a);
   background: linear-gradient(135deg, #0f172a, #1e3a8a, #0f172a);
@@ -79,9 +82,9 @@
   display: flex;
 
 }
-.embla__slide  {
+/* .embla__slide  {
   flex: 0 0 auto;
-}
+} */
   .test {
 
   opacity: 0;
