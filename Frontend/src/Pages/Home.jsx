@@ -222,9 +222,9 @@ shadow-xl shadow-black/10' >
 
   </div>
 </div>{/* popular courses */}
-      <div className='box p-10 font-[outfit] w-full h-full'>
+      <div className='box p-4 md:p-10 font-[outfit] w-full h-full'>
         <div>
-          <h2 className='text-5xl text-white drop-shadow-lg py-10 font-medium font-[outfit] capitalize text-center '>popular <span className='text-4xl border-b-2 font-[Merienda]  italic'>courses</span></h2>
+          <h2 className='text-5xl text-white drop-shadow-lg md:py-10 font-medium font-[outfit] capitalize text-center '>popular <span className='text-4xl border-b-2 font-[Merienda]  italic'>courses</span></h2>
         </div>
         {/* courses cards */}
         <div className='embla' ref={emblaRef}>
@@ -244,32 +244,32 @@ shadow-xl shadow-black/10' >
               
                 <div className='p-3 flex flex-col gap-4'>
                     <div className='flex flex-col text-left flex-wrap '>
-                <h2 className='text-xl font-semibold font-heading text-gray-950'>{course.course_name}</h2>
-                <p className='text-sm mt-1 text-wrap font-body text-gray-800 line-clamp-2'>{course.course_desc}
+                <h2 className='text-sm md:text-xl font-semibold font-heading text-gray-950'>{course.course_name}</h2>
+                <p className='text-xs/5 md:text-sm mt-1 text-wrap font-body text-gray-800 line-clamp-2'>{course.course_desc}
                 </p>
               </div>
              
 <div className='flex items-center justify-start flex-wrap gap-3'>
-    <span className='py-2 px-4 text-sm shadow-sm  font-body rounded-full capitalize   bg-slate-100 text-slate-700 flex flex-row gap-2 items-center'><span><PiBookDuotone className='text-xl'/></span>{course.chapters} Chapters</span>
-      <span className='py-2 px-4 text-sm shadow-sm font-body rounded-full  bg-slate-100 text-slate-700 flex flex-row gap-2 items-center'><span><CiClock1 className='text-xl'/></span>{course.duration}</span>
-      <span className="py-2 px-4 text-sm shadow-sm rounded-full bg-indigo-300 text-white flex gap-2 items-center">
-        <FiTrendingUp className="text-lg" />
+    <span className='p-1 md:py-2 md:px-4 text-xs md:text-sm shadow-sm  font-body rounded-full capitalize   bg-slate-100 text-slate-700 flex flex-row gap-2 items-center'><span><PiBookDuotone className='text-sm md:text-xl'/></span>{course.chapters} Chapters</span>
+      <span className='p-1 md:py-2 text-xs md:text-sm shadow-sm font-body rounded-full  bg-slate-100 text-slate-700 flex flex-row gap-2 items-center'><span><CiClock1 className='text-sm md:text-xl'/></span>{course.duration}</span>
+      <span className="p-1 md:py-2 md:px-4 text-xs md:text-sm shadow-sm rounded-full bg-indigo-300 text-white flex gap-2 items-center">
+        <FiTrendingUp className="text-sm md:text-xl" />
         Beginner
       </span>
 </div>
- <div className='flex justify-start items-center gap-3'>
+ <div className='hidden md:flex justify-start items-center gap-3 '>
                 <div><img src={course.instructor_img} className='w-12 rounded-full aspect-[1]' alt="" /></div>
                 <div className='flex flex-col justify-start items-start capitalize font-[outfit]'>
                   <span className='text-lg font-medium'>{course.instructor_name} </span>
                   <span className='font-medium text-sm '>instructor</span>
                 </div>
               </div>
-              <div className='flex items-center justify-between'>
+              <div className='flex items-center justify-between flex-col'>
               <div className="flex items-center gap-3">
       <span className="text-sm line-through text-gray-400">₹2000</span>
       <span className="text-3xl font-semibold text-indigo-900">₹959</span>
     </div>
-    <div>
+    <div className='w-full'>
         <button className=' transition-all bg-gradient-to-tr from-[#95b1ee] to-[#728ccd] font-[Comic_Relief]  cursor-pointer text-white rounded-full py-1.5 px-5 text-lg box capitalize font-medium hover:scale-95'>buy now</button></div></div>
                 </div>
             </div>
@@ -292,7 +292,7 @@ shadow-xl shadow-black/10' >
         </div>
       </div>
       {/* trusted by */}
-      <div className='text-center w-full h-full px-10 py-5  '>
+      <div className='text-center w-full h-full p-4 md:px-10 md:py-5 text-slate-100'>
         <h2 className='text-xl font-light font-[Outfit]'>Trusted by over 16,000 companies and millions of learners around the world  </h2>
         <div className='text-6xl logo font-light opacity-80 font-[Outfit] flex flex-row flex-wrap justify-center gap-24 items-center mt-11'>
           <span><FaAws /></span>
@@ -314,10 +314,10 @@ shadow-xl shadow-black/10' >
             <h2 className='text-5xl text-white drop-shadow-lg  font-medium font-[outfit] capitalize '>featured <span className='text-4xl border-b-2 font-[Merienda]  italic'>courses</span></h2>
             <p className='text-white text-lg  '>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Saepe, nostrum!</p>
           </div>
-          <div className='grid  grid-cols-1 md:grid-cols-2 gap-4   md:px-5 py-10'>
+          <div className='grid  grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4   md:px-5 py-10'>
            
             {featureCourses.map((course,index)=>{return(
-              <div key={index} className='cards  rounded-4xl p-3  md:p-5'>
+              <div key={index} className='cards rounded-lg  md:rounded-4xl p-2  md:p-5'>
              
               <div className='relative group cursor-pointer'>
                 <img src={course.img} className='aspect-square rounded-2xl shadow group-hover:brightness-50 transition-all ease-in duration-200' alt="" />
@@ -329,18 +329,18 @@ shadow-xl shadow-black/10' >
                   <FaHeart/></span><span className=' bg-white p-2 rounded-full hover:scale-110 ease-in duration-200 transition-all'><FaCartArrowDown/></span></div>
               </div>
               
-                <div className='p-3 flex flex-col gap-2 md:gap-4'>
+                <div className=' flex flex-col gap-2 md:gap-4'>
                     <div className='flex flex-col text-left flex-wrap '>
-                <h2 className='text-sm md:text-xl font-bold font-heading text-gray-950'>{course.course_name}</h2>
-                <p className='text-xs md:text-sm mt-1 text-wrap font-body text-gray-800 line-clamp-2'>{course.course_desc}
+                <h2 className='text-sm md:text-xl font-semibold font-heading text-gray-950'>{course.course_name}</h2>
+                <p className='text-xs/4 md:text-sm  mt-1 text-wrap font-body text-gray-800 line-clamp-2'>{course.course_desc}
                 </p>
               </div>
              
 <div className='flex items-center justify-start flex-wrap gap-2 md:gap-3'>
-    <span className=' py-1 px-3 md:py-2 md:px-4 text-sm shadow-sm  font-body rounded-full capitalize   bg-slate-100 text-slate-700 flex flex-row gap-1 md:gap-2 items-center'><span><PiBookDuotone className='text-xl'/></span>{course.chapters}</span>
-      <span className=' py-1 px-3 md:py-2 md:px-4 text-sm shadow-sm font-body rounded-full  bg-slate-100 text-slate-700 flex flex-row gap-1 md:gap-2 items-center'><span><CiClock1 className='text-xl'/></span>{course.duration}</span>
-      <span className=" py-1 px-3 md:py-2 md:px-4 text-sm shadow-sm rounded-full bg-indigo-300 text-white flex gap-1 md:gap-2 items-center">
-        <FiTrendingUp className="text-lg" />
+    <span className=' p-1 md:py-1 md:px-4 text-xs lg:text-sm font-medium shadow-sm  font-body  rounded-sm md:rounded-full capitalize   bg-slate-100 text-slate-700 flex flex-row gap-1 md:gap-2 items-center'><span><PiBookDuotone className='text-sm md:text-xl'/></span>{course.chapters}</span>
+      <span className=' p-1 md:py-1 md:px-4 text-xs lg:text-sm font-medium shadow-sm font-body   rounded-sm md:rounded-full  bg-slate-100 text-slate-700 flex flex-row gap-1 md:gap-2 items-center '><span><CiClock1 className='text-sm md:text-xl'/></span>{course.duration}</span>
+      <span className=" p-1 md:py-1 md:px-4 text-xs lg:text-sm font-medium  shadow-sm  rounded-sm md:rounded-full bg-indigo-300 text-white flex gap-1 md:gap-2 items-center">
+        <FiTrendingUp className="text-sm md:text-xl" />
 {course.level}      </span>
 </div>
  <div className='hidden md:flex justify-start items-center gap-3'>
@@ -350,10 +350,10 @@ shadow-xl shadow-black/10' >
                   <span className='font-medium text-xs  md:text-sm '>instructor</span>
                 </div>
               </div>
-              <div className='flex flex-col md:flex-row gap-2 items-center justify-between'>
+              <div className='flex flex-col  gap-2 items-start  justify-between'>
               <div className="flex items-center gap-3">
       <span className="text-sm line-through text-gray-400">₹2000</span>
-      <span className=" text-xl md:text-3xl font-semibold text-indigo-900">₹{course.price}</span>
+      <span className=" text-lg md:text-3xl font-semibold text-indigo-900">₹{course.price}</span>
     </div>
     <div className='w-full'>
         <button className=' transition-all bg-gradient-to-tr from-[#95b1ee] to-[#728ccd] font-[Comic_Relief]  cursor-pointer text-white rounded-full md:py-1.5 py-1 px-5 w-full text-lg box capitalize font-medium hover:scale-95'>buy now</button></div></div>
@@ -368,7 +368,7 @@ shadow-xl shadow-black/10' >
             <h2 className='text-5xl text-white drop-shadow-lg  font-medium font-[outfit] capitalize text-center '>featured <span className='text-4xl border-b-2 font-[Merienda]  italic'>teachers</span></h2>
             <p className='text-white text-lg'>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Saepe, nostrum!</p>
           </div>
-          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4  gap-4 px-5 py-10'>
+          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4  gap-4 md:px-5 py-10'>
             {teachers.map((teacher, index) => (
               <div className='flex bg-gradient-to-b from-blue-200 to-[#364c84] ease-in-out  flex-col cursor-pointer shadow-2xl bg-white  w-full gap-3 rounded-2xl   h-full px-6 py-6'>
                 <div className='text-2xl flex   flex-col font-[Roboto] capitalize text-slate-950 '>

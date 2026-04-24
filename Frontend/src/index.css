@@ -108,9 +108,9 @@ opacity: 0.8;
   opacity: 1;
   cursor: pointer;
   font-weight: bold;
-  color: #364c84;
-  transition: all 0.3s ease-in-out;
-  transform: translateY(-3px);
+  color: white;
+  transition: all 0.5s ease-in;
+  transform: translateY(-3px) scale(1.01);
 }
 
 .testimonials{
