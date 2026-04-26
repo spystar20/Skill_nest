@@ -263,12 +263,12 @@ shadow-xl shadow-black/10' >
                   <span className='font-medium text-sm '>instructor</span>
                 </div>
               </div>
-              <div className='flex items-start md:items-center md:justify-between flex-col'>
+              <div className='flex items-start  flex-col'>
               <div className="flex items-center gap-3">
       <span className="text-sm line-through text-gray-400">₹2000</span>
       <span className="text-lg md:text-3xl font-semibold text-indigo-900">₹959</span>
     </div>
-    <div className='w-full '>
+    <div className='w-full py-2 '>
         <button className=' transition-all bg-gradient-to-tr from-[#95b1ee] to-[#728ccd] font-[Comic_Relief]  cursor-pointer text-white rounded-full py-1 md:py-1.5 px-5 w-full text-lg box capitalize font-medium hover:scale-95'>buy now</button></div></div>
                 </div>
             </div>
@@ -369,8 +369,8 @@ shadow-xl shadow-black/10' >
           </div>
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-4 md:px-5 py-10'>
             {teachers.map((teacher, index) => (
-              <div className='flex bg-gradient-to-b from-blue-200 to-[#364c84] ease-in-out  flex-col cursor-pointer shadow-2xl bg-white  w-full gap-3 rounded-2xl   h-full px-6 py-6'>
-                <div className='text-2xl flex   flex-col font-[Roboto] capitalize text-slate-950 '>
+              <div  className='flex bg-gradient-to-b from-blue-200 to-[#364c84] ease-in-out  flex-col cursor-pointer shadow-2xl bg-white  w-full gap-3 rounded-2xl   h-full px-6 py-6'>
+                <div key={index} className='text-2xl flex   flex-col font-[Roboto] capitalize text-slate-950 '>
                   <span className='font-semibold font-heading'>{teacher.name}</span>
                   <span className='text-lg italic text-slate-800 font-body'>{teacher.title}</span>
                 </div>

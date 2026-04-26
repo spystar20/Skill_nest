@@ -33,13 +33,13 @@ const toggleMenu = ()=>{
             onMouseLeave={() => setopen(false)}
           >
             <Link to="/courses">
-              <li className="cursor-pointer px-5 py-2 rounded-full flex items-center gap-1 hover:bg-gradient-to-tr hover:from-[#95b1ee] hover:to-[#728ccd] text-white/80 hover:text-white transition-all duration-300">
+              <div className="cursor-pointer px-5 py-2 rounded-full flex items-center gap-1 hover:bg-gradient-to-tr hover:from-[#95b1ee] hover:to-[#728ccd] text-white/80 hover:text-white transition-all duration-300">
                 Courses
                 <FaAngleDown
                   className={`transition-transform duration-300 mt-[2px] ${open ? "rotate-180" : ""
                     }`}
                 />
-              </li>
+              </div>
             </Link>
 
             {open && (
@@ -179,7 +179,7 @@ transition-all duration-300 hover:scale-95  cursor-pointer box'>sign up</button>
    
 </div>
    {openMenu && (
-  <div className="absolute top-0 right-0 bg-white shadow-lg rounded-bl-xl p-10 w-1/2 min-h-10/12 transition-all duration-300">
+  <div className="absolute top-0 right-0 bg-white shadow-lg rounded-bl-xl py-10 px-5 w-1/2 min-h-10/12 transition-all duration-300">
     <span><IoCloseSharp onClick={toggleMenu}/></span>
     <div className='text-blue-700 font-body font-medium text-xl'>
       <h6>Login</h6>
