@@ -1,9 +1,11 @@
 import React from 'react'
-import { FaAngleDown, FaCross } from "react-icons/fa";
+import { FaAngleDown, FaAngleRight, FaCross } from "react-icons/fa";
 import { GiNestBirds } from 'react-icons/gi';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Cross, MenuIcon } from 'lucide-react';
+import { TfiAngleRight } from "react-icons/tfi";
+
 import { IoCloseSharp } from 'react-icons/io5';
 const Navbar = () => {
 
@@ -179,11 +181,24 @@ transition-all duration-300 hover:scale-95  cursor-pointer box'>sign up</button>
    
 </div>
    {openMenu && (
-  <div className="absolute top-0 right-0 bg-white shadow-lg rounded-bl-xl py-10 px-5 w-1/2 min-h-10/12 transition-all duration-300">
+  <div className="absolute top-0 right-0 bg-white shadow-lg rounded-bl-xl py-10 px-2 w-2xl min-h-10/12 transition-all duration-300">
     <span><IoCloseSharp onClick={toggleMenu}/></span>
-    <div className='text-blue-700 font-body font-medium text-xl'>
-      <h6>Login</h6>
-      <h6>Sign Up</h6>
+    <div className='text-gray-900 font-body font-medium text-xl'>
+    <ul className='flex flex-col gap-4'>
+      <li><Link to="/"><div className='p-2 border-2 rounded-lg flex justify-between items-center font-medium font-heading active:bg-black active:text-white' ><span>Home</span><FaAngleRight className='text-xs font-semibold text-black hover:translate-y-1'/></div></Link></li>
+   <li><Link to="/"><div>
+   <div className='p-2 border-2 rounded-lg flex justify-between items-center font-medium font-heading active:bg-black active:text-white' ><span>Courses</span><FaAngleDown className='text-xs font-semibold text-black hover:translate-y-1'/></div>
+   <div className='p-2 border-2 rounded-lg flexflex-col justify-between items-center font-medium font-heading' >
+    <h4 className='text-lg font-semibold'>Development</h4>
+    <ul>  
+                      <li className=" text-gray-800 font-light">Web Development</li>
+                      <li className="hover:text-white transition">Mobile Development</li>
+                      <li className="hover:text-white transition">Game Development</li>
+                      <li className="hover:text-white transition">Programming Languages</li>
+    </ul>
+    </div></div></Link></li>
+    </ul>
+    
 
     </div>
   </div>
@@ -195,3 +210,5 @@ transition-all duration-300 hover:scale-95  cursor-pointer box'>sign up</button>
   )
 }
 export default Navbar
+
+
