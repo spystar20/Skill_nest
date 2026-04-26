@@ -5,10 +5,18 @@ import AppRoutes from './Routes/AppRoutes'
 
 const App = () => {
   return (
-    <div className='home-bg w-full '>
-    <Toaster  containerStyle={{
+    <div className='bg-black w-full '>
+  <Toaster
+  position="top-center"
+  containerStyle={{
+    left: 16,
+    right: 16,
+    top: 16,
+    bottom: "auto",
+    inset: "auto",
     zIndex: 999999999999
-  }}/>
+  }}
+/>
     <BrowserRouter>
 <AppRoutes/>
     </BrowserRouter>

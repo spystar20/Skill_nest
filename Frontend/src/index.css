@@ -15,9 +15,7 @@
 --font-body:Roboto;
 --color-button:#0e0929;
 }
-*{
-  border: 2px solid red;
-}
+
 .home-bg{
   background: linear-gradient(135deg, #0f172a, #1e3a8a);
   background: linear-gradient(135deg, #0f172a, #1e3a8a, #0f172a);
@@ -53,9 +51,9 @@
   background: linear-gradient(to right, #fda4af, #fbcfe8, #ffe4e6);
   color: #fda4af;
   border-radius: 20%;
-  padding: 10px;
-  margin-right: 10px;
+
 }
+
 .feature-box , .courses-div {
   box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
   background-size: 200% 200%;

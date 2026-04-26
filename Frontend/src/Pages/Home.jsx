@@ -63,10 +63,10 @@ const Home = () => {
 
   return (
     <div >
-      <div className='w-full  py-10 font-["Roboto"] home-bg  '>
-        <div className=' grid grid-cols-1 lg:grid-cols-2 relative z-0 p-4 lg:px-20 lg:py-10 justify-between items-center'>
+      <div className='w-full mt-12  py-10 font-["Roboto"] home-bg  '>
+        <div className=' grid grid-cols-1 lg:grid-cols-2 relative z-0 px-4 py-10 lg:px-20 lg:py-10 justify-between items-center'>
           <div className='flex flex-col max-w-lg justify-center items-start gap-4'>
-            <h1 className='text-5xl font-[Merienda] font-bold text-white'>Learn. Create. Thrive.</h1>
+            <h1 className='text-5xl/15  font-[Merienda] font-bold text-white'>Learn. Create. Thrive.</h1>
             <p className='text-white mt-4'>Learn in-demand skills from top mentors across tech, design, business, and more — all in one place. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptatem, magnam.</p>
              
             <button className=' transition-all bg-gradient-to-tr from-[#95b1ee] to-[#728ccd] font-[Comic_Relief]  cursor-pointe text-white rounded-lg py-2 px-6 text-xl box capitalize font-medium'>Explore courses</button>
@@ -114,51 +114,51 @@ const Home = () => {
           </div>
         </div>
         {/* data */}
-        <div className='data  my-10 flex flex-row flex-wrap gap-6 justify-center items-center'>
-          <div className='flex flex-wrap border-2 opacity-95 hover:opacity-100  border-rose-200 inset-shadow-rose-300 inset-shadow-2xs  cursor-pointer shadow-md shadow-black hover:-translate-y-4 -translate-y-0 transition-all justify-start p-5 rounded-xl  items-center gap-2 bg-white capitalize duration-300 ease-in hover:scale-105 '>
+        <div className='data p-1 my-10 grid grid-cols-2 md:flex md:flex-row gap-3 md:gap-6 justify-center items-center'>
+          <div className='flex flex-wrap border-2 opacity-95 hover:opacity-100  border-rose-200 inset-shadow-rose-300 inset-shadow-2xs  cursor-pointer shadow-md shadow-black hover:-translate-y-4 -translate-y-0 transition-all justify-start py-2 md:p-5 rounded-lg md:rounded-xl  items-center gap-2 bg-white capitalize duration-300 ease-in hover:scale-105 '>
             <span>
-              <TbBooks className='text-6xl  font-light icon' />
+              <TbBooks className=' text-4xl p-1 md:mr-2.5 md:p-3 md:text-6xl  font-light icon' />
             </span>
             <span className='flex justify-start flex-col ' >
-              <span className='text-3xl font-semibold'>24K+</span>
-              <span className='text-lg font-light'> online courses</span>
+              <span className=' text-xl md:text-3xl font-semibold'>24K+</span>
+              <span className='text-sm  md:text-lg font-light'> online courses</span>
             </span>
           </div>
-          <div className='flex border-2 opacity-95 hover:opacity-100  border-rose-200 inset-shadow-rose-300 inset-shadow-2xs  cursor-pointer shadow-md shadow-black hover:-translate-y-4 -translate-y-0 transition-all justify-start p-5 rounded-xl  items-center gap-2 bg-white capitalize duration-300 ease-in hover:scale-105 '>
+          <div className='flex border-2 opacity-95 hover:opacity-100  border-rose-200 inset-shadow-rose-300 inset-shadow-2xs  cursor-pointer shadow-md shadow-black hover:-translate-y-4 -translate-y-0 transition-all justify-start py-2 md:p-5 rounded-lg md:rounded-xl  items-center  gap-2 bg-white capitalize duration-300 ease-in hover:scale-105 '>
             <span>
-              <FaChalkboardTeacher className='text-6xl  font-light icon' />
+              <FaChalkboardTeacher className='text-4xl p-1 md:mr-2.5 md:p-3 md:text-6xl font-light icon' />
             </span>
             <span className='flex justify-start flex-col ' >
-              <span className='text-3xl font-semibold'>60+</span>
-              <span className='text-lg font-light'> expert tutors</span>
+              <span className='text-xl md:text-3xl font-semibold'>60+</span>
+              <span className='text-sm  md:text-lg  font-light'> expert tutors</span>
             </span>
           </div>
-          <div className='flex border-2 opacity-95 hover:opacity-100  border-rose-200 inset-shadow-rose-300 inset-shadow-2xs  cursor-pointer shadow-md shadow-black hover:-translate-y-4 -translate-y-0 transition-all justify-start p-5 rounded-xl  items-center gap-2 bg-white capitalize duration-300 ease-in hover:scale-105 '>
+          <div className='flex border-2 opacity-95 hover:opacity-100  border-rose-200 inset-shadow-rose-300 inset-shadow-2xs  cursor-pointer shadow-md shadow-black hover:-translate-y-4 -translate-y-0 transition-all justify-start py-2 md:p-5 rounded-lg md:rounded-xl  items-center gap-2 bg-white capitalize duration-300 ease-in hover:scale-105 '>
             <span>
-              <PiStudentFill className='text-6xl  font-light icon' />
+              <PiStudentFill className='text-4xl p-1 md:mr-2.5 md:p-3 md:text-6xl font-light icon' />
             </span>
             <span className='flex justify-start flex-col ' >
-              <span className='text-3xl font-semibold'>20K+</span>
-              <span className='text-lg font-light'>online sudents </span>
+              <span className='text-xl md:text-3xl font-semibold'>20K+</span>
+              <span className='text-sm  md:text-lg font-light'>online sudents </span>
             </span>
           </div>
-          <div className='flex border-2 opacity-95 hover:opacity-100  border-rose-200 inset-shadow-rose-300 inset-shadow-2xs  cursor-pointer shadow-md shadow-black hover:-translate-y-4 -translate-y-0 transition-all justify-start p-5 rounded-xl  items-center gap-2 bg-white capitalize duration-300 ease-in hover:scale-105'>
+          <div className='flex border-2 opacity-95 hover:opacity-100  border-rose-200 inset-shadow-rose-300 inset-shadow-2xs  cursor-pointer shadow-md shadow-black hover:-translate-y-4 -translate-y-0 transition-all justify-start py-2 md:p-5 rounded-lg md:rounded-xl  items-center gap-2 bg-white capitalize duration-300 ease-in hover:scale-105'>
             <span>
-              <GrCertificate className='text-6xl  font-light icon' />
+              <GrCertificate className='text-4xl p-1 md:mr-2.5 md:p-3 md:text-6xl  font-light icon' />
             </span>
             <span className='flex justify-start flex-col ' >
-              <span className='text-3xl font-semibold'>5K+</span>
-              <span className='text-lg font-light'> certified courses</span>
+              <span className='text-xl md:text-3xl font-semibold'>5K+</span>
+              <span className='text-sm  md:text-lg font-light'> Skill Tracks</span>
             </span>
           </div>
         </div>
       </div>
-  <div className='w-full flex flex-col gap-10 justify-center items-center min-h-screen py-20 px-10 font-["Roboto"]'>
+  <div className='w-full flex flex-col gap-10 justify-center items-center min-h-screen px-4 py-10 md:py-20 md:px-10 font-["Roboto"]'>
 
   {/* feature header */}
   <div
     onClick={ShowFeature}
-    className='feature-box flex justify-center items-center font-[Outfit] w-full max-w-3xl shadow-md text-4xl capitalize font-semibold text-[#2a3f74] gap-3 p-10 rounded-2xl cursor-pointer transition-all hover:scale-[1.02]'
+    className='feature-box flex justify-center items-center font-[Outfit] w-full max-w-3xl shadow-md text-3xl md:text-4xl capitalize font-semibold text-[#2a3f74] gap-3 p-5 md:p-10 rounded-2xl cursor-pointer transition-all hover:scale-[1.02]'
   >
     <div className='flex flex-col justify-center items-center gap-6 text-center'>
       
@@ -167,7 +167,7 @@ const Home = () => {
       </h2>
 
       <div className='flex items-center cursor-pointer'>
-        <div className='flex items-center transition-all hover:scale-95 group text-white rounded-lg py-2 px-3 gap-1 text-xl capitalize font-medium'>
+        <div className='flex items-center transition-all hover:scale-95 group text-white rounded-lg md:py-2 md:px-3 gap-1 text-xl capitalize font-medium'>
          <div className='flex justify-center items-center transition-all hover:scale-95 scale-100 group border-blue-300 font-[Comic_Relief] cursor-pointer box text-white rounded-lg py-2 px-3 gap-1 text-xl capitalize font-medium'><button >see all features</button><span className='mt-1 group-hover:-translate-y-1 transition-all -translate-y-0'> <MdArrowOutward /></span></div>
        
         </div>
@@ -222,15 +222,15 @@ shadow-xl shadow-black/10' >
 
   </div>
 </div>{/* popular courses */}
-      <div className='box p-4 md:p-10 font-[outfit] w-full h-full'>
+      <div className='box px-4 py-10 md:p-10 font-[outfit] w-full h-full'>
         <div>
-          <h2 className='text-5xl text-white drop-shadow-lg md:py-10 font-medium font-[outfit] capitalize text-center '>popular <span className='text-4xl border-b-2 font-[Merienda]  italic'>courses</span></h2>
+          <h2 className='text-3xl md:text-5xl text-white drop-shadow-lg md:py-10 font-medium font-[outfit] capitalize text-center '>popular <span className='md:text-4xl border-b-2 font-[Merienda]  italic'>courses</span></h2>
         </div>
         {/* courses cards */}
         <div className='embla' ref={emblaRef}>
           <div className='embla__container  flex  gap-4 px-5 py-10'>
            {popularCourses.map((course,index)=>{return(
-<div key={index} className='embla_slide cards rounded-4xl p-5 basis-full md:basis-1/2 lg:basis-1/4 shrink-0'>
+<div key={index} className='embla_slide cards rounded-lg md:rounded-4xl p-2 md:p-5 basis-full md:basis-1/2 lg:basis-1/4 shrink-0'>
              
               <div className='relative group cursor-pointer '>
                 <img src={course.img} className='aspect-[1] rounded-2xl shadow group-hover:brightness-50 transition-all ease-in duration-200' alt="" />
@@ -245,17 +245,16 @@ shadow-xl shadow-black/10' >
                 <div className='p-3 flex flex-col gap-4'>
                     <div className='flex flex-col text-left flex-wrap '>
                 <h2 className='text-sm md:text-xl font-semibold font-heading text-gray-950'>{course.course_name}</h2>
-                <p className='text-xs/5 md:text-sm mt-1 text-wrap font-body text-gray-800 line-clamp-2'>{course.course_desc}
+                <p className='text-xs/4 md:text-sm mt-1 text-wrap font-body text-gray-800 line-clamp-2'>{course.course_desc}
                 </p>
               </div>
              
-<div className='flex items-center justify-start flex-wrap gap-3'>
+<div className='flex items-center justify-start flex-wrap gap-2 md:gap-3'>
     <span className='p-1 md:py-2 md:px-4 text-xs md:text-sm shadow-sm  font-body rounded-full capitalize   bg-slate-100 text-slate-700 flex flex-row gap-2 items-center'><span><PiBookDuotone className='text-sm md:text-xl'/></span>{course.chapters} Chapters</span>
       <span className='p-1 md:py-2 text-xs md:text-sm shadow-sm font-body rounded-full  bg-slate-100 text-slate-700 flex flex-row gap-2 items-center'><span><CiClock1 className='text-sm md:text-xl'/></span>{course.duration}</span>
       <span className="p-1 md:py-2 md:px-4 text-xs md:text-sm shadow-sm rounded-full bg-indigo-300 text-white flex gap-2 items-center">
         <FiTrendingUp className="text-sm md:text-xl" />
-        Beginner
-      </span>
+{course.level}      </span>
 </div>
  <div className='hidden md:flex justify-start items-center gap-3 '>
                 <div><img src={course.instructor_img} className='w-12 rounded-full aspect-[1]' alt="" /></div>
@@ -264,13 +263,13 @@ shadow-xl shadow-black/10' >
                   <span className='font-medium text-sm '>instructor</span>
                 </div>
               </div>
-              <div className='flex items-center justify-between flex-col'>
+              <div className='flex items-start md:items-center md:justify-between flex-col'>
               <div className="flex items-center gap-3">
       <span className="text-sm line-through text-gray-400">₹2000</span>
-      <span className="text-3xl font-semibold text-indigo-900">₹959</span>
+      <span className="text-lg md:text-3xl font-semibold text-indigo-900">₹959</span>
     </div>
-    <div className='w-full'>
-        <button className=' transition-all bg-gradient-to-tr from-[#95b1ee] to-[#728ccd] font-[Comic_Relief]  cursor-pointer text-white rounded-full py-1.5 px-5 text-lg box capitalize font-medium hover:scale-95'>buy now</button></div></div>
+    <div className='w-full '>
+        <button className=' transition-all bg-gradient-to-tr from-[#95b1ee] to-[#728ccd] font-[Comic_Relief]  cursor-pointer text-white rounded-full py-1 md:py-1.5 px-5 w-full text-lg box capitalize font-medium hover:scale-95'>buy now</button></div></div>
                 </div>
             </div>
            )})}
@@ -292,9 +291,9 @@ shadow-xl shadow-black/10' >
         </div>
       </div>
       {/* trusted by */}
-      <div className='text-center w-full h-full p-4 md:px-10 md:py-5 text-slate-100'>
+      <div className='text-center w-full h-full px-4 py-10 md:px-10 md:py-5 text-slate-100'>
         <h2 className='text-xl font-light font-[Outfit]'>Trusted by over 16,000 companies and millions of learners around the world  </h2>
-        <div className='text-6xl logo font-light opacity-80 font-[Outfit] flex flex-row flex-wrap justify-center gap-24 items-center mt-11'>
+        <div className=' text-3xl md:text-6xl logo font-light opacity-80 font-[Outfit] flex flex-row flex-wrap justify-center gap-12 md:gap-24 items-center mt-11'>
           <span><FaAws /></span>
           <span><SiCanva /></span>
           <span><FaGoogle /></span>
@@ -306,12 +305,12 @@ shadow-xl shadow-black/10' >
         </div>
       </div>
       {/* featured courses and teachers */}
-      <div className= 'box  grid grid-cols-1 gap-10  w-full h-full p-4 md:px-10 md:py-20 mt-12 '>
+      <div className= 'box  grid grid-cols-1 gap-10  w-full h-full px-4 py-10 md:px-10 md:py-20  '>
         {/* featured courses */}
         <div>
           <div className=' flex flex-col justify-center items-center md:justify-start  md:items-start gap-3 mt-10 text-center'>
             <h4 className=' text-xl bg-linear-120 to-blue-200 from-white text-transparent  bg-clip-text capitalize font-[Merienda] text-shadow-2xs '> “Editor’s Picks” </h4>
-            <h2 className='text-5xl text-white drop-shadow-lg  font-medium font-[outfit] capitalize '>featured <span className='text-4xl border-b-2 font-[Merienda]  italic'>courses</span></h2>
+            <h2 className=' text-3xl md:text-5xl text-white drop-shadow-lg  font-medium font-[outfit] capitalize '>featured <span className='md:text-4xl border-b-2 font-[Merienda]  italic'>courses</span></h2>
             <p className='text-white text-lg  '>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Saepe, nostrum!</p>
           </div>
           <div className='grid  grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4   md:px-5 py-10'>
@@ -320,7 +319,7 @@ shadow-xl shadow-black/10' >
               <div key={index} className='cards rounded-lg  md:rounded-4xl p-2  md:p-5'>
              
               <div className='relative group cursor-pointer'>
-                <img src={course.img} className='aspect-square rounded-2xl shadow group-hover:brightness-50 transition-all ease-in duration-200' alt="" />
+                <img src={course.img} className='aspect-square  rounded-2xl shadow group-hover:brightness-50 transition-all ease-in duration-200' alt="" />
               <span className="py-2 px-4 text-sm shadow-lg bg-black/70 backdrop-blur rounded-full absolute top-3 left-3 text-white font-body">
       {course.category}
     </span>
@@ -365,10 +364,10 @@ shadow-xl shadow-black/10' >
         {/* featured teachers */}
         <div>
           <div className=' flex flex-col  justify-start  items-start gap-3 mt-10'>
-            <h2 className='text-5xl text-white drop-shadow-lg  font-medium font-[outfit] capitalize text-center '>featured <span className='text-4xl border-b-2 font-[Merienda]  italic'>teachers</span></h2>
-            <p className='text-white text-lg'>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Saepe, nostrum!</p>
+            <h2 className='text-3xl md:text-5xl text-white drop-shadow-lg  font-medium font-[outfit] capitalize text-center '>featured <span className='md:text-4xl border-b-2 font-[Merienda]  italic'>teachers</span></h2>
+            <p className='text-white text-lg text-center'>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Saepe, nostrum!</p>
           </div>
-          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4  gap-4 md:px-5 py-10'>
+          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-4 md:px-5 py-10'>
             {teachers.map((teacher, index) => (
               <div className='flex bg-gradient-to-b from-blue-200 to-[#364c84] ease-in-out  flex-col cursor-pointer shadow-2xl bg-white  w-full gap-3 rounded-2xl   h-full px-6 py-6'>
                 <div className='text-2xl flex   flex-col font-[Roboto] capitalize text-slate-950 '>
@@ -377,7 +376,7 @@ shadow-xl shadow-black/10' >
                 </div>
                 <div className=' ease-in-out '><img className='rounded-2xl  ' src={teacher.img} alt="" />
                 </div>
-                <div className='text-4xl flex justify-center  rounded-4xl bg-[#364c84] basis-1/4 shrink-0 grow-0 shadow-2xl  items-center gap-5 text-gray-300 '>
+                <div className='text-4xl flex justify-center  rounded-4xl bg-[#364c84] p-5 md:p-0 md:basis-1/4 md:shrink-0 grow-0 shadow-2xl  items-center gap-5 text-gray-300 '>
                   <span className='hover:text-black scale-100 hover:scale-110 transition-all'>
                     <a href="/home"><FaLinkedin /></a>
                   </span>
@@ -400,7 +399,7 @@ shadow-xl shadow-black/10' >
         <p>Lorem ipsum dolor sit amet, . Labore, libero!</p>
       </div>
       <div className=' flex flex-col items-center justify-center'>
-<div className='embla1  lg:overflow-hidden max-w-5xl mx-auto ' ref={emblaRef1}><div className='embla__container   '>      {testimonials.map((testimonials, index) => (
+<div className='embla1  overflow-hidden max-w-5xl mx-auto ' ref={emblaRef1}><div className='embla__container   '>      {testimonials.map((testimonials, index) => (
 <div
   key={index}
   className="embla__slide transition-opacity duration-700 ease-in-out min-w-0 flex-[0_0_100%] lg:w-[70%] test   inset-0  flex items-center justify-center"
