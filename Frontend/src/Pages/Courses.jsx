@@ -41,45 +41,48 @@ const Courses = () => {
   const endIndex = startIndex + itemsPerPage
   const CurrentCourse = FinalArr.slice(startIndex, endIndex)
   return (
-    <div className=' bg-white w-full font-[Roboto]'>
-      <div className='w-full flex flex-col gap-3 justify-center items-center text-white  home-bg'>
+    <div className='min-h-screen bg-white w-full font-[Roboto]'>
+      <div className='w-full flex flex-col min-h-[320px] gap-3 pt-23 justify-center items-center text-white  home-bg'>
         <h2 className='text-5xl font-semibold font-[Outfit]  capitalize '>courses</h2>
         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi, labore.</p>
       </div>
       {/* search and sort */}
-      <div className='px-4 py-8 pr-16 flex justify-center gap-4 items-center shadow-xs'>
-        <button className='text-xl font-normal capitalize border px-10 cursor-pointer rounded-xl py-2  hover:bg-gray-100'>
+      <div className='p-6  flex justify-center gap-4 items-center shadow-xs font-body'>
+        <button className='text-base h-12 px-8 font-normal text-gray-700  capitalize border  cursor-pointer rounded-lg  hover:bg-gray-100'>
           filter
         </button>
-        <div>
-          <button onClick={() => toggle("showSort")} className='text-xl font-normal capitalize border px-10 cursor-pointer rounded-xl py-2  hover:bg-gray-100'>
+        <div className='relative'>
+          <button onClick={() => toggle("showSort")} className='text-base h-12 px-8 text-gray-700 font-normal capitalize border cursor-pointer rounded-lg  hover:bg-gray-100'>
             sort
           </button>
-          <ul className={`absolute flex flex-col bg-pink-400 shadow-2xl mt-2 capitalize font-semibold text-white rounded-lg   cursor-pointer transition-all ease-out duration-300 w-[9.4vw] z-50 ${showSort ? 'visible translate-y-0' : 'invisible -translate-y-6'}`}>
-            <li className=' hover:bg-white hover:text-pink-400  text-white p-3 rounded-t-lg  '>
+          <ul className={`absolute flex flex-col bg-gradient-to-tr from-[#95b1ee] to-[#728ccd] shadow-2xl mt-2 capitalize font-semibold text-white rounded-lg   cursor-pointer transition-all ease-out duration-300 w-34 z-50 ${showSort ? 'visible translate-y-0' : 'invisible -translate-y-6'}`}>
+            <li className=' hover:bg-black  hover:text-white  text-white p-3 rounded-t-lg  '>
               popular
             </li>
-            <li onClick={() => handleSort("price")} className=' hover:bg-white hover:text-pink-400  text-white p-3 '>
+            <li onClick={() => handleSort("price")} className=' hover:bg-black  hover:text-white  text-white p-3 '>
               Price
             </li>
-            <li onClick={() => handleSort("rating")} className='hover:bg-white hover:text-pink-400 text-white p-3 '>
+            <li onClick={() => handleSort("rating")} className='hover:bg-black  hover:text-white text-white p-3 '>
               rating
             </li>
-            <li onClick={() => handleSort("views")} className=' hover:bg-white hover:text-pink-400  text-white p-3 rounded-b-lg '>
+            <li onClick={() => handleSort("views")} className=' hover:bg-black  hover:text-white text-white p-3 rounded-b-lg '>
               views
             </li>
           </ul>
         </div>
-        <div className='w-[85%] border rounded-2xl border-black flex justify-between items-center'>
-          <input value={search} onChange={(e) => setFilter("search", e.target.value)} type="text" className='text-xl border-none outline-none placeholder:capitalize placeholder:font-[Roboto] placeholder:text-gray-900 placeholder:font-light px-4 py-2' placeholder='search desired courses' />
-          <span className='h-11 bg-pink-400 px-4  flex items-center rounded-2xl'><FaSearch className='text-xl scale-100 hover:scale-125 cursor-pointer text-white' /></span>
+        <div className='flex-1 overflow-hidden rounded-lg border flex justify-between items-center'>
+          <input value={search} onChange={(e) => setFilter("search", e.target.value)} type="text" className=' flex-1 h-full text-base  border-none outline-none placeholder:capitalize placeholder:font-[Roboto] placeholder:text-gray-900 placeholder:font-light px-4 ' placeholder='search desired courses' />
+          <span className='h-11 text-white
+bg-gradient-to-tr from-[#95b1ee] to-[#728ccd]
+transition-all duration-300  px-4  flex items-center rounded-lg'><FaSearch className='text-xl scale-100 hover:scale-125 cursor-pointer text-white' /></span>
         </div>
       </div>
+   
       {/* filter */}
-      <div className='flex items-start justify-between '>
-        <div className='flex flex-col justify-start items-start border-r px-5 mt-1 w-[23%] '>
+      <div className='flex items-start gap-8 '>
+        <aside className=' border rounded-2xl p-6 sticky flex flex-col  shrink-0 self-start top-24 w-[300px] '>
           <div className=' font-[Outfit] w-full  '>
-            <h2 onClick={() => toggle("openCourseCategories")} className='text-2xl font-medium py-4 pb-5 flex justify-between items-center   '>Categories <span><MdOutlineKeyboardArrowDown className={`text-4xl font-black rotate-0  transition-all cursor-pointer ease-out ${openCourseCategories ? 'rotate-180' : 'rotate-0'}`} /></span></h2>
+            <h2 onClick={() => toggle("openCourseCategories")} className='text-lg font-semibold mb-3 flex justify-between items-center   '>Categories <span><MdOutlineKeyboardArrowDown className={`text-2xl font-black rotate-0  transition-all cursor-pointer ease-out ${openCourseCategories ? 'rotate-180' : 'rotate-0'}`} /></span></h2>
             {openCourseCategories &&
               courseCategories.map((course, index) => {
                 return (
@@ -89,7 +92,7 @@ const Courses = () => {
                       <label>
                         <span className='flex justify-center items-center'>
                           <input type="checkbox" className='w-3 cursor-pointer border-none h-3 accent-pink-400' name={course.category} checked={selectCourse === course.category} onChange={() => setFilter("selectCourse", course.category)} value={course.category} id="" />
-                          <span className='text-xl px-3 text-wrap capitalize '>{course.category}</span>
+                          <span className='text-base text-gray-700 px-3 text-wrap capitalize '>{course.category}</span>
                         </span>
                       </label>
                       <span ><MdOutlineKeyboardArrowDown className='text-xl cursor-pointer ' /></span>
@@ -102,7 +105,7 @@ const Courses = () => {
                               <label>
                                 <span className='flex justify-center items-center'>
                                   <input type="checkbox" onChange={() => setFilter("selectSubCategories", subc)} checked={selectSubCategories === subc} value={subc} className=' border-none  accent-pink-400' name="web development" id="" />
-                                  <span className='text-lg font-normal px-3 capitalize'>{subc}</span>
+                                  <span className='text-base font-normal px-3 capitalize'>{subc}</span>
                                 </span>
                               </label>
                             </div>
@@ -116,7 +119,7 @@ const Courses = () => {
           </div>
           {/* Rating */}
           <div className='font-[Outfit]  w-full'>
-            <h2 className='text-2xl font-medium py-4 pb-5 flex justify-between items-center  capitalize '>rating<span><MdOutlineKeyboardArrowDown className='text-4xl font-black' /></span></h2>
+            <h2 className='text-lg font-medium mb-3 flex justify-between items-center  capitalize '>rating<span><MdOutlineKeyboardArrowDown className='text-2xl font-black' /></span></h2>
             <div>
 
               <div className='pl-4'>
@@ -126,7 +129,7 @@ const Courses = () => {
                       <label >
                         <span className='flex justify-center items-center'>
                           <input type="radio" className=' border-none  accent-pink-400' onChange={(e) => setFilter("rating", Number(e.target.value))} checked={Number(rating) === star} value={star} name={star} id="" />
-                          <span className='text-lg font-normal px-3 capitalize'>{star} & above</span>
+                          <span className='text-base text-gray-700 font-normal px-3 capitalize'>{star} & above</span>
                         </span>
                       </label>
                     </div>
@@ -141,17 +144,17 @@ const Courses = () => {
           </div>
           {/* price */}
           <div className='font-[Outfit]  w-full'>
-            <h2 className='text-2xl font-medium py-4 pb-5 flex justify-between items-center  capitalize '>price<span><MdOutlineKeyboardArrowDown className='text-4xl font-black' /></span></h2>
-            <div>
+            <h2 className='text-lg font-semibold mb-3 flex justify-between items-center  capitalize '>price<span><MdOutlineKeyboardArrowDown className='text-2xl font-black' /></span></h2>
+            <div className='space-y-1'>
               {PriceArr.map((arr, index) => {
                 return (
-                  <div className='pl-4' key={index} >
+                  <div key={index} >
                     <div className='flex items-center  py-1 '>
-                      <label>
-                        <span className='flex justify-center items-center'>
-                          <input type="checkbox" onChange={(e) => setFilter("price", e.target.value)} checked={price === arr.rate} value={arr.rate} className=' border-none  accent-pink-400' id="" />
-                          <span className='text-lg font-normal px-3 capitalize'>{arr.rate}</span>
-                        </span>
+                      <label className='flex gap-3 p-2 rounded-lg transition hover:bg-gray-50 cursor-pointer   justify-center items-center'>
+                       
+                          <input type="radio" onChange={(e) => setFilter("price", e.target.value)} checked={price === arr.rate} value={arr.rate} className=' border-none  accent-pink-400' id="" />
+                          <span className='text-base text-gray-700 font-normal capitalize'>{arr.rate}</span>
+                      
                       </label>
                     </div>
                   </div>
@@ -161,14 +164,15 @@ const Courses = () => {
             </div>
           </div>
 
-        </div>
+        </aside>
+     
         {/* courses */}
         {comingSoon ? (
           <div className="text-center flex justify-center items-center h-[20vh] w-full text-xl font-[Merienda] font-semibold text-gray-500 py-4">
             🚀 Courses will be available soon
           </div>
         ) : (
-          <div className='w-[80%]'>
+          <div className='flex-1 min-w-0'>
             <div className='grid grid-cols-3  gap-4 px-5 py-10'>
               {CurrentCourse.map((course,index) => {
                 return (
