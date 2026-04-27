@@ -9,9 +9,8 @@ const App = () => {
   <Toaster
   position="top-center"
   containerStyle={{
-    left: 16,
-    right: 16,
-    top: 16,
+    left:16,right:16,
+top:0,
     bottom: "auto",
     inset: "auto",
     zIndex: 999999999999

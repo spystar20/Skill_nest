@@ -3,6 +3,7 @@ import login from '../assets/login.png'
 import { Link, useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
 import api from '@/utils/axios'
+import { FaAngleRight } from 'react-icons/fa'
 const Login = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -26,9 +27,9 @@ toast.error(err.response?.data?.message || "Login failed")    }
   }
   return (
 
-    <div className='w-full bg-black py-32 px-12'>
-      <div className='bg-white/85  grid grid-cols-2 p-6 rounded-2xl'>
-        <div className='flex flex-col items-start justify-end box rounded-2xl p-16'>
+    <div className=' min-h-screen w-full bg-black px-4 py-6 md:py-32 md:px-12 box-border'>
+      <div className='bg-white/85 grid-col-1 md:grid grid-cols-2 p-6 md:p-6 rounded-2xl'>
+        <div className=' hidden md:flex flex-col items-start justify-end box rounded-2xl p-16'>
           <img className='login w-[516px]' src={login} alt="" />
           <div className='text-white flex flex-col gap-2 '>
             <h6 className='font-body font-semibold text-sm capitalize '>Lorem ipsum dolor sit amet.</h6>
@@ -36,14 +37,14 @@ toast.error(err.response?.data?.message || "Login failed")    }
           </div>
         </div>
         <div className='flex flex-col items-center justify-center'>
-          <div className=' max-w-xl flex flex-col p-12 font-body'>
+          <div className='w-full md:max-w-xl flex flex-col md:p-12 font-body'>
             {/* heading */}
-            <div className='flex flex-col gap-4 py-4 '>
-              <h2 className='font-semibold text-3xl text-slate-900 font-body capitalize'>Log in to <span className='italic text-transparent bg-clip-text  bg-gradient-to-br from-[#728ccd] to-[#364c84] font-[Merienda] '> your account</span> </h2>
-              <p className='font-body max-w-lg'>Join thousands of learners building skills in tech, design, and business. Learn at your own pace with expert-led courses.</p>
+            <div className='flex flex-col gap-2 md:gap-4 md:py-4 '>
+              <h2 className='font-semibold text-2xl md:text-3xl text-slate-900 font-body capitalize'>Log in to <span className='italic text-transparent bg-clip-text  bg-gradient-to-br from-[#728ccd] to-[#364c84] font-[Merienda] '> your account</span> </h2>
+              <p className='font-body text-sm text-gray-700 md:max-w-lg'>Join thousands of learners building skills in tech, design, and business. Learn at your own pace with expert-led courses.</p>
             </div>
             {/* form */}
-            <div className='py-6  w-10/12 '>
+            <div className='py-3 md:py-6  md:w-10/12 '>
               <div className=''>
                 <form onSubmit={handleLogin} action="" className='font-body flex flex-col gap-5'>
 
@@ -83,7 +84,7 @@ toast.error(err.response?.data?.message || "Login failed")    }
                 </div>
               </div>
               {/* login */}
-              <div className=' flex justify-center items-center mt-6'>
+              <div className=' flex justify-center items-center mt-1 md:mt-6'>
                 <h6 className='font-heading text-base text-gray-600'>Don't have an account ? <span className='underline hover:italic cursor-pointer text-blue-900'><Link to="/signup">SignUp</Link></span></h6>
               </div>
             </div>
@@ -91,6 +92,7 @@ toast.error(err.response?.data?.message || "Login failed")    }
         </div>
       </div>
     </div>
+   <Link to="/"><div className='text-white flex gap-4 items-center justify-center mt-3'>Back to Home <FaAngleRight/></div></Link> 
     </div >
   )
 }

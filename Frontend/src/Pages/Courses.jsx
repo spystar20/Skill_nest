@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { FaSearch, FaStar } from "react-icons/fa";
+import { FaCartArrowDown, FaSearch, FaStar } from "react-icons/fa";
 import { MdOutlineKeyboardArrowDown } from 'react-icons/md';
 import Course from '../data/course'
 import courseCategories from '../data/CourseCategories';
@@ -8,11 +8,13 @@ import { SiBookstack } from "react-icons/si";
 import { FaEye } from "react-icons/fa";
 import { FaShoppingCart } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa";
-import { CiHeart } from 'react-icons/ci';
+import { CiClock1, CiHeart } from 'react-icons/ci';
 import { toggleStore } from '../Store/toggleStore';
 import { useCourseStore } from '../Store/CourseFunc';
 import Pagination from '@mui/material/Pagination';
 import { Link } from 'react-router-dom';
+import { FiTrendingUp } from 'react-icons/fi';
+import { PiBookDuotone } from 'react-icons/pi';
 const Courses = () => {
 
   const { openCourseCategories, showSort, openSubCategories, Liked, toggle, toggleSubCategories, toggleLike } = toggleStore()
@@ -39,8 +41,8 @@ const Courses = () => {
   const endIndex = startIndex + itemsPerPage
   const CurrentCourse = FinalArr.slice(startIndex, endIndex)
   return (
-    <div className=' bg-white w-full h-[100vh] font-[Roboto]'>
-      <div className='w-full h-[30%] flex flex-col gap-3 justify-center items-center text-white  home-bg'>
+    <div className=' bg-white w-full font-[Roboto]'>
+      <div className='w-full flex flex-col gap-3 justify-center items-center text-white  home-bg'>
         <h2 className='text-5xl font-semibold font-[Outfit]  capitalize '>courses</h2>
         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi, labore.</p>
       </div>
@@ -168,44 +170,51 @@ const Courses = () => {
         ) : (
           <div className='w-[80%]'>
             <div className='grid grid-cols-3  gap-4 px-5 py-10'>
-              {CurrentCourse.map((course) => {
+              {CurrentCourse.map((course,index) => {
                 return (
                   <Link key={course.id} to={`/courses/${course.course_name}`}>
-                  <div className='flex flex-col cursor-pointer shadow-2xl bg-white  w-full gap-3 rounded-2xl   h-full px-6 py-6'>
-                    <div className='grid group '>
-                      <div className='col-start-1 row-start-1 z-0'><img src={course.img} className='drop-shadow-xs col-span-1 rounded-2xl' alt="" /></div>
-                      <div className='col-start-1 relative invisible group-hover:visible  px-3 py-3 flex  justify-between items-end row-start-1 z-10 bg-black  opacity-65  rounded-2xl'>
-                        <div key={course.id} onClick={() => toggleLike(course.id)} className='absolute z-10 top-0 right-0  m-1 transition-all ease-out '>{Liked.includes(course.id) ? <FaHeart className='text-[1.8rem] text-pink-400' /> : <CiHeart className='text-4xl text-pink-400' />}</div>
-                        <div >
-                          <button className='flex justify-center items-center  transition-all hover:scale-95 scale-100 group    font-[Comic_Relief]  cursor-pointer bg-pink-400 text-white rounded-lg py-1 px-2 gap-1 text-lg  capitalize font-medium'><span><FaShoppingCart /></span> <span>add to cart</span></button></div>
-                        <div>
-                          <button className='flex justify-center items-center  transition-all hover:scale-95 scale-100 group    font-[Comic_Relief]  cursor-pointer bg-pink-400 text-white rounded-lg py-1 px-2 gap-1 text-lg  capitalize font-medium'>{course.price}</button></div>
-                      </div>
-                    </div>
-                    <div className='flex justify-start items-center gap-3'>
-                      <div><img src={course.instructor_img} className='w-16 rounded-full ' alt={course.instructor_img} /></div>
-                      <div className='flex flex-col justify-start items-start capitalize font-[outfit]'>
-                        <span className='text-lg font-medium'>{course.instructor_name}</span>
-                        <span className='font-medium text-sm '>instructor</span>
-                      </div>
-                    </div>
+                    <div key={index} className='cards rounded-lg  md:rounded-4xl p-2  md:p-5'>
+             
+              <div className='relative group cursor-pointer'>
+                <img src={course.img} className='aspect-square  rounded-2xl shadow group-hover:brightness-50 transition-all ease-in duration-200' alt="" />
+              <span className="py-2 px-4 text-sm shadow-lg bg-black/70 backdrop-blur rounded-full absolute top-3 left-3 text-white font-body">
+      {course.category}
+    </span>
 
-                    <div className='flex flex-col text-left  flex-wrap'>
-                      <h2 className='text-xl font-semibold'>{course.course_name} </h2>
-                      <p className='text-lg text-wrap line-clamp-2'> {course.course_desc}</p>
-                    </div>
-
-                    <div className='flex  justify-between  items-center'>
-                      <div className='flex border capitalize bg-black text-white text-sm font-medium  rounded-lg px-2 py-2 justify-start items-center gap-2'>
-                        <span className='flex justify-center text-yellow-500'><FaStar /></span>
-                        <h2 className=' font-medium'>{course.rating}</h2>
-                      </div>
-                      <div className='flex border capitalize bg-black text-white text-sm font-medium  rounded-lg px-2 py-2 justify-start items-center gap-3'>
-                        <span><FaEye /></span><span>{course.view}</span>
-                      </div>
-                    </div>
-                    <div className='flex justify-between items-center '><span className='flex items-center gap-2 text-lg capitalize '>< SiBookstack />{course.chapters} chapters</span><span className='flex items-center gap-2 text-lg capitalize '><IoTime />{course.duration}</span></div>
-                  </div>
+                <div className=' gap-5 items-center justify-start absolute bottom-1 right-0 z-40 text-xl text-black p-5 hidden group-hover:flex '><span className=' bg-white p-2 rounded-full hover:scale-110 ease-in duration-200 transition-all'>
+                  <FaHeart/></span><span className=' bg-white p-2 rounded-full hover:scale-110 ease-in duration-200 transition-all'><FaCartArrowDown/></span></div>
+              </div>
+              
+                <div className=' flex flex-col gap-2 md:gap-4'>
+                    <div className='flex flex-col text-left flex-wrap '>
+                <h2 className='text-sm md:text-xl font-semibold font-heading text-gray-950'>{course.course_name}</h2>
+                <p className='text-xs/4 md:text-sm  mt-1 text-wrap font-body text-gray-800 line-clamp-2'>{course.course_desc}
+                </p>
+              </div>
+             
+<div className='flex items-center justify-start flex-wrap gap-2 md:gap-3'>
+    <span className=' p-1 md:py-1 md:px-4 text-xs lg:text-sm font-medium shadow-sm  font-body  rounded-sm md:rounded-full capitalize   bg-slate-100 text-slate-700 flex flex-row gap-1 md:gap-2 items-center'><span><PiBookDuotone className='text-sm md:text-xl'/></span>{course.chapters}</span>
+      <span className=' p-1 md:py-1 md:px-4 text-xs lg:text-sm font-medium shadow-sm font-body   rounded-sm md:rounded-full  bg-slate-100 text-slate-700 flex flex-row gap-1 md:gap-2 items-center '><span><CiClock1 className='text-sm md:text-xl'/></span>{course.duration}</span>
+      <span className=" p-1 md:py-1 md:px-4 text-xs lg:text-sm font-medium  shadow-sm  rounded-sm md:rounded-full bg-indigo-300 text-white flex gap-1 md:gap-2 items-center">
+        <FiTrendingUp className="text-sm md:text-xl" />
+{course.level}      </span>
+</div>
+ <div className='hidden md:flex justify-start items-center gap-3'>
+                <div><img src={course.instructor_img} className=' w-8 md:w-12 rounded-full aspect-[1]' alt="" /></div>
+                <div className=' flex flex-col justify-start items-start capitalize font-[outfit]'>
+                  <span className=' text-sm md:text-lg font-semibold md:font-medium'>{course.instructor_name}</span>
+                  <span className='font-medium text-xs  md:text-sm '>instructor</span>
+                </div>
+              </div>
+              <div className='flex flex-col  gap-2 items-start  justify-between'>
+              <div className="flex items-center gap-3">
+      <span className="text-sm line-through text-gray-400">₹2000</span>
+      <span className=" text-lg md:text-3xl font-semibold text-indigo-900">₹{course.price}</span>
+    </div>
+    <div className='w-full'>
+        <button className=' transition-all bg-gradient-to-tr from-[#95b1ee] to-[#728ccd] font-[Comic_Relief]  cursor-pointer text-white rounded-full md:py-1.5 py-1 px-5 w-full text-lg box capitalize font-medium hover:scale-95'>buy now</button></div></div>
+                </div>
+            </div>
                   </Link>
                 )
               })}

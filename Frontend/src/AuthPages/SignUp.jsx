@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import signup from '../assets/signup.png'
 import toast from 'react-hot-toast'
 import { Link, useNavigate } from 'react-router-dom'
+import { FaAngleRight } from 'react-icons/fa'
 import api from '@/utils/axios'
 
 const SignUp = () => {
@@ -29,9 +30,9 @@ const SignUp = () => {
     console.log(import.meta.env.VITE_BACKEND_URL);
   }}
   return (
-    <div className='w-full  bg-black p-12 box-border'>
-      <div className=' mx-auto bg-white/85  grid grid-cols-2 p-6 rounded-2xl'>
-        <div className='flex flex-col items-start justify-end  box rounded-2xl p-16'>
+    <div className='w-full min-h-screen flex flex-col justify-center items-center  bg-black px-4 py-6 md:p-12 box-border'>
+      <div className=' mx-auto bg-white/85  grid grid-col-1 md:grid-cols-2 p-6 rounded-2xl'>
+        <div className='hidden md:flex flex-col items-start justify-end  box rounded-2xl p-16'>
           <img className='login w-full  mb-12' src={signup} alt="" />
           <div className='text-white flex flex-col gap-2 '>
             <h6 className='font-body font-semibold text-sm capitalize '>Lorem ipsum dolor sit amet.</h6>
@@ -39,14 +40,14 @@ const SignUp = () => {
           </div>
         </div>
         <div className='flex flex-col items-center justify-center'>
-          <div className=' max-w-xl flex flex-col p-12 font-body'>
+          <div className=' md:max-w-xl flex flex-col md:p-12 font-body'>
             {/* heading */}
-            <div className='flex flex-col gap-4 py-4 '>
-              <h2 className='font-semibold text-3xl text-slate-900 font-body capitalize'>Start your <span className='italic text-transparent bg-clip-text  bg-gradient-to-br from-[#728ccd] to-[#364c84] font-[Merienda] '>learning journey</span> today</h2>
-              <p className='font-body max-w-lg'>Join thousands of learners building skills in tech, design, and business. Learn at your own pace with expert-led courses.</p>
+            <div className='flex flex-col md:gap-4 md:py-4 '>
+              <h2 className='font-semibold text-2xl md:text-3xl text-slate-900 font-body capitalize'>Start your <span className='italic text-transparent bg-clip-text  bg-gradient-to-br from-[#728ccd] to-[#364c84] font-[Merienda] '>learning journey</span> today</h2>
+              <p className='font-body text-sm text-gray-700 max-w-lg'>Join thousands of learners building skills in tech, design, and business. Learn at your own pace with expert-led courses.</p>
             </div>
             {/* form */}
-            <div className='py-6   '>
+            <div className='md:py-6 py-3  '>
               <div className=''>
                 <form action="" onSubmit={handleSubmit} className='font-body flex flex-col gap-5'>
                   <div className='flex flex-col gap-1'>
@@ -77,7 +78,7 @@ const SignUp = () => {
                   </div>
                 </div>
                 {/* login */}
-                <div className=' flex justify-center items-center mt-6'>
+                <div className=' flex justify-center items-center mt-1 md:mt-6'>
                   <h6 className='font-heading text-base text-gray-600'>Already have an account ? <span className='underline hover:italic cursor-pointer text-blue-900'><Link to="/login">Login</Link></span></h6>
                 </div>
               </div>
@@ -85,6 +86,8 @@ const SignUp = () => {
           </div>
         </div>
       </div>
+         <Link to="/"><div className='text-white flex gap-4 items-center justify-center mt-3'>Back to Home <FaAngleRight/></div></Link> 
+      
     </div>
 
   
