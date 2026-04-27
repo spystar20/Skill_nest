@@ -180,35 +180,56 @@ transition-all duration-300 hover:scale-95  cursor-pointer box'>sign up</button>
       <MenuIcon onClick={toggleMenu} className='text-8xl font-semibold '/>
    
 </div>
-   {openMenu && (
-  <div className="absolute top-0 right-0 bg-white shadow-lg rounded-bl-xl py-10 px-2 w-2xl min-h-10/12 transition-all duration-300">
-    <span><IoCloseSharp onClick={toggleMenu}/></span>
-    <div className='text-gray-900 font-body font-medium text-xl'>
+  
+  <div  className={`fixed inset-0 z-50 flex flex-col px-4 py-6
+transition-all duration-400 ease-in-out
+${
+openMenu
+? "opacity-100 visible bg-black/95"
+: "opacity-0 invisible bg-black/0"
+}`}>
+   <div className="  w-full  font-heading flex justify-between items-center text-white backdrop-blur-lg  bg-opacity-40 mb-9 " >
+    <div className="flex items-center justify-between gap-2">
+          <GiNestBirds className="text-white text-4xl" />
+          <span className="text-3xl font-semibold text-white flex gap-0">
+            Skill <span className='font-span capitalize'>nest</span>
+          </span>
+          <span className="w-2 h-2 bg-[#1e3a8a] rounded-full mt-3"></span>
+        </div>
+    
+    <span><IoCloseSharp className={`text-3xl font-semibold transition-all duration-500 ${openMenu ?'rotate-0':'rotate-180'}`} onClick={toggleMenu}/></span>
+
+   </div>
+   
+    <div className='text-gray-900 font-body font-medium text-xl flex flex-col justify-between flex-1 w-full'>
     <ul className='flex flex-col gap-4'>
-      <li><Link to="/"><div className='p-2 border-2 rounded-lg flex justify-between items-center font-medium font-heading active:bg-black active:text-white' ><span>Home</span><FaAngleRight className='text-xs font-semibold text-black hover:translate-y-1'/></div></Link></li>
-   <li><Link to="/"><div>
-   <div className='p-2 border-2 rounded-lg flex justify-between items-center font-medium font-heading active:bg-black active:text-white' ><span>Courses</span><FaAngleDown className='text-xs font-semibold text-black hover:translate-y-1'/></div>
-   <div className='p-2 border-2 rounded-lg flexflex-col justify-between items-center font-medium font-heading' >
-    <h4 className='text-lg font-semibold'>Development</h4>
-    <ul>  
-                      <li className=" text-gray-800 font-light">Web Development</li>
-                      <li className="hover:text-white transition">Mobile Development</li>
-                      <li className="hover:text-white transition">Game Development</li>
-                      <li className="hover:text-white transition">Programming Languages</li>
-    </ul>
-    </div></div></Link></li>
+      <li className={`p-3 border-2 border-gray-300 rounded-lg flex  justify-start font-medium text-gray-300 font-heading transition-all duration-500 ease-in-out ${openMenu ? 'translate-x-0' : 'translate-x-3' }`}><Link to="/">Home</Link></li>
+  <li className={`p-3 border-2 border-gray-300 rounded-lg flex  justify-start font-medium text-gray-300 font-heading transition-all delay-100 duration-500 ease-in-out ${openMenu ? 'translate-x-0' : 'translate-x-3' }`}><Link to="/">Courses</Link></li>
+   <li className={`p-3 border-2 border-gray-300 rounded-lg flex  justify-start font-medium text-gray-300 font-heading transition-all delay-200 duration-500 ease-in-out ${openMenu ? 'translate-x-0' : 'translate-x-3' }`}><Link to="/">About</Link></li>
+    <li className={`p-3 border-2 border-gray-300 rounded-lg flex  justify-start font-medium text-gray-300 font-heading transition-all delay-300 duration-500 ease-in-out ${openMenu ? 'translate-x-0' : 'translate-x-3' }`}><Link to="/">Teach</Link></li>
+    
     </ul>
     
-
+<div className='flex flex-col gap-3 mt-auto '>
+ <Link to="/login"><button className='w-full
+px-6 py-2 rounded-full font-normal text-xl capitalize text-gray-300 border-2 border-gray-300  hover:border-[#0e0929]
+hover:bg-gradient-to-tr  shadow-lg shadow-black/10 transition-all duration-300   cursor-pointer'>Log In</button></Link>
+         <Link to="/signup" ><button className=' w-full
+px-6 py-2 rounded-full font-normal text-xl capitalize text-white
+bg-gradient-to-tr from-[#0e0929] via-[#1c1450] to-[#2a1f75]
+hover:opacity-90
+shadow-lg shadow-black/10
+transition-all duration-300 hover:scale-95  cursor-pointer box'>sign up</button></Link>
+</div>
     </div>
   </div>
-)}
 
-    </div>
-    
 
-  )
-}
+
+ 
+</div>
+
+   )
+} 
 export default Navbar
-
 
