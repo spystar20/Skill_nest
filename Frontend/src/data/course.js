@@ -1471,13 +1471,252 @@
 // export default featureCourses;
 
   
-  const featureCourses = [
+//   const featureCourses = [
+//   {
+//     id: 1,
+//     img: "https://i.pinimg.com/1200x/fa/35/25/fa35252a5aabc99afec76c8ca2399573.jpg",
+//     instructor_name: "Kim Seon Ho",
+//     instructor_img: "https://i.pinimg.com/1200x/d6/75/f8/d675f805d61bd937951f047cd8d87208.jpg",
+//     course_name: "Focus & Time Management for Students",
+//     course_desc: "High emotional hook — improves study skills and life skills.",
+//     rating: "4.3",
+//     view: "10k ratings",
+//     category: "Personal Development",
+//     subcategory: "Time Management",
+//     price: 999,
+//     level: "Beginner",
+//     duration: "2.5 H",
+//     chapters: "12",
+//   },
+
+//   {
+//     id: 2,
+//     img: "https://i.pinimg.com/736x/fd/34/37/fd343720993fa1776cd62e3e2dc1a4d1.jpg",
+//     instructor_name: "Park Shin Hye",
+//     instructor_img: "https://i.pinimg.com/1200x/a5/67/4d/a5674de544a8c13dea045c5827732a97.jpg",
+//     course_name: "Beginner Korean Language Course",
+//     course_desc: "Learn to speak Korean fluently from scratch.",
+//     rating: "4.6",
+//     view: "14k ratings",
+//     category: "Language Learning",
+//     subcategory: "Korean",
+//     price: 450,
+//     level: "Beginner",
+//     duration: "6 H",
+//     chapters: "7",
+//   },
+
+//   {
+//     id: 3,
+//     img: "https://i.pinimg.com/1200x/84/32/e0/8432e0db3c171c830dcc036e544bfdbe.jpg",
+//     instructor_name: "Lee Min Ji",
+//     instructor_img: "https://i.pinimg.com/474x/da/4b/c2/da4bc24a654f6a3bec29e95d58c1d444.jpg",
+//     course_name: "Photography Essentials for Beginners",
+//     course_desc: "Learn to capture stunning photos with any camera.",
+//     rating: "4.7",
+//     view: "12k ratings",
+//     category: "Photography & Video",
+//     subcategory: "DSLR Photography",
+//     price: 990,
+//     level: "Beginner",
+//     duration: "4 H",
+//     chapters: "9",
+//   },
+
+//   {
+//     id: 4,
+//     img: "https://i.pinimg.com/736x/5f/50/13/5f5013e537ba0157af791d51504a1758.jpg",
+//     instructor_name: "Choi Ji Eun",
+//     instructor_img: "https://i.pinimg.com/736x/09/75/ba/0975ba68cb84b0ee0f5057290ea383a4.jpg",
+//     course_name: "Personal Finance 101",
+//     course_desc: "Manage money, save smartly, and grow wealth.",
+//     rating: "4.5",
+//     view: "18k ratings",
+//     category: "Business",
+//     subcategory: "Finance",
+//     price: 340,
+//     level: "Beginner",
+//     duration: "3.5 H",
+//     chapters: "8",
+//   },
+
+//   {
+//     id: 5,
+//     img: "https://i.pinimg.com/1200x/15/bb/9e/15bb9e5cd68b1760e2e31c61c35846e7.jpg",
+//     instructor_name: "Han Ye Ri",
+//     instructor_img: "https://i.pinimg.com/736x/e0/01/37/e0013783f6137012b3f34cca1bf8fbcd.jpg",
+//     course_name: "Yoga & Mindfulness for Beginners",
+//     course_desc: "Start your yoga journey for health and peace.",
+//     rating: "4.6",
+//     view: "9k ratings",
+//     category: "Health & Fitness",
+//     subcategory: "Yoga",
+//     price: 3440,
+//     level: "Beginner",
+//     duration: "5 H",
+//     chapters: "10",
+//   },
+
+//   {
+//     id: 6,
+//     img: "https://i.pinimg.com/1200x/22/bc/8e/22bc8ebef610eb881071e1a7007a7a80.jpg",
+//     instructor_name: "Seo Hyun Woo",
+//     instructor_img: "https://i.pinimg.com/736x/80/31/2f/80312f67d6ec51e8feb50549b429c445.jpg",
+//     course_name: "Introduction to Web Development",
+//     course_desc: "Learn HTML, CSS, and JavaScript basics.",
+//     rating: "4.8",
+//     view: "20k ratings",
+//     category: "Development",
+//     subcategory: "Web Development",
+//     price: 1560,
+//     level: "Beginner",
+//     duration: "7 H",
+//     chapters: "15",
+//   },
+
+//   {
+//     id: 7,
+//     img: "https://i.pinimg.com/736x/72/0a/14/720a14af9456ed89ab241ecf4ba871ef.jpg",
+//     instructor_name: "Park Ji Hoon",
+//     instructor_img: "https://i.pinimg.com/1200x/1a/e9/19/1ae91999241cd063f5a99b91af68f8f9.jpg",
+//     course_name: "Public Speaking Mastery",
+//     course_desc: "Overcome stage fear and speak with confidence.",
+//     rating: "4.6",
+//     view: "7k ratings",
+//     category: "Personal Development",
+//     subcategory: "Public Speaking",
+//     price: 2340,
+//     level: "Intermediate",
+//     duration: "3 H",
+//     chapters: "7",
+//   },
+
+//   {
+//     id: 8,
+//     img: "https://i.pinimg.com/736x/d9/6b/a4/d96ba425a2283d6c3267e2cb48fe3a3b.jpg",
+//     instructor_name: "Kang Hye Jin",
+//     instructor_img: "https://i.pinimg.com/236x/23/99/98/239998a27de8d9d93b050034b4dc468e.jpg",
+//     course_name: "Creative Writing for Beginners",
+//     course_desc: "Unlock your creativity and write engaging stories.",
+//     rating: "4.7",
+//     view: "6k ratings",
+//     category: "Personal Development",
+//     subcategory: "Productivity",
+//     price: 2440,
+//     level: "Beginner",
+//     duration: "4H",
+//     chapters: "8",
+//   },
+
+//   {
+//     id: 9,
+//     img: "https://i.pinimg.com/736x/f9/c7/4b/f9c74be019b573cdc7631942fc3e9e3a.jpg",
+//     instructor_name: "Im Soo Kyung",
+//     instructor_img: "https://i.pinimg.com/1200x/90/34/fc/9034fc876fd76e2fdd5569f12e79e9b4.jpg",
+//     course_name: "Graphic Design with Canva",
+//     course_desc: "Create beautiful designs easily using Canva.",
+//     rating: "4.8",
+//     view: "14k ratings",
+//     category: "Design",
+//     subcategory: "Graphic Design",
+//     price: 1240,
+//     level: "Beginner",
+//     duration: "3.5 H",
+//     chapters: "9",
+//   },
+
+//   {
+//     id: 10,
+//     img: "https://i.pinimg.com/736x/b0/41/ab/b041abab5f12ce21f693f0bf2e1f895b.jpg",
+//     instructor_name: "Yoon Da Eun",
+//     instructor_img: "https://i.pinimg.com/1200x/c1/5e/d3/c15ed31f306dfedb0a66ad16f06f85a3.jpg",
+//     course_name: "Digital Marketing Basics",
+//     course_desc: "Grow your business with online marketing strategies.",
+//     rating: "4.7",
+//     view: "16k ratings",
+//     category: "Marketing",
+//     subcategory: "Digital Marketing",
+//     price: 2460,
+//     level: "Beginner",
+//     duration: "5 H",
+//     chapters: "12",
+//   },
+
+//   {
+//     id: 11,
+//     img: "https://i.pinimg.com/1200x/11/09/f8/1109f8710d4c2ea968811abd207a19c6.jpg",
+//     instructor_name: "Heyri",
+//     instructor_img: "https://i.pinimg.com/736x/89/62/6b/89626bc3962f251636b0894ed87347d7.jpg",
+//     course_name: "Python Programming for Beginners",
+//     course_desc: "Start coding in Python with real-world projects.",
+//     rating: "4.6",
+//     view: "15k ratings",
+//     category: "Development",
+//     subcategory: "Programming Languages",
+//     price: 3120,
+//     level: "Beginner",
+//     duration: "7 H",
+//     chapters: "10",
+//   },
+
+//   {
+//     id: 12,
+//     img: "https://i.pinimg.com/736x/55/f1/25/55f125ac6c307ae8e7ad953e48edaa03.jpg",
+//     instructor_name: "Kim Namjoon",
+//     instructor_img: "https://i.pinimg.com/736x/d6/01/2b/d6012bd9075e8327bbf22b86a5814101.jpg",
+//     course_name: "Mastering Public Speaking",
+//     course_desc: "Boost confidence and communication in every speech.",
+//     rating: "4.9",
+//     view: "20k ratings",
+//     category: "Personal Development",
+//     subcategory: "Public Speaking",
+//     price: 1499,
+//     level: "Advanced",
+//     duration: "4 H",
+//     chapters: "12",
+//   },
+
+//   {
+//     id: 13,
+//     img: "https://i.pinimg.com/736x/31/45/be/3145bec948c0a5ad359c443a8ecdd5d8.jpg",
+//     instructor_name: "Sejeong",
+//     instructor_img: "https://i.pinimg.com/1200x/c6/a6/e6/c6a6e6721585887cdc3d16b25a378a6f.jpg",
+//     course_name: "UI/UX Design for Beginners",
+//     course_desc: "Design user-friendly websites and apps.",
+//     rating: "4.4",
+//     view: "6.7k ratings",
+//     category: "Design",
+//     subcategory: "UI/UX Design",
+//     price: 1299,
+//     level: "Beginner",
+//     duration: "3 H",
+//     chapters: "6",
+//   },
+
+//   {
+//     id: 14,
+//     img: "https://i.pinimg.com/736x/3a/d2/d3/3ad2d3b37f25aa1c7ca854b6f1e8f7a7.jpg",
+//     instructor_name: "Park Hyung Sik",
+//     instructor_img: "https://i.pinimg.com/736x/c9/27/24/c92724426f8cb84e6bae7c72a231a4b2.jpg",
+//     course_name: "Full Stack Web Development Bootcamp",
+//     course_desc: "Learn HTML, CSS, JS, React, Node, and MongoDB from scratch.",
+//     rating: "4.7",
+//     view: "25k ratings",
+//     category: "Development",
+//     subcategory: "Web Development",
+//     price: 2999,
+//     level: "Advanced",
+//     duration: "15.5H",
+//     chapters: "20",
+//   },
+// ];
+const featureCourses = [
   {
     id: 1,
     img: "https://i.pinimg.com/1200x/fa/35/25/fa35252a5aabc99afec76c8ca2399573.jpg",
     instructor_name: "Kim Seon Ho",
     instructor_img: "https://i.pinimg.com/1200x/d6/75/f8/d675f805d61bd937951f047cd8d87208.jpg",
-    course_name: "Focus, Habits & Time Management for Students",
+    course_name: "Focus & Time Management for Students",
     course_desc: "High emotional hook — improves study skills and life skills.",
     rating: "4.3",
     view: "10k ratings",
@@ -1485,8 +1724,38 @@
     subcategory: "Time Management",
     price: 999,
     level: "Beginner",
-    duration: "2.5 hours",
+    duration: "2.5 H",
     chapters: "12",
+
+    overview: {
+      description: "Master focus, build habits, and manage time effectively.",
+      learn: ["Focus techniques", "Habit building", "Avoid procrastination"],
+      highlights: ["Real examples", "Step-by-step system"],
+      requirements: ["Notebook", "Consistency"],
+    },
+
+    syllabus: [
+      {
+        module: "Productivity Basics",
+        lessons: [
+          { title: "Why focus matters", time: "05:00" },
+          { title: "Habit science", time: "08:00" },
+        ],
+      },
+    ],
+
+    instructor: {
+      title: "Productivity Coach",
+      rating: "4.6",
+      students: "2M+",
+    },
+
+    reviews: [
+      { name: "Rahul", rating: 4, comment: "Helpful course" },
+      { name: "Aisha", rating: 5, comment: "Very practical!" },
+    ],
+
+    features: ["2.5h video", "Certificate", "Lifetime access"],
   },
 
   {
@@ -1502,8 +1771,34 @@
     subcategory: "Korean",
     price: 450,
     level: "Beginner",
-    duration: "6 hours",
+    duration: "6 H",
     chapters: "7",
+
+    overview: {
+      description: "Learn Hangul, grammar, and conversations.",
+      learn: ["Alphabet", "Basic grammar", "Daily phrases"],
+      highlights: ["Native audio", "Practice sessions"],
+      requirements: ["No prior knowledge"],
+    },
+
+    syllabus: [
+      {
+        module: "Hangul Basics",
+        lessons: [{ title: "Alphabet", time: "12:00" }],
+      },
+    ],
+
+    instructor: {
+      title: "Language Instructor",
+      rating: "4.8",
+      students: "1.8M+",
+    },
+
+    reviews: [
+      { name: "Emma", rating: 5, comment: "Loved it!" },
+    ],
+
+    features: ["6h video", "Exercises", "Certificate"],
   },
 
   {
@@ -1512,15 +1807,41 @@
     instructor_name: "Lee Min Ji",
     instructor_img: "https://i.pinimg.com/474x/da/4b/c2/da4bc24a654f6a3bec29e95d58c1d444.jpg",
     course_name: "Photography Essentials for Beginners",
-    course_desc: "Learn to capture stunning photos with any camera.",
+    course_desc: "Learn to capture stunning photos.",
     rating: "4.7",
     view: "12k ratings",
     category: "Photography & Video",
     subcategory: "DSLR Photography",
     price: 990,
     level: "Beginner",
-    duration: "4 hours",
+    duration: "4 H",
     chapters: "9",
+
+    overview: {
+      description: "Learn camera, lighting, and composition.",
+      learn: ["Camera basics", "Lighting", "Editing"],
+      highlights: ["Hands-on", "Real examples"],
+      requirements: ["Any camera"],
+    },
+
+    syllabus: [
+      {
+        module: "Camera Basics",
+        lessons: [{ title: "Exposure", time: "10:00" }],
+      },
+    ],
+
+    instructor: {
+      title: "Photographer",
+      rating: "4.8",
+      students: "1.3M+",
+    },
+
+    reviews: [
+      { name: "Arjun", rating: 4, comment: "Good basics" },
+    ],
+
+    features: ["4h video", "Projects", "Certificate"],
   },
 
   {
@@ -1529,15 +1850,41 @@
     instructor_name: "Choi Ji Eun",
     instructor_img: "https://i.pinimg.com/736x/09/75/ba/0975ba68cb84b0ee0f5057290ea383a4.jpg",
     course_name: "Personal Finance 101",
-    course_desc: "Manage money, save smartly, and grow wealth.",
+    course_desc: "Manage money and grow wealth.",
     rating: "4.5",
     view: "18k ratings",
     category: "Business",
     subcategory: "Finance",
     price: 340,
     level: "Beginner",
-    duration: "3.5 hours",
+    duration: "3.5 H",
     chapters: "8",
+
+    overview: {
+      description: "Budgeting, saving, and investing basics.",
+      learn: ["Budgeting", "Saving", "Investing"],
+      highlights: ["Simple methods"],
+      requirements: ["Basic math"],
+    },
+
+    syllabus: [
+      {
+        module: "Money Basics",
+        lessons: [{ title: "Budgeting", time: "09:00" }],
+      },
+    ],
+
+    instructor: {
+      title: "Financial Advisor",
+      rating: "4.7",
+      students: "1.4M+",
+    },
+
+    reviews: [
+      { name: "Priya", rating: 5, comment: "Very useful!" },
+    ],
+
+    features: ["3.5h video", "Templates", "Certificate"],
   },
 
   {
@@ -1546,15 +1893,41 @@
     instructor_name: "Han Ye Ri",
     instructor_img: "https://i.pinimg.com/736x/e0/01/37/e0013783f6137012b3f34cca1bf8fbcd.jpg",
     course_name: "Yoga & Mindfulness for Beginners",
-    course_desc: "Start your yoga journey for health and peace.",
+    course_desc: "Start your yoga journey.",
     rating: "4.6",
     view: "9k ratings",
     category: "Health & Fitness",
     subcategory: "Yoga",
     price: 3440,
     level: "Beginner",
-    duration: "5 hours",
+    duration: "5 H",
     chapters: "10",
+
+    overview: {
+      description: "Yoga, breathing, and mindfulness.",
+      learn: ["Yoga poses", "Breathing", "Meditation"],
+      highlights: ["Guided sessions"],
+      requirements: ["Yoga mat"],
+    },
+
+    syllabus: [
+      {
+        module: "Yoga Basics",
+        lessons: [{ title: "Breathing", time: "08:00" }],
+      },
+    ],
+
+    instructor: {
+      title: "Yoga Instructor",
+      rating: "4.8",
+      students: "1M+",
+    },
+
+    reviews: [
+      { name: "Liam", rating: 5, comment: "Relaxing!" },
+    ],
+
+    features: ["5h video", "Meditation", "Certificate"],
   },
 
   {
@@ -1563,15 +1936,41 @@
     instructor_name: "Seo Hyun Woo",
     instructor_img: "https://i.pinimg.com/736x/80/31/2f/80312f67d6ec51e8feb50549b429c445.jpg",
     course_name: "Introduction to Web Development",
-    course_desc: "Learn HTML, CSS, and JavaScript basics.",
+    course_desc: "Learn HTML, CSS, and JavaScript.",
     rating: "4.8",
     view: "20k ratings",
     category: "Development",
     subcategory: "Web Development",
     price: 1560,
     level: "Beginner",
-    duration: "7 hours",
+    duration: "7 H",
     chapters: "15",
+
+    overview: {
+      description: "Build websites from scratch.",
+      learn: ["HTML", "CSS", "JS"],
+      highlights: ["Projects"],
+      requirements: ["Laptop"],
+    },
+
+    syllabus: [
+      {
+        module: "Web Basics",
+        lessons: [{ title: "HTML", time: "10:00" }],
+      },
+    ],
+
+    instructor: {
+      title: "Full Stack Dev",
+      rating: "4.9",
+      students: "3M+",
+    },
+
+    reviews: [
+      { name: "Ravi", rating: 5, comment: "Loved projects!" },
+    ],
+
+    features: ["7h video", "Projects", "Certificate"],
   },
 
   {
@@ -1580,17 +1979,42 @@
     instructor_name: "Park Ji Hoon",
     instructor_img: "https://i.pinimg.com/1200x/1a/e9/19/1ae91999241cd063f5a99b91af68f8f9.jpg",
     course_name: "Public Speaking Mastery",
-    course_desc: "Overcome stage fear and speak with confidence.",
+    course_desc: "Overcome stage fear.",
     rating: "4.6",
     view: "7k ratings",
     category: "Personal Development",
     subcategory: "Public Speaking",
     price: 2340,
     level: "Intermediate",
-    duration: "3 hours",
+    duration: "3 H",
     chapters: "7",
-  },
 
+    overview: {
+      description: "Improve speaking confidence.",
+      learn: ["Confidence", "Body language"],
+      highlights: ["Practice drills"],
+      requirements: ["Practice mindset"],
+    },
+
+    syllabus: [
+      {
+        module: "Basics",
+        lessons: [{ title: "Stage fear", time: "07:00" }],
+      },
+    ],
+
+    instructor: {
+      title: "Communication Coach",
+      rating: "4.7",
+      students: "800k+",
+    },
+
+    reviews: [
+      { name: "Nora", rating: 5, comment: "Confidence boosted!" },
+    ],
+
+    features: ["3h video", "Worksheets", "Certificate"],
+  },
   {
     id: 8,
     img: "https://i.pinimg.com/736x/d9/6b/a4/d96ba425a2283d6c3267e2cb48fe3a3b.jpg",
@@ -1604,8 +2028,34 @@
     subcategory: "Productivity",
     price: 2440,
     level: "Beginner",
-    duration: "4 hours",
+    duration: "4H",
     chapters: "8",
+
+    overview: {
+      description: "Learn storytelling, characters, and dialogue writing.",
+      learn: ["Story ideas", "Characters", "Dialogue"],
+      highlights: ["Creative exercises"],
+      requirements: ["Interest in writing"],
+    },
+
+    syllabus: [
+      {
+        module: "Writing Basics",
+        lessons: [{ title: "Finding ideas", time: "06:00" }],
+      },
+    ],
+
+    instructor: {
+      title: "Writing Coach",
+      rating: "4.8",
+      students: "900k+",
+    },
+
+    reviews: [
+      { name: "Sasha", rating: 5, comment: "Loved prompts!" },
+    ],
+
+    features: ["4h video", "Prompts", "Certificate"],
   },
 
   {
@@ -1621,8 +2071,34 @@
     subcategory: "Graphic Design",
     price: 1240,
     level: "Beginner",
-    duration: "3.5 hours",
+    duration: "3.5 H",
     chapters: "9",
+
+    overview: {
+      description: "Design social posts, flyers, and branding materials.",
+      learn: ["Canva basics", "Templates", "Design skills"],
+      highlights: ["Hands-on projects"],
+      requirements: ["Canva account"],
+    },
+
+    syllabus: [
+      {
+        module: "Canva Basics",
+        lessons: [{ title: "Using templates", time: "08:00" }],
+      },
+    ],
+
+    instructor: {
+      title: "Graphic Designer",
+      rating: "4.9",
+      students: "1.2M+",
+    },
+
+    reviews: [
+      { name: "Aarav", rating: 5, comment: "Very easy!" },
+    ],
+
+    features: ["3.5h video", "Assets", "Certificate"],
   },
 
   {
@@ -1638,8 +2114,34 @@
     subcategory: "Digital Marketing",
     price: 2460,
     level: "Beginner",
-    duration: "5 hours",
+    duration: "5 H",
     chapters: "12",
+
+    overview: {
+      description: "Learn SEO, social media, and email marketing.",
+      learn: ["SEO basics", "Social media ads", "Email campaigns"],
+      highlights: ["Real strategies"],
+      requirements: ["Internet access"],
+    },
+
+    syllabus: [
+      {
+        module: "Marketing Basics",
+        lessons: [{ title: "SEO intro", time: "09:00" }],
+      },
+    ],
+
+    instructor: {
+      title: "Marketing Consultant",
+      rating: "4.8",
+      students: "1.6M+",
+    },
+
+    reviews: [
+      { name: "Raj", rating: 5, comment: "Useful for business!" },
+    ],
+
+    features: ["5h video", "Templates", "Certificate"],
   },
 
   {
@@ -1655,8 +2157,34 @@
     subcategory: "Programming Languages",
     price: 3120,
     level: "Beginner",
-    duration: "7 hours",
+    duration: "7 H",
     chapters: "10",
+
+    overview: {
+      description: "Learn Python fundamentals with projects.",
+      learn: ["Syntax", "Loops", "Projects"],
+      highlights: ["Hands-on coding"],
+      requirements: ["Laptop"],
+    },
+
+    syllabus: [
+      {
+        module: "Python Basics",
+        lessons: [{ title: "Variables", time: "08:00" }],
+      },
+    ],
+
+    instructor: {
+      title: "Software Engineer",
+      rating: "4.8",
+      students: "500k+",
+    },
+
+    reviews: [
+      { name: "Saanvi", rating: 5, comment: "Very easy!" },
+    ],
+
+    features: ["7h video", "Exercises", "Certificate"],
   },
 
   {
@@ -1665,15 +2193,41 @@
     instructor_name: "Kim Namjoon",
     instructor_img: "https://i.pinimg.com/736x/d6/01/2b/d6012bd9075e8327bbf22b86a5814101.jpg",
     course_name: "Mastering Public Speaking",
-    course_desc: "Boost confidence and communication in every speech.",
+    course_desc: "Boost confidence and communication.",
     rating: "4.9",
     view: "20k ratings",
     category: "Personal Development",
     subcategory: "Public Speaking",
     price: 1499,
     level: "Advanced",
-    duration: "4 hours",
+    duration: "4 H",
     chapters: "12",
+
+    overview: {
+      description: "Advanced speaking and storytelling techniques.",
+      learn: ["Speech structure", "Storytelling"],
+      highlights: ["Advanced drills"],
+      requirements: ["Basic speaking skills"],
+    },
+
+    syllabus: [
+      {
+        module: "Speech Basics",
+        lessons: [{ title: "Storytelling", time: "07:30" }],
+      },
+    ],
+
+    instructor: {
+      title: "Leadership Coach",
+      rating: "4.9",
+      students: "1.1M+",
+    },
+
+    reviews: [
+      { name: "Haruto", rating: 5, comment: "Confidence boost!" },
+    ],
+
+    features: ["4h video", "Templates", "Certificate"],
   },
 
   {
@@ -1682,15 +2236,41 @@
     instructor_name: "Sejeong",
     instructor_img: "https://i.pinimg.com/1200x/c6/a6/e6/c6a6e6721585887cdc3d16b25a378a6f.jpg",
     course_name: "UI/UX Design for Beginners",
-    course_desc: "Design user-friendly websites and apps.",
+    course_desc: "Design user-friendly apps.",
     rating: "4.4",
     view: "6.7k ratings",
     category: "Design",
     subcategory: "UI/UX Design",
     price: 1299,
     level: "Beginner",
-    duration: "3 hours",
+    duration: "3 H",
     chapters: "6",
+
+    overview: {
+      description: "Learn wireframing and prototyping.",
+      learn: ["UI basics", "UX flow"],
+      highlights: ["Figma projects"],
+      requirements: ["Laptop"],
+    },
+
+    syllabus: [
+      {
+        module: "UI Basics",
+        lessons: [{ title: "Wireframes", time: "07:00" }],
+      },
+    ],
+
+    instructor: {
+      title: "Product Designer",
+      rating: "4.7",
+      students: "300k+",
+    },
+
+    reviews: [
+      { name: "Irene", rating: 5, comment: "Great intro!" },
+    ],
+
+    features: ["3h video", "Projects", "Certificate"],
   },
 
   {
@@ -1699,16 +2279,43 @@
     instructor_name: "Park Hyung Sik",
     instructor_img: "https://i.pinimg.com/736x/c9/27/24/c92724426f8cb84e6bae7c72a231a4b2.jpg",
     course_name: "Full Stack Web Development Bootcamp",
-    course_desc: "Learn HTML, CSS, JS, React, Node, and MongoDB from scratch.",
+    course_desc: "Become a full stack developer.",
     rating: "4.7",
     view: "25k ratings",
     category: "Development",
     subcategory: "Web Development",
     price: 2999,
     level: "Advanced",
-    duration: "15.5 hours",
+    duration: "15.5H",
     chapters: "20",
+
+    overview: {
+      description: "Frontend + backend complete guide.",
+      learn: ["React", "Node", "MongoDB"],
+      highlights: ["Real projects"],
+      requirements: ["Basic computer skills"],
+    },
+
+    syllabus: [
+      {
+        module: "Frontend",
+        lessons: [{ title: "React basics", time: "15:00" }],
+      },
+    ],
+
+    instructor: {
+      title: "Full Stack Developer",
+      rating: "4.8",
+      students: "1.4M+",
+    },
+
+    reviews: [
+      { name: "Daniel", rating: 5, comment: "Amazing bootcamp!" },
+    ],
+
+    features: ["15.5h video", "Projects", "Certificate"],
   },
+
 ];
 
 export default featureCourses;

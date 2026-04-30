@@ -26,6 +26,9 @@ import "quill/dist/quill.snow.css"; // Quill's default styling
 
 
 const CoursePlayer = () => {
+   useEffect(() => {
+  toggletab("overview");
+}, []);
    const tabs = [ {name: "overview",id:1 },{name:"syllabus",id:2},{name:"notes",id:3},{name:"resource",id:4},{name:"instructor",id:5} ,{name:"review", id:6},]
     const {tab,toggletab,toggleModule,syllabus } = usetoggletab()
   const  {course_name} = useParams()

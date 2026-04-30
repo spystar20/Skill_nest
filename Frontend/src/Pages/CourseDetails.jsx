@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { CiHeart } from "react-icons/ci";
 import { SiBookstack } from "react-icons/si";
 import { IoTime } from "react-icons/io5";
@@ -23,28 +23,33 @@ const CourseDetails = () => {
   const {course_name} = useParams()
  const courseData = course.find((c)=> c.course_name == course_name)
  if(!courseData){
-<h1>course not found</h1>
+return <h1>course not found</h1>
  }
+ useEffect(() => {
+  toggletab("overview");
+}, []);
   return (
-    <div className=' bg-white w-full h-[100vh] font-[Roboto]'>
+    <div className=' bg-white  w-full min-h-screen font-[Roboto] relative'>
       
-      <div className='w-[100%] h-[50%] flex justify-between items-center gap-3  text-white  home-bg'>
+      <div className='w-[100%] min-h-[320px] pt-23   grid grid-cols-2 justify-between items-center gap-3  text-white  home-bg'>
         {/* course info */}
-        <div className='flex flex-col gap-7 items-center justify-center w-[60%]'>
+        <div className='flex flex-col gap-7 items-center justify-center min-w-3xl py-12'>
           <h2 className='text-3xl font-semibold font-[Outfit]  capitalize '>{courseData.course_name} </h2>
           <div className='flex justify-center items-center gap-6'>
-            <span className='flex gap-2 items-center justify-center text-xl font-medium '>
-              <SiBookstack className=' text-pink-300 font-bold text-2xl' />{courseData.chapters} lessons
+            <span className=' p-1 md:py-1 md:px-2.5 text-xs lg:text-sm font-medium shadow-sm font-body   rounded-sm md:rounded-full  bg-slate-100 text-slate-700 flex flex-row gap-1  items-center '>
+              <SiBookstack className=' font-bold text-2xl' />{courseData.chapters} lessons
             </span>
-            <span className='flex gap-2 items-center justify-center text-xl font-medium '>
-              <IoTime className='text-pink-300 font-bold text-2xl' />{courseData.duration}
+            <span className=' p-1 md:py-1 md:px-2.5 text-xs lg:text-sm font-medium shadow-sm font-body   rounded-sm md:rounded-full  bg-slate-100 text-slate-700 flex flex-row gap-1  items-center '>
+              <IoTime className= 'font-bold text-2xl ' />{courseData.duration}
             </span>
-            <span className='flex gap-2 items-center justify-center text-xl font-medium '>
+            <span className=' p-1 md:py-1 md:px-2.5 text-xs lg:text-sm font-medium shadow-sm font-body   rounded-sm md:rounded-full  bg-slate-100 text-slate-700 flex flex-row gap-1  items-center '>
              
-              <FaEye className='text-pink-300 font-bold text-2xl' />{courseData.view}
+              <FaEye className=' font-bold text-2xl' />{courseData.view}
             </span>
+                        <Rating  name="read-only" value={courseData.rating} className='bg-yellow-100 rounded-full px-3' precision={0.5} readOnly/>
+
           </div>
-          <div className='flex items-center justify-between w-[60%]'>
+          <div className='flex items-center justify-center w-[60%]'>
             <div className='flex justify-start items-center gap-3'>
               <div><img src={courseData.instructor_img} className='w-16 rounded-full ' alt={courseData.instructor_img} /></div>
               <div className='flex flex-col justify-start items-start capitalize font-[outfit]'>
@@ -52,12 +57,26 @@ const CourseDetails = () => {
                 <span className='font-medium text-sm '>instructor</span>
               </div>
             </div>
-            <Rating  name="read-only" value={courseData.rating}  precision={0.5} readOnly/>
+            {/* <Rating  name="read-only" value={courseData.rating} className='bg-yellow-100 rounded-full px-3' precision={0.5} readOnly/> */}
           </div>
         </div>
+<div className='flex items-end justify-end w-1/2 my-6'>
+         <div className='flex flex-col cursor-pointer  shadow-2xl bg-white  gap-3 rounded-2xl  p-3'>
+            <div><img src={courseData.img} className='drop-shadow-xs rounded-2xl object-cover rounded-t-2xl transform hover:scale-105 transition-transform duration-300 w-[320px] ' alt="" /></div>
+            <div className='flex justify-between items-center'><p class="text-lg md:text-2xl font-semibold  bg-clip-text text-transparent bg-gradient-to-tr from-[#0f172a] via-[#1e3a8a] to-[#60a5fa]">
+     Rs. {courseData.price}
+            </p>
+               <Link to={`/courses/lecture/${courseData.course_name}`}> <button className='px-5 py-2 capitalize text-lg font-semibold  rounded-lg duration-300 transition-all ease-in bg-gradient-to-tr from-[#95b1ee] to-[#728ccd] w-full hover:scale-95 scale-100 text-white cursor-pointer '>enroll now</button></Link>
+            </div>
+            {/* <div className='flex flex-col gap-2'>
+             <Link to={`/courses/lecture/${courseData.course_name}`}> <button className='px-5 py-2 capitalize text-lg font-semibold  rounded-xl bg-gradient-to-r from-pink-500 to-pink-400 w-full hover:scale-95 scale-100 text-white ease-out '>enroll now</button></Link> 
+              <button className='  flex gap-2 items-center justify-center px-5 py-2 capitalize text-lg font-semibold  rounded-xl hover:bg-gradient-to-tr hover:from-[#95b1ee] hover:to-[#728ccd]0 hover:text-white hover:border-0  text-black border-gray-400 border w-full ease-in transition-all ' ><span><CiHeart className='text-2xl ' /></span> add to whishlist</button>
+            </div> */}
+          </div>
+          </div>
       </div>
-      <div className='flex w-full py-5 '>
-        <div className='w-[50%] pl-28 font-[Outfit]'>
+      <div className='grid grid-cols-2 w-full py-5 px-28 gap-8'>
+        <div className=' font-[Outfit]'>
           {/* headings */}           
           <div className='flex flex-row gap-16   text-black text-xl font-semibold '>
               {tabs.map((t)=>{return(
@@ -229,24 +248,12 @@ const CourseDetails = () => {
      
 </div>
         </div>
+         <div className='  flex flex-col gap-5 justify-center items-center '>
        
-        {/* sidebar */}
-        <div className='w-[50%]   flex flex-col gap-5 justify-center items-center absolute top-[7rem] right-0 '>
-          {/* course card */}
-          <div className='flex flex-col cursor-pointer  shadow-2xl bg-white w-[53%] gap-3 rounded-2xl  px-4 py-4'>
-            <div><img src={courseData.img}className='drop-shadow-xs rounded-2xl object-cover rounded-t-2xl transform hover:scale-105 transition-transform duration-300 ' alt="" /></div>
-            <div className='flex justify-start items-center'><p class="text-2xl font-extrabold bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">
-     {courseData.price}
-            </p>
-            </div>
-            <div className='flex flex-col gap-2'>
-             <Link to={`/courses/lecture/${courseData.course_name}`}> <button className='px-5 py-2 capitalize text-lg font-semibold  rounded-xl bg-gradient-to-r from-pink-500 to-pink-400 w-full hover:scale-95 scale-100 text-white ease-out '>enroll now</button></Link>
-              <button className='  flex gap-2 items-center justify-center px-5 py-2 capitalize text-lg font-semibold  rounded-xl hover:bg-gradient-to-r hover:from-pink-500 hover:to-pink-400 hover:text-white hover:border-0  text-black border-gray-400 border w-full ease-in transition-all ' ><span><CiHeart className='text-2xl ' /></span> add to whishlist</button>
-            </div>
-          </div>
-          <div className='flex flex-col cursor-pointer  shadow-2xl bg-white text-black w-[53%]  gap-3 rounded-2xl px-4 py-4'>
+          <div className='flex flex-col sticky top-8 cursor-pointer  shadow-2xl bg-white text-black   gap-3 rounded-2xl px-4 py-4'>
             <h2 className='text-xl p-2  font-medium text-black capitalize font-[Outfit]'>course features</h2>
-            <ul className='flex flex-col gap-3 p-2'>
+            <div className='flex flex-col'> 
+            <ul className='flex flex-col gap-6 p-2'>
               <li className='text-lg group flex justify-start text-gray-600 items-center gap-2'>
                 <MdOndemandVideo className=' text-black text-2xl group-hover:text-pink-500 ' />2.5 hours on-demand video
               </li>
@@ -256,6 +263,8 @@ const CourseDetails = () => {
               <li className='text-lg flex justify-start group text-gray-600 items-center gap-2'>
                 <FaMobileAlt className=' text-black text-2xl group-hover:text-pink-500 ' />Access on mobile and desktop
               </li>
+              </ul>
+              <ul className='flex flex-col gap-6 p-2'>
               <li className='text-lg flex justify-start group text-gray-600 items-center gap-2'>
                 <TbWorldCheck className=' text-black text-2xl group-hover:text-pink-500 ' />Lifetime access
               </li>
@@ -265,14 +274,12 @@ const CourseDetails = () => {
               <li className='text-lg flex justify-start group text-gray-600 items-center gap-2'>
                 <PiFileAudioBold className=' text-black text-2xl group-hover:text-pink-500' />Audio lectures available
               </li>
-              <li className='text-lg flex justify-start group text-gray-600 items-center gap-2'>
-                <LuMessageCircleMore className=' text-black text-2xl group-hover:text-pink-500 ' />Community Q&A and support
-              </li>
+           
             </ul>
-          </div>
-        </div>
-      </div>
-  
+         </div>
+  </div>
+  </div>
+  </div>
     </div>
 
 

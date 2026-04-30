@@ -5,6 +5,8 @@ export const toggleStore = create(((set)=> ({
 openCourseCategories: false,
 openSubCategories:{},
 showSort :false,
+filter:false,
+
 Liked:[] ,
 toggle :(key) => set((state) =>({[key] : !state[key]})),
 

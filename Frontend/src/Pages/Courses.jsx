@@ -1,13 +1,11 @@
 import React, { useState } from 'react'
-import { FaCartArrowDown, FaSearch, FaStar } from "react-icons/fa";
+import { FaCartArrowDown, FaSearch, FaSortAlphaDownAlt, FaStar } from "react-icons/fa";
 import { MdOutlineKeyboardArrowDown } from 'react-icons/md';
 import Course from '../data/course'
 import courseCategories from '../data/CourseCategories';
-import { IoTime } from "react-icons/io5";
-import { SiBookstack } from "react-icons/si";
-import { FaShoppingCart } from "react-icons/fa";
+import { IoFilterSharp, IoTime } from "react-icons/io5";
 import { FaHeart } from "react-icons/fa";
-import { CiClock1, CiHeart } from 'react-icons/ci';
+import { CiClock1,  } from 'react-icons/ci';
 import { toggleStore } from '../Store/toggleStore';
 import { useCourseStore } from '../Store/CourseFunc';
 import Pagination from '@mui/material/Pagination';
@@ -16,7 +14,7 @@ import { FiTrendingUp } from 'react-icons/fi';
 import { PiBookDuotone } from 'react-icons/pi';
 const Courses = () => {
 
-  const { openCourseCategories, showSort, openSubCategories, Liked, toggle, toggleSubCategories, toggleLike } = toggleStore()
+  const { openCourseCategories, showSort, openSubCategories, Liked, toggle, toggleSubCategories, toggleLike ,filter,} = toggleStore()
 
   const { selectCourse, selectSubCategories, price, rating, search, sortBy, handleSearch, handleCategories, handleSubCategories, handleSort, handleRating, setFilter } = useCourseStore()
 
@@ -46,15 +44,21 @@ const Courses = () => {
         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi, labore.</p>
       </div>
       {/* search and sort */}
-      <div className='p-6  flex justify-center gap-4 items-center shadow-xs font-body'>
-        <button className='text-base h-12 px-8 font-normal text-gray-700  capitalize border  cursor-pointer rounded-lg  hover:bg-gray-100'>
+      <div className='md:p-6 p-3  flex justify-center gap-2 md:gap-4 items-center shadow-xs font-body'>
+        <button onClick={()=>toggle("filter")} className='hidden md:block text-base h-12 px-3 font-normal text-gray-700  capitalize border  cursor-pointer rounded-lg  hover:bg-gray-100'>
           filter
         </button>
+        <button  onClick={()=>toggle("filter")} className='md:hidden text-lg h-12 px-4 font-normal text-gray-700  capitalize border  cursor-pointer rounded-lg  hover:bg-gray-100'>
+          <IoFilterSharp/>
+        </button>
         <div className='relative'>
-          <button onClick={() => toggle("showSort")} className='text-base h-12 px-8 text-gray-700 font-normal capitalize border cursor-pointer rounded-lg  hover:bg-gray-100'>
+          <button onClick={() => toggle("showSort")} className=' hidden md:block text-base h-12 px-8 text-gray-700 font-normal capitalize border cursor-pointer rounded-lg  hover:bg-gray-100 '>
             sort
           </button>
-          <ul className={`absolute flex flex-col bg-gradient-to-tr from-[#95b1ee] to-[#728ccd] shadow-2xl mt-2 capitalize font-semibold text-white rounded-lg   cursor-pointer transition-all ease-out duration-300 w-34 z-50 ${showSort ? 'visible translate-y-0' : 'invisible -translate-y-6'}`}>
+          <button onClick={() => toggle("showSort")} className='md:hidden text-lg h-12 px-3 text-gray-700 font-normal capitalize border cursor-pointer rounded-lg  hover:bg-gray-100' >
+          <FaSortAlphaDownAlt/>
+          </button>
+          <ul className={`absolute flex flex-col bg-gradient-to-tr from-[#95b1ee] to-[#728ccd] shadow-2xl mt-2 capitalize font-semibold text-white rounded-lg z-[10000]   cursor-pointer transition-all ease-out duration-300 w-34  ${showSort ? 'visible translate-y-0' : 'invisible -translate-y-6'}`}>
             <li className=' hover:bg-black  hover:text-white  text-white p-3 rounded-t-lg  '>
               popular
             </li>
@@ -70,16 +74,20 @@ const Courses = () => {
           </ul>
         </div>
         <div className='flex-1 overflow-hidden rounded-lg border flex justify-between items-center'>
-          <input value={search} onChange={(e) => setFilter("search", e.target.value)} type="text" className=' flex-1 h-full text-base  border-none outline-none placeholder:capitalize placeholder:font-[Roboto] placeholder:text-gray-900 placeholder:font-light px-4 ' placeholder='search desired courses' />
+          <input value={search} onChange={(e) => setFilter("search", e.target.value)} type="text" className=' flex-1 h-full text-base  border-none outline-none placeholder:capitalize placeholder:font-[Roboto] placeholder:text-gray-900 placeholder:font-light px-2 md:px-4 ' placeholder='search desired courses' />
           <span className='h-11 text-white
 bg-gradient-to-tr from-[#95b1ee] to-[#728ccd]
-transition-all duration-300  px-4  flex items-center rounded-lg'><FaSearch className='text-xl scale-100 hover:scale-125 cursor-pointer text-white' /></span>
+transition-all duration-300 px-3  md:px-4  flex items-center rounded-lg'><FaSearch className='text-xl scale-100 hover:scale-125 cursor-pointer text-white' /></span>
         </div>
       </div>
 
       {/* filter */}
-      <div className='flex items-start gap-8 '>
-        <aside className=' border rounded-2xl p-6 sticky flex flex-col  shrink-0 self-start top-24 w-[300px] space-y-4 '>
+      <div className={`flex relative items-start transition-all duration-300 ease-out ${filter?'gap-8':'gap-0'}`}>
+
+        <aside   className={`transition-all absolute top-2 bg-white z-[99] h-full md:sticky md:top-24 duration-300 overflow-hidden shrink-0
+  ${filter ? 'w-[300px] p-6 border rounded-2xl' : 'w-0 p-0 border-0'}
+  `}
+>
           <div className=' font-[Outfit] w-full '> <h2 onClick={() => toggle("openCourseCategories")} className='text-lg font-semibold mb-3 flex justify-between items-center '>Categories <span><MdOutlineKeyboardArrowDown className={`text-2xl text-gray-600 rotate-0 transition-all cursor-pointer ease-out ${openCourseCategories ? 'rotate-180' : 'rotate-0'}`} /></span></h2> {openCourseCategories && courseCategories.map((course, index) => { return (<div key={index}> <div onClick={() => toggleSubCategories(course.category)} className='flex items-center pt-2 hide '> <label> <span className='flex justify-center items-center'> <input type="checkbox" className='w-3 cursor-pointer border-none h-3 accent-pink-400' name={course.category} checked={selectCourse === course.category} onChange={() => setFilter("selectCourse", course.category)} value={course.category} id="" /> <span className='text-base text-gray-700 px-3 text-wrap capitalize '>{course.category}</span> </span> </label> <span ><MdOutlineKeyboardArrowDown className='text-xl cursor-pointer text-gray-700 ' /></span> </div> {openSubCategories[course.category] && course.subcategories && (<div className='pl-4'> {course.subcategories.map((subc, index) => { return (<div key={index} className='flex items-center py-2 '> <label className='flex justify-start items-center hover:bg-gray-50 cursor-pointer w-full' >  <input type="checkbox" onChange={() => setFilter("selectSubCategories", subc)} checked={selectSubCategories === subc} value={subc} className=' border-none accent-pink-400' name="web development" id="" /> <span className='text-base font-normal text-gray-700 px-3 capitalize'>{subc}</span>  </label> </div>) })} </div>)} </div>) })} </div>
           {/* Rating */}
           <div className='font-[Outfit] w-full'>
@@ -122,7 +130,7 @@ transition-all duration-300  px-4  flex items-center rounded-lg'><FaSearch class
           </div>
         ) : (
           <div className='flex-1 min-w-0'>
-            <div className='grid grid-cols-3  gap-4 px-5 py-10'>
+            <div className={`grid  gap-4 px-5 py-4 md:py-10 grid-cols-1 ${filter?'md:grid-cols-3 ':'md:grid-cols-4'}`}>
               {CurrentCourse.map((course, index) => {
                 return (
                
@@ -139,10 +147,10 @@ transition-all duration-300  px-4  flex items-center rounded-lg'><FaSearch class
  className={`${Liked.includes(course.id)?"text-pink-300":"text-black"}`} /></span><span className=' bg-white p-2 rounded-full hover:scale-110 ease-in duration-200 transition-all'><FaCartArrowDown /></span></div>
                       </div>
    <Link key={course.id} to={`/courses/${course.course_name}`}>
-                      <div className=' flex flex-col gap-2 md:gap-4 md:py-4'>
+                      <div className=' flex flex-col gap-2 md:gap-4 py-4'>
                         <div className='flex flex-col text-left flex-wrap '>
-                          <h2 className='text-sm md:text-sm font-medium font-heading text-gray-950'>{course.course_name}</h2>
-                          <p className='text-xs/4 md:text-sm  mt-1 text-wrap font-body text-gray-800 line-clamp-1 '>{course.course_desc}
+                          <h2 className='text-sm md:text-base font-semibold leading-snug font-heading text-gray-950'>{course.course_name}</h2>
+                          <p className='text-xs/4 md:text-xs   mt-1 text-wrap font-body text-gray-700 line-clamp-1 '>{course.course_desc}
                           </p>
                         </div>
 
