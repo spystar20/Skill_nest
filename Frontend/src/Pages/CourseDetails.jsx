@@ -2,7 +2,7 @@ import React, { useEffect ,useState} from 'react'
 import { CiHeart } from "react-icons/ci";
 import { SiBookstack } from "react-icons/si";
 import { IoTime } from "react-icons/io5";
-import { FaStar, FaMobileAlt, FaEye ,FaPlayCircle , FaFacebookF  ,FaInstagram} from "react-icons/fa";
+import { FaStar, FaMobileAlt, FaEye ,FaPlayCircle , FaFacebookF  ,FaInstagram, FaPlus} from "react-icons/fa";
 import { MdOndemandVideo, MdOutlineSimCardDownload ,MdOutlinePeopleAlt } from "react-icons/md";
 import { TbWorldCheck } from "react-icons/tb";
 import { GrCertificate } from "react-icons/gr";
@@ -18,11 +18,11 @@ import course from '../data/course';
 import { Link } from 'react-router-dom';
 
 const CourseDetails = () => {
-  const [openSection, setOpenSection] = useState(null);
 
-const toggleSection = (section) => {
-  setOpenSection(openSection === section ? null : section);
-};
+const [opensection,Setopensection]= useState(null)
+const toggleAccordian=()=>{
+Setopensection(Setopensection === opensection? null: opensection)
+}
   const tabs = [ {name: "overview",id:1 },{name:"syllabus",id:2},{name:"instructor",id:3},{name:"review",id:4}]
   const {tab,toggletab,toggleModule,syllabus } = usetoggletab()
   const {course_name} = useParams()
@@ -79,6 +79,7 @@ return <h1>course not found</h1>
           
       </div></div>
       <div className='grid grid-cols-1 md:grid-cols-2 w-full py-5 gap-8'>
+        {/* for desktop  */}
          <div className='w-full hidden md:inline-flex order-2 md:order-1  justify-center'> 
         <div className=' font-[Outfit] max-w-3xl  '>
           {/* headings */}           
@@ -253,6 +254,95 @@ return <h1>course not found</h1>
 </div>
         </div>
         </div> 
+        {/* for mobile */}
+
+        <div>
+          <div className=' flex-col flex px-6 '>
+          <span className='flex justify-between items-center text-lg font-medium bg-black text-white rounded-lg px-3 py-2 '> <h2 >Overview </h2><FaPlus className='text-xs'/></span> 
+              <div className='px-2 py-3 bg-gray-50 rounded-lg '>  
+            <div className='flex flex-col  gap-1 '>
+              <h1 className='text-lg font-medium'>Course Description</h1>
+              <p className='font-normal '>
+                {courseData.overview.description}
+              </p>
+            </div>
+            <div className='flex flex-col gap-1 '>
+              <h2 className='text-lg font-medium'>What you’ll learn</h2>
+              <ul className='flex flex-col list-disc list-outside pl-5'>
+                {courseData.overview.learn.map((list)=>{return(
+                <li>{list}</li>)})}
+              </ul>
+            </div>
+            <div className='flex flex-col gap-1 py-5'>
+              <h2 className='text-lg font-medium'>Who this course is for</h2>
+              <ul className='flex flex-col list-disc list-outside pl-5'>
+                 {courseData.overview.highlights.map((list)=>{return(
+                <li>{list}</li>
+                )})}
+              </ul>
+            </div>
+            <div className='flex flex-col gap-1 py-3'>
+              <h2 className='text-lg font-medium'>Requirements</h2>
+              <ul className='flex flex-col list-disc list-outside pl-5'>
+                 {courseData.overview.requirements.map((list)=>{return(
+                <li>
+                {list}
+                </li>
+                )})}
+               </ul>
+            </div>
+          </div>
+          </div>
+          <div className=' flex-col flex px-6 '>
+                      <span className='flex justify-between items-center text-lg font-medium bg-black text-white rounded-lg px-3 py-2 '> <h2 >Syllabus </h2><FaPlus className='text-xs'/></span> 
+  <div  className='py-10'>
+
+{courseData.syllabus.map((t, i) => {
+  const moduleKey = `module${i + 1}`; 
+  return (
+    <div key={i}>
+      {/* Module header */}
+      <div
+        onClick={() => toggleModule(moduleKey)}
+        className="flex my-1 justify-between items-center py-5 bg-pink-400 px-3 rounded-lg text-white cursor-pointer"
+      >
+        <span className="flex items-center gap-2 text-lg font-medium">
+          <TiArrowSortedDown
+            className={`transition-transform duration-300 ${
+              syllabus[moduleKey] ? "rotate-180" : "rotate-0"
+            }`}
+          />
+          {t.module}
+        </span>
+        <span>({t.totalTime})</span>
+      </div>
+      {/* Lessons */}
+      {syllabus[moduleKey] && (
+        <ul className="flex flex-col gap-2 mt-2">
+          {t.lessons.map((lesson, j) => (
+            <li
+              key={j}
+              className="flex justify-between rounded-xl hover:bg-gray-100 transition-all px-6 py-4 w-full"
+            >
+              <span className="flex items-center gap-2">
+                <FaPlayCircle className="text-sm text-pink-500" />
+                {lesson.title}
+              </span>
+              <span className="text-gray-500">{lesson.time}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+})}
+
+          </div>
+          </div>
+          <div>
+
+          </div>
+        </div>
              <div className='  flex flex-col order-1 md:order-2 gap-5 justify-start items-center '>
        
           <div className='flex flex-col  cursor-pointer  shadow-2xl bg-white text-black   gap-3 rounded-2xl p-4 '>
@@ -286,180 +376,7 @@ return <h1>course not found</h1>
   </div>
   </div>
 
-  <div className='w-full inline-flex md:hidden order-2 md:order-1 justify-center'>
-  <div className='font-[Outfit] w-full max-w-3xl flex flex-col gap-4'>
-
-    {/* ================= OVERVIEW ================= */}
-    <div className='border rounded-xl overflow-hidden'>
-      <div
-        onClick={() => toggleSection("overview")}
-        className='flex justify-between items-center p-4 bg-gray-100 cursor-pointer'
-      >
-        <span className='text-lg font-semibold'>Overview</span>
-        <span>{openSection === "overview" ? "-" : "+"}</span>
-      </div>
-
-      {openSection === "overview" && (
-        <div className='p-4'>
-          <div className='flex flex-col gap-2 py-4'>
-            <h1 className='text-lg font-medium'>Course Description</h1>
-            <p>{courseData.overview.description}</p>
-          </div>
-
-          <div className='flex flex-col gap-2'>
-            <h2 className='text-lg font-medium'>What you’ll learn</h2>
-            <ul className='list-disc pl-5'>
-              {courseData.overview.learn.map((list, i) => (
-                <li key={i}>{list}</li>
-              ))}
-            </ul>
-          </div>
-
-          <div className='flex flex-col gap-2 py-4'>
-            <h2 className='text-lg font-medium'>Who this course is for</h2>
-            <ul className='list-disc pl-5'>
-              {courseData.overview.highlights.map((list, i) => (
-                <li key={i}>{list}</li>
-              ))}
-            </ul>
-          </div>
-
-          <div className='flex flex-col gap-2'>
-            <h2 className='text-lg font-medium'>Requirements</h2>
-            <ul className='list-disc pl-5'>
-              {courseData.overview.requirements.map((list, i) => (
-                <li key={i}>{list}</li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      )}
-    </div>
-
-    {/* ================= SYLLABUS ================= */}
-    <div className='border rounded-xl overflow-hidden'>
-      <div
-        onClick={() => toggleSection("syllabus")}
-        className='flex justify-between items-center p-4 bg-gray-100 cursor-pointer'
-      >
-        <span className='text-lg font-semibold'>Syllabus</span>
-        <span>{openSection === "syllabus" ? "-" : "+"}</span>
-      </div>
-
-      {openSection === "syllabus" && (
-        <div className='p-4'>
-          {courseData.syllabus.map((t, i) => {
-            const moduleKey = `module${i + 1}`;
-            return (
-              <div key={i}>
-                <div
-                  onClick={() => toggleModule(moduleKey)}
-                  className="flex my-2 justify-between items-center py-4 bg-pink-400 px-3 rounded-lg text-white cursor-pointer"
-                >
-                  <span className="flex items-center gap-2 text-lg font-medium">
-                    <TiArrowSortedDown
-                      className={`transition-transform duration-300 ${
-                        syllabus[moduleKey] ? "rotate-180" : ""
-                      }`}
-                    />
-                    {t.module}
-                  </span>
-                  <span>({t.totalTime})</span>
-                </div>
-
-                {syllabus[moduleKey] && (
-                  <ul className="flex flex-col gap-2 mt-2">
-                    {t.lessons.map((lesson, j) => (
-                      <li
-                        key={j}
-                        className="flex justify-between rounded-xl hover:bg-gray-100 px-4 py-3"
-                      >
-                        <span className="flex items-center gap-2">
-                          <FaPlayCircle className="text-pink-500" />
-                          {lesson.title}
-                        </span>
-                        <span className="text-gray-500">{lesson.time}</span>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      )}
-    </div>
-
-    {/* ================= INSTRUCTOR ================= */}
-    <div className='border rounded-xl overflow-hidden'>
-      <div
-        onClick={() => toggleSection("instructor")}
-        className='flex justify-between items-center p-4 bg-gray-100 cursor-pointer'
-      >
-        <span className='text-lg font-semibold'>Instructor</span>
-        <span>{openSection === "instructor" ? "-" : "+"}</span>
-      </div>
-
-      {openSection === "instructor" && (
-        <div className='p-4'>
-          <h2 className='text-xl font-semibold'>
-            {courseData.instructor_name}
-          </h2>
-          <p className='text-gray-600'>{courseData.instructor.title}</p>
-
-          <div className='flex flex-col md:flex-row gap-6 mt-4'>
-            <img
-              className='w-full md:w-64 rounded-xl'
-              src={courseData.instructor_img}
-              alt=""
-            />
-
-            <ul className='flex flex-col gap-2'>
-              <li><FaStar /> {courseData.instructor.rating}</li>
-              <li>{courseData.instructor.reviews}</li>
-              <li>{courseData.instructor.students}</li>
-              <li>{courseData.instructor.courses}</li>
-            </ul>
-          </div>
-
-          <div className='mt-4'>
-            <h3 className='font-medium'>About</h3>
-            <p>{courseData.instructor.bio}</p>
-          </div>
-        </div>
-      )}
-    </div>
-
-    {/* ================= REVIEWS ================= */}
-    <div className='border rounded-xl overflow-hidden'>
-      <div
-        onClick={() => toggleSection("review")}
-        className='flex justify-between items-center p-4 bg-gray-100 cursor-pointer'
-      >
-        <span className='text-lg font-semibold'>Reviews</span>
-        <span>{openSection === "review" ? "-" : "+"}</span>
-      </div>
-
-      {openSection === "review" && (
-        <div className='p-4 flex flex-col gap-4'>
-          {courseData.reviews.map((rev, i) => (
-            <div key={i} className='border p-4 rounded-xl'>
-              <div className='flex gap-3'>
-                <img className='w-12 rounded-full' src={rev.img} alt="" />
-                <div>
-                  <p className='font-medium'>{rev.name}</p>
-                  <Rating value={rev.rating} readOnly />
-                </div>
-              </div>
-              <p className='mt-2'>{rev.comment}</p>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-
-  </div>
-</div>
+ 
     </div>
 
 
