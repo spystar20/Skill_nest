@@ -7,7 +7,7 @@ import passport from "passport"
 router.post('/sign',signup)
 router.post("/login",Login)
 router.post("/logout",middleware,logout)
-router.get("/me",middleware,me)
+router.get("/me",me)
 router.post("/verify-email",verifyEmail)
 router.post("/forgot-password",forgotPassword)
 router.post("/reset-password",resetPassword)

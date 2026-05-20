@@ -50,7 +50,7 @@ export const Login = async (req, res) => {
       const refreshExpires = rememberme ? "30d" : "7d"
       const refreshMaxAge = rememberme ? 30 * 24 * 60 * 60 * 1000 : 7 * 24 * 60 * 60 * 1000
       const accessToken = createAccessToken({
-         UserID: existingUser._id, isEmailVerified: existingUser.isEmailVerified
+         UserID: existingUser._id, isEmailVerified: existingUser.isEmailVerified,
       })
       const sessionDoc = new session({
          UserID: existingUser._id, expiresAt: new Date(Date.now() + refreshMaxAge)
@@ -59,7 +59,8 @@ export const Login = async (req, res) => {
       sessionDoc.refreshToken = refreshToken
       await sessionDoc.save()
       res.cookie("refreshToken", refreshToken, getrefreshCookieOptions(refreshMaxAge))
-      return res.status(200).json({ message: "successfully logged in ", accessToken, isEmailVerified: existingUser.isEmailVerified, email: existingUser.email })
+      res.cookie("accessToken",accessToken,getaccessCookieOptions())
+      return res.status(200).json({ message: "successfully logged in ", accessToken,existingUser, isEmailVerified: existingUser.isEmailVerified, email: existingUser.email })
    } catch (err) {
       console.log("internal server error", err)
 
@@ -67,21 +68,45 @@ export const Login = async (req, res) => {
 }
 
 export const me = async (req, res) => {
+      console.log("ME HIT")
    try {
       const { accessToken, refreshToken } = req.cookies
+console.log(req.cookies)
+      if (accessToken) {
+         try {
+            const payload = verifyAccessToken(accessToken)
 
-      if (accessToken) { const payload = verifyAccessToken(accessToken) 
-         return res.json({ user: payload }) } 
-      if (!refreshToken) { return res.status(401).json({ message: "authentication failed" }) } 
-      const payload = verifyRefreshToken(refreshToken)
-      const sessionDoc = await session.findById(payload.sessionID)
-      if (!sessionDoc || sessionDoc.refreshToken !== refreshToken) {
-         return res.status(401).json({ message: "authentication failed" })
+            const existingUser = await user.findById(payload.UserID)
+
+            return res.json({ existingUser })
+
+         } catch (err) {
+            console.log("Access token invalid or expired")
+         }
       }
+      // if (!refreshToken) { return res.status(401).json({ message: "authentication failed" }) } 
+      // const payload = verifyRefreshToken(refreshToken)
+      let payload
+      try {
+   payload = verifyRefreshToken(refreshToken)
+} catch (err) {
+   return res.status(401).json({
+      message: "invalid or expired refresh token"
+   })
+}
+     console.log("PAYLOAD:", payload)
+
+      const sessionDoc = await session.findById(payload.sessionID)
+      console.log("SESSION:", sessionDoc)
+      if (!sessionDoc|| sessionDoc.refreshToken !== refreshToken) {
+         return res.status(403).json({ message: "authentication failed" })
+      }
+
+      const existingUser = await user.findById(payload.UserID)
       const newAccessToken = createAccessToken({ UserID: payload.UserID })
       res.cookie("accessToken", newAccessToken, getaccessCookieOptions())
 
-return res.json({accesToken:newAcessToken})   }
+return res.json({accessToken:newAccessToken,existingUser})   }
    catch (err) {
       console.log("internal server error", err)
 

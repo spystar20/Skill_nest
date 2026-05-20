@@ -4,11 +4,13 @@ import { Link, useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
 import api from '@/utils/axios'
 import { FaAngleRight } from 'react-icons/fa'
+import { useAuth } from '@/context/AuthContext'
 const Login = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [rememberme, setRememberMe] = useState(false)
   const navigate = useNavigate()
+  const {setUser } = useAuth()
   const handleLogin = async (e) => {
     e.preventDefault()
     try {
@@ -16,11 +18,13 @@ const Login = () => {
       console.log(res)
       if (res.data.isEmailVerified !== true) {
         navigate('/pending-email-verification'),{state:{email:res.data.email}}
-
+         
       }else{
         navigate('/')
       toast.success("Login Successfull")
-
+      setUser(res.data.existingUser)
+console.log(res)
+console.log(setUser)
       }
     } catch (err) {
 toast.error(err.response?.data?.message || "Login failed")    }

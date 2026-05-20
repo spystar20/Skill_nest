@@ -1,5 +1,5 @@
 import React from 'react'
-import { FaAngleDown, FaAngleRight, FaCross } from "react-icons/fa";
+import { FaAngleDown, FaAngleRight, FaChalkboardTeacher, FaCross, FaUserAlt } from "react-icons/fa";
 import { GiNestBirds } from 'react-icons/gi';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -7,16 +7,22 @@ import { Cross, MenuIcon } from 'lucide-react';
 import { TfiAngleRight } from "react-icons/tfi";
 
 import { IoCloseSharp } from 'react-icons/io5';
+import { useAuth } from '@/context/AuthContext';
+import { FiLogOut } from 'react-icons/fi';
 const Navbar = () => {
 
   const [open, setopen] = useState(false)
   const [openMenu , setOpenMenu] = useState(false)
+  const { user } = useAuth()
+  console.log(user)
 const toggleMenu = ()=>{
   setOpenMenu(!openMenu)
 }
   return (
 
     <div className='font-["Roboto"] fixed top-0 left-0 w-full z-[9999]  bg-transparent shadow-2xs border-b  shadow-black'>
+      {/* desktop */}
+    {/* student menu */}
       <div className="hidden  w-full py-6 font-heading md:flex justify-between px-12 items-cente text-white backdrop-blur-lg  bg-opacity-40 relative ">
         <div className="flex items-center gap-2">
           <GiNestBirds className="text-white text-4xl" />
@@ -149,11 +155,11 @@ const toggleMenu = ()=>{
             )}
           </li>
           <li className="cursor-pointer hover:bg-gradient-to-tr hover:from-[#95b1ee] hover:to-[#728ccd] rounded-full transition-all duration-300 hover:text-white hover:-translate-y-0.5 py-2 px-5 ">About</li>
-          <li className="cursor-pointer hover:bg-gradient-to-tr hover:from-[#95b1ee] hover:to-[#728ccd] rounded-full transition-all duration-300 hover:text-white hover:-translate-y-0.5 py-2 px-5 ">Teach</li>
+          <li className="cursor-pointer hover:bg-gradient-to-tr hover:from-[#95b1ee] hover:to-[#728ccd] rounded-full transition-all duration-300 hover:text-white hover:-translate-y-0.5 py-2 px-5 ">{user ? 'teach on skillnest':'teacher dashboard'} </li>
         </ul>
 
         {/* button  */}
-        <div class="flex justify-center text-xl  capitalize   gap-5 items-center h-full">
+        <div class="  md:flex justify-center text-xl  capitalize   gap-5 items-center h-full">
           
           <Link to="/login"><button className='
 px-6 py-2 rounded-lg font-normal text-lg capitalize text-white border border-white hover:border-[#0e0929]
@@ -167,6 +173,22 @@ transition-all duration-300 hover:scale-95  cursor-pointer box'>sign up</button>
 
 
         </div>
+
+      {/* user-profile */}
+      {/* <div className='relative'>
+      <div className='flex gap-2 items-center cursor-pointer '>
+        <img src="https://i.pinimg.com/736x/b9/3b/1a/b93b1a8791d97e7296fc3db7a2d2f7cf.jpg" alt="user.img" className='w-12 h-12 rounded-full border border-gray-50/15'/>
+        <div className='flex flex-col  '>
+          <h1 className='text-sm font-medium capitalize'>{user.name}</h1>
+          <span className='text-xs text-white/45 font-light'>{user.email}</span>
+        </div>
+      </div>
+      <div>
+        <div><FaUserAlt/><span>Profile</span></div>
+        <div><FaChalkboardTeacher/><span>Become a Teacher</span></div>
+          <div><FiLogOut/><span>logout</span></div>
+      </div>
+</div> */}
       </div>
       {/* mobile-menu */}
 <div className="lg:hidden  w-full py-6 font-heading flex justify-between px-4 items-center text-white backdrop-blur-lg  bg-opacity-40 relative ">
