@@ -14,6 +14,8 @@ import AuthLayout from '@/Layout/AuthLayout'
 import PendingEmailVerification from '@/AuthPages/PendingEmailVerification'
 import ForgotPassword from '@/AuthPages/ForgotPassword'
 import ResetPassword from '@/AuthPages/ResetPassword'
+import Profile from '@/Pages/Profile'
+import DashboardLayout from '@/Layout/DashboardLayout'
 
 const AppRoutes = () => {
   return (
@@ -26,8 +28,9 @@ const AppRoutes = () => {
   <Route path='/courses' element={<Courses/>}/>
    <Route path='/courses/:course_name' element={<CourseDetails/>}/>
      <Route path='/courses/lecture/:course_name' element={<CoursePlayer/>}/>
+     
             </Route>
-            <Route element={<AuthLayout/>}>
+     <Route element={<AuthLayout/>}>
 
      <Route path='/login' element={<Login/>}/>
      <Route path='/signup' element={<SignUp/>}/>
@@ -36,7 +39,12 @@ const AppRoutes = () => {
      <Route path='/pending-email-verification' element={<PendingEmailVerification/>}/>
      <Route path='/forgot-password' element={<ForgotPassword/>}/>
         <Route path='/reset-password' element={<ResetPassword/>}/>
-     </Route></Routes>
+         
+     </Route>
+   <Route element={<DashboardLayout/>}>
+       <Route path='/profile' element={<Profile/>}/>
+   </Route>
+     </Routes>
     
   )
 }

@@ -1,29 +1,33 @@
 import React from 'react'
-import { FaAngleDown, FaAngleRight, FaChalkboardTeacher, FaCross, FaUserAlt } from "react-icons/fa";
+import { FaAngleDown,  FaRegUser,  } from "react-icons/fa";
 import { GiNestBirds } from 'react-icons/gi';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Cross, MenuIcon } from 'lucide-react';
-import { TfiAngleRight } from "react-icons/tfi";
+import {  MenuIcon } from 'lucide-react';
 
 import { IoCloseSharp } from 'react-icons/io5';
 import { useAuth } from '@/context/AuthContext';
-import { FiLogOut } from 'react-icons/fi';
+import { LiaChalkboardTeacherSolid } from 'react-icons/lia';
+import { IoIosLogOut } from 'react-icons/io';
 const Navbar = () => {
 
   const [open, setopen] = useState(false)
-  const [openMenu , setOpenMenu] = useState(false)
+  const [openMenu, setOpenMenu] = useState(false)
+  const [openProfile,setOpenProfile] = useState(false)
   const { user } = useAuth()
   console.log(user)
-const toggleMenu = ()=>{
-  setOpenMenu(!openMenu)
-}
+  const toggleMenu = () => {
+    setOpenMenu(!openMenu)
+  }
+  const toggleProfile = ()=>{
+    setOpenProfile(!openProfile)
+  }
   return (
 
     <div className='font-["Roboto"] fixed top-0 left-0 w-full z-[9999]  bg-transparent shadow-2xs border-b  shadow-black'>
       {/* desktop */}
-    {/* student menu */}
-      <div className="hidden  w-full py-6 font-heading md:flex justify-between px-12 items-cente text-white backdrop-blur-lg  bg-opacity-40 relative ">
+      {/* student menu */}
+      <div className="hidden  w-full py-6 font-heading md:flex justify-between px-12 items-center text-white backdrop-blur-lg  bg-opacity-40 relative ">
         <div className="flex items-center gap-2">
           <GiNestBirds className="text-white text-4xl" />
           <span className="text-3xl font-semibold text-white flex gap-0">
@@ -155,16 +159,40 @@ const toggleMenu = ()=>{
             )}
           </li>
           <li className="cursor-pointer hover:bg-gradient-to-tr hover:from-[#95b1ee] hover:to-[#728ccd] rounded-full transition-all duration-300 hover:text-white hover:-translate-y-0.5 py-2 px-5 ">About</li>
-          <li className="cursor-pointer hover:bg-gradient-to-tr hover:from-[#95b1ee] hover:to-[#728ccd] rounded-full transition-all duration-300 hover:text-white hover:-translate-y-0.5 py-2 px-5 ">{user ? 'teach on skillnest':'teacher dashboard'} </li>
+          <li className="cursor-pointer hover:bg-gradient-to-tr hover:from-[#95b1ee] hover:to-[#728ccd] rounded-full transition-all duration-300 hover:text-white hover:-translate-y-0.5 py-2 px-5 capitalize">{user ? 'teach on skillnest' : 'teacher dashboard'} </li>
         </ul>
 
-        {/* button  */}
-        <div class="  md:flex justify-center text-xl  capitalize   gap-5 items-center h-full">
+       
+      
+{ (user) ?(
+       <>
+       {/* {user-profile} */}
+        <div className='relative '>
+          <div className='flex gap-2 items-center cursor-pointer ' onClick={toggleProfile}>
+            <img src="https://i.pinimg.com/736x/b9/3b/1a/b93b1a8791d97e7296fc3db7a2d2f7cf.jpg" alt="user.img" className='w-12 h-12 rounded-full border border-gray-50/15' />
+            <div className='flex flex-col  '>
+              <h1 className='text-base font-medium capitalize'>{user?.name}</h1>
+              <span className='text-xs text-white/45 font-light'>{user?.email}</span>
+            </div>
+          </div>
           
+          <div className={`bg-white ${openProfile ? 'opacity-100 translate-y-0 ':'opacity-0 -translate-y-6 '}  text-gray-900 rounded-xl p-2 absolute mt-3 duration-200 transition-all ease-in `}>
+            <Link to='/profile' ><div className='flex group items-center justify-start gap-3 hover:bg-neutral-200 rounded-xl cursor-pointer p-2 border-b duration-100 ease-in transition-all hover:border-b-gray-400'><FaRegUser className='  text-lg group-hover:scale-105 group-hover:rotate-3 transition-all ease-in duration-200' /><span className='text-base font-medium'>Profile</span></div></Link>
+            <div className='flex group items-center justify-start gap-3 hover:bg-neutral-200 rounded-xl cursor-pointer p-2 border-b  duration-100 ease-in transition-all hover:border-b-gray-400'><LiaChalkboardTeacherSolid className='  text-lg group-hover:scale-105 group-hover:rotate-3 transition-all ease-in duration-200' /><span className='text-base font-medium'>Become a Teacher</span></div>
+            <div className='flex group items-center justify-start gap-3 hover:bg-neutral-200 rounded-xl cursor-pointer p-2 border-b  duration-100 ease-in transition-all hover:border-b-gray-400'><IoIosLogOut className='  text-lg group-hover:scale-105 group-hover:rotate-3 transition-all ease-in duration-200' /><span className='text-base font-medium'>logout</span></div>
+          </div>
+
+        </div>
+        </>
+) :(
+  <>
+  {/* buttons */}
+          <div class="flex justify-center text-xl  capitalize   gap-5 items-center h-full">
+
           <Link to="/login"><button className='
 px-6 py-2 rounded-lg font-normal text-lg capitalize text-white border border-white hover:border-[#0e0929]
 hover:bg-gradient-to-tr hover:from-[#0e0929] hover:via-[#1c1450] hover:to-[#2a1f75] hover:opacity-90 shadow-lg shadow-black/10 transition-all duration-300 hover:scale-95  cursor-pointer'>Log In</button></Link>
-         <Link to="/signup" ><button className='
+          <Link to="/signup" ><button className='
 px-6 py-2 rounded-lg font-normal text-lg capitalize text-white
 bg-gradient-to-tr from-[#0e0929] via-[#1c1450] to-[#2a1f75]
 hover:opacity-90
@@ -173,85 +201,70 @@ transition-all duration-300 hover:scale-95  cursor-pointer box'>sign up</button>
 
 
         </div>
-
-      {/* user-profile */}
-      {/* <div className='relative'>
-      <div className='flex gap-2 items-center cursor-pointer '>
-        <img src="https://i.pinimg.com/736x/b9/3b/1a/b93b1a8791d97e7296fc3db7a2d2f7cf.jpg" alt="user.img" className='w-12 h-12 rounded-full border border-gray-50/15'/>
-        <div className='flex flex-col  '>
-          <h1 className='text-sm font-medium capitalize'>{user.name}</h1>
-          <span className='text-xs text-white/45 font-light'>{user.email}</span>
-        </div>
-      </div>
-      <div>
-        <div><FaUserAlt/><span>Profile</span></div>
-        <div><FaChalkboardTeacher/><span>Become a Teacher</span></div>
-          <div><FiLogOut/><span>logout</span></div>
-      </div>
-</div> */}
+        </>
+        ) }
       </div>
       {/* mobile-menu */}
-<div className="lg:hidden  w-full py-6 font-heading flex justify-between px-4 items-center text-white backdrop-blur-lg  bg-opacity-40 relative ">
-  <div className="flex items-center justify-between gap-2">
+      <div className="lg:hidden  w-full py-6 font-heading flex justify-between px-4 items-center text-white backdrop-blur-lg  bg-opacity-40 relative ">
+        <div className="flex items-center justify-between gap-2">
           <GiNestBirds className="text-white text-4xl" />
           <span className="text-3xl font-semibold text-white flex gap-0">
             Skill <span className='font-span capitalize'>nest</span>
           </span>
           <span className="w-2 h-2 bg-[#1e3a8a] rounded-full mt-3"></span>
         </div>
-      <MenuIcon onClick={toggleMenu} className='text-8xl font-semibold '/>
-   
-</div>
-  
-  <div  className={`fixed inset-0 z-50 flex flex-col px-4 py-6
-transition-all duration-400 ease-in-out
-${
-openMenu
-? "opacity-100 visible bg-black/95"
-: "opacity-0 invisible bg-black/0"
-}`}>
-   <div className="  w-full  font-heading flex justify-between items-center text-white backdrop-blur-lg  bg-opacity-40 mb-9 " >
-    <div className="flex items-center justify-between gap-2">
-          <GiNestBirds className="text-white text-4xl" />
-          <span className="text-3xl font-semibold text-white flex gap-0">
-            Skill <span className='font-span capitalize'>nest</span>
-          </span>
-          <span className="w-2 h-2 bg-[#1e3a8a] rounded-full mt-3"></span>
-        </div>
-    
-    <span><IoCloseSharp className={`text-3xl font-semibold transition-all duration-500 ${openMenu ?'rotate-0':'rotate-180'}`} onClick={toggleMenu}/></span>
+        <MenuIcon onClick={toggleMenu} className='text-8xl font-semibold ' />
 
-   </div>
-   
-    <div className='text-gray-900 font-body font-medium text-xl flex flex-col justify-between flex-1 w-full'>
-    <ul className='flex flex-col gap-4'>
-      <li className={`p-3 border-2 border-gray-300 rounded-lg flex  justify-start font-medium text-gray-300 font-heading transition-all duration-500 ease-in-out ${openMenu ? 'translate-x-0' : 'translate-x-3' }`}><Link to="/">Home</Link></li>
-  <li className={`p-3 border-2 border-gray-300 rounded-lg flex  justify-start font-medium text-gray-300 font-heading transition-all delay-100 duration-500 ease-in-out ${openMenu ? 'translate-x-0' : 'translate-x-3' }`}><Link to="/">Courses</Link></li>
-   <li className={`p-3 border-2 border-gray-300 rounded-lg flex  justify-start font-medium text-gray-300 font-heading transition-all delay-200 duration-500 ease-in-out ${openMenu ? 'translate-x-0' : 'translate-x-3' }`}><Link to="/">About</Link></li>
-    <li className={`p-3 border-2 border-gray-300 rounded-lg flex  justify-start font-medium text-gray-300 font-heading transition-all delay-300 duration-500 ease-in-out ${openMenu ? 'translate-x-0' : 'translate-x-3' }`}><Link to="/">Teach</Link></li>
-    
-    </ul>
-    
-<div className='flex flex-col gap-3 mt-auto '>
- <Link to="/login"><button className='w-full
+      </div>
+
+      <div className={`fixed inset-0 z-50 flex flex-col px-4 py-6
+transition-all duration-400 ease-in-out
+${openMenu
+          ? "opacity-100 visible bg-black/95"
+          : "opacity-0 invisible bg-black/0"
+        }`}>
+        <div className="  w-full  font-heading flex justify-between items-center text-white backdrop-blur-lg  bg-opacity-40 mb-9 " >
+          <div className="flex items-center justify-between gap-2">
+            <GiNestBirds className="text-white text-4xl" />
+            <span className="text-3xl font-semibold text-white flex gap-0">
+              Skill <span className='font-span capitalize'>nest</span>
+            </span>
+            <span className="w-2 h-2 bg-[#1e3a8a] rounded-full mt-3"></span>
+          </div>
+
+          <span><IoCloseSharp className={`text-3xl font-semibold transition-all duration-500 ${openMenu ? 'rotate-0' : 'rotate-180'}`} onClick={toggleMenu} /></span>
+
+        </div>
+
+        <div className='text-gray-900 font-body font-medium text-xl flex flex-col justify-between flex-1 w-full'>
+          <ul className='flex flex-col gap-4'>
+            <li className={`p-3 border-2 border-gray-300 rounded-lg flex  justify-start font-medium text-gray-300 font-heading transition-all duration-500 ease-in-out ${openMenu ? 'translate-x-0' : 'translate-x-3'}`}><Link to="/">Home</Link></li>
+            <li className={`p-3 border-2 border-gray-300 rounded-lg flex  justify-start font-medium text-gray-300 font-heading transition-all delay-100 duration-500 ease-in-out ${openMenu ? 'translate-x-0' : 'translate-x-3'}`}><Link to="/">Courses</Link></li>
+            <li className={`p-3 border-2 border-gray-300 rounded-lg flex  justify-start font-medium text-gray-300 font-heading transition-all delay-200 duration-500 ease-in-out ${openMenu ? 'translate-x-0' : 'translate-x-3'}`}><Link to="/">About</Link></li>
+            <li className={`p-3 border-2 border-gray-300 rounded-lg flex  justify-start font-medium text-gray-300 font-heading transition-all delay-300 duration-500 ease-in-out ${openMenu ? 'translate-x-0' : 'translate-x-3'}`}><Link to="/">Teach</Link></li>
+
+          </ul>
+
+          <div className='flex flex-col gap-3 mt-auto '>
+            <Link to="/login"><button className='w-full
 px-6 py-2 rounded-full font-normal text-xl capitalize text-gray-300 border-2 border-gray-300  hover:border-[#0e0929]
 hover:bg-gradient-to-tr  shadow-lg shadow-black/10 transition-all duration-300   cursor-pointer'>Log In</button></Link>
-         <Link to="/signup" ><button className=' w-full
+            <Link to="/signup" ><button className=' w-full
 px-6 py-2 rounded-full font-normal text-xl capitalize text-white
 bg-gradient-to-tr from-[#0e0929] via-[#1c1450] to-[#2a1f75]
 hover:opacity-90
 shadow-lg shadow-black/10
 transition-all duration-300 hover:scale-95  cursor-pointer box'>sign up</button></Link>
-</div>
+          </div>
+        </div>
+      </div>
+
+
+
+
     </div>
-  </div>
 
-
-
- 
-</div>
-
-   )
-} 
+  )
+}
 export default Navbar
 
