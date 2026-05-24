@@ -1,14 +1,30 @@
 import mongoose from "mongoose";
 const UserSchema = new mongoose.Schema({
-    name:{
+    firstName:{
         type:String,required:true
-    },email:{
+    },lastName:{
+        type:String,default:""
+    }
+    ,email:{
         type:String,required:true,unique:true
     },password:{
         type:String,required:function () {
             return this.provider === "local"
         },unique:true
-    },isEmailVerified:{
+    },username:{
+        type:String,
+    },DOB:{
+        type:Date,
+    },Gender:{
+        type:String
+    },Phone:{
+        type:String
+    },Location:{
+        type:String
+    },Bio:{
+        type:String
+    }
+    ,isEmailVerified:{
         type:Boolean,
     },resetOTP:{
         type:String
@@ -20,6 +36,7 @@ const UserSchema = new mongoose.Schema({
         type:String,default:"local", enum: ["local", "google"],
 
     },avatar:String,
+
 },{timestamps:true})
 
 export default mongoose.model("user",UserSchema)

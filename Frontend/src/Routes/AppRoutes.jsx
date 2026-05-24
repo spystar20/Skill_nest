@@ -14,8 +14,9 @@ import AuthLayout from '@/Layout/AuthLayout'
 import PendingEmailVerification from '@/AuthPages/PendingEmailVerification'
 import ForgotPassword from '@/AuthPages/ForgotPassword'
 import ResetPassword from '@/AuthPages/ResetPassword'
-import Profile from '@/Pages/Profile'
+import Profile from '@/Dashboard Pages/Profile/Profile'
 import DashboardLayout from '@/Layout/DashboardLayout'
+import Security from '@/Dashboard Pages/Security'
 
 const AppRoutes = () => {
   return (
@@ -43,6 +44,7 @@ const AppRoutes = () => {
      </Route>
    <Route element={<DashboardLayout/>}>
        <Route path='/profile' element={<Profile/>}/>
+       <Route path='/security' element={<Security/>}/>
    </Route>
      </Routes>
     

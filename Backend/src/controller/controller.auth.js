@@ -9,14 +9,15 @@ import { getaccessCookieOptions, getrefreshCookieOptions } from "../config/cooki
 
 export const signup = async (req, res) => {
    try {
-      const { name, email, password } = req.body
+      const { firstName, email, password } = req.body
+    
       const existingUser = await user.findOne({ email })
       if (existingUser) {
          return res.status(401).json({ message: "user already exists , please login" })
       }
       const hashPassword = await bcrypt.hash(password, 10)
       const User = await user.create({
-         name, email, password: hashPassword
+         firstName, email, password: hashPassword
       })
       const EmailVerifyToken = createEmailToken({ UserID: User._id })
       const emailLink = `${process.env.URL}/verify-email?token=${EmailVerifyToken}`
@@ -71,6 +72,8 @@ export const me = async (req, res) => {
       console.log("ME HIT")
    try {
       const { accessToken, refreshToken } = req.cookies
+           
+
 console.log(req.cookies)
       if (accessToken) {
          try {
@@ -250,6 +253,28 @@ res.cookie(
 )
 res.cookie("accessToken",accessToken,getaccessCookieOptions())
 res.redirect(process.env.URL)
+   }catch(Err){
+      console.log(Err)
+   }
+}
+
+export const updateProfile = async(req,res)=>{
+   try{
+const {firstName,lastName,email,username,DOB,Gender,Phone,Location,Bio} = req.body
+console.log(req.cookies)
+const existingUser = await user.findById(req.user.UserID)
+  if (firstName !== undefined && firstName !== "") existingUser.firstName = firstName;
+    if (lastName !== undefined) existingUser.lastName = lastName;
+    if (email !== undefined && email !== "") existingUser.email = email;
+    if (username !== undefined) existingUser.username = username;
+    if (DOB !== undefined) existingUser.DOB = DOB;
+    if (Gender !== undefined) existingUser.Gender = Gender;
+    if (Phone !== undefined) existingUser.Phone = Phone;
+    if (Location !== undefined) existingUser.Location = Location;
+    if (Bio !== undefined) existingUser.Bio = Bio;
+
+await existingUser.save()
+return res.status(200).json({message:"user updated succesfully",existingUser})
    }catch(Err){
       console.log(Err)
    }

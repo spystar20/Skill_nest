@@ -6,20 +6,20 @@ import { FaAngleRight } from 'react-icons/fa'
 import api from '@/utils/axios'
 
 const SignUp = () => {
-  const [name,setName] = useState("")
+  const [firstName,setName] = useState("")
     const [email,setEmail] = useState("")
   const [password,setPassword] = useState("")
 
   const navigate = useNavigate()
   const handleSubmit = async(e)=>{
     e.preventDefault()
-     if(!name||!email||!password){
+     if(!firstName||!email||!password){
   toast.error("all fields are required")
   return;
 }
   try {
 
-    const res = await api.post('/auth/sign',{name,email,password})
+    const res = await api.post('/auth/sign',{firstName,email,password})
     console.log(res)
       toast.success("Verify Your Email")
       setTimeout(() => {
