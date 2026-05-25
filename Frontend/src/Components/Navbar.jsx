@@ -2,25 +2,40 @@ import React from 'react'
 import { FaAngleDown,  FaRegUser,  } from "react-icons/fa";
 import { GiNestBirds } from 'react-icons/gi';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import {  MenuIcon } from 'lucide-react';
 
 import { IoCloseSharp } from 'react-icons/io5';
 import { useAuth } from '@/context/AuthContext';
 import { LiaChalkboardTeacherSolid } from 'react-icons/lia';
 import { IoIosLogOut } from 'react-icons/io';
+import api from '@/utils/axios';
 const Navbar = () => {
 
   const [open, setopen] = useState(false)
   const [openMenu, setOpenMenu] = useState(false)
   const [openProfile,setOpenProfile] = useState(false)
-  const { user } = useAuth()
+  const { user ,setUser } = useAuth()
+  const navigate = useNavigate()
   console.log(user)
   const toggleMenu = () => {
     setOpenMenu(!openMenu)
   }
   const toggleProfile = ()=>{
     setOpenProfile(!openProfile)
+  }
+  const handleLogout = async()=>{
+    try{
+const res = await api.post('/auth/logout',{},{withCredentials:true})
+
+
+ setTimeout(() => {
+  navigate('/login')
+}, 500);
+setUser(null)
+    }catch(err){
+      console.log(err)
+    }
   }
   return (
 
@@ -171,15 +186,15 @@ const Navbar = () => {
           <div className='flex gap-2 items-center cursor-pointer ' onClick={toggleProfile}>
             <img src="https://i.pinimg.com/736x/b9/3b/1a/b93b1a8791d97e7296fc3db7a2d2f7cf.jpg" alt="user.img" className='w-12 h-12 rounded-full border border-gray-50/15' />
             <div className='flex flex-col  '>
-              <h1 className='text-base font-medium capitalize'>{user?.name}</h1>
+              <h1 className='text-base font-medium capitalize'>{user?.firstName}</h1>
               <span className='text-xs text-white/45 font-light'>{user?.email}</span>
             </div>
           </div>
           
           <div className={`bg-white ${openProfile ? 'opacity-100 translate-y-0 ':'opacity-0 -translate-y-6 '}  text-gray-900 rounded-xl p-2 absolute mt-3 duration-200 transition-all ease-in `}>
             <Link to='/profile' ><div className='flex group items-center justify-start gap-3 hover:bg-neutral-200 rounded-xl cursor-pointer p-2 border-b duration-100 ease-in transition-all hover:border-b-gray-400'><FaRegUser className='  text-lg group-hover:scale-105 group-hover:rotate-3 transition-all ease-in duration-200' /><span className='text-base font-medium'>Profile</span></div></Link>
-            <div className='flex group items-center justify-start gap-3 hover:bg-neutral-200 rounded-xl cursor-pointer p-2 border-b  duration-100 ease-in transition-all hover:border-b-gray-400'><LiaChalkboardTeacherSolid className='  text-lg group-hover:scale-105 group-hover:rotate-3 transition-all ease-in duration-200' /><span className='text-base font-medium'>Become a Teacher</span></div>
-            <div className='flex group items-center justify-start gap-3 hover:bg-neutral-200 rounded-xl cursor-pointer p-2 border-b  duration-100 ease-in transition-all hover:border-b-gray-400'><IoIosLogOut className='  text-lg group-hover:scale-105 group-hover:rotate-3 transition-all ease-in duration-200' /><span className='text-base font-medium'>logout</span></div>
+           <Link to='/become-teacher '><div className='flex group items-center justify-start gap-3 hover:bg-neutral-200 rounded-xl cursor-pointer p-2 border-b  duration-100 ease-in transition-all hover:border-b-gray-400'><LiaChalkboardTeacherSolid className='  text-lg group-hover:scale-105 group-hover:rotate-3 transition-all ease-in duration-200' /><span className='text-base font-medium'>Become a Teacher</span></div></Link> 
+            <div onClick={()=>handleLogout()} className='flex group items-center justify-start gap-3 hover:bg-neutral-200 rounded-xl cursor-pointer p-2 border-b  duration-100 ease-in transition-all hover:border-b-gray-400'><IoIosLogOut className='  text-lg group-hover:scale-105 group-hover:rotate-3 transition-all ease-in duration-200' /><span className='text-base font-medium'>logout</span></div>
           </div>
 
         </div>

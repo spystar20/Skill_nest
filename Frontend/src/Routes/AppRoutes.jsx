@@ -17,6 +17,7 @@ import ResetPassword from '@/AuthPages/ResetPassword'
 import Profile from '@/Dashboard Pages/Profile/Profile'
 import DashboardLayout from '@/Layout/DashboardLayout'
 import Security from '@/Dashboard Pages/Security'
+import BecomeTeacher from '@/AuthPages/BecomeTeacher'
 
 const AppRoutes = () => {
   return (
@@ -39,8 +40,8 @@ const AppRoutes = () => {
      <Route path='/verify-email' element={<VerifyEmail/>}/> 
      <Route path='/pending-email-verification' element={<PendingEmailVerification/>}/>
      <Route path='/forgot-password' element={<ForgotPassword/>}/>
-        <Route path='/reset-password' element={<ResetPassword/>}/>
-         
+      <Route path='/reset-password' element={<ResetPassword/>}/>
+         <Route path='/become-teacher' element={<BecomeTeacher/>}/>
      </Route>
    <Route element={<DashboardLayout/>}>
        <Route path='/profile' element={<Profile/>}/>

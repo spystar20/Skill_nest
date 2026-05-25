@@ -18,7 +18,7 @@ const Profile = () => {
         
         <div className='w-full bg-neutral-200 min-h-screen px-2 md:px-8 py-3 flex flex-col gap-6 '>
            <div className='flex justify-between items-center'> <h2 className='text-3xl font-bold font-heading'>Account</h2><Link to='/'><span className='cursor-pointer flex gap-2 items-center hover:scale-105 duration-300 transition-all ease-in'><FaAngleDoubleLeft />Back to Home</span></Link></div>
-            <div className='bg-white p-6 rounded-lg'>
+            <div className='bg-white p-2 md:p-6 rounded-lg'>
                 <h2 className='text-xl font-semibold capitalize font-heading'>{user?.name}'s profile</h2>
                 <div className='px-6 py-4 border border-neutral-200 rounded-2xl mt-4 gap-7 grid grid-cols-1 lg:grid-cols-2'>
                 <div className='flex  flex-col items-center justify-center gap-2'>

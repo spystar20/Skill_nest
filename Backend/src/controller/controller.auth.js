@@ -6,6 +6,7 @@ import { createEmailToken, verifyEmailToken } from "../utils/email.js"
 import { sendMail } from "../utils/mail.js"
 import { createAccessToken, createRefreshToken, verifyAccessToken, verifyRefreshToken } from "../utils/jwt.js"
 import { getaccessCookieOptions, getrefreshCookieOptions } from "../config/cookie.js"
+import TeacherSchema from "../models/Teacher/TeacherSchema.js"
 
 export const signup = async (req, res) => {
    try {
@@ -260,22 +261,30 @@ res.redirect(process.env.URL)
 
 export const updateProfile = async(req,res)=>{
    try{
-const {firstName,lastName,email,username,DOB,Gender,Phone,Location,Bio} = req.body
+const {firstName,lastName,username,DOB,Gender,Phone,Location,Bio} = req.body
 console.log(req.cookies)
-const existingUser = await user.findById(req.user.UserID)
-  if (firstName !== undefined && firstName !== "") existingUser.firstName = firstName;
-    if (lastName !== undefined) existingUser.lastName = lastName;
-    if (email !== undefined && email !== "") existingUser.email = email;
-    if (username !== undefined) existingUser.username = username;
-    if (DOB !== undefined) existingUser.DOB = DOB;
-    if (Gender !== undefined) existingUser.Gender = Gender;
-    if (Phone !== undefined) existingUser.Phone = Phone;
-    if (Location !== undefined) existingUser.Location = Location;
-    if (Bio !== undefined) existingUser.Bio = Bio;
-
+const existingUser = await user.findById(req.user.UserID,req.body,{
+   new:true,runValidators:true
+})
 await existingUser.save()
+console.log(existingUser)
 return res.status(200).json({message:"user updated succesfully",existingUser})
    }catch(Err){
       console.log(Err)
    }
 }
+
+// export const updateTeacherProfile = async(req,res)=>{
+//    try{
+//       const { title,experience ,specialization, organization ,website ,linkdin} = req.body
+//       const user = req.user.UserID
+//       const Teacher = await TeacherSchema.findByIdAndUpdate(user,req.body,{
+//          new:true, runValidators:true
+//       })
+// // await Teacher.save()
+// console.log(Teacher)
+// return res.status(201).json({message:"data updated succesfully",Teacher})
+//    }catch(Err){
+//       console.log(Err)
+//    }
+// }

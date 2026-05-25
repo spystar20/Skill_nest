@@ -12,17 +12,17 @@ const UserSchema = new mongoose.Schema({
             return this.provider === "local"
         },unique:true
     },username:{
-        type:String,
+        type:String,default:""
     },DOB:{
-        type:Date,
+        type:Date,default:''
     },Gender:{
-        type:String
+        type:String,default:""
     },Phone:{
-        type:String
+        type:String,default:""
     },Location:{
-        type:String
+        type:String,default:""
     },Bio:{
-        type:String
+        type:String,default:""
     }
     ,isEmailVerified:{
         type:Boolean,
