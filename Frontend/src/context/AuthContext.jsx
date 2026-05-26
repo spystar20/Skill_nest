@@ -6,11 +6,14 @@ const AuthContext = createContext()
 export const AuthProvider = ({children})=>{
     
     const [user,setUser] = useState(null);
+
     const checkauth = async()=>{
         try{
        const res =  await api.get('/auth/me',{withCredentials:true})
-       setUser(res.data.existingUser)
-       
+       setUser({
+        ...res.data.existingUser,...res.data.Teacher
+       })
+       console.log(user)
         }catch(err){
             console.log(err)
         }}

@@ -30,6 +30,8 @@ const UserSchema = new mongoose.Schema({
         type:String
     },resetOTPExpires:{
         type:Date
+    },role:{
+type:String,enum:['student','teacher'],default:'student'
     },
     googleId:String,
     provider:{

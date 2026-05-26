@@ -81,8 +81,10 @@ console.log(req.cookies)
             const payload = verifyAccessToken(accessToken)
 
             const existingUser = await user.findById(payload.UserID)
-
-            return res.json({ existingUser })
+const Teacher = await TeacherSchema.findOne({
+  user: existingUser._id
+})
+            return res.json({ existingUser ,Teacher})
 
          } catch (err) {
             console.log("Access token invalid or expired")
@@ -262,29 +264,55 @@ res.redirect(process.env.URL)
 export const updateProfile = async(req,res)=>{
    try{
 const {firstName,lastName,username,DOB,Gender,Phone,Location,Bio} = req.body
-console.log(req.cookies)
+
 const existingUser = await user.findById(req.user.UserID,req.body,{
    new:true,runValidators:true
 })
 await existingUser.save()
-console.log(existingUser)
+
 return res.status(200).json({message:"user updated succesfully",existingUser})
    }catch(Err){
       console.log(Err)
    }
 }
 
-// export const updateTeacherProfile = async(req,res)=>{
-//    try{
-//       const { title,experience ,specialization, organization ,website ,linkdin} = req.body
-//       const user = req.user.UserID
-//       const Teacher = await TeacherSchema.findByIdAndUpdate(user,req.body,{
-//          new:true, runValidators:true
-//       })
-// // await Teacher.save()
-// console.log(Teacher)
-// return res.status(201).json({message:"data updated succesfully",Teacher})
-//    }catch(Err){
-//       console.log(Err)
-//    }
-// }
+export const becomeTeacher = async(req,res)=>{
+   try{
+const {title,experience,specialization,organization,website,linkdin,bio} = req.body
+const User = req.user.UserID
+if(!title){
+   return res.status(401).json('title is required')
+}
+const existingUser = await user.findById(User)
+if(!existingUser){
+   return res.status(401).json({message:'user not found'})
+}
+if(existingUser.role === 'teacher'){
+   return res.status(401).json({message:'user is already a teacher'})
+}
+existingUser.Bio= bio
+await existingUser.save()
+existingUser.role = 'teacher'
+await existingUser.save()
+const newTeacher = await TeacherSchema.create({
+  user:existingUser._id, title:title,experience:experience,specialization:specialization,organization:organization,website:website,linkdin:linkdin
+})
+await newTeacher.save()
+return res.status(200).json({message:'teacher created successfully',existingUser,newTeacher})
+   }catch(err){
+   console.log(err)
+   }
+}
+export const updateTeacherProfile = async(req,res)=>{
+   try{
+      const { title,experience ,specialization, organization ,website ,linkdin} = req.body
+    
+      const Teacher = await TeacherSchema.findOneAndUpdate({user:req.user.UserID},req.body,{
+         new:true, runValidators:true
+      })
+
+return res.status(201).json({message:"data updated succesfully",Teacher})
+   }catch(Err){
+      console.log(Err)
+   }
+}

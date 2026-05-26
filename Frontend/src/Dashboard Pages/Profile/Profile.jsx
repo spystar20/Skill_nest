@@ -13,7 +13,7 @@ import ProfessionalForm from './ProfessionalForm'
 
 const Profile = () => {
     const { user } = useAuth()
-    
+
     return (
         
         <div className='w-full bg-neutral-200 min-h-screen px-2 md:px-8 py-3 flex flex-col gap-6 '>
@@ -41,8 +41,11 @@ const Profile = () => {
                 </div>
 <StudentStat/>
                 </div>
-            <BasicInfo/>
-<ProfessionalForm/>
+
+          
+
+<BasicInfo/>
+<ProfessionalForm />
             </div>
 
 

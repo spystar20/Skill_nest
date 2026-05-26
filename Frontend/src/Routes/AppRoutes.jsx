@@ -18,6 +18,7 @@ import Profile from '@/Dashboard Pages/Profile/Profile'
 import DashboardLayout from '@/Layout/DashboardLayout'
 import Security from '@/Dashboard Pages/Security'
 import BecomeTeacher from '@/AuthPages/BecomeTeacher'
+import Teach from '@/Pages/Teach'
 
 const AppRoutes = () => {
   return (
@@ -30,7 +31,7 @@ const AppRoutes = () => {
   <Route path='/courses' element={<Courses/>}/>
    <Route path='/courses/:course_name' element={<CourseDetails/>}/>
      <Route path='/courses/lecture/:course_name' element={<CoursePlayer/>}/>
-     
+     <Route path='/Teach' element={<Teach/>}/>
             </Route>
      <Route element={<AuthLayout/>}>
 
