@@ -174,7 +174,7 @@ setUser(null)
             )}
           </li>
           <li className="cursor-pointer hover:bg-gradient-to-tr hover:from-[#95b1ee] hover:to-[#728ccd] rounded-full transition-all duration-300 hover:text-white hover:-translate-y-0.5 py-2 px-5 ">About</li>
-          <li className="cursor-pointer hover:bg-gradient-to-tr hover:from-[#95b1ee] hover:to-[#728ccd] rounded-full transition-all duration-300 hover:text-white hover:-translate-y-0.5 py-2 px-5 capitalize"><Link to='/teach'>{user.role ==='teacher' ? 'teach on skillnest' : 'teacher dashboard'}</Link> </li>
+          <li className="cursor-pointer hover:bg-gradient-to-tr hover:from-[#95b1ee] hover:to-[#728ccd] rounded-full transition-all duration-300 hover:text-white hover:-translate-y-0.5 py-2 px-5 capitalize"><Link to='/teach'>{user?.role ==='teacher' ? 'teach on skillnest' : 'teacher dashboard'}</Link> </li>
         </ul>
 
        
