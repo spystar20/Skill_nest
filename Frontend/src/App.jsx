@@ -2,10 +2,11 @@ import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
 import { Toaster } from "react-hot-toast";
 import AppRoutes from './Routes/AppRoutes'
+import ScrollToTop from './utils/ScrollToTop';
 
 const App = () => {
   return (
-    <div className='bg-black w-full '>
+    <div className=' bg-black w-full '>
   <Toaster
   position="top-center"
   containerStyle={{
@@ -17,6 +18,7 @@ top:0,
   }}
 />
     <BrowserRouter>
+    <ScrollToTop/>
 <AppRoutes/>
     </BrowserRouter>
     </div>

@@ -11,7 +11,11 @@ import { LiaChalkboardTeacherSolid } from 'react-icons/lia';
 import { IoIosLogOut } from 'react-icons/io';
 import api from '@/utils/axios';
 const Navbar = () => {
-
+for (var i = 0; i < 3; i++) {
+  setTimeout(() => {
+    console.log(i);
+  }, 0);
+}
   const [open, setopen] = useState(false)
   const [openMenu, setOpenMenu] = useState(false)
   const [openProfile,setOpenProfile] = useState(false)
@@ -59,8 +63,8 @@ setUser(null)
             onMouseEnter={() => setopen(true)}
             onMouseLeave={() => setopen(false)}
           >
-            <Link to="/courses">
-              <div className="cursor-pointer px-5 py-2 rounded-full flex items-center gap-1 hover:bg-gradient-to-tr hover:from-[#95b1ee] hover:to-[#728ccd] text-white/80 hover:text-white transition-all duration-300">
+            <Link to="/courses" >
+              <div className="cursor-pointer  px-5 py-2 rounded-full flex items-center gap-1 hover:bg-gradient-to-tr hover:from-[#95b1ee] hover:to-[#728ccd] text-white/80 hover:text-white transition-all duration-300">
                 Courses
                 <FaAngleDown
                   className={`transition-transform duration-300 mt-[2px] ${open ? "rotate-180" : ""

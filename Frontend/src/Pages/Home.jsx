@@ -2,9 +2,8 @@ import React, { useState } from 'react'
 import hero from '../assets/girl.png'
 import { TbBooks } from "react-icons/tb";
 import {  GrCertificate } from "react-icons/gr";
-import { FiTrendingUp } from "react-icons/fi";
 import { MdArrowOutward } from "react-icons/md";
-import { PiBookDuotone, PiVideoFill } from "react-icons/pi";
+import {  PiVideoFill } from "react-icons/pi";
 import { LiaCertificateSolid } from "react-icons/lia";
 import { MdSupportAgent } from "react-icons/md";
 import { GiTeacher } from "react-icons/gi";
@@ -12,17 +11,16 @@ import { PiStudentFill } from "react-icons/pi";
 import AutoScroll from 'embla-carousel-auto-scroll';
 import useEmblaCarousel from 'embla-carousel-react';
 import { useCallback, useEffect } from 'react';
-import { FaAws , FaGoogle , FaApple ,  FaGitAlt , FaLinkedin  , FaInstagram, FaCartArrowDown, FaChalkboardTeacher, FaHeart} from "react-icons/fa";
+import { FaAws , FaGoogle , FaApple ,  FaGitAlt , FaLinkedin  , FaInstagram, FaChalkboardTeacher} from "react-icons/fa";
 import { SiDuolingo, SiSamsung , SiCanva } from "react-icons/si";
 import { TiVendorMicrosoft } from "react-icons/ti";
-import { CiClock1 } from "react-icons/ci";
-import { popularCourses  } from '../Courses/popularCourse';
 import { featureCourses } from '../Courses/featuredCourse';
 import { teachers } from '../Courses/teachers';
 import { testimonials } from '../Courses/testimonials';
 import Fade from "embla-carousel-fade";
 import Autoplay from "embla-carousel-autoplay";
 import { BsTwitterX } from 'react-icons/bs';
+import ProjectCard from '@/utils/ProjectCard';
 const Home = () => {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [
     AutoScroll({ speed: 0.3, startDelay: 1000 })],
@@ -229,49 +227,11 @@ shadow-xl shadow-black/10' >
         {/* courses cards */}
         <div className='embla' ref={emblaRef}>
           <div className='embla__container  flex  gap-4 px-5 py-10'>
-           {popularCourses.map((course,index)=>{return(
-<div key={index} className='embla_slide cards rounded-lg md:rounded-4xl p-2 md:p-5 basis-full md:basis-1/2 lg:basis-1/4 shrink-0'>
-             
-              <div className='relative group cursor-pointer '>
-                <img src={course.img} className='aspect-[1] rounded-2xl shadow group-hover:brightness-50 transition-all ease-in duration-200' alt="" />
-              <span className="py-2 px-4 text-sm shadow-lg bg-black/70 backdrop-blur rounded-full absolute top-3 left-3 text-white font-body">
-      {course.category}
-    </span>
+           {featureCourses.map((course,index)=>{return(
 
-                <div className=' gap-5 items-center justify-start absolute bottom-1 right-0 z-40 text-xl text-black p-5 hidden group-hover:flex '><span className=' bg-white p-2 rounded-full hover:scale-110 ease-in duration-200 transition-all'>
-                  <FaHeart/></span><span className=' bg-white p-2 rounded-full hover:scale-110 ease-in duration-200 transition-all'><FaCartArrowDown/></span></div>
-              </div>
-              
-                <div className='p-3 flex flex-col gap-4'>
-                    <div className='flex flex-col text-left flex-wrap '>
-                <h2 className='text-sm md:text-xl font-semibold font-heading text-gray-950'>{course.course_name}</h2>
-                <p className='text-xs/4 md:text-sm mt-1 text-wrap font-body text-gray-800 line-clamp-2'>{course.course_desc}
-                </p>
-              </div>
-             
-<div className='flex items-center justify-start flex-wrap gap-2 md:gap-3'>
-    <span className='p-1 md:py-2 md:px-4 text-xs md:text-sm shadow-sm  font-body rounded-full capitalize   bg-slate-100 text-slate-700 flex flex-row gap-2 items-center'><span><PiBookDuotone className='text-sm md:text-xl'/></span>{course.chapters} Chapters</span>
-      <span className='p-1 md:py-2 text-xs md:text-sm shadow-sm font-body rounded-full  bg-slate-100 text-slate-700 flex flex-row gap-2 items-center'><span><CiClock1 className='text-sm md:text-xl'/></span>{course.duration}</span>
-      <span className="p-1 md:py-2 md:px-4 text-xs md:text-sm shadow-sm rounded-full bg-indigo-300 text-white flex gap-2 items-center">
-        <FiTrendingUp className="text-sm md:text-xl" />
-{course.level}      </span>
-</div>
- <div className='hidden md:flex justify-start items-center gap-3 '>
-                <div><img src={course.instructor_img} className='w-12 rounded-full aspect-[1]' alt="" /></div>
-                <div className='flex flex-col justify-start items-start capitalize font-[outfit]'>
-                  <span className='text-lg font-medium'>{course.instructor_name} </span>
-                  <span className='font-medium text-sm '>instructor</span>
-                </div>
-              </div>
-              <div className='flex items-start  flex-col'>
-              <div className="flex items-center gap-3">
-      <span className="text-sm line-through text-gray-400">₹2000</span>
-      <span className="text-lg md:text-3xl font-semibold text-indigo-900">₹959</span>
-    </div>
-    <div className='w-full py-2 '>
-        <button className=' transition-all bg-gradient-to-tr from-[#95b1ee] to-[#728ccd] font-[Comic_Relief]  cursor-pointer text-white rounded-full py-1 md:py-1.5 px-5 w-full text-lg box capitalize font-medium hover:scale-95'>buy now</button></div></div>
-                </div>
-            </div>
+             <ProjectCard className='embla_slide basis-full md:basis-1/2 lg:basis-1/4 shrink-0' img={course.img} price={course.price} key={index} category={course.category} course_desc={course.course_desc} course_name={course.course_name} chapters={course.chapters} duration={course.duration} level={course.level} rating={course.rating} instructor_img={course.instructor_img} instructor_name={course.instructor_name} />
+
+         
            )})}
          
   
@@ -316,48 +276,7 @@ shadow-xl shadow-black/10' >
           <div className='grid  grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4   md:px-5 py-10'>
            
             {featureCourses.map((course,index)=>{return(
-              <div key={index} className='cards rounded-lg  md:rounded-4xl p-2  md:p-5'>
-             
-              <div className='relative group cursor-pointer'>
-                <img src={course.img} className='aspect-square  rounded-2xl shadow group-hover:brightness-50 transition-all ease-in duration-200' alt="" />
-              <span className="py-2 px-4 text-sm shadow-lg bg-black/70 backdrop-blur rounded-full absolute top-3 left-3 text-white font-body">
-      {course.category}
-    </span>
-
-                <div className=' gap-5 items-center justify-start absolute bottom-1 right-0 z-40 text-xl text-black p-5 hidden group-hover:flex '><span className=' bg-white p-2 rounded-full hover:scale-110 ease-in duration-200 transition-all'>
-                  <FaHeart/></span><span className=' bg-white p-2 rounded-full hover:scale-110 ease-in duration-200 transition-all'><FaCartArrowDown/></span></div>
-              </div>
-              
-                <div className=' flex flex-col gap-2 md:gap-4'>
-                    <div className='flex flex-col text-left flex-wrap '>
-                <h2 className='text-sm md:text-xl font-semibold font-heading text-gray-950'>{course.course_name}</h2>
-                <p className='text-xs/4 md:text-sm  mt-1 text-wrap font-body text-gray-800 line-clamp-2'>{course.course_desc}
-                </p>
-              </div>
-             
-<div className='flex items-center justify-start flex-wrap gap-2 md:gap-3'>
-    <span className=' p-1 md:py-1 md:px-4 text-xs lg:text-sm font-medium shadow-sm  font-body  rounded-sm md:rounded-full capitalize   bg-slate-100 text-slate-700 flex flex-row gap-1 md:gap-2 items-center'><span><PiBookDuotone className='text-sm md:text-xl'/></span>{course.chapters}</span>
-      <span className=' p-1 md:py-1 md:px-4 text-xs lg:text-sm font-medium shadow-sm font-body   rounded-sm md:rounded-full  bg-slate-100 text-slate-700 flex flex-row gap-1 md:gap-2 items-center '><span><CiClock1 className='text-sm md:text-xl'/></span>{course.duration}</span>
-      <span className=" p-1 md:py-1 md:px-4 text-xs lg:text-sm font-medium  shadow-sm  rounded-sm md:rounded-full bg-indigo-300 text-white flex gap-1 md:gap-2 items-center">
-        <FiTrendingUp className="text-sm md:text-xl" />
-{course.level}      </span>
-</div>
- <div className='hidden md:flex justify-start items-center gap-3'>
-                <div><img src={course.instructor_img} className=' w-8 md:w-12 rounded-full aspect-[1]' alt="" /></div>
-                <div className=' flex flex-col justify-start items-start capitalize font-[outfit]'>
-                  <span className=' text-sm md:text-lg font-semibold md:font-medium'>{course.instructor_name}</span>
-                  <span className='font-medium text-xs  md:text-sm '>instructor</span>
-                </div>
-              </div>
-              <div className='flex flex-col  gap-2 items-start  justify-between'>
-              <div className="flex items-center gap-3">
-      <span className="text-sm line-through text-gray-400">₹2000</span>
-      <span className=" text-lg md:text-3xl font-semibold text-indigo-900">₹{course.price}</span>
-    </div>
-    <div className='w-full'>
-        <button className=' transition-all bg-gradient-to-tr from-[#95b1ee] to-[#728ccd] font-[Comic_Relief]  cursor-pointer text-white rounded-full md:py-1.5 py-1 px-5 w-full text-lg box capitalize font-medium hover:scale-95'>buy now</button></div></div>
-                </div>
-            </div>
+          <ProjectCard img={course.img} price={course.price} key={index} category={course.category} course_desc={course.course_desc} course_name={course.course_name} chapters={course.chapters} duration={course.duration} level={course.level} rating={course.rating} instructor_img={course.instructor_img} instructor_name={course.instructor_name} />
             )})}
           </div>
         </div>
