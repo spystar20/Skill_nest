@@ -124,7 +124,7 @@ hover:translate-y-0  backdrop-blur-lg rounded-2xl p-4  ${index % 2 == 0 ? ' scal
 <div className='flex flex-col md:py-12'>
 
   <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-     <div className='flex gap-4 flex-wrap'>
+     <div className='flex gap-4 flex-col md:flex-row '>
     <div className='flex flex-col justify-center p-6 gap-3 bg-[#D8F8E1] hover:rotate-z-0 duration-300 ease-out transition-all rounded-2xl md:rotate-z-3'>
       <img className='w-[350px] object-cover rounded-lg shadow' src="https://i.pinimg.com/webp85/736x/95/43/cb/9543cb39869a88ec91d388d7eb523266.webp" alt="" />
       <h2 className='text-xl font-heading font-medium text-center'>Student Engagement</h2>
@@ -136,7 +136,7 @@ hover:translate-y-0  backdrop-blur-lg rounded-2xl p-4  ${index % 2 == 0 ? ' scal
       <p className='font-body text-center text-black/70'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Et aspernatur voluptatum aut. Inventore aut explicabo quidem deserunt quis, nesciunt perferendis iure at quasi?</p>
     </div>
     </div>
-     <div className='flex gap-4 flex-wrap'>
+     <div className='flex gap-4 flex-col md:flex-row '>
     <div className='flex flex-col justify-center p-6 gap-3 bg-[#FFE9A8] rounded-2xl hover:rotate-z-0 duration-300 ease-out transition-all md:rotate-z-3'>
       <img className='w-[350px] object-cover rounded-lg shadow' src="https://i.pinimg.com/webp85/736x/95/43/cb/9543cb39869a88ec91d388d7eb523266.webp" alt="" />
       <h2 className='text-xl font-heading font-medium text-center'>Analytics & Insights</h2>
