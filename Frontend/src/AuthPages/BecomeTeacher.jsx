@@ -41,7 +41,7 @@ console.log(err)
     }
   return (
     <div className=' min-h-screen w-full bg-white/90 px-4 py-6 md:py-32 md:px-12 box-border items-center flex justify-center'>
-      <div className='flex flex-col bg-white/85   w-1/2  rounded-lg gap-4'>
+      <div className='flex flex-col bg-white/85   md:w-1/2  rounded-lg gap-4'>
 
 <div className='flex items-center justify-center px-6 pt-6'>
         {[1,2,3].map((item,index)=>(
