@@ -52,7 +52,7 @@ const SignUp = () => {
                 <form action="" onSubmit={handleSubmit} className='font-body flex flex-col gap-5'>
                   <div className='flex flex-col gap-1'>
                     <label htmlFor="Name" className='font-medium text-gray-800'>Full Name</label>
-                    <input value={name} onChange={(e)=>setName(e.target.value)} type="text" className='border rounded-lg  border-gray-400 p-3 placeholder:capitalize hover:border-[#364c84]  ' placeholder='Enter your full name' />
+                    <input value={firstName} onChange={(e)=>setName(e.target.value)} type="text" className='border rounded-lg  border-gray-400 p-3 placeholder:capitalize hover:border-[#364c84]  ' placeholder='Enter your full name' />
                   </div>
                   <div className='flex flex-col gap-1'>
                     <label htmlFor="email" className='font-medium text-gray-800'>Email Address</label>
