@@ -6,7 +6,7 @@ import {
   InputOTPSlot,
 } from "@/Components/ui/input-otp"
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
 const Otp = () => {
   const [otp,setotp] = useState("")
   const [searchParams] = useSearchParams()

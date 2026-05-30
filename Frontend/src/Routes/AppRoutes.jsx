@@ -20,6 +20,7 @@ import Security from '@/Dashboard Pages/Security'
 import BecomeTeacher from '@/AuthPages/BecomeTeacher'
 import Teach from '@/Pages/Teach'
 import MyCourse from '@/Dashboard Pages/Teaching/MyCourse'
+import AddCourse from '@/Dashboard Pages/Teaching/AddCourse'
 
 const AppRoutes = () => {
   return (
@@ -44,6 +45,7 @@ const AppRoutes = () => {
      <Route path='/forgot-password' element={<ForgotPassword/>}/>
       <Route path='/reset-password' element={<ResetPassword/>}/>
          <Route path='/become-teacher' element={<BecomeTeacher/>}/>
+         <Route path='/dashboard/my-courses/add-course' element={<AddCourse/>} />
      </Route>
    <Route element={<DashboardLayout/>}>
        <Route path='/profile' element={<Profile/>}/>

@@ -1,6 +1,6 @@
 import api from '@/utils/axios';
 import React from 'react'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
 import { IoIosMailUnread } from "react-icons/io";
 import { useLocation, useSearchParams } from 'react-router-dom';
 

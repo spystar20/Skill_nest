@@ -10,6 +10,7 @@ import { useAuth } from '@/context/AuthContext';
 import { LiaChalkboardTeacherSolid } from 'react-icons/lia';
 import { IoIosLogOut } from 'react-icons/io';
 import api from '@/utils/axios';
+import { toast } from 'sonner';
 const Navbar = () => {
 for (var i = 0; i < 3; i++) {
   setTimeout(() => {
@@ -32,7 +33,7 @@ for (var i = 0; i < 3; i++) {
     try{
 const res = await api.post('/auth/logout',{},{withCredentials:true})
 
-
+toast.success('succesfully logged out')
  setTimeout(() => {
   navigate('/login')
 }, 500);

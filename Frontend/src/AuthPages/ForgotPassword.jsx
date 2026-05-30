@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import login from '../assets/login.png'
 import { Link, useNavigate } from 'react-router-dom'
-import toast from 'react-hot-toast'
+import  {toast } from 'sonner'
 import api from '@/utils/axios'
 const ForgotPassword = () => {
   const [email, setEmail] = useState('')

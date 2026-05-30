@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import signup from '../assets/signup.png'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
 import { Link, useNavigate } from 'react-router-dom'
 import { FaAngleRight } from 'react-icons/fa'
 import api from '@/utils/axios'

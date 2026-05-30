@@ -5,44 +5,34 @@ import api from '@/utils/axios'
 import { useAuth } from '@/context/AuthContext'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
-
-const BecomeTeacher = () => {
-  const {setUser,user} = useAuth()
-  const [step,setStep] = useState(1)
-  const navigate = useNavigate()
-const [formData,setFormData] = useState({
-title:'',experience:'',specialization:'',organization:'',website:'',linkdin:'',bio:''
-})
-
-    const ExperienceOpt = [
-          { value: '0-1 Years', label: '0-1 Years' },
-  { value: '1-3 Years', label: '1-3 Years' },
-  { value: '3-5 Years', label: '3-5 Years' },
-  { value: '5-10 Years', label: '5-10 Years' },
-  { value: '10+ Years', label: '10+ Years' }
-    ]
-     const ExpertiseOpt = [
-          { value: 'Web Development', label: 'Web Development' },
-  { value: 'Mobile Development', label: 'Mobile Development' },
-  { value: 'AI & Machine Learning', label: 'AI & Machine Learning' },
-  { value: 'Design', label: 'Design' },
-  { value: 'Marketing', label: 'Marketing' }
-    ]
-    const handleNew = async()=>{
-      try{
-        const res = await api.post('auth/becomeTeacher',formData,{withCredentials:true})
-setUser({...res.data.existingUser,...res.data.newTeacher})
-toast.success('role updated')
-setTimeout(() => {
-  navigate('/profile'),user
-}, 1000);
-      }catch(err){
-console.log(err)
-      }
-    }
+const AddCourse = () => {
+     const {setUser,user} = useAuth()
+      const [step,setStep] = useState(1)
+      const navigate = useNavigate()
+    const [formData,setFormData] = useState({
+    title:'',experience:'',specialization:'',organization:'',website:'',linkdin:'',bio:''
+    })
+    
+        const Level = [
+              { value: 'Beginner', label: 'Beginner' },
+      { value: 'Intermediate', label: 'Intermediate' },
+      { value: 'Difficult', label: 'Difficult' },
+        ]
+        const Price = [
+              { value: 'Free', label: 'Free' },
+      { value: 'Paid', label: 'Paid' },
+      
+        ]
+         const ExpertiseOpt = [
+              { value: 'Web Development', label: 'Web Development' },
+      { value: 'Mobile Development', label: 'Mobile Development' },
+      { value: 'AI & Machine Learning', label: 'AI & Machine Learning' },
+      { value: 'Design', label: 'Design' },
+      { value: 'Marketing', label: 'Marketing' }
+        ]
   return (
-    <div className=' min-h-screen w-full bg-white/90 px-4 py-6 md:py-32 md:px-12 box-border items-center flex justify-center'>
-      <div className='flex flex-col bg-white/85   md:w-1/2  rounded-lg gap-4'>
+  <div className=' min-h-screen w-full bg-white/90 px-4 py-6 md:py-32 md:px-12 box-border items-center flex justify-center'>
+      <div className='flex flex-col bg-white/85   md:w-2/3  rounded-lg gap-4'>
 
 <div className='flex items-center justify-center px-6 pt-6'>
         {[1,2,3].map((item,index)=>(
@@ -75,21 +65,38 @@ console.log(err)
 {step === 1 &&(
   <>
 <div >
-<h2 className='font-heading text-4xl font-semibold'>
-Professional Background</h2>
-<p className='mt-2 font-body text-neutral-700'>Tell students about your professional experience and current role. This helps build trust and showcase your expertise.</p>
+<h2 className='font-heading text-2xl font-semibold'>
+Create Your Course</h2>
+<p className='mt-2 font-body text-neutral-700'>Set up the basic information for your course. This will be visible to students.</p>
 </div>
 <form action="" className='w-full gap-3 flex flex-col'>
     <div className='flex gap-1 flex-col'>
-                               <label className='text-lg font-medium text-neutral-900 mb-1' >Professional Title
+                               <label className='text-lg font-medium text-neutral-900 mb-1' >Course Title
  </label>
-                                <input value={formData.title} onChange={(e)=>setFormData({...formData,title:e.target.value})} type='text' className='border border-black/20 disabled:bg-neutral-100  placeholder:text-lg placeholder:font-medium placeholder:text-gray-900 focus:ring-1 focus:outline-none focus:ring-neutral-800 rounded-lg px-3 py-2 capitalize' />
+                                <input value={formData.title} placeholder='e.g. Complete React Development Bootcamp' onChange={(e)=>setFormData({...formData,title:e.target.value})} type='text' className='border placeholder:text-neutral-400  border-black/20 disabled:bg-neutral-100  placeholder:text-sm  focus:ring-1 focus:outline-none focus:ring-neutral-800 rounded-lg px-3 py-2 ' />
                            </div>
-                           <div className='flex gap-1 flex-col'>
-                            <label className='text-lg font-medium text-neutral-900 mb-1' > Experience
+                            <div className='flex gap-1 flex-col'>
+                               <label className='text-lg font-medium text-neutral-900 mb-1' >Short Description
  </label>
-    <Select onChange={(selected)=>setFormData({...formData,experience:selected?.value||''})} isClearable={true} options={ExperienceOpt}/>
+                                <input value={formData.title} placeholder='Write a short summary of your course (1–2 lines)' onChange={(e)=>setFormData({...formData,title:e.target.value})} type='text' className='border placeholder:text-neutral-400  border-black/20 disabled:bg-neutral-100  placeholder:text-sm  focus:ring-1 focus:outline-none focus:ring-neutral-800 rounded-lg px-3 py-2 ' />
+                           </div>
+                           <div className='grid grid-cols-3 gap-3 mt-2'>
+                             <div className='flex gap-1 flex-col'>
+                            <label className='text-lg font-medium text-neutral-900 mb-1' > Category
+ </label>
+    <CreatableSelect onChange={(selected)=>setFormData({...formData,specialization:selected?.value||''})} isClearable={true} options={ExpertiseOpt}/>
     </div>
+     <div className='flex gap-1 flex-col'>
+                            <label className='text-lg font-medium text-neutral-900 mb-1' > Difficulty Level
+ </label>
+    <Select onChange={(selected)=>setFormData({...formData,experience:selected?.value||''})} isClearable={true} options={Level}/>
+    </div> <div className='flex gap-1 flex-col'>
+                            <label className='text-lg font-medium text-neutral-900 mb-1' > Pricing Type
+ </label>
+    <Select onChange={(selected)=>setFormData({...formData,experience:selected?.value||''})} isClearable={true} options={Price}/>
+    </div>
+                           </div>
+                           
      <div className='flex gap-1 flex-col'>
                                <label className='text-lg font-medium text-neutral-900 mb-1' >Organization
  </label>
@@ -104,7 +111,7 @@ Professional Background</h2>
 </>
 )}
 
-{step === 2 && (
+{/* {step === 2 && (
 <>
 <div >
 <h2 className='font-heading text-4xl font-semibold'>
@@ -153,7 +160,7 @@ Portfolio & Social Links</h2>
  <div className='flex gap-4 justify-end'>  <span onClick={()=>setStep(step-1)}  className='bg-black/40 px-4 border border-red-400/15 py-0.5 rounded-4xl  text-white flex gap-2 items-center justify-center text-lg hover:scale-95 transition-all duration-200 ease-out  cursor-pointer shadow-2xl '>Back</span> <span onClick={()=>handleNew()} className=' px-4 border bg-gradient-to-tr from-[#95b1ee] to-[#728ccd] py-0.5 rounded-4xl  text-white flex gap-2 items-center justify-center text-lg hover:scale-95 transition-all duration-200 ease-out  cursor-pointer shadow-2xl '>Submit</span></div>
 </>
 
-)}
+)} */}
   
 </div>
 </div>
@@ -161,4 +168,4 @@ Portfolio & Social Links</h2>
   )
 }
 
-export default BecomeTeacher
+export default AddCourse

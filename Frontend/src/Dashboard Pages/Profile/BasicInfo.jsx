@@ -2,7 +2,7 @@ import { useAuth } from '@/context/AuthContext'
 import api from '@/utils/axios'
 import React, { useEffect, useState } from 'react'
 import { PiPencil } from 'react-icons/pi'
-import { useFetcher } from 'react-router-dom'
+import { toast } from 'sonner'
 
 const BasicInfo = () => {
     const { user, setUser } = useAuth()
@@ -38,6 +38,7 @@ const BasicInfo = () => {
             const res = await api.put('/auth/update/profile', formData, { withCredentials: true })
             setEditing(false),
                 setUser(res.data.existingUser)
+                toast.success('profile updated')
             console.log(res)
         } catch (err) {
             console.log(err)

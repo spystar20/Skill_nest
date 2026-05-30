@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import login from '../assets/login.png'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
 import api from '@/utils/axios'
 const ResetPassword = () => {
   const [newpassword, setPassword] = useState('')

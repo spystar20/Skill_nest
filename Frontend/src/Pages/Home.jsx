@@ -61,7 +61,7 @@ const Home = () => {
 
   return (
     <div >
-      <div className='w-full mt-12  py-10 font-["Roboto"] home-bg  '>
+      <div className='w-full pt-20  py-10 font-["Roboto"] home-bg  '>
         <div className=' grid grid-cols-1 lg:grid-cols-2 relative z-0 px-4 py-10 lg:px-20 lg:py-10 justify-between items-center'>
           <div className='flex flex-col max-w-lg justify-center items-start gap-4'>
             <h1 className='text-5xl/15  font-[Merienda] font-bold text-white'>Learn. Create. Thrive.</h1>
