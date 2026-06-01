@@ -8,6 +8,7 @@ import session from "express-session"
 import cors from "cors"
 import passport from "passport";
 import './src/controller/google.passport.js'
+import uploads from "./src/middleware/multer.js";
 ConnectDB()
 loadOnce()
 const app = express()
@@ -22,6 +23,7 @@ app.use(cookieParser())
 app.use(passport.initialize())
 app.use("/auth",authRoutes)
 app.use(errHandler)
+app.use('/file',express.static("uploads"))
 const PORT =  process.env.PORT || 3000
 app.listen(PORT,()=>{
     console.log(`SERVER IS RUNNING ON ${PORT} `)

@@ -1,8 +1,9 @@
 import express from "express"
 const router = express.Router()
-import { signup,Login,logout,me,verifyEmail,forgotPassword,resetPassword, resendVerificationEmail, googleLogin, updateProfile, becomeTeacher,updateTeacherProfile  } from "../controller/controller.auth.js"
+import { signup,Login,logout,me,verifyEmail,forgotPassword,resetPassword, resendVerificationEmail, googleLogin, updateProfile, becomeTeacher,updateTeacherProfile, CreateCoursse, GetCourses  } from "../controller/controller.auth.js"
 import { middleware } from "../middleware/auth.middleware.js"
 import passport from "passport"
+import uploads from "../middleware/multer.js"
 
 router.post('/sign',signup)
 router.post("/login",Login)
@@ -18,5 +19,7 @@ router.post('/becomeTeacher',middleware,becomeTeacher)
 router.put('/update/profile',middleware,updateProfile)
 
 router.put('/update/Teacher-Profile',middleware,updateTeacherProfile)
+router.post('/create-course',middleware,uploads.single("thumbnail"),CreateCoursse)
+router.get('/courses',GetCourses)
 export default router
 

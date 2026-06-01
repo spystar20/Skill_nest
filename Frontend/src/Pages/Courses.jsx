@@ -1,17 +1,29 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {  FaSearch, FaSortAlphaDownAlt } from "react-icons/fa";
 import { MdOutlineKeyboardArrowDown } from 'react-icons/md';
 import Course from '../data/course'
 import courseCategories from '../data/CourseCategories';
 import { IoFilterSharp, IoTime } from "react-icons/io5";
-
 import { toggleStore } from '../Store/toggleStore';
 import { useCourseStore } from '../Store/CourseFunc';
 import Pagination from '@mui/material/Pagination';
 
 import ProjectCard from '@/utils/ProjectCard';
+import api from '@/utils/axios';
 const Courses = () => {
+  useEffect(()=>{
+    handleCourses()
+  },[])
+ const handleCourses = async()=>{
+  try{
+const res = api.get('/auth/courses',{withCredentials:true}
+)
+  console.log(res)
 
+  }catch(err){
+console.log(err)
+  }
+ }
   const { openCourseCategories, showSort, openSubCategories,  toggle, toggleSubCategories ,filter,} = toggleStore()
 
   const { selectCourse, selectSubCategories, price, rating, search, sortBy, handleSearch, handleCategories, handleSubCategories, handleSort, handleRating, setFilter } = useCourseStore()

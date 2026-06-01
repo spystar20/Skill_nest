@@ -7,6 +7,7 @@ import { sendMail } from "../utils/mail.js"
 import { createAccessToken, createRefreshToken, verifyAccessToken, verifyRefreshToken } from "../utils/jwt.js"
 import { getaccessCookieOptions, getrefreshCookieOptions } from "../config/cookie.js"
 import TeacherSchema from "../models/Teacher/TeacherSchema.js"
+import Course from "../models/Teacher/Course.js"
 
 export const signup = async (req, res) => {
    try {
@@ -314,5 +315,39 @@ export const updateTeacherProfile = async(req,res)=>{
 return res.status(201).json({message:"data updated succesfully",Teacher})
    }catch(Err){
       console.log(Err)
+   }
+}
+
+export const CreateCoursse = async(req,res)=>{
+   try{
+      console.log("BODY:", req.body)
+console.log("FILE:", req.file)
+const {title,desc,priceType,price,category,duration, difficulty} = req.body
+const instructor = req.user.UserID
+const existingUser =await user.findById(instructor)
+if(!existingUser){
+   return res.status(401).json({message:"user not found"})
+}
+if(existingUser.role !== "teacher"){
+   return res.status(401).json({message:"only instructors can create course"})
+}
+// console.log(req.file)
+const thumbnail = req.file?.path
+
+const newCourse = await Course.create({
+   title,desc,thumbnail,priceType,price,category,duration,difficulty,instructor
+})
+
+return res.status(200).json({message:"course is created",newCourse})
+   }catch(err){
+console.log(err)
+   }
+}
+export const GetCourses = async(req,res) =>{
+   try{
+ const courses = await Course.find()
+return res.status(200).json({message:"courses sent",courses})
+   }catch(err){
+                console.log(err)
    }
 }
