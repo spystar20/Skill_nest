@@ -12,11 +12,7 @@ import { IoIosLogOut } from 'react-icons/io';
 import api from '@/utils/axios';
 import { toast } from 'sonner';
 const Navbar = () => {
-for (var i = 0; i < 3; i++) {
-  setTimeout(() => {
-    console.log(i);
-  }, 0);
-}
+
   const [open, setopen] = useState(false)
   const [openMenu, setOpenMenu] = useState(false)
   const [openProfile,setOpenProfile] = useState(false)

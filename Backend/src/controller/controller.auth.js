@@ -320,8 +320,7 @@ return res.status(201).json({message:"data updated succesfully",Teacher})
 
 export const CreateCoursse = async(req,res)=>{
    try{
-      console.log("BODY:", req.body)
-console.log("FILE:", req.file)
+  
 const {title,desc,priceType,price,category,duration, difficulty} = req.body
 const instructor = req.user.UserID
 const existingUser =await user.findById(instructor)
@@ -331,7 +330,7 @@ if(!existingUser){
 if(existingUser.role !== "teacher"){
    return res.status(401).json({message:"only instructors can create course"})
 }
-// console.log(req.file)
+console.log(req.file)
 const thumbnail = req.file?.path
 
 const newCourse = await Course.create({
@@ -345,7 +344,8 @@ console.log(err)
 }
 export const GetCourses = async(req,res) =>{
    try{
- const courses = await Course.find()
+ const courses = await Course.find().populate("instructor","firstName")
+ 
 return res.status(200).json({message:"courses sent",courses})
    }catch(err){
                 console.log(err)

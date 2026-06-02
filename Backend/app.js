@@ -23,7 +23,7 @@ app.use(cookieParser())
 app.use(passport.initialize())
 app.use("/auth",authRoutes)
 app.use(errHandler)
-app.use('/file',express.static("uploads"))
+app.use('/uploads',express.static("uploads"))
 const PORT =  process.env.PORT || 3000
 app.listen(PORT,()=>{
     console.log(`SERVER IS RUNNING ON ${PORT} `)

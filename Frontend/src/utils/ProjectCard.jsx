@@ -14,7 +14,7 @@ const ProjectCard = ({img,category,course_name,course_desc,chapters,duration,lev
            <div  className={`cards rounded-lg  md:rounded-4xl p-2  md:p-5 ${className}`}>
 
                       <div className='relative group cursor-pointer '>
-                        <img src={img} className='aspect-square  rounded-2xl shadow group-hover:brightness-50 transition-all ease-in duration-200' alt="" />
+                        <img src={img} className='aspect-square object-cover rounded-2xl shadow group-hover:brightness-50 transition-all ease-in duration-200' alt="" />
                         <span className="py-2 px-4 text-sm shadow-lg bg-black/70 backdrop-blur rounded-full absolute top-3 left-3 text-white font-body">
                           {category}
                         </span>

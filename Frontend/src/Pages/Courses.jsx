@@ -10,14 +10,19 @@ import Pagination from '@mui/material/Pagination';
 
 import ProjectCard from '@/utils/ProjectCard';
 import api from '@/utils/axios';
+import { Import } from 'lucide-react';
 const Courses = () => {
+  const [ courses , setCourses] = useState(null)
   useEffect(()=>{
     handleCourses()
+    console.log(courses)
   },[])
  const handleCourses = async()=>{
   try{
-const res = api.get('/auth/courses',{withCredentials:true}
+const res =await api.get('/auth/courses',{withCredentials:true}
 )
+setCourses(res?.data?.courses)
+
   console.log(res)
 
   }catch(err){
@@ -141,10 +146,10 @@ transition-all duration-300 px-3  md:px-4  flex items-center rounded-lg'><FaSear
         ) : (
           <div className='flex-1 min-w-0'>
             <div className={`grid  gap-4 px-5 py-4 md:py-10 grid-cols-1 ${filter?'md:grid-cols-3 ':'md:grid-cols-4'}`}>
-              {CurrentCourse.map((course, index) => {
+              {courses?.map((course, index) => {
                 return (
                
-                 <ProjectCard img={course.img} price={course.price} key={index} category={course.category} course_desc={course.course_desc} course_name={course.course_name} chapters={course.chapters} duration={course.duration} level={course.level} rating={course.rating} instructor_img={course.instructor_img} instructor_name={course.instructor_name} />
+                 <ProjectCard img={`${import.meta.env.VITE_BACKEND_URL}${course.thumbnail}`} price={course.price} key={index} category={course.category} course_desc={course.desc} course_name={course.title} chapters={12} duration={course.duration} level={course.difficulty} rating={5} instructor_img={`${import.meta.env.VITE_BACKEND_URL}${course.thumbnail}`} instructor_name={course.firstName} />
                 )
               })}
 

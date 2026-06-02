@@ -11,7 +11,7 @@ passport.use(
         ,async (accessToken,refreshToken,profile,done) => {
             try{
 const email = profile.emails[0].value
-const existingUser = await user.findOne({googleId:profile.id})
+const existingUser = await user.findOne({email})
 if(existingUser){
     existingUser.googleId = profile.id
     existingUser.email = profile.emails[0].value
@@ -21,8 +21,12 @@ if(existingUser){
     await existingUser.save()
     return done(null,existingUser)
 }
+const fullName = profile.displayName?.trim() || ""
+const names = fullName.split(" ")
+const firstName =names[0] ||  "Google User"
+const lastName = names.slice(1).join(" ")
 const newUser = await user.create({
-    name:profile.displayName,email,provider:"google",avatar:profile.photos[0].value,googleId:profile.id,isEmailVerified:true
+    firstName,lastName,email,provider:"google",avatar:profile.photos[0].value,googleId:profile.id,isEmailVerified:true
 })
 return done(null,newUser)
             }
