@@ -185,7 +185,7 @@ setUser(null)
        {/* {user-profile} */}
         <div className='relative '>
           <div className='flex gap-2 items-center cursor-pointer ' onClick={toggleProfile}>
-            <img src="https://i.pinimg.com/736x/b9/3b/1a/b93b1a8791d97e7296fc3db7a2d2f7cf.jpg" alt="user.img" className='w-12 h-12 rounded-full border border-gray-50/15' />
+            <img src={user?.avatar} alt="user.img" className='w-12 h-12 rounded-full border border-gray-50/15' />
             <div className='flex flex-col  '>
               <h1 className='text-base font-medium capitalize'>{user?.firstName}</h1>
               <span className='text-xs text-white/45 font-light'>{user?.email}</span>

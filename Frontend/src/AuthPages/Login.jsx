@@ -84,7 +84,7 @@ toast.error(err.response?.data?.message || "Login failed")    }
                 <div className='flex gap-3 items-center justify-center '>
                   <img  onClick={() => {
     window.location.href =
-      `${import.meta.env.VITE_BACKEND_URL}/auth/google`
+      `${import.meta.env.VITE_BACKEND_URL}auth/google`
   }} src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQRd6qY47iHxIp0wyHdmkwiVUzUXV4rBzTtNQ&s" className='rounded-full w-7 h-7 cursor-pointer hover:scale-110 hover:brightness-110 transition-all ease-in duration-100' alt="google" />
                   <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" className='rounded-full w-7 h-7 cursor-pointer hover:scale-110 hover:brightness-110 transition-all ease-in duration-100' alt="google" />
                   <img src="https://img.freepik.com/premium-vector/instagram-vector-logo-icon-social-media-logotype_901408-392.jpg?semt=ais_hybrid&w=740&q=80" className='rounded-full w-7 h-7 cursor-pointer hover:scale-110 hover:brightness-110 transition-all ease-in duration-100' alt="google" />
