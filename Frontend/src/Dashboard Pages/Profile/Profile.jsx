@@ -12,6 +12,7 @@ import BasicInfo from './BasicInfo'
 import ProfessionalForm from './ProfessionalForm'
 
 const Profile = () => {
+
     const { user } = useAuth()
 
     return (
@@ -23,7 +24,7 @@ const Profile = () => {
                 <div className='px-6 py-4 border border-neutral-200 rounded-2xl mt-4 gap-7 grid grid-cols-1 lg:grid-cols-2'>
                 <div className='flex  flex-col items-center justify-center gap-2'>
                     <div className=' relative group w-fit cursor-pointer'>
-                        <img src="https://i.pinimg.com/736x/b9/3b/1a/b93b1a8791d97e7296fc3db7a2d2f7cf.jpg" className='w-[130px] h-[130px]  rounded-full' alt="" />
+                        <img src={user?.avatar} className='w-[130px] h-[130px]  rounded-full' alt="" />
                         <span className='bg-neutral-800 px-4 border border-neutral-700 py-0.5 rounded-4xl absolute text-white/80 flex gap-2 items-center justify-center text-lg bottom-0 cursor-pointer left-1/2 -translate-x-1/2'><BsCamera />Edit</span>
                         <div className='translate-x-1/2 -translate-y-full   text-white/80 bg-neutral-800 rounded-xl p-2 absolute  duration-300 transition-all ease-out scale-0  group-hover:scale-100 min-w-[220px]  opacity-0  group-hover:opacity-100'>
                             <div className='flex  items-center justify-start gap-3 hover:bg-neutral-200/10 rounded-lg cursor-pointer p-2 duration-100 ease-in transition-all group'><BsEye className='  text-xl ' /><span className='text-base font-normal'>View Photo</span></div>

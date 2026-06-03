@@ -13,10 +13,18 @@ passport.use(
             try{
 const email = profile.emails[0].value
 const existingUser = await user.findOne({email})
+console.log("Existing user:", existingUser);
+
 if(existingUser){
+      if(!existingUser.firstName){
+        existingUser.firstName = profile.displayName || "Google User"
+    }
     existingUser.googleId = profile.id
     existingUser.email = profile.emails[0].value
+    console.log("Email:", email);
+
     existingUser.avatar =profile.photos[0].value
+
     existingUser.provider= "google"
     existingUser.isEmailVerified= true
     await existingUser.save()
@@ -25,6 +33,8 @@ if(existingUser){
 const fullName = profile.displayName?.trim() || ""
 const names = fullName.split(" ")
 const firstName =names[0] ||  "Google User"
+console.log(firstName)
+console.log(fullName)
 const lastName = names.slice(1).join(" ")
 const newUser = await user.create({
     firstName,lastName,email,provider:"google",avatar:profile.photos[0].value,googleId:profile.id,isEmailVerified:true
@@ -33,6 +43,8 @@ return done(null,newUser)
             }
             catch(err){
                 console.log(err)
+                    return done(err, null)
+
             }
         }
     )
