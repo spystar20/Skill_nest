@@ -70,7 +70,7 @@ const Home = () => {
             <button className=' transition-all bg-gradient-to-tr from-[#95b1ee] to-[#728ccd] font-[Comic_Relief]  cursor-pointe text-white rounded-lg py-2 px-6 text-xl box capitalize font-medium'>Explore courses</button>
           </div>
           <div className='hidden lg:flex'>
-            <div className='flex '>
+            <div className='flex'>
               <img className='relative rounded-4xl left-[4rem] top-16 w-lg z-30' src={hero} alt="" />
             </div>
             {/* connected students */}

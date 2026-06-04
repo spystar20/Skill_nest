@@ -34,7 +34,7 @@ const Sidebar = () => {
 </h2>
      <ul className='flex flex-col font-heading gap-3'>
         <li ><Link to='/dashboard/instructor' className='flex items-center justify-start gap-2 text-lg px-3 py-1 hover:translate-x-1 hover:bg-neutral-200 hover:text-[#0a1931] rounded-l-full transition-all duration-200 ease-in cursor-pointer' ><FaUserCircle className='w-4 h-4 '/><span>Instructor Dashboard</span></Link></li>
-         <li ><NavLink to='/dashboard/my-courses' className={({isActive}) => `flex items-center justify-start gap-2 text-lg px-3 py-1 hover:translate-x-1 hover:bg-neutral-200 hover:text-[#0a1931] ${isActive ?'bg-white/70 text-[#0a1931]' :''} rounded-l-full transition-all duration-200 ease-in cursor-pointer` }><FaUnlockAlt className='w-4 h-4 '/><span>  My Courses
+         <li ><NavLink to='/dashboard/teacher/my-courses' className={({isActive}) => `flex items-center justify-start gap-2 text-lg px-3 py-1 hover:translate-x-1 hover:bg-neutral-200 hover:text-[#0a1931] ${isActive ?'bg-white/70 text-[#0a1931]' :''} rounded-l-full transition-all duration-200 ease-in cursor-pointer` }><FaUnlockAlt className='w-4 h-4 '/><span>  My Courses
 </span></NavLink></li>
           <li className='flex items-center justify-start gap-2 text-lg  px-3 py-1 hover:translate-x-1 hover:bg-neutral-200 hover:text-[#0a1931] rounded-l-full transition-all duration-200 ease-in cursor-pointer'><FaBell className='w-4 h-4'/><span>          Students
 </span></li>

@@ -43,7 +43,7 @@ const [sort, setSort] = useState("");
 
   </div>
 </div>
-<Link to='/dashboard/my-courses/add-course'><button className=' flex items-center justify-center gap-2 bg-dashboard p-2 rounded-lg text-white hover:bg-dashboard/90 transition-discrete cursor-pointer'><FiPlus className='text-xl'/>New Course</button></Link>
+<Link to='/dashboard/teacher/add-course'><button className=' flex items-center justify-center gap-2 bg-dashboard p-2 rounded-lg text-white hover:bg-dashboard/90 transition-discrete cursor-pointer'><FiPlus className='text-xl'/>New Course</button></Link>
        
           </div> 
      <div className="flex items-center justify-between border p-3 rounded-2xl hover:shadow-md transition">

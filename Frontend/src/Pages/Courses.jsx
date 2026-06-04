@@ -149,7 +149,7 @@ transition-all duration-300 px-3  md:px-4  flex items-center rounded-lg'><FaSear
               {courses?.map((course, index) => {
                 return (
                
-                 <ProjectCard img={`${import.meta.env.VITE_BACKEND_URL}${course.thumbnail}`} price={course.price} key={index} category={course.category} course_desc={course.desc} course_name={course.title} chapters={12} duration={course.duration} level={course.difficulty} rating={5} instructor_img={`${import.meta.env.VITE_BACKEND_URL}${course.thumbnail}`} instructor_name={course.firstName} />
+                 <ProjectCard img={course.thumbnail} price={course.price} key={index} category={course.category} course_desc={course.desc} course_name={course.title} chapters={12} duration={course.duration} level={course.difficulty} rating={5} instructor_img={course.thumbnail} instructor_name={course.instructor.firstName} />
                 )
               })}
 

@@ -20,7 +20,8 @@ import Security from '@/Dashboard Pages/Security'
 import BecomeTeacher from '@/AuthPages/BecomeTeacher'
 import Teach from '@/Pages/Teach'
 import MyCourse from '@/Dashboard Pages/Teaching/MyCourse'
-import AddCourse from '@/Dashboard Pages/Teaching/AddCourse'
+import AddCourse from '@/Dashboard Pages/Teaching/CourseCreation/AddCourse'
+import CourseBuilder from '@/Dashboard Pages/Teaching/CourseCreation/CourseBuilder'
 
 const AppRoutes = () => {
   return (
@@ -45,11 +46,12 @@ const AppRoutes = () => {
      <Route path='/forgot-password' element={<ForgotPassword/>}/>
       <Route path='/reset-password' element={<ResetPassword/>}/>
          <Route path='/become-teacher' element={<BecomeTeacher/>}/>
-         <Route path='/dashboard/my-courses/add-course' element={<AddCourse/>} />
+         <Route path='/dashboard/teacher/add-course' element={<AddCourse/>} />
+         <Route path='/dashboard/teacher/courses/:courseId/edit' element={<CourseBuilder/>}/>
      </Route>
    <Route element={<DashboardLayout/>}>
        <Route path='/profile' element={<Profile/>}/>
-       <Route path='/dashboard/my-courses' element={<MyCourse/>}/>
+       <Route path='/dashboard/teacher/my-courses' element={<MyCourse/>}/>
        <Route path='/security' element={<Security/>}/>
    </Route>
      </Routes>

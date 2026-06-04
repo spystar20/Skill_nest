@@ -27,7 +27,7 @@ const ProjectCard = ({img,category,course_name,course_desc,chapters,duration,lev
                       <div className=' flex flex-col gap-2 md:gap-4 py-4'>
                         <div className='flex flex-col text-left flex-wrap '>
                           <h2 className='text-sm md:text-base font-semibold leading-snug font-heading text-gray-950'>{course_name}</h2>
-                          <p className='text-xs/4 md:text-xs   mt-1 text-wrap font-body text-gray-700 line-clamp-1 '>{course_desc}
+                          <p className='text-xs/4 md:text-xs mt-1 text-wrap font-body text-gray-700 line-clamp-1 '>{course_desc}
                           </p>
                         </div>
 
@@ -42,7 +42,7 @@ const ProjectCard = ({img,category,course_name,course_desc,chapters,duration,lev
                             {rating}   </span>
                         </div>
                         <div className='hidden md:flex justify-start items-center gap-3'>
-                          <div><img src={instructor_img} className=' w-8 md:w-12 rounded-full aspect-[1]' alt="" /></div>
+                          <div><img src={instructor_img} className='object-cover w-8 md:w-12 rounded-full aspect-[1]' alt="" /></div>
                           <div className=' flex flex-col justify-start items-start capitalize font-[outfit]'>
                             <span className=' text-sm md:text-lg font-semibold md:font-medium'>{instructor_name}</span>
                             <span className='font-medium text-xs  md:text-sm '>instructor</span>
