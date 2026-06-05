@@ -4,7 +4,7 @@ import { signup,Login,logout,me,verifyEmail,forgotPassword,resetPassword, resend
 import { middleware } from "../middleware/auth.middleware.js"
 import passport from "passport"
 import uploads from "../middleware/multer.js"
-import { getCoursebyId ,CreateCoursse, GetCourses, CreateSection,} from "../controller/controller.course.js"
+import { getCoursebyId ,CreateCoursse, GetCourses, CreateSection, getSection,} from "../controller/controller.course.js"
 
 router.post('/sign',signup)
 router.post("/login",Login)
@@ -21,6 +21,7 @@ router.put('/update/profile',middleware,updateProfile)
 router.put('/update/Teacher-Profile',middleware,updateTeacherProfile)
 router.post('/create-course',middleware,uploads.single("thumbnail"),CreateCoursse)
 router.post('/:courseId/create-section',middleware,CreateSection)
+router.get('/:courseId/get-section',middleware,getSection)
 router.get('/:courseId/edit',middleware,getCoursebyId)
 router.get('/courses',GetCourses)
 export default router

@@ -59,6 +59,15 @@ return res.status(200).json({message:'section ceated',sec})
 console.log(err)
    }
 }
+export const getSection = async(req,res)=>{
+   try{
+const {courseId} = req.params
+const section = await Section.find({course:courseId})
+return res.status(200).json({message:'section sent',section})
+   }catch(err){
+      console.log(err)
+   }
+}
 export const getCoursebyId = async(req,res)=>{
    try{
 const {courseId} = req.params

@@ -8,9 +8,9 @@ import { toast } from 'sonner'
 const CourseBuilder = () => {
     const { courseId } = useParams()
     const [course,setCourse] = useState(null)
-    const [title,setTitle] = useState([])
+    const [title,setTitle] = useState('')
     const [addsection,setAddsection] = useState(false)
-    
+    const [section,setSection] = useState([])
     const {user} = useAuth()
     const fetchCourse = async()=>{
         try{
@@ -22,20 +22,31 @@ console.log(err)
 toast.error('error occured')
         }
     }
-    const handleToggleSection = async()=>{
-        setAddsection(addsection)
+    const handleToggleSection = ()=>{
+        setAddsection(!addsection)
     }
     const handleSection = async()=>{
         try{
 const res = await api.post(`/auth/${courseId}/create-section`,{title})
 console.log(res)
 toast.success('section created')
+
         }catch(err){
 console.log(err)
         }
     }
+    const fetchSection = async()=>{
+      try{
+const res =await api.get(`/auth/${courseId}/get-section`) 
+setSection(res.data.section)
+console.log(res)
+      }catch(Err){
+
+      }
+    }
     useEffect(()=>{
         fetchCourse()
+        fetchSection()
     },[])
   return (
 
@@ -102,18 +113,26 @@ console.log(err)
             Curriculum
           </h2>
 
-          <button className="bg-black text-white px-4 py-2 rounded-lg">
+          <button onClick={handleToggleSection} className="bg-black text-white px-4 py-2 rounded-lg">
             + Add Section
           </button>
         </div>
 
         {/* Section Card */}
+        { addsection && (
+<div className='border rounded-xl p-5 mb-4 flex justify-between items-center my-10 '>
+<input value={title} onChange={(e)=>setTitle(e.target.value)} type="text" className='border-none outline-none w-full' placeholder='Enter Section Name'  />
+<button onClick={handleSection} className="bg-black text-white px-4 py-2 rounded-lg">
+Save
+</button>
+</div>
+)}
         <div className="border rounded-xl p-5 mb-4">
 
   
 
         {/* Empty State */}
-        {title.length === 0 ? (
+        {section?.length === 0 ? (
         <div className="border-2 border-dashed rounded-xl p-10 text-center">
 
           <h3 className="font-semibold text-lg">
@@ -130,10 +149,12 @@ console.log(err)
 
         </div>):(
              <>
+           {section?.map((i)=>( 
+            <div className="border rounded-xl p-5 mb-4">
         <div className="mt-4 space-y-3">
    <div className="flex justify-between items-center">
             <h3 className="text-lg font-semibold">
-              React Fundamentals
+             {i.title}
             </h3>
 
             <button>
@@ -149,9 +170,9 @@ console.log(err)
               <span>JSX Basics</span>
               <span>10 min</span>
             </div>
-
+</div>
           </div>
-
+))} 
           <button className="mt-4">
             + Add Lesson
           </button>
@@ -159,14 +180,7 @@ console.log(err)
        </>
         )}
         
-{ addsection && (
-<div className='border rounded-xl p-5 mb-4 flex justify-between items-center my-10 '>
-<input value={title} onChange={(e)=>setTitle(e.target.value)} type="text" className='border-none outline-none w-full' placeholder='Enter Section Name'  />
-<button onClick={handleSection} className="bg-black text-white px-4 py-2 rounded-lg">
-Save
-</button>
-</div>
-)}
+
       </div>
 </div>
     </div>
