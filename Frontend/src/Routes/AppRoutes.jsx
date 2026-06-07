@@ -22,6 +22,7 @@ import Teach from '@/Pages/Teach'
 import MyCourse from '@/Dashboard Pages/Teaching/MyCourse'
 import AddCourse from '@/Dashboard Pages/Teaching/CourseCreation/AddCourse'
 import CourseBuilder from '@/Dashboard Pages/Teaching/CourseCreation/CourseBuilder'
+import LessonEditor from '@/Dashboard Pages/Teaching/CourseCreation/LessonEditor'
 
 const AppRoutes = () => {
   return (
@@ -48,6 +49,8 @@ const AppRoutes = () => {
          <Route path='/become-teacher' element={<BecomeTeacher/>}/>
          <Route path='/dashboard/teacher/add-course' element={<AddCourse/>} />
          <Route path='/dashboard/teacher/courses/:courseId/edit' element={<CourseBuilder/>}/>
+                  <Route path='/courseBuilder/:lessonId/lesson/' element={<LessonEditor/>}/>
+
      </Route>
    <Route element={<DashboardLayout/>}>
        <Route path='/profile' element={<Profile/>}/>

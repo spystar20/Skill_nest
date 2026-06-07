@@ -95,6 +95,37 @@ return res.status(200).json({lessons})
       console.log(Err)
    }
 }
+export const getLessonById = async(req,res)=>{
+   try{
+const {lessonId} = req.params
+const lesson = await Lesson.findById(lessonId)
+console.log(lesson)
+return res.status(200).json({lesson})
+   }catch(Err){
+      console.log(Err)
+   }
+}
+export const updateLesson = async(req,res)=>{
+   try{
+const {lessionId} = req.params
+const {description} = req.body
+
+const lesson = await Lesson.findByIdAndUpdate(lessionId)
+if(!lesson){
+   return res.status(404).json({message:'lesson not found'})
+}
+const result = await cloudinary.uploader.upload(req.file.path,{
+   resource_type:'video',folder:'skillnest-courses/video'
+})
+const video = await result.secure_url
+lesson.videoUrl= video
+lesson.description= description
+await lesson.save()
+return res.status(200).json({message:'lesson updated',})
+   }catch(err){
+
+   }
+}
 export const getCoursebyId = async (req, res) => {
    try {
       const { courseId } = req.params

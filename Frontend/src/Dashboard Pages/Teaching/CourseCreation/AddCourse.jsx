@@ -24,14 +24,13 @@ const [ preview,setPreview] = useState('')
       form.append("price", formData.price)
       form.append("difficulty", formData.difficulty)
       form.append("thumbnail", thumbnail)
-      console.log(formData)
-      console.log(form)
+     
       const res = await api.post('/auth/create-course', form, { withCredentials: true })
       toast.success("course uploaded succesfully")
       setTimeout(() => {
         navigate(`/dashboard/teacher/courses/${res.data.newCourse._id}/edit`)
       }, 1000);
-      console.log(res)
+   
     } catch (err) {
       console.log(err)
     }

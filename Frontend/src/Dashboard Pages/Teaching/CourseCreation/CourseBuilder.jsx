@@ -3,7 +3,7 @@ import api from '@/utils/axios'
 import ProjectCard from '@/utils/ProjectCard'
 import React, { useEffect, useState } from 'react'
 import { MdPlayArrow } from 'react-icons/md'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'sonner'
 
 const CourseBuilder = () => {
@@ -16,7 +16,7 @@ const CourseBuilder = () => {
     const [section,setSection] = useState([])
     const [activeSection,setActiveSection] = useState(null)
     const [expandedSection,setExpandedSection]= useState(null)
-
+const navigate = useNavigate()
     const {user} = useAuth()
     const fetchCourse = async()=>{
         try{
@@ -67,7 +67,7 @@ console.log(err)
     }
     const fetchLesson = async(section)=>{
 const res = await api.get(`/auth/course/${section}/get-lesson`)
-console.log(res.data.lessons)
+
 setLessonArr(prev =>({...prev,[section]:res.data.lessons}))
     }
    const handleExpandedSection = (sectionId) =>{
@@ -201,29 +201,29 @@ setLessonArr(prev =>({...prev,[section]:res.data.lessons}))
     ) : (
       <div className="space-y-3">
 
-        {section?.map((i) => (
+        {section?.map((section) => (
           <div
-            key={i._id}
+            key={section._id}
             className="border border-neutral-200 rounded-xl overflow-hidden bg-white"
           >
 
             {/* Section Header */}
             <div
-              onClick={() => handleExpandedSection(i._id)}
+              onClick={() => handleExpandedSection(section._id)}
               className="flex justify-between items-center px-4 py-4 cursor-pointer hover:bg-neutral-50 transition"
             >
               <div className="flex items-center gap-2">
 
                 <MdPlayArrow
                   className={`text-xl transition-transform duration-300 ${
-                    expandedSection === i._id
+                    expandedSection === section._id
                       ? "rotate-90"
                       : ""
                   }`}
                 />
 
                 <h3 className="font-semibold text-lg capitalize">
-                  {i.title}
+                  {section.title}
                 </h3>
 
               </div>
@@ -237,20 +237,22 @@ setLessonArr(prev =>({...prev,[section]:res.data.lessons}))
             </div>
 
             {/* Expanded Content */}
-            {expandedSection === i._id && (
+            {expandedSection === section._id && (
               <div className="px-4 pb-4">
 
                 {/* Lessons */}
                 <div className="space-y-2">
 
-                  {lessonArr[i._id]?.map((lesson) => (
+                  {lessonArr[section._id]?.map((lesson) => (
                     <div
                       key={lesson._id}
                       className="ml-8 flex items-center gap-2 bg-neutral-50 px-4 py-3 rounded-lg"
                     >
                       <MdPlayArrow className="text-neutral-400" />
 
-                      <span className="text-sm font-medium">
+                      <span   onClick={() =>
+    navigate(`/courseBuilder/${lesson._id}/lesson`)
+  } className="text-sm font-medium">
                         {lesson.lesson}
                       </span>
                     </div>
@@ -259,7 +261,7 @@ setLessonArr(prev =>({...prev,[section]:res.data.lessons}))
                 </div>
 
                 {/* Add Lesson Form */}
-                {activeSection === i._id && (
+                {activeSection === section._id && (
                   <div className="ml-8 mt-4 bg-neutral-50 rounded-xl p-4">
 
                     <input
@@ -270,7 +272,7 @@ setLessonArr(prev =>({...prev,[section]:res.data.lessons}))
                     />
 
                     <button
-                      onClick={() => handleLesson(i._id)}
+                      onClick={() => handleLesson(section._id)}
                       className="mt-3 bg-black text-white px-4 py-2 rounded-lg hover:bg-neutral-800"
                     >
                       Save Lesson
@@ -283,9 +285,9 @@ setLessonArr(prev =>({...prev,[section]:res.data.lessons}))
                 <button
                   onClick={() =>
                     setActiveSection(
-                      activeSection === i._id
+                      activeSection === section._id
                         ? null
-                        : i._id
+                        : section._id
                     )
                   }
                   className="ml-8 mt-4 text-blue-600 hover:text-blue-700 text-sm font-medium"
