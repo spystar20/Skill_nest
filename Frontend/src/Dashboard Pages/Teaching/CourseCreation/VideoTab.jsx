@@ -1,22 +1,29 @@
 import { useAuth } from '@/context/AuthContext'
 import api from '@/utils/axios'
 import React, { useState } from 'react'
+import { toast } from 'sonner'
 
 const VideoTab = ({lessonId}) => {
     const {user} =useAuth()
     const [video,setVideo]= useState(null)
     const [preview,setPreview]= useState('')
     const handleUpload = (e)=>{
-        const Video = e.target.files[0]
-        setVideo(Video)
-        setPreview(URL.createObjectURL(Video))
+        const file = e.target.files[0]
+
+        setVideo(file)
+console.log(file)
+        setPreview(URL.createObjectURL(file))
     }
     const handleVideo = async()=>{
-const form = new FormData()
-form.append('video',video)
+
         try{
-const res = await api.put(`/auth/course/lesson/${lessonId}/edit`,form)
-console.log(res)
+          const form = new FormData()
+form.append('video',video)
+console.log(video)
+ await api.put(`/auth/course/lesson/${lessonId}/edit`,form)
+ toast.success('video uploaded')
+ setPreview('')
+ setVideo(null)
         }catch(err){
             console.log(err)
         }

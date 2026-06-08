@@ -5,27 +5,29 @@ import SettingsTab from './SettingsTab'
 import { useParams } from 'react-router-dom'
 import api from '@/utils/axios'
 import { toast } from 'sonner'
+import { useAuth } from '@/context/AuthContext'
 
-const LessonEditor = () => {
+const LessonEditor = () => { 
+  const {user} = useAuth()
     const [active,setActive] = useState("lesson info")
     const [title,setTitle] = useState(null)
     const [description,setDescription] = useState('')
-    const lesson = useParams()
-    const lessonId = lesson.lessonId
+    const {lessonId} = useParams()
     const fetchLesson = async()=>{
         try{
 const res =await api.get(`/auth/course/${lessonId}/lesson`)
 console.log(res)
-setTitle(res.data.lesson)
+setTitle(res?.data?.lesson?.lesson)
         }catch(err){
             console.log(err)
         }
     }
 const handleLesson = async()=>{
     try{
-const res = api.put(`/course/lesson/${lessonId}/edit`,{title,description})
+const res =await api.put(`/auth/course/lesson/${lessonId}/edit`,{title,description})
 console.log(res)
 toast.success('course updated')
+setActive('video')
     }catch(err){
 console.log(err)
     }
@@ -101,9 +103,9 @@ console.log(err)
             </label>
 
             <input
-              className="w-full border rounded-lg px-4 py-3"
-              value={title?.lesson || ''} 
-
+              className="w-full border rounded-lg px-4 py-3 text-black"
+              value={title || ''} 
+onChange={(e)=>setTitle(e.target.value)}
             />
           </div>
 
@@ -126,7 +128,7 @@ console.log(err)
   </div>
 )} 
 {active === 'video' &&(<VideoTab lessonId={lessonId}/>)}
- {active === 'resources'&&(<ResourcesTab/>
+ {active === 'resources'&&(<ResourcesTab lessonId={lessonId}/>
 )}
 {active==='settings'&& (<SettingsTab/>
 )}

@@ -107,22 +107,54 @@ return res.status(200).json({lesson})
 }
 export const updateLesson = async(req,res)=>{
    try{
-const {lessionId} = req.params
-const {description} = req.body
+const {lessonId} = req.params
+const {description,title} = req.body
+const lesson = await Lesson.findById(lessonId)
+if(!lesson){
+   return res.status(404).json({message:'lesson not found'})
+}
+    console.log("📤 uploading to cloudinary...")
+    if(title !== lesson.title && title !==undefined){
+      lesson.title = title
+    }
+if(description !== undefined){
+lesson.description=description
 
-const lesson = await Lesson.findByIdAndUpdate(lessionId)
+
+}
+if(req.file){
+const result = await cloudinary.uploader.upload(req.file.path,{
+   resource_type:'video',folder:'skillnest-courses/video'
+})
+const video =  result.secure_url
+lesson.videoUrl=video
+}   
+fs.unlinkSync(req.file.path)
+
+await lesson.save()
+return res.status(200).json({message:'lesson updated',})
+   }catch(err){
+console.log(err)
+return res.status(500).json({message:'errorrrr',})
+
+   }
+}
+export const LessonPdfUpload = async(req,res)=>{
+   try{
+const {lessonId}= req.params
+const lesson = await Lesson.findById(lessonId)
 if(!lesson){
    return res.status(404).json({message:'lesson not found'})
 }
 const result = await cloudinary.uploader.upload(req.file.path,{
-   resource_type:'video',folder:'skillnest-courses/video'
+   resource_type:'raw',folder:'skillnest-courses/pdf'
 })
-const video = await result.secure_url
-lesson.videoUrl= video
-lesson.description= description
+const pdf = result.secure_url
+lesson.pdf = pdf
 await lesson.save()
-return res.status(200).json({message:'lesson updated',})
+return res.status(200).json({message:"pdf uploaded",})
    }catch(err){
+return res.status(500).json({message:'errorrrr',})
 
    }
 }

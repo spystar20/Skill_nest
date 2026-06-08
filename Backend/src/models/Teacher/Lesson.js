@@ -4,7 +4,7 @@ const lessonSchema = new mongoose.Schema({
         type:String,required:true
     },
     description:{
-        type:String,required:true
+        type:String,
     },
         order:{
         type:Number,required:true
