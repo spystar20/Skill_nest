@@ -146,15 +146,42 @@ const lesson = await Lesson.findById(lessonId)
 if(!lesson){
    return res.status(404).json({message:'lesson not found'})
 }
-const result = await cloudinary.uploader.upload(req.file.path,{
+const resources = []
+
+
+for (let i = 0; i < req.files.length; i++) {
+   const result = await cloudinary.uploader.upload(req.files[i].path,{
    resource_type:'raw',folder:'skillnest-courses/pdf'
+}) 
+console.log("UPLOAD RESULT:", result)
+resources.push({
+   title:req.body.title[i],url:result.secure_url
 })
-const pdf = result.secure_url
-lesson.pdf = pdf
+   }
+   lesson.resources.push(...resources)
+
 await lesson.save()
 return res.status(200).json({message:"pdf uploaded",})
    }catch(err){
 return res.status(500).json({message:'errorrrr',})
+
+   }
+}
+export const DeleteResource = async(req,res)=>{
+   try{
+const {lessonId,resourceId} = req.params
+
+const lesson = await Lesson.findById(lessonId)
+if(!lesson){
+return res.status(404).json({message:"lesson not found"})
+}
+lesson.resources = lesson.resources.filter((i)=> i._id.toString() !== resourceId)
+
+await lesson.save()
+return res.status(200).json({message:'pdf deleted'})
+   }catch(err){
+      console.log(err)
+      return res.status(500).json({message:'errorrrr',})
 
    }
 }
@@ -168,6 +195,8 @@ export const getCoursebyId = async (req, res) => {
       return res.status(200).json({ course })
    } catch (err) {
       console.log(err)
+      return res.status(500).json({message:'errorrrr',})
+
    }
 }
 export const GetCourses = async (req, res) => {
