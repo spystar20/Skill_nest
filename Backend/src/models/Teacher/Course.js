@@ -20,7 +20,13 @@ const course = new mongoose.Schema({
     },price:{
         type:Number,default:0
     },instructor:{
-type:mongoose.Schema.Types.ObjectId,ref:"user",required:true    }
-})
+type:mongoose.Schema.Types.ObjectId,ref:"user",required:true    },
+status:{
+    type:String,
+    enum:['draft','published'],
+   default:'draft' 
+},
+
+},{timestamps:true})
 
 export default mongoose.model('course',course)

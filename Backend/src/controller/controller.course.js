@@ -128,6 +128,7 @@ const result = await cloudinary.uploader.upload(req.file.path,{
 })
 const video =  result.secure_url
 lesson.videoUrl=video
+ lesson.duration = result.duration;
 }   
 fs.unlinkSync(req.file.path)
 
@@ -146,16 +147,18 @@ const lesson = await Lesson.findById(lessonId)
 if(!lesson){
    return res.status(404).json({message:'lesson not found'})
 }
+const titles = Array.isArray(req.body.title) ? req.body.title: [req.body.title]
 const resources = []
 
-
+console.log(typeof req.body.title)
+console.log(req.body.title)
 for (let i = 0; i < req.files.length; i++) {
    const result = await cloudinary.uploader.upload(req.files[i].path,{
    resource_type:'raw',folder:'skillnest-courses/pdf'
 }) 
-console.log("UPLOAD RESULT:", result)
+
 resources.push({
-   title:req.body.title[i],url:result.secure_url
+   title:titles[i],url:result.secure_url
 })
    }
    lesson.resources.push(...resources)
@@ -185,6 +188,22 @@ return res.status(200).json({message:'pdf deleted'})
 
    }
 }
+export const CourseSetting = async(req,res)=>{
+   try{
+
+      const {lessonId}= req.params
+      const lesson = await Lesson.findById(lessonId)
+      if(!lesson){
+         return res.status(404).json({message:'lesson not found'})
+      }
+    
+      lesson.isPreview = req.body.isPreview
+      await lesson.save()
+      return res.status(200).json({message:'settings updated',lesson})
+   }catch(err){
+      console.log(err)
+   }
+}
 export const getCoursebyId = async (req, res) => {
    try {
       const { courseId } = req.params
@@ -205,6 +224,23 @@ export const GetCourses = async (req, res) => {
 
       return res.status(200).json({ message: "courses sent", courses })
    } catch (err) {
+      console.log(err)
+   }
+}
+export const GetCoursesByTeacherId = async(req,res)=>{
+   try{
+      const instructor = req.user.UserID
+      if(!instructor){
+                  return res.status(404).json({message:'teacher not found'})
+
+      }
+      const courses = await Course.find({instructor})
+      if(!courses){
+         return res.status(404).json({message:'courses not found'})
+      }
+      return res.status(200).json({courses})
+       
+   }catch(err){
       console.log(err)
    }
 }

@@ -130,7 +130,7 @@ onChange={(e)=>setTitle(e.target.value)}
 {active === 'video' &&(<VideoTab lessonId={lessonId}/>)}
  {active === 'resources'&&(<ResourcesTab lessonId={lessonId}/>
 )}
-{active==='settings'&& (<SettingsTab/>
+{active==='settings'&& (<SettingsTab lessonId={lessonId}/>
 )}
     </div>
 

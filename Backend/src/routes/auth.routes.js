@@ -4,7 +4,7 @@ import { signup,Login,logout,me,verifyEmail,forgotPassword,resetPassword, resend
 import { middleware } from "../middleware/auth.middleware.js"
 import passport from "passport"
 import uploads from "../middleware/multer.js"
-import { getCoursebyId ,CreateCoursse, GetCourses, CreateSection, getSection, createLesson, getLesson, updateLesson, getLessonById, LessonPdfUpload, DeleteResource,} from "../controller/controller.course.js"
+import { getCoursebyId ,CreateCoursse, GetCourses, CreateSection, getSection, createLesson, getLesson, updateLesson, getLessonById, LessonPdfUpload, DeleteResource, CourseSetting, GetCoursesByTeacherId,} from "../controller/controller.course.js"
 
 router.post('/sign',signup)
 router.post("/login",Login)
@@ -28,8 +28,9 @@ router.get('/course/:lessonId/lesson',middleware,getLessonById)
 router.put('/course/lesson/:lessonId/resource-upload',uploads.array("resource"), middleware,LessonPdfUpload)
 router.delete('/course/:lessonId/resource/:resourceId/delete',middleware,DeleteResource)
 router.put('/course/lesson/:lessonId/edit',uploads.single('video'),middleware,updateLesson)
+router.put('/course/lesson/:lessonId/setting',middleware,CourseSetting)
 router.get('/:courseId/edit',middleware,getCoursebyId)
- 
+router.get('/dashboard/my-courses',middleware,GetCoursesByTeacherId)
 router.get('/courses',GetCourses)
 export default router
 

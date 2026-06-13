@@ -1,5 +1,5 @@
 import { useAuth } from '@/context/AuthContext'
-import React ,{useState} from 'react'
+import React ,{useEffect, useState} from 'react'
 import { Link } from 'react-router-dom'
 import { FaAngleDoubleLeft, FaSearch } from 'react-icons/fa'
 import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
@@ -7,13 +7,28 @@ import { FiPlus } from 'react-icons/fi';
 import { PiBooks, PiPencil, PiStudentFill } from 'react-icons/pi';
 import { ImBin } from 'react-icons/im';
 import {  MdOutlineWatchLater } from 'react-icons/md';
+import api from '@/utils/axios';
 
 
 
 const MyCourse = () => {
         const { user } = useAuth()
+        console.log(user)
 const [sort, setSort] = useState("");
-
+const [ Course,setCourse] = useState([])
+const fetchCourses = async()=>{
+  try{
+const res = await api.get('/auth/dashboard/my-courses')
+setCourse(res?.data?.courses)
+  }catch(err){
+    console.log(err)
+  }
+}
+useEffect(()=>{
+setTimeout(() => {
+    fetchCourses()
+  
+}, 1000)},[])
   return (
      
         <div className='w-full bg-neutral-200 min-h-screen px-2 md:px-8 py-3 flex flex-col gap-6 '>
@@ -46,28 +61,28 @@ const [sort, setSort] = useState("");
 <Link to='/dashboard/teacher/add-course'><button className=' flex items-center justify-center gap-2 bg-dashboard p-2 rounded-lg text-white hover:bg-dashboard/90 transition-discrete cursor-pointer'><FiPlus className='text-xl'/>New Course</button></Link>
        
           </div> 
-     <div className="flex items-center justify-between border p-3 rounded-2xl hover:shadow-md transition">
+          {Course.map((course)=>(
+     <div className="flex items-center justify-between border p-3 rounded-2xl hover:shadow-md transition  my-4">
 
   {/* LEFT */}
   <div className="flex gap-4 items-center">
 
     <img
-      src="https://i.pinimg.com/1200x/fa/35/25/fa35252a5aabc99afec76c8ca2399573.jpg"
+      src={course.thumbnail}
       className="w-20 h-20 rounded-lg object-cover"
     />
 
     <div>
       <div className="flex items-center gap-3">
-        <h5 className="font-medium text-lg">Photography</h5>
+        <h5 className="font-medium text-lg">{course.title}</h5>
 
         <span className="text-xs px-3 py-1 rounded-full bg-green-100 text-green-700">
-          Published
+          {course.status}
         </span>
       </div>
 
       <p className="text-sm text-gray-500 mt-1">
-        Learn photography from basics to advanced lighting techniques...
-      </p>
+{course.desc}      </p>
 
       {/* META */}
       <div className="flex gap-4 text-sm text-gray-500 mt-2">
@@ -90,6 +105,7 @@ const [sort, setSort] = useState("");
   </div>
 
 </div>
+))}
 </div>
             </div>
 <div className='basis-1/4'>

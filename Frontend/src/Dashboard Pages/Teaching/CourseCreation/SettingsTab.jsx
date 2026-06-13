@@ -1,5 +1,18 @@
-const SettingsTab = ({ lessonData, setLessonData }) => {
+import api from "@/utils/axios";
+import React, { useState } from "react";
+const SettingsTab = ({lessonId}) => {
+const [isPreview,setIsPreview] = useState(false)
+console.log(isPreview)
+const handleChecked = async()=>{
+  try{
 
+const res = await api.put(`/auth/course/lesson/${lessonId}/setting`,{isPreview})
+
+
+  }catch(err){
+    console.log(err)
+  }
+}
   return (
     <div className="bg-white rounded-xl p-6 shadow-sm">
 
@@ -24,11 +37,8 @@ const SettingsTab = ({ lessonData, setLessonData }) => {
           <input
             type="checkbox"
             
-            onChange={(e) =>
-              setLessonData({
-                ...lessonData,
-                isPreview: e.target.checked
-              })
+            onChange={(e) =>{
+              setIsPreview(e.target.checked),handleChecked()}
             }
           />
 
@@ -36,26 +46,11 @@ const SettingsTab = ({ lessonData, setLessonData }) => {
 
         <div>
 
-          <label className="block mb-2 font-medium">
-            Duration (minutes)
-          </label>
 
-          <input
-            type="number"
-            
-            onChange={(e) =>
-              setLessonData({
-                ...lessonData,
-                duration: e.target.value
-              })
-            }
-            className="border rounded-lg px-4 py-3 w-full"
-          />
 
         </div>
 
       </div>
-
     </div>
   );
 };
