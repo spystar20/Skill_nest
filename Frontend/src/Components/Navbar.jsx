@@ -192,9 +192,9 @@ setUser(null)
             </div>
           </div>
           
-          <div className={`bg-white ${openProfile ? 'opacity-100 translate-y-0 ':'opacity-0 -translate-y-6 '}  text-gray-900 rounded-xl p-2 absolute mt-3 duration-200 transition-all ease-in `}>
+          <div className={`bg-white ${openProfile ? 'opacity-100 translate-y-0 ':'opacity-0 -translate-y-6 '}  text-gray-900 rounded-xl p-2 absolute mt-3 duration-200 transition-all ease-in min-w-[184px]`}>
             <Link to='/profile' ><div className='flex group items-center justify-start gap-3 hover:bg-neutral-200 rounded-xl cursor-pointer p-2 border-b duration-100 ease-in transition-all hover:border-b-gray-400'><FaRegUser className='  text-lg group-hover:scale-105 group-hover:rotate-3 transition-all ease-in duration-200' /><span className='text-base font-medium'>Profile</span></div></Link>
-           <Link to='/become-teacher '><div className='flex group items-center justify-start gap-3 hover:bg-neutral-200 rounded-xl cursor-pointer p-2 border-b  duration-100 ease-in transition-all hover:border-b-gray-400'><LiaChalkboardTeacherSolid className='  text-lg group-hover:scale-105 group-hover:rotate-3 transition-all ease-in duration-200' /><span className='text-base font-medium'>Become a Teacher</span></div></Link> 
+          {user.role=="student" &&(<Link to='/become-teacher '><div className='flex group items-center justify-start gap-3 hover:bg-neutral-200 rounded-xl cursor-pointer p-2 border-b  duration-100 ease-in transition-all hover:border-b-gray-400'><LiaChalkboardTeacherSolid className='  text-lg group-hover:scale-105 group-hover:rotate-3 transition-all ease-in duration-200' /><span className='text-base font-medium'>Become a Teacher</span></div></Link> ) } 
             <div onClick={()=>handleLogout()} className='flex group items-center justify-start gap-3 hover:bg-neutral-200 rounded-xl cursor-pointer p-2 border-b  duration-100 ease-in transition-all hover:border-b-gray-400'><IoIosLogOut className='  text-lg group-hover:scale-105 group-hover:rotate-3 transition-all ease-in duration-200' /><span className='text-base font-medium'>logout</span></div>
           </div>
 
@@ -221,7 +221,7 @@ transition-all duration-300 hover:scale-95  cursor-pointer box'>sign up</button>
         ) }
       </div>
       {/* mobile-menu */}
-      <div className="lg:hidden  w-full py-6 font-heading flex justify-between px-4 items-center text-white backdrop-blur-lg  bg-opacity-40 relative ">
+      {/* <div className="lg:hidden  w-full py-6 font-heading flex justify-between px-4 items-center text-white backdrop-blur-lg  bg-opacity-40 relative ">
         <div className="flex items-center justify-between gap-2">
           <GiNestBirds className="text-white text-4xl" />
           <span className="text-3xl font-semibold text-white flex gap-0">
@@ -261,7 +261,8 @@ ${openMenu
 
           </ul>
 
-          <div className='flex flex-col gap-3 mt-auto '>
+{(user) ?(<><div></div></>):(     <div className='flex flex-col gap-3 mt-auto '>
+
             <Link to="/login"><button className='w-full
 px-6 py-2 rounded-full font-normal text-xl capitalize text-gray-300 border-2 border-gray-300  hover:border-[#0e0929]
 hover:bg-gradient-to-tr  shadow-lg shadow-black/10 transition-all duration-300   cursor-pointer'>Log In</button></Link>
@@ -272,9 +273,192 @@ hover:opacity-90
 shadow-lg shadow-black/10
 transition-all duration-300 hover:scale-95  cursor-pointer box'>sign up</button></Link>
           </div>
+          )
+}     
+        </div>
+
+      </div> */}
+{/* Mobile Navbar */}
+<div className="lg:hidden w-full py-6 px-4 flex justify-between items-center text-white">
+  <div className="flex items-center gap-2">
+    <GiNestBirds className="text-4xl" />
+
+    <span className="text-3xl font-semibold font-heading">
+      Skill <span className="font-span capitalize">nest</span>
+    </span>
+
+    <span className="w-2 h-2 bg-[#1e3a8a] rounded-full mt-3"></span>
+  </div>
+
+  <MenuIcon
+    onClick={toggleMenu}
+    className="text-4xl"
+  />
+</div>
+
+{/* Mobile Menu */}
+<div
+  className={`fixed inset-0 z-50 flex flex-col px-4 py-6
+  transition-all duration-500
+  ${
+    openMenu
+      ? "opacity-100 visible bg-black"
+      : "opacity-0 invisible bg-black/0"
+  }`}
+>
+  {/* Header */}
+  <div className="w-full flex justify-between items-center text-white mb-8">
+    <div className="flex items-center gap-2">
+      <GiNestBirds className="text-4xl" />
+
+      <span className="text-3xl font-semibold font-heading">
+        Skill <span className="font-span capitalize">nest</span>
+      </span>
+
+      <span className="w-2 h-2 bg-[#1e3a8a] rounded-full mt-3"></span>
+    </div>
+
+    <IoCloseSharp
+      onClick={toggleMenu}
+      className={`text-4xl transition-all duration-500 ${
+        openMenu ? "rotate-0" : "rotate-180"
+      }`}
+    />
+  </div>
+
+  {/* Content */}
+  <div className="flex flex-col flex-1">
+
+    {/* User Card */}
+    {user && (
+      <div
+        className={`mb-8 p-4 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md
+        transition-all duration-500
+        ${
+          openMenu
+            ? "translate-y-0 opacity-100"
+            : "-translate-y-4 opacity-0"
+        }`}
+      >
+        <div className="flex items-center gap-4">
+
+          <img
+            src={
+              user?.avatar ||
+              `https://ui-avatars.com/api/?name=${user?.name}`
+            }
+            alt="profile"
+            className="w-14 h-14 rounded-full object-cover border-2 border-[#1e3a8a]"
+          />
+
+          <div>
+            <h3 className="text-white font-semibold text-lg">
+              {user?.name}
+            </h3>
+
+            <p className="text-gray-400 text-sm">
+              {user?.email}
+            </p>
+          </div>
+
         </div>
       </div>
+    )}
 
+    {/* Navigation */}
+    <ul className="flex flex-col gap-4">
+
+      <li
+        className={`p-3 border border-gray-700 rounded-xl text-gray-300
+        transition-all duration-500
+        ${openMenu ? "translate-x-0" : "translate-x-3"}`}
+      >
+        <Link to="/">Home</Link>
+      </li>
+
+      <li
+        className={`p-3 border border-gray-700 rounded-xl text-gray-300
+        transition-all delay-100 duration-500
+        ${openMenu ? "translate-x-0" : "translate-x-3"}`}
+      >
+        <Link to="/courses">Courses</Link>
+      </li>
+
+      <li
+        className={`p-3 border border-gray-700 rounded-xl text-gray-300
+        transition-all delay-200 duration-500
+        ${openMenu ? "translate-x-0" : "translate-x-3"}`}
+      >
+        <Link to="/about">About</Link>
+      </li>
+
+      <li
+        className={`p-3 border border-gray-700 rounded-xl text-gray-300
+        transition-all delay-300 duration-500
+        ${openMenu ? "translate-x-0" : "translate-x-3"}`}
+      >
+        <Link to="/teach">Teach</Link>
+      </li>
+
+    </ul>
+
+    {/* Bottom Section */}
+    {user ? (
+      <div className="mt-auto flex flex-col gap-3">
+
+        <Link to="/dashboard">
+          <button
+            className="w-full py-3 rounded-full
+            border border-gray-700
+            text-gray-300
+            bg-white/5"
+          >
+            Dashboard
+          </button>
+        </Link>
+
+        <button
+       
+          className="w-full py-3 rounded-full
+          bg-red-500/20
+          text-red-400
+          border border-red-500/30"
+        >
+          Logout
+        </button>
+
+      </div>
+    ) : (
+      <div className="mt-auto flex flex-col gap-3">
+
+        <Link to="/login">
+          <button
+            className="w-full py-3 rounded-full
+            border border-gray-600
+            text-gray-300"
+          >
+            Log In
+          </button>
+        </Link>
+
+        <Link to="/signup">
+          <button
+            className="w-full py-3 rounded-full
+            text-white
+            bg-gradient-to-tr
+            from-[#0e0929]
+            via-[#1c1450]
+            to-[#2a1f75]"
+          >
+            Sign Up
+          </button>
+        </Link>
+
+      </div>
+    )}
+
+  </div>
+</div>
 
 
 

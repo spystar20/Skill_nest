@@ -1,3 +1,4 @@
+import { useAuth } from '@/context/AuthContext'
 import React from 'react'
 import { FaBell, FaBookmark, FaUnlockAlt, FaUserCircle } from 'react-icons/fa'
 import { GiNestBirds } from 'react-icons/gi'
@@ -7,6 +8,7 @@ import { MdDashboard, MdPlayLesson } from 'react-icons/md'
 import {  PiCertificateFill } from 'react-icons/pi'
 import { Link, NavLink } from 'react-router-dom'
 const Sidebar = () => {
+ const {user} = useAuth()
   return (
     <div className='h-screen hidden bg-[#0a1931] w-64  fixed left-0 top-0 backdrop-blur-lg  bg-opacity-40 text-white md:flex flex-col '>
         <div>
@@ -29,6 +31,7 @@ const Sidebar = () => {
             <li className='flex items-center justify-start gap-2 text-lg px-3 py-1 hover:translate-x-1 hover:bg-neutral-200 hover:text-[#0a1931] rounded-l-full transition-all duration-200 ease-in cursor-pointer'><PiCertificateFill className='w-4 h-4 '/><span>Certificate</span></li>
     </ul>
     </div>
+{user?.role ==='teacher' &&(
       <div className='flex flex-col py-6 gap-3 border-b border-white/10'>
       <h2 className='text-white/80 uppercase text-sm  px-3 font-body'> Teaching
 </h2>
@@ -42,6 +45,7 @@ const Sidebar = () => {
       
     </ul>
     </div>
+    )}
      <div className='flex flex-col py-6 gap-3 border-b border-white/10'>
       <h2 className='text-white/80 uppercase text-sm  px-3 font-body'>Account</h2>
      <ul className='flex flex-col font-heading gap-3'>

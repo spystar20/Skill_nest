@@ -2,13 +2,14 @@ import React, { useEffect, useState } from 'react'
 import VideoTab from './VideoTab'
 import ResourcesTab from './ResourceTab'
 import SettingsTab from './SettingsTab'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import api from '@/utils/axios'
 import { toast } from 'sonner'
 import { useAuth } from '@/context/AuthContext'
 
 const LessonEditor = () => { 
   const {user} = useAuth()
+  const {courseId} = useParams()
     const [active,setActive] = useState("lesson info")
     const [title,setTitle] = useState(null)
     const [description,setDescription] = useState('')
@@ -52,9 +53,9 @@ console.log(err)
       </h1>
     </div>
 
-    <button className="bg-black text-white px-5 py-2 rounded-lg">
+    <Link to={`/dashboard/teacher/courses/${courseId}/edit`} ><button  className="bg-black text-white px-5 py-2 rounded-lg">
       Save Changes
-    </button>
+    </button></Link>
 
   </div>
 

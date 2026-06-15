@@ -18,6 +18,18 @@ const CourseBuilder = () => {
     const [expandedSection,setExpandedSection]= useState(null)
 const navigate = useNavigate()
     const {user} = useAuth()
+        const handleStatus = async(status)=>{
+      try{
+    const res = await api.put(`/auth/teacher/course/${courseId}/status`,{status})
+    console.log(res)
+    toast.success('course published successfully')
+    setTimeout(() => {
+      navigate('/dashboard/teacher/my-courses')
+    }, 1000);
+      }catch(err){
+        console.log(err)
+      }
+    }
     const fetchCourse = async()=>{
         try{
 const res = await api.get(`/auth/${courseId}/edit`)
@@ -107,7 +119,7 @@ setLessonArr(prev =>({...prev,[section]:res.data.lessons}))
         Preview
       </button>
 
-      <button className="bg-gradient-to-r from-[#95b1ee] to-[#728ccd] text-white px-4 py-2 rounded-lg">
+      <button onClick={()=>handleStatus('published')} className="bg-gradient-to-r from-[#95b1ee] to-[#728ccd] text-white px-4 py-2 rounded-lg">
         Publish
       </button>
     </div>
@@ -251,7 +263,7 @@ setLessonArr(prev =>({...prev,[section]:res.data.lessons}))
                       <MdPlayArrow className="text-neutral-400" />
 
                       <span   onClick={() =>
-    navigate(`/courseBuilder/${lesson._id}/lesson`)
+    navigate(`/courseBuilder/${courseId}/lesson/${lesson._id}`)
   } className="text-sm font-medium">
                         {lesson.lesson}
                       </span>

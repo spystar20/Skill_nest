@@ -62,7 +62,7 @@ setTimeout(() => {
        
           </div> 
           {Course.map((course)=>(
-     <div className="flex items-center justify-between border p-3 rounded-2xl hover:shadow-md transition  my-4">
+   <Link key={course._id} to={`/dashboard/teacher/courses/${course._id}/edit`} ><div  className="flex items-center justify-between border p-3 rounded-2xl hover:shadow-md transition  my-4">
 
   {/* LEFT */}
   <div className="flex gap-4 items-center">
@@ -104,7 +104,7 @@ setTimeout(() => {
     </button>
   </div>
 
-</div>
+</div></Link>  
 ))}
 </div>
             </div>

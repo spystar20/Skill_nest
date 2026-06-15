@@ -49,7 +49,7 @@ const AppRoutes = () => {
          <Route path='/become-teacher' element={<BecomeTeacher/>}/>
          <Route path='/dashboard/teacher/add-course' element={<AddCourse/>} />
          <Route path='/dashboard/teacher/courses/:courseId/edit' element={<CourseBuilder/>}/>
-                  <Route path='/courseBuilder/:lessonId/lesson/' element={<LessonEditor/>}/>
+                  <Route path='/courseBuilder/:courseId/lesson/:lessonId' element={<LessonEditor/>}/>
 
      </Route>
    <Route element={<DashboardLayout/>}>

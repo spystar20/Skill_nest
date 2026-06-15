@@ -244,3 +244,15 @@ export const GetCoursesByTeacherId = async(req,res)=>{
       console.log(err)
    }
 }
+ export const UpdateCourseStatus = async(req,res)=>{
+   try{
+const {courseId} = req.params
+const {status} = req.body
+const course =await Course.findById(courseId)
+course.status = status
+await course.save()
+return res.status(200).json({message:'course status updated'})
+   }catch(Err){
+      console.log(Err)
+   }
+ }
