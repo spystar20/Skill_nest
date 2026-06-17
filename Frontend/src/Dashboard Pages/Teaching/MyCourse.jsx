@@ -8,7 +8,7 @@ import { PiBooks, PiPencil, PiStudentFill } from 'react-icons/pi';
 import { ImBin } from 'react-icons/im';
 import {  MdOutlineWatchLater } from 'react-icons/md';
 import api from '@/utils/axios';
-
+import {formatDistanceToNow} from 'date-fns'
 
 
 const MyCourse = () => {
@@ -61,7 +61,9 @@ setTimeout(() => {
 <Link to='/dashboard/teacher/add-course'><button className=' flex items-center justify-center gap-2 bg-dashboard p-2 rounded-lg text-white hover:bg-dashboard/90 transition-discrete cursor-pointer'><FiPlus className='text-xl'/>New Course</button></Link>
        
           </div> 
-          {Course.map((course)=>(
+          {Course.map((course)=> {   console.log(course.updatedAt)
+ return(
+
    <Link key={course._id} to={`/dashboard/teacher/courses/${course._id}/edit`} ><div  className="flex items-center justify-between border p-3 rounded-2xl hover:shadow-md transition  my-4">
 
   {/* LEFT */}
@@ -87,8 +89,9 @@ setTimeout(() => {
       {/* META */}
       <div className="flex gap-4 text-sm text-gray-500 mt-2">
         <span className='flex gap-1 items-center'><PiStudentFill/> 120 Students</span>
-        <span className='flex gap-1 items-center'><PiBooks/> 24 Lessons</span>
-        <span className='flex gap-1 items-center'><MdOutlineWatchLater/>  Updated 2 days ago</span>
+        <span className='flex gap-1 items-center'><PiBooks/> {course.lessonCount}</span>
+        {course.updatedAt ? (<span className='flex gap-1 items-center'><MdOutlineWatchLater/>
+        updated{''} {formatDistanceToNow((new Date(course.updatedAt)),{addSuffix:true})}</span>):(<span className='flex gap-1 items-center'><MdOutlineWatchLater/>Just Now</span>)}
       </div>
     </div>
   </div>
@@ -105,7 +108,7 @@ setTimeout(() => {
   </div>
 
 </div></Link>  
-))}
+)})}
 </div>
             </div>
 <div className='basis-1/4'>

@@ -21,5 +21,5 @@ const lessonSchema = new mongoose.Schema({
         type: String
     }, isPreview: Boolean, duration: Number
 
-})
+},{timestamps:true})
 export default mongoose.model('lesson', lessonSchema)

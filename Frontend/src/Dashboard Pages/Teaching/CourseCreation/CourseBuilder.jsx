@@ -2,7 +2,9 @@ import { useAuth } from '@/context/AuthContext'
 import api from '@/utils/axios'
 import ProjectCard from '@/utils/ProjectCard'
 import React, { useEffect, useState } from 'react'
+import { ImBin } from 'react-icons/im'
 import { MdPlayArrow } from 'react-icons/md'
+import { PiPencil } from 'react-icons/pi'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'sonner'
 
@@ -46,9 +48,10 @@ toast.error('error occured')
     const handleSection = async()=>{
         try{
 const res = await api.post(`/auth/${courseId}/create-section`,{title})
-console.log(res)
 toast.success('section created')
-
+await fetchSection()
+setAddsection(false)
+setTitle('')
         }catch(err){
 console.log(err)
         }
@@ -239,13 +242,11 @@ setLessonArr(prev =>({...prev,[section]:res.data.lessons}))
                 </h3>
 
               </div>
+<span className='flex gap-1' onClick={(e)=> e.stopPropagation()}>
+   <span className='bg-neutral-800 hover:scale-110 duration-200 ease-in transition-all p-1 border border-neutral-700  rounded-full  text-white/80 flex gap-2 items-center justify-center text-sm  cursor-pointer '><PiPencil /></span>
+   <span className='bg-neutral-800  hover:scale-110 duration-200 ease-in transition-all border border-neutral-700 p-1 rounded-full  text-white/80 flex gap-2 items-center justify-center text-sm  cursor-pointer '><ImBin /></span>
+</span>
 
-              <button
-                onClick={(e) => e.stopPropagation()}
-                className="text-neutral-500 hover:text-black"
-              >
-                ⋮
-              </button>
             </div>
 
             {/* Expanded Content */}

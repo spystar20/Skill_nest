@@ -36,7 +36,7 @@ export const CreateCoursse = async (req, res) => {
       const newCourse = await Course.create({
          title, desc, thumbnail, priceType, price, category, duration, difficulty, instructor
       })
-
+   
       return res.status(200).json({ message: "course is created", newCourse })
    } catch (err) {
       console.log(err)
@@ -46,7 +46,11 @@ export const CreateSection = async (req, res) => {
    try {
       const { courseId } = req.params
       const { title } = req.body
-      const course = await Course.findById(courseId)
+      const course = await Course.findByIdAndUpdate(courseId,{ $set:{
+         updatedAt:Date.now()
+      },$inc:{
+         section:1
+      }})
       if (!course) {
          return res.status(404).json({ message: "course not found" })
       }
@@ -54,11 +58,36 @@ export const CreateSection = async (req, res) => {
       const sec = await Section.create({
          title, course: courseId, order: sectionCount + 1
       })
+      course.sectionCount +=1
+      await course.save()
       return res.status(200).json({ message: 'section ceated', sec })
 
    } catch (err) {
       console.log(err)
    }
+}
+export const UpdateSection = async(req,res)=>{
+   try{
+     const {sectionId} = req.params
+     const {newtitle} = req.body
+     const section = await Section.findById(sectionId)
+     section.title= newtitle
+     await section.save()
+     return res.status(200).json({message:'section updated'})
+   }catch(err){
+      console.log(err)
+   }
+}
+export const DeleteSection = async(req,res)=>{
+   const {sectionId} = req.params
+
+   const section = await Section.findById(sectionId)
+   const lesson = await Lesson.deleteMany({section:sectionId})
+   const course = await Course.findByIdAndUpdate(section.course,{
+   $inc:{
+      lessonCount:-1,sectionCount:-1
+   }
+   })
 }
 export const getSection = async (req, res) => {
    try {
@@ -74,6 +103,11 @@ export const createLesson = async (req, res) => {
       const { lesson } = req.body
       const { sectionId } = req.params
       const existingSection = await Section.findById(sectionId)
+      const course = await Course.findByIdAndUpdate(existingSection.course,{ $set:{
+         updatedAt:Date.now()
+      },$inc:{
+         section:1
+      }})
       if (!existingSection) {
          return res.status(404).json({ message: "section not found" })
       }
@@ -81,9 +115,18 @@ export const createLesson = async (req, res) => {
       const newLesson = await Lesson.create({
          lesson, section:existingSection, order: lessons + 1
       })
+   
    return res.status(200).json({message:"lesson created ",newLesson})}
    catch (Err) {
       console.log(Err)
+   }
+}
+export const deleteLesson = async(req,res)=>{
+   try{
+
+      
+   }catch(err){
+      console.log(err)
    }
 }
 export const getLesson = async(req,res)=>{
@@ -110,10 +153,10 @@ export const updateLesson = async(req,res)=>{
 const {lessonId} = req.params
 const {description,title} = req.body
 const lesson = await Lesson.findById(lessonId)
+
 if(!lesson){
    return res.status(404).json({message:'lesson not found'})
 }
-    console.log("📤 uploading to cloudinary...")
     if(title !== lesson.title && title !==undefined){
       lesson.title = title
     }
@@ -140,6 +183,7 @@ return res.status(500).json({message:'errorrrr',})
 
    }
 }
+export const 
 export const LessonPdfUpload = async(req,res)=>{
    try{
 const {lessonId}= req.params
@@ -188,6 +232,7 @@ return res.status(200).json({message:'pdf deleted'})
 
    }
 }
+
 export const CourseSetting = async(req,res)=>{
    try{
 

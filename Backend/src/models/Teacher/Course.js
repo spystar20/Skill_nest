@@ -25,8 +25,12 @@ status:{
     type:String,
     enum:['draft','published'],
    default:'draft' 
+},sectionCount:{
+    type:Number,default:0
+}
+,lessonCount:{
+    type:Number,default:0
 },
-
 },{timestamps:true})
 
 export default mongoose.model('course',course)

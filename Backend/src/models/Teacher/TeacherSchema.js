@@ -17,6 +17,6 @@ type:mongoose.Schema.Types.ObjectId,ref:"User"
         type:String,default:''
     },
 
-})
+},{timestamps:true})
 
 export default mongoose.model("TeacherSchema",TeacherSchema)
