@@ -42,6 +42,17 @@ export const CreateCoursse = async (req, res) => {
       console.log(err)
    }
 }
+export const DeleteCourse = async(req,res)=>{
+   try{
+const {courseId}= req.params
+const course = await Course.findByIdAndDelete(courseId)
+const section = await Section.deleteMany({course:courseId})
+const lesson = await Lesson.deleteMany({section:section._id})
+return res.status(200).json({message:'course deleted successfully'})
+   }catch(err){
+      console.log(err)
+   }
+}
 export const CreateSection = async (req, res) => {
    try {
       const { courseId } = req.params
@@ -58,7 +69,7 @@ export const CreateSection = async (req, res) => {
       const sec = await Section.create({
          title, course: courseId, order: sectionCount + 1
       })
-      course.sectionCount +=1
+     
       await course.save()
       return res.status(200).json({ message: 'section ceated', sec })
 
@@ -69,9 +80,9 @@ export const CreateSection = async (req, res) => {
 export const UpdateSection = async(req,res)=>{
    try{
      const {sectionId} = req.params
-     const {newtitle} = req.body
+     const {title} = req.body
      const section = await Section.findById(sectionId)
-     section.title= newtitle
+     section.title= title
      await section.save()
      return res.status(200).json({message:'section updated'})
    }catch(err){
@@ -79,15 +90,20 @@ export const UpdateSection = async(req,res)=>{
    }
 }
 export const DeleteSection = async(req,res)=>{
+   try{
    const {sectionId} = req.params
 
-   const section = await Section.findById(sectionId)
+   const section = await Section.findByIdAndDelete(sectionId)
    const lesson = await Lesson.deleteMany({section:sectionId})
    const course = await Course.findByIdAndUpdate(section.course,{
    $inc:{
       lessonCount:-1,sectionCount:-1
    }
    })
+   return res.status(200).json({message:'section deleted'})
+}catch(Err){
+      console.log(Err)
+   }
 }
 export const getSection = async (req, res) => {
    try {
@@ -106,7 +122,7 @@ export const createLesson = async (req, res) => {
       const course = await Course.findByIdAndUpdate(existingSection.course,{ $set:{
          updatedAt:Date.now()
       },$inc:{
-         section:1
+         lessonCount:1
       }})
       if (!existingSection) {
          return res.status(404).json({ message: "section not found" })
@@ -123,9 +139,19 @@ export const createLesson = async (req, res) => {
 }
 export const deleteLesson = async(req,res)=>{
    try{
-
-      
-   }catch(err){
+      const {sectionId} = req.params
+const lesson = await Lesson.findOneAndDelete({section:sectionId})  
+const section =await Section.findById(sectionId)
+const course = await Course.findByIdAndUpdate(section.course,{
+   $inc:{
+      lessonCount:-1
+   }
+})
+if(!lesson){
+   return res.status(404).json({message:'lesson not found'})
+} 
+return res.status(200).json({message:'lesson deleted successfully'})
+}catch(err){
       console.log(err)
    }
 }
@@ -183,7 +209,7 @@ return res.status(500).json({message:'errorrrr',})
 
    }
 }
-export const 
+
 export const LessonPdfUpload = async(req,res)=>{
    try{
 const {lessonId}= req.params

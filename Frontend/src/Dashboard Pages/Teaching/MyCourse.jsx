@@ -9,6 +9,7 @@ import { ImBin } from 'react-icons/im';
 import {  MdOutlineWatchLater } from 'react-icons/md';
 import api from '@/utils/axios';
 import {formatDistanceToNow} from 'date-fns'
+import { toast } from 'sonner';
 
 
 const MyCourse = () => {
@@ -20,8 +21,19 @@ const fetchCourses = async()=>{
   try{
 const res = await api.get('/auth/dashboard/my-courses')
 setCourse(res?.data?.courses)
+console.log(res)
   }catch(err){
     console.log(err)
+  }
+}
+const DeleteCourse = async(courseId)=>{
+  try{
+await api.delete(`/auth/course/${courseId}/delete`)
+await fetchCourses()
+toast.success('course deleted successfully')
+  }
+  catch(Err){
+    console.log(Err)
   }
 }
 useEffect(()=>{
@@ -61,17 +73,17 @@ setTimeout(() => {
 <Link to='/dashboard/teacher/add-course'><button className=' flex items-center justify-center gap-2 bg-dashboard p-2 rounded-lg text-white hover:bg-dashboard/90 transition-discrete cursor-pointer'><FiPlus className='text-xl'/>New Course</button></Link>
        
           </div> 
-          {Course.map((course)=> {   console.log(course.updatedAt)
+          {Course.map((course)=> { 
  return(
 
-   <Link key={course._id} to={`/dashboard/teacher/courses/${course._id}/edit`} ><div  className="flex items-center justify-between border p-3 rounded-2xl hover:shadow-md transition  my-4">
+   <div key={course._id} className="flex items-center justify-between border p-3 rounded-2xl hover:shadow-md transition  my-4">
 
   {/* LEFT */}
   <div className="flex gap-4 items-center">
 
     <img
       src={course.thumbnail}
-      className="w-20 h-20 rounded-lg object-cover"
+      className="w-28 h-28 rounded-lg object-fill"
     />
 
     <div>
@@ -83,7 +95,7 @@ setTimeout(() => {
         </span>
       </div>
 
-      <p className="text-sm text-gray-500 mt-1">
+      <p className="text-sm text-gray-500 mt-1 line-clamp-2">
 {course.desc}      </p>
 
       {/* META */}
@@ -98,16 +110,16 @@ setTimeout(() => {
 
   {/* RIGHT ACTIONS */}
   <div className="flex flex-col gap-2 items-end">
-<span className='flex gap-1'>
-   <span className='bg-neutral-800 hover:scale-110 duration-200 ease-in transition-all p-1 border border-neutral-700  rounded-full  text-white/80 flex gap-2 items-center justify-center text-sm  cursor-pointer '><PiPencil /></span>
-   <span className='bg-neutral-800  hover:scale-110 duration-200 ease-in transition-all border border-neutral-700 p-1 rounded-full  text-white/80 flex gap-2 items-center justify-center text-sm  cursor-pointer '><ImBin /></span>
+<span className='flex gap-1 ' onClick={(e)=>e.stopPropagation()}>
+   <Link key={course._id} to={`/dashboard/teacher/courses/${course._id}/edit`} ><span className='bg-neutral-800 hover:scale-110 duration-200 ease-in transition-all p-1 border border-neutral-700  rounded-full  text-white/80 flex gap-2 items-center justify-center text-sm  cursor-pointer '><PiPencil /></span></Link>
+   <span onClick={()=>DeleteCourse(course._id)} className='bg-neutral-800  hover:scale-110 duration-200 ease-in transition-all border border-neutral-700 p-1 rounded-full  text-white/80 flex gap-2 items-center justify-center text-sm  cursor-pointer '><ImBin /></span>
 </span>
     <button className="text-sm px-3 py-1 rounded-lg bg-gray-100">
       Analytics
     </button>
   </div>
 
-</div></Link>  
+</div>  
 )})}
 </div>
             </div>

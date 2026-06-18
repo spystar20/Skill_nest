@@ -12,6 +12,7 @@ const CourseBuilder = () => {
     const { courseId } = useParams()
     const [course,setCourse] = useState(null)
     const [title,setTitle] = useState('')
+    const [editingSection, setEditingSection] = useState(null)
     const [lesson,setLesson]= useState('')
     const [lessonArr,setLessonArr] = useState([])
     const [addsection,setAddsection] = useState(false)
@@ -56,6 +57,15 @@ setTitle('')
 console.log(err)
         }
     }
+    const editSectioni = async(sectionId)=>{
+      try{
+  const res = await api.put(`/auth/${courseId}/${sectionId}/edit-section`,{title})
+  await fetchSection()
+  toast.success('section title updated')
+      }catch(err){
+        console.log(err)
+      }
+    }
     const fetchSection = async()=>{
       try{
 const res =await api.get(`/auth/${courseId}/get-section`) 
@@ -78,6 +88,24 @@ fetchLesson(section)
 toast.error('something happend')
 
 console.log(err)
+      }
+    }
+    const handleDelete = async(sectionId)=>{
+      try{
+const res = await api.delete(`/auth/${courseId}/${sectionId}/delete`)
+toast.success('section deleted successfully')
+await fetchSection()
+      }catch(Err){
+        console.log(Err)
+      }
+    }
+    const deleteLesson = async(sectionId)=>{
+      try{
+await api.delete(`/auth/course/${sectionId}/lesson/delete`)
+await fetchLesson(sectionId)
+toast.success('lesson deleted successfully')
+      }catch(err){
+        console.log(err)
       }
     }
     const fetchLesson = async(section)=>{
@@ -237,14 +265,51 @@ setLessonArr(prev =>({...prev,[section]:res.data.lessons}))
                   }`}
                 />
 
-                <h3 className="font-semibold text-lg capitalize">
-                  {section.title}
-                </h3>
+              {editingSection === section._id ? (
+  <div
+    className="flex items-center gap-2"
+    onClick={(e) => e.stopPropagation()}
+  >
+    <input
+      value={title}
+      onChange={(e) => setTitle(e.target.value)}
+      className="border rounded-lg px-3 py-1 text-sm outline-none"
+      autoFocus
+    />
+
+    <button
+      onClick={() => {
+        editSectioni(section._id)
+        setEditingSection(null)
+      }}
+      className="bg-black text-white px-3 py-1 rounded-lg text-sm"
+    >
+      Save
+    </button>
+
+    <button
+      onClick={() => {
+        setEditingSection(null)
+        setTitle("")
+      }}
+      className="border px-3 py-1 rounded-lg text-sm"
+    >
+      Cancel
+    </button>
+  </div>
+) : (
+  <h3 className="font-semibold text-lg capitalize">
+    {section.title}
+  </h3>
+)}
 
               </div>
 <span className='flex gap-1' onClick={(e)=> e.stopPropagation()}>
-   <span className='bg-neutral-800 hover:scale-110 duration-200 ease-in transition-all p-1 border border-neutral-700  rounded-full  text-white/80 flex gap-2 items-center justify-center text-sm  cursor-pointer '><PiPencil /></span>
-   <span className='bg-neutral-800  hover:scale-110 duration-200 ease-in transition-all border border-neutral-700 p-1 rounded-full  text-white/80 flex gap-2 items-center justify-center text-sm  cursor-pointer '><ImBin /></span>
+   <span   onClick={() => {
+    setEditingSection(section._id)
+    setTitle(section.title)
+  }} className='bg-neutral-800 hover:scale-110 duration-200 ease-in transition-all p-1 border border-neutral-700  rounded-full  text-white/80 flex gap-2 items-center justify-center text-sm  cursor-pointer '><PiPencil /></span>
+   <span onClick={()=>handleDelete(section._id)} className='bg-neutral-800  hover:scale-110 duration-200 ease-in transition-all border border-neutral-700 p-1 rounded-full  text-white/80 flex gap-2 items-center justify-center text-sm  cursor-pointer '><ImBin /></span>
 </span>
 
             </div>
@@ -259,8 +324,9 @@ setLessonArr(prev =>({...prev,[section]:res.data.lessons}))
                   {lessonArr[section._id]?.map((lesson) => (
                     <div
                       key={lesson._id}
-                      className="ml-8 flex items-center gap-2 bg-neutral-50 px-4 py-3 rounded-lg"
+                      className="ml-8 flex items-center justify-between bg-neutral-50 px-4 py-3 rounded-lg cursor-pointer"
                     >
+                      <div className="flex items-center gap-2  " >
                       <MdPlayArrow className="text-neutral-400" />
 
                       <span   onClick={() =>
@@ -268,6 +334,11 @@ setLessonArr(prev =>({...prev,[section]:res.data.lessons}))
   } className="text-sm font-medium">
                         {lesson.lesson}
                       </span>
+                      </div>
+                      <span className='flex gap-1 ' onClick={(e)=> e.stopPropagation()}>
+ 
+   <span onClick={()=>deleteLesson(section._id)} className='bg-neutral-800  hover:scale-110 duration-200 ease-in transition-all border border-neutral-700 p-1 rounded-full  text-white/80 flex gap-2 items-center justify-center text-xs  cursor-pointer '><ImBin /></span>
+</span>
                     </div>
                   ))}
 
