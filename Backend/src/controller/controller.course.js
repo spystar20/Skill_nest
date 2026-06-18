@@ -5,10 +5,11 @@ import cloudinary from "../utils/cloudinary.js"
 import fs from 'fs'
 import Section from "../models/Teacher/Section.js"
 import Lesson from "../models/Teacher/Lesson.js"
+import { asyncHandler } from "../middleware/asyncHandler.middleware.js"
 
-export const CreateCoursse = async (req, res) => {
-   try {
 
+export const CreateCoursse = asyncHandler( async (req, res) => {
+   
       const { title, desc, priceType, price, category, duration, difficulty } = req.body
       const instructor = req.user.UserID
       const existingUser = await user.findById(instructor)
@@ -38,23 +39,26 @@ export const CreateCoursse = async (req, res) => {
       })
    
       return res.status(200).json({ message: "course is created", newCourse })
-   } catch (err) {
-      console.log(err)
-   }
-}
-export const DeleteCourse = async(req,res)=>{
-   try{
+  
+})
+
+export const DeleteCourse =asyncHandler( async(req,res)=>{
+   
 const {courseId}= req.params
 const course = await Course.findByIdAndDelete(courseId)
-const section = await Section.deleteMany({course:courseId})
-const lesson = await Lesson.deleteMany({section:section._id})
+
+const section = await Section.find({course:courseId})
+const sectionId = section.map(sec=>sec._id)
+const lesson = await Lesson.deleteMany({section:{
+   $in:sectionId
+   
+}})
+await Section.deleteMany({course:courseId})
 return res.status(200).json({message:'course deleted successfully'})
-   }catch(err){
-      console.log(err)
-   }
-}
-export const CreateSection = async (req, res) => {
-   try {
+
+})
+export const CreateSection =asyncHandler( async (req, res) => {
+   
       const { courseId } = req.params
       const { title } = req.body
       const course = await Course.findByIdAndUpdate(courseId,{ $set:{
@@ -73,49 +77,42 @@ export const CreateSection = async (req, res) => {
       await course.save()
       return res.status(200).json({ message: 'section ceated', sec })
 
-   } catch (err) {
-      console.log(err)
-   }
-}
-export const UpdateSection = async(req,res)=>{
-   try{
+
+})
+export const UpdateSection = asyncHandler(async(req,res)=>{
+  
      const {sectionId} = req.params
      const {title} = req.body
      const section = await Section.findById(sectionId)
      section.title= title
      await section.save()
      return res.status(200).json({message:'section updated'})
-   }catch(err){
-      console.log(err)
-   }
-}
-export const DeleteSection = async(req,res)=>{
-   try{
+  
+})
+export const DeleteSection = asyncHandler(async(req,res)=>{
+  
    const {sectionId} = req.params
 
    const section = await Section.findByIdAndDelete(sectionId)
+  const lessonCount = await Lesson.countDocuments({section:sectionId})
    const lesson = await Lesson.deleteMany({section:sectionId})
    const course = await Course.findByIdAndUpdate(section.course,{
    $inc:{
-      lessonCount:-1,sectionCount:-1
+      lessonCount:-lessonCount,sectionCount:-1
    }
    })
    return res.status(200).json({message:'section deleted'})
-}catch(Err){
-      console.log(Err)
-   }
-}
-export const getSection = async (req, res) => {
-   try {
+
+})
+export const getSection =asyncHandler( async (req, res) => {
+   
       const { courseId } = req.params
       const section = await Section.find({ course: courseId })
       return res.status(200).json({ message: 'section sent', section })
-   } catch (err) {
-      console.log(err)
-   }
-}
-export const createLesson = async (req, res) => {
-   try {
+
+})
+export const createLesson =asyncHandler( async (req, res) => {
+   
       const { lesson } = req.body
       const { sectionId } = req.params
       const existingSection = await Section.findById(sectionId)
@@ -132,15 +129,13 @@ export const createLesson = async (req, res) => {
          lesson, section:existingSection, order: lessons + 1
       })
    
-   return res.status(200).json({message:"lesson created ",newLesson})}
-   catch (Err) {
-      console.log(Err)
-   }
-}
-export const deleteLesson = async(req,res)=>{
-   try{
+   return res.status(200).json({message:"lesson created ",newLesson})
+
+})
+export const deleteLesson = asyncHandler(async(req,res)=>{
+  
       const {sectionId} = req.params
-const lesson = await Lesson.findOneAndDelete({section:sectionId})  
+const lesson = await Lesson.findByIdAndDelete({section:sectionId})  
 const section =await Section.findById(sectionId)
 const course = await Course.findByIdAndUpdate(section.course,{
    $inc:{
@@ -151,31 +146,26 @@ if(!lesson){
    return res.status(404).json({message:'lesson not found'})
 } 
 return res.status(200).json({message:'lesson deleted successfully'})
-}catch(err){
-      console.log(err)
-   }
-}
-export const getLesson = async(req,res)=>{
-   try{
+
+})
+export const getLesson =asyncHandler( async(req,res)=>{
+   
       const {sectionId} = req.params
 const lessons = await Lesson.find({section:sectionId})
 return res.status(200).json({lessons})
-   }catch(Err){
-      console.log(Err)
-   }
-}
-export const getLessonById = async(req,res)=>{
-   try{
+
+})
+
+export const getLessonById = asyncHandler( async(req,res)=>{
+   
 const {lessonId} = req.params
 const lesson = await Lesson.findById(lessonId)
-console.log(lesson)
+
 return res.status(200).json({lesson})
-   }catch(Err){
-      console.log(Err)
-   }
-}
-export const updateLesson = async(req,res)=>{
-   try{
+ 
+})
+export const updateLesson =asyncHandler( async(req,res)=>{
+   
 const {lessonId} = req.params
 const {description,title} = req.body
 const lesson = await Lesson.findById(lessonId)
@@ -198,20 +188,17 @@ const result = await cloudinary.uploader.upload(req.file.path,{
 const video =  result.secure_url
 lesson.videoUrl=video
  lesson.duration = result.duration;
+ fs.unlinkSync(req.file.path)
+
 }   
-fs.unlinkSync(req.file.path)
 
 await lesson.save()
 return res.status(200).json({message:'lesson updated',})
-   }catch(err){
-console.log(err)
-return res.status(500).json({message:'errorrrr',})
+ 
+})
 
-   }
-}
-
-export const LessonPdfUpload = async(req,res)=>{
-   try{
+export const LessonPdfUpload =asyncHandler( async(req,res)=>{
+   
 const {lessonId}= req.params
 const lesson = await Lesson.findById(lessonId)
 if(!lesson){
@@ -220,8 +207,6 @@ if(!lesson){
 const titles = Array.isArray(req.body.title) ? req.body.title: [req.body.title]
 const resources = []
 
-console.log(typeof req.body.title)
-console.log(req.body.title)
 for (let i = 0; i < req.files.length; i++) {
    const result = await cloudinary.uploader.upload(req.files[i].path,{
    resource_type:'raw',folder:'skillnest-courses/pdf'
@@ -235,13 +220,10 @@ resources.push({
 
 await lesson.save()
 return res.status(200).json({message:"pdf uploaded",})
-   }catch(err){
-return res.status(500).json({message:'errorrrr',})
-
-   }
-}
-export const DeleteResource = async(req,res)=>{
-   try{
+ 
+})
+export const DeleteResource = asyncHandler(async(req,res)=>{
+   
 const {lessonId,resourceId} = req.params
 
 const lesson = await Lesson.findById(lessonId)
@@ -252,15 +234,11 @@ lesson.resources = lesson.resources.filter((i)=> i._id.toString() !== resourceId
 
 await lesson.save()
 return res.status(200).json({message:'pdf deleted'})
-   }catch(err){
-      console.log(err)
-      return res.status(500).json({message:'errorrrr',})
 
-   }
-}
+})
 
-export const CourseSetting = async(req,res)=>{
-   try{
+export const CourseSetting =asyncHandler( async(req,res)=>{
+
 
       const {lessonId}= req.params
       const lesson = await Lesson.findById(lessonId)
@@ -271,35 +249,27 @@ export const CourseSetting = async(req,res)=>{
       lesson.isPreview = req.body.isPreview
       await lesson.save()
       return res.status(200).json({message:'settings updated',lesson})
-   }catch(err){
-      console.log(err)
-   }
-}
-export const getCoursebyId = async (req, res) => {
-   try {
+  
+})
+export const getCoursebyId =asyncHandler( async (req, res) => {
+  
       const { courseId } = req.params
       const course = await Course.findById(courseId).populate('instructor', "firstName lastName avatar")
       if (!course) {
          return res.status(401).json({ message: 'course not found' })
       }
       return res.status(200).json({ course })
-   } catch (err) {
-      console.log(err)
-      return res.status(500).json({message:'errorrrr',})
-
-   }
-}
-export const GetCourses = async (req, res) => {
-   try {
+   
+})
+export const GetCourses =asyncHandler( async (req, res) => {
+   
       const courses = await Course.find().populate("instructor", "firstName")
 
       return res.status(200).json({ message: "courses sent", courses })
-   } catch (err) {
-      console.log(err)
-   }
-}
-export const GetCoursesByTeacherId = async(req,res)=>{
-   try{
+
+})
+export const GetCoursesByTeacherId = asyncHandler(async(req,res)=>{
+  
       const instructor = req.user.UserID
       if(!instructor){
                   return res.status(404).json({message:'teacher not found'})
@@ -311,19 +281,15 @@ export const GetCoursesByTeacherId = async(req,res)=>{
       }
       return res.status(200).json({courses})
        
-   }catch(err){
-      console.log(err)
-   }
-}
- export const UpdateCourseStatus = async(req,res)=>{
-   try{
+
+})
+ export const UpdateCourseStatus =asyncHandler( async(req,res)=>{
+   
 const {courseId} = req.params
 const {status} = req.body
 const course =await Course.findById(courseId)
 course.status = status
 await course.save()
 return res.status(200).json({message:'course status updated'})
-   }catch(Err){
-      console.log(Err)
-   }
- }
+
+ })

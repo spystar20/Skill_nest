@@ -10,9 +10,10 @@ import TeacherSchema from "../models/Teacher/TeacherSchema.js"
 import Course from "../models/Teacher/Course.js"
 import cloudinary from "../utils/cloudinary.js"
 import fs from 'fs'
+import { asyncHandler } from "../middleware/asyncHandler.middleware.js"
 
-export const signup = async (req, res) => {
-   try {
+export const signup =asyncHandler( async (req, res) => {
+   
       const { firstName, email, password } = req.body
     
       const existingUser = await user.findOne({ email })
@@ -33,21 +34,17 @@ export const signup = async (req, res) => {
       return res.status(200).json({
          message: "user created sucessfully", email: User.email
       })
-   } catch (err) {
-      console.log("internal server error", err)
-   }
-}
+ 
+})
 
-export const Login = async (req, res) => {
-   try {
+export const Login = asyncHandler(async (req, res) => {
+  
       const { email, password, rememberme } = req.body
       const existingUser = await user.findOne({ email })
       if (!existingUser) {
          return res.status(401).json({ message: "user not found" })
       }
-      // if(!existingUser.isEmailVerified){
-      //    return res.status(401).json({message:"please verify your email before logging in "})
-      // }
+    
       const hashPassword = await bcrypt.compare(password, existingUser.password)
       if (!hashPassword) {
          return res.status(401).json({ message: "incorrect credentials" })
@@ -66,20 +63,14 @@ export const Login = async (req, res) => {
       res.cookie("refreshToken", refreshToken, getrefreshCookieOptions(refreshMaxAge))
       res.cookie("accessToken",accessToken,getaccessCookieOptions())
       return res.status(200).json({ message: "successfully logged in ", accessToken,existingUser, isEmailVerified: existingUser.isEmailVerified, email: existingUser.email })
-   } catch (err) {
-      console.log("internal server error", err)
 
-   }
-}
+})
 
-export const me = async (req, res) => {
-      console.log("ME HIT")
-   try {
+export const me =asyncHandler( async (req, res) => {
+      
+   
       const { accessToken, refreshToken } = req.cookies
-           
-
-console.log(req.cookies)
-      if (accessToken) {
+                 if (accessToken) {
          try {
             const payload = verifyAccessToken(accessToken)
 
@@ -90,11 +81,10 @@ const Teacher = await TeacherSchema.findOne({
             return res.json({ existingUser ,Teacher})
 
          } catch (err) {
-            console.log("Access token invalid or expired")
+            return res.status(401).json({message:'access token expired'})
          }
       }
-      // if (!refreshToken) { return res.status(401).json({ message: "authentication failed" }) } 
-      // const payload = verifyRefreshToken(refreshToken)
+     
       let payload
       try {
    payload = verifyRefreshToken(refreshToken)
@@ -103,10 +93,9 @@ const Teacher = await TeacherSchema.findOne({
       message: "invalid or expired refresh token"
    })
 }
-     console.log("PAYLOAD:", payload)
 
       const sessionDoc = await session.findById(payload.sessionID)
-      console.log("SESSION:", sessionDoc)
+   
       if (!sessionDoc|| sessionDoc.refreshToken !== refreshToken) {
          return res.status(403).json({ message: "authentication failed" })
       }
@@ -115,15 +104,12 @@ const Teacher = await TeacherSchema.findOne({
       const newAccessToken = createAccessToken({ UserID: payload.UserID })
       res.cookie("accessToken", newAccessToken, getaccessCookieOptions())
 
-return res.json({accessToken:newAccessToken,existingUser})   }
-   catch (err) {
-      console.log("internal server error", err)
+return res.json({accessToken:newAccessToken,existingUser})   
 
-   }
-}
+})
 
-export const logout = async (req, res) => {
-   try {
+export const logout = asyncHandler( async (req, res) => {
+   
       const { refreshToken } = req.cookies
       if (refreshToken) {
          const payload = verifyRefreshToken(refreshToken)
@@ -132,15 +118,12 @@ export const logout = async (req, res) => {
       res.clearCookie("refreshToken")
       res.clearCookie("accessToken")
       res.json({ message: "logged out succesfully" })
-   } catch (err) {
-      console.log("internal server error", err)
-   }
-}
 
-export const verifyEmail = async (req, res) => {
-   try {
-      console.log("VERIFY ROUTE HIT")
-   console.log(req.body)
+})
+
+export const verifyEmail = asyncHandler( async (req, res) => {
+  
+
       const { token } = req.body
       if (!token) {
          return res.status(401).json({ message: "token not found" })
@@ -157,13 +140,11 @@ export const verifyEmail = async (req, res) => {
       existingUser.isEmailVerified = true
       await existingUser.save()
       return res.status(200).json({ message: "Email verified" })
-   } catch (err) {
-      return res.status(500).json({ message: "internal server error" })
-   }
-}
 
-export const forgotPassword = async (req, res) => {
-   try {
+})
+
+export const forgotPassword = asyncHandler( async (req, res) => {
+   
       const { email } = req.body
       if (!email) {
          return res.status(401).json({ message: "provide email " })
@@ -185,14 +166,10 @@ export const forgotPassword = async (req, res) => {
     `
       })
       return res.status(200).json({ message: `otp mail sent to ${existingUser}` })
-   } catch (err){
-      console.log(err)
-      return res.status(500).json({ message: "internal server error" })
 
-   }
-}
-export const resetPassword = async (req, res) => {
-   try {
+})
+export const resetPassword = asyncHandler( async (req, res) => {
+   
       const { otp, newpassword, email } = req.body
       const existingUser = await user.findOne({ email })
       if (!existingUser || !existingUser.resetOTP || !existingUser.resetOTPExpires) {
@@ -212,14 +189,11 @@ export const resetPassword = async (req, res) => {
       await existingUser.save()
       return res.status(200).json({ message: `${user} password changed` })
 
-   } catch(err) {
-      return res.status(500).json({ message: "internal server error" })
-console.log(err)
-   }
-}
 
-export const resendVerificationEmail = async (req, res) => {
-   try {
+})
+
+export const resendVerificationEmail = asyncHandler( async (req, res) => {
+  
       const {email} = req.body
 
       const existingUser = await user.findOne({email})
@@ -240,13 +214,10 @@ export const resendVerificationEmail = async (req, res) => {
       })
 
       return res.status(200).json({ message: "Verification Link has been sent to user" })
-   } catch (Err) {
-      console.log(Err)
-   }
-}
-export const googleLogin = async(req,res)=>{
-   try{
-const existingUser = req.user
+
+})
+export const googleLogin = asyncHandler(async(req,res)=>{
+  const existingUser = req.user
 const accessToken = createAccessToken({
    UserID:existingUser._id
 })
@@ -259,13 +230,11 @@ res.cookie(
 )
 res.cookie("accessToken",accessToken,getaccessCookieOptions())
 res.redirect(process.env.URL)
-   }catch(Err){
-      console.log(Err)
-   }
-}
 
-export const updateProfile = async(req,res)=>{
-   try{
+})
+
+export const updateProfile =asyncHandler( async(req,res)=>{
+   
 const {firstName,lastName,username,DOB,Gender,Phone,Location,Bio} = req.body
 
 const existingUser = await user.findById(req.user.UserID,req.body,{
@@ -274,13 +243,11 @@ const existingUser = await user.findById(req.user.UserID,req.body,{
 await existingUser.save()
 
 return res.status(200).json({message:"user updated succesfully",existingUser})
-   }catch(Err){
-      console.log(Err)
-   }
-}
 
-export const becomeTeacher = async(req,res)=>{
-   try{
+}
+)
+export const becomeTeacher = asyncHandler(async(req,res)=>{
+  
 const {title,experience,specialization,organization,website,linkdin,bio} = req.body
 const User = req.user.UserID
 if(!title){
@@ -302,12 +269,10 @@ const newTeacher = await TeacherSchema.create({
 })
 await newTeacher.save()
 return res.status(200).json({message:'teacher created successfully',existingUser,newTeacher})
-   }catch(err){
-   console.log(err)
-   }
-}
-export const updateTeacherProfile = async(req,res)=>{
-   try{
+
+})
+export const updateTeacherProfile = asyncHandler( async(req,res)=>{
+
       const { title,experience ,specialization, organization ,website ,linkdin} = req.body
     
       const Teacher = await TeacherSchema.findOneAndUpdate({user:req.user.UserID},req.body,{
@@ -315,8 +280,6 @@ export const updateTeacherProfile = async(req,res)=>{
       })
 
 return res.status(201).json({message:"data updated succesfully",Teacher})
-   }catch(Err){
-      console.log(Err)
-   }
-}
+ 
+})
 

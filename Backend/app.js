@@ -22,8 +22,11 @@ app.use(session({
 app.use(cookieParser())
 app.use(passport.initialize())
 app.use("/auth",authRoutes)
-app.use(errHandler)
+app.get("/test", (req,res,next)=>{
+   next(new Error("Middleware Test"))
+})
 app.use('/uploads',express.static("uploads"))
+app.use(errHandler)
 const PORT =  process.env.PORT || 3000
 app.listen(PORT,()=>{
     console.log(`SERVER IS RUNNING ON ${PORT} `)
