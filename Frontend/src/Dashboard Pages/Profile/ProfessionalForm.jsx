@@ -26,7 +26,7 @@ const ProfessionalForm = () => {
       const handleUpdate = async()=>
         {
         try{
-const res = await api.put('auth/update/Teacher-Profile',formData,{ withCredentials:true})
+const res = await api.put('/teacher/update/Teacher-Profile',formData,{ withCredentials:true})
 setUser(prev => ({
   ...prev,
   ...res.data.Teacher

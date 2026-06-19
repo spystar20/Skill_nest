@@ -6,7 +6,7 @@ console.log(isPreview)
 const handleChecked = async()=>{
   try{
 
-const res = await api.put(`/auth/course/lesson/${lessonId}/setting`,{isPreview})
+const res = await api.put(`/course/lesson/${lessonId}/setting`,{isPreview})
 
 
   }catch(err){

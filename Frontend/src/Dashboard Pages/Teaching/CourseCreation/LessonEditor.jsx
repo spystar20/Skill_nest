@@ -16,7 +16,7 @@ const LessonEditor = () => {
     const {lessonId} = useParams()
     const fetchLesson = async()=>{
         try{
-const res =await api.get(`/auth/course/${lessonId}/lesson`)
+const res =await api.get(`/course/lesson/${lessonId}`)
 console.log(res)
 setTitle(res?.data?.lesson?.lesson)
         }catch(err){
@@ -25,7 +25,7 @@ setTitle(res?.data?.lesson?.lesson)
     }
 const handleLesson = async()=>{
     try{
-const res =await api.put(`/auth/course/lesson/${lessonId}/edit`,{title,description})
+const res =await api.put(`/course/lesson/${lessonId}/update`,{title,description})
 console.log(res)
 toast.success('course updated')
 setActive('video')

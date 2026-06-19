@@ -64,7 +64,7 @@ export const CreateSection =asyncHandler( async (req, res) => {
       const course = await Course.findByIdAndUpdate(courseId,{ $set:{
          updatedAt:Date.now()
       },$inc:{
-         section:1
+         sectionCount:1
       }})
       if (!course) {
          return res.status(404).json({ message: "course not found" })
@@ -135,7 +135,7 @@ export const createLesson =asyncHandler( async (req, res) => {
 export const deleteLesson = asyncHandler(async(req,res)=>{
   
       const {sectionId} = req.params
-const lesson = await Lesson.findByIdAndDelete({section:sectionId})  
+const lesson = await Lesson.findOneAndDelete({section:sectionId})  
 const section =await Section.findById(sectionId)
 const course = await Course.findByIdAndUpdate(section.course,{
    $inc:{

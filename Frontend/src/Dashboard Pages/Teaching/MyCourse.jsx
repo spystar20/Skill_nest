@@ -19,7 +19,7 @@ const [sort, setSort] = useState("");
 const [ Course,setCourse] = useState([])
 const fetchCourses = async()=>{
   try{
-const res = await api.get('/auth/dashboard/my-courses')
+const res = await api.get('/teacher/dashboard/my-courses')
 setCourse(res?.data?.courses)
 console.log(res)
   }catch(err){
@@ -28,7 +28,7 @@ console.log(res)
 }
 const DeleteCourse = async(courseId)=>{
   try{
-await api.delete(`/auth/course/${courseId}/delete`)
+await api.delete(`/course/${courseId}`)
 await fetchCourses()
 toast.success('course deleted successfully')
   }
@@ -37,9 +37,10 @@ toast.success('course deleted successfully')
   }
 }
 useEffect(()=>{
+
 setTimeout(() => {
-    fetchCourses()
-  
+      fetchCourses()
+
 }, 1000)},[])
   return (
      

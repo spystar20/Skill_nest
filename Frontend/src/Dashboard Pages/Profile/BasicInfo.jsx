@@ -35,7 +35,7 @@ const BasicInfo = () => {
     const [editing, setEditing] = useState(false)
     const handleUpdate = async () => {
         try {
-            const res = await api.put('/auth/update/profile', formData, { withCredentials: true })
+            const res = await api.put('/student/update/profile', formData, { withCredentials: true })
             setEditing(false),
                 setUser(res.data.existingUser)
                 toast.success('profile updated')

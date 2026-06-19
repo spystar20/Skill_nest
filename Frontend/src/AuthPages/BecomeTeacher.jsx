@@ -30,7 +30,7 @@ title:'',experience:'',specialization:'',organization:'',website:'',linkdin:'',b
     ]
     const handleNew = async()=>{
       try{
-        const res = await api.post('auth/becomeTeacher',formData,{withCredentials:true})
+        const res = await api.post('/teacher/becomeTeacher',formData,{withCredentials:true})
 setUser({...res.data.existingUser,...res.data.newTeacher})
 toast.success('role updated')
 setTimeout(() => {

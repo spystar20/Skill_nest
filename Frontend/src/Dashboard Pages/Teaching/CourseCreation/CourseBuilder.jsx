@@ -23,8 +23,7 @@ const navigate = useNavigate()
     const {user} = useAuth()
         const handleStatus = async(status)=>{
       try{
-    const res = await api.put(`/auth/teacher/course/${courseId}/status`,{status})
-    console.log(res)
+    const res = await api.put(`/course/${courseId}/status`,{status})
     toast.success('course published successfully')
     setTimeout(() => {
       navigate('/dashboard/teacher/my-courses')
@@ -35,12 +34,10 @@ const navigate = useNavigate()
     }
     const fetchCourse = async()=>{
         try{
-const res = await api.get(`/auth/${courseId}/edit`)
+const res = await api.get(`/course/${courseId}`)
 setCourse(res?.data?.course)
-console.log(res)
         }catch(err){
 console.log(err)
-toast.error('error occured')
         }
     }
     const handleToggleSection = ()=>{
@@ -48,7 +45,7 @@ toast.error('error occured')
     }
     const handleSection = async()=>{
         try{
-const res = await api.post(`/auth/${courseId}/create-section`,{title})
+const res = await api.post(`/course/${courseId}/create-section`,{title})
 toast.success('section created')
 await fetchSection()
 setAddsection(false)
@@ -59,7 +56,7 @@ console.log(err)
     }
     const editSectioni = async(sectionId)=>{
       try{
-  const res = await api.put(`/auth/${courseId}/${sectionId}/edit-section`,{title})
+  const res = await api.put(`/course/section/${sectionId}/edit-section`,{title})
   await fetchSection()
   toast.success('section title updated')
       }catch(err){
@@ -68,7 +65,7 @@ console.log(err)
     }
     const fetchSection = async()=>{
       try{
-const res =await api.get(`/auth/${courseId}/get-section`) 
+const res =await api.get(`/course/${courseId}/get-section`) 
 setSection(res.data.section)
 console.log(res)
       }catch(Err){
@@ -77,7 +74,7 @@ console.log(res)
     }
     const handleLesson = async(section)=>{
       try{
-        const res = await api.post(`/auth/course/${section}/create-lesson`,{lesson})
+        const res = await api.post(`/course/lesson/${section}/create-lesson`,{lesson})
          toast.success('lesson added')
 setLesson('')
 setAddsection(false)
@@ -85,14 +82,13 @@ fetchSection()
 fetchLesson(section)
          console.log(res)
       }catch(err){
-toast.error('something happend')
 
 console.log(err)
       }
     }
     const handleDelete = async(sectionId)=>{
       try{
-const res = await api.delete(`/auth/${courseId}/${sectionId}/delete`)
+const res = await api.delete(`/course/section/${sectionId}/delete`)
 toast.success('section deleted successfully')
 await fetchSection()
       }catch(Err){
@@ -101,7 +97,7 @@ await fetchSection()
     }
     const deleteLesson = async(sectionId)=>{
       try{
-await api.delete(`/auth/course/${sectionId}/lesson/delete`)
+await api.delete(`/course/lesson/${sectionId}/delete`)
 await fetchLesson(sectionId)
 toast.success('lesson deleted successfully')
       }catch(err){
@@ -109,7 +105,7 @@ toast.success('lesson deleted successfully')
       }
     }
     const fetchLesson = async(section)=>{
-const res = await api.get(`/auth/course/${section}/get-lesson`)
+const res = await api.get(`/course/lesson/${section}/get-lesson`)
 
 setLessonArr(prev =>({...prev,[section]:res.data.lessons}))
     }
@@ -122,6 +118,7 @@ setLessonArr(prev =>({...prev,[section]:res.data.lessons}))
     }
    }
     useEffect(()=>{
+      console.log(section)
         fetchCourse()
         fetchSection()
     },[])

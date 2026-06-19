@@ -26,7 +26,7 @@ try{
     form.append('title',resource.title)
     form.append('resource',resource.file)
   })
- await api.put(`/auth/course/lesson/${lessonId}/resource-upload`,form)
+ await api.put(`/course/lesson/${lessonId}/resource-upload`,form)
 toast.success('file uploaded successfully')
 fetchUploaded()
 setResource([])
@@ -36,7 +36,7 @@ toast.error('error occured')}
   }
   const handleDelete = async(resourceId)=>{
     try{
-const res = await api.delete(`/auth/course/${lessonId}/resource/${resourceId}/delete`)
+const res = await api.delete(`/course/lesson/${lessonId}/resource/${resourceId}/delete`)
 console.log(res)
 toast.success('file deleted')
 fetchUploaded()
@@ -46,12 +46,11 @@ fetchUploaded()
   }
   const fetchUploaded = async()=>{
     try{
-const res = await api.get(`/auth/course/${lessonId}/lesson`)
+const res = await api.get(`/course/lesson/${lessonId}`)
 setUploaded(res?.data?.lesson?.resources)
 console.log(res)
     }catch(err){
       console.log(err)
-toast.error('error occured')
     }
   }
   useEffect(()=>{

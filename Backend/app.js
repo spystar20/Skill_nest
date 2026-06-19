@@ -4,6 +4,9 @@ import { loadOnce } from "./Config/env.js";
 import { errHandler } from "./src/middleware/err.middleware.js"
 import cookieParser from "cookie-parser"
 import authRoutes from './src/routes/auth.routes.js'
+import courseRoutes from './src/routes/course.routes.js'
+import teacherRoutes from './src/routes/teacher.routes.js'
+import studentRoutes from './src/routes/student.routes.js'
 import session from "express-session"
 import cors from "cors"
 import passport from "passport";
@@ -22,6 +25,9 @@ app.use(session({
 app.use(cookieParser())
 app.use(passport.initialize())
 app.use("/auth",authRoutes)
+app.use('/course',courseRoutes)
+app.use('/teacher',teacherRoutes)
+app.use('/student',studentRoutes)
 app.get("/test", (req,res,next)=>{
    next(new Error("Middleware Test"))
 })

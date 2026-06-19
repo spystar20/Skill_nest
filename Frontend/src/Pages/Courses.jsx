@@ -19,7 +19,7 @@ const Courses = () => {
   },[])
  const handleCourses = async()=>{
   try{
-const res =await api.get('/auth/courses',{withCredentials:true}
+const res =await api.get('/course/',{withCredentials:true}
 )
 setCourses(res?.data?.courses)
 
