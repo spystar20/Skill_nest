@@ -23,6 +23,8 @@ const CourseDetails = () => {
   const {user} = useAuth()
 const {course_id} = useParams()
 const [courseData,setCourseData]= useState([])
+const [sectionArr,setSectionArr] = useState([])
+const [lessons,setLessons]= useState([])
   const [opensection, Setopensection] = useState(null)
   const toggleAccordian = (section) => {
     Setopensection(opensection === section ? null : section)
@@ -38,6 +40,8 @@ const [courseData,setCourseData]= useState([])
   useEffect(() => {
     toggletab("overview");
     fetchCourseDetails()
+    fetchSection()
+    fetchLesson()
   }, []);
   const fetchCourseDetails = async()=>{
     try{
@@ -47,6 +51,25 @@ const [courseData,setCourseData]= useState([])
     }catch(err){
       console.log(err)
     }
+  }
+  const fetchSection = async()=>{
+       try{
+      const res = await api.get(`/course/${course_id}/get-section`)
+      console.log(res)
+     setSectionArr(res?.data?.section)
+    }catch(err){
+      console.log(err)
+    }
+  }
+  const fetchLesson = async(sectionId)=>{
+      try{
+      const res = await api.get(`/course/lesson/${sectionId}/get-lesson`)
+      console.log(res)
+     setLessons(res?.data?.lessons)
+    }catch(err){
+      console.log(err)
+    }
+  
   }
   return (
     <div className=' bg-white  w-full min-h-screen font-[Roboto] '>
@@ -108,56 +131,38 @@ const [courseData,setCourseData]= useState([])
             <div>
               {/* overview */}
               {tab === "overview" ? (
-                <div>
+                <div className=''>
                   <div className='flex flex-col  gap-1 py-6'>
                     <h1 className='text-lg font-medium'>Course Description</h1>
                     <p className='font-normal '>
                       {courseData.desc}
                     </p>
                   </div>
-                  <div className='flex flex-col gap-1 '>
-                    <h2 className='text-lg font-medium'>What you’ll learn</h2>
-                    <ul className='flex flex-col list-disc list-outside pl-5'>
-                      {/* {courseData.overview.learn.map((list) => {
-                        return (
-                          <li>{list}</li>)
-                      })} */}
-                    </ul>
-                  </div>
-                  <div className='flex flex-col gap-1 py-5'>
-                    <h2 className='text-lg font-medium'>Who this course is for</h2>
-                    <ul className='flex flex-col list-disc list-outside pl-5'>
-                      {/* {courseData.overview.highlights.map((list) => {
-                        return (
-                          <li>{list}</li>
-                        )
-                      })} */}
-                    </ul>
-                  </div>
-                  <div className='flex flex-col gap-1 py-3'>
+            
+                  {/* <div className='flex flex-col gap-1 py-3'>
                     <h2 className='text-lg font-medium'>Requirements</h2>
                     <ul className='flex flex-col list-disc list-outside pl-5'>
-                      {/* {courseData.overview.requirements.map((list) => {
+                       {courseData.overview.requirements.map((list) => {
                         return (
                           <li>
                             {list}
                           </li>
                         )
-                      })} */}
+                      })} 
                     </ul>
-                  </div>
+                  </div> */}
                 </div>
               ) : tab === "syllabus" ? (
 
                 <div className='py-10'>
 
-                  {courseData.syllabus.map((t, i) => {
+                  {sectionArr.map((t, i) => {
                     const moduleKey = `module${i + 1}`;
                     return (
                       <div key={i}>
                         {/* Module header */}
                         <div
-                          onClick={() => toggleModule(moduleKey)}
+                          onClick={() => {toggleModule(moduleKey),fetchLesson(t._id)}}
                           className="flex my-1 justify-between items-center py-5 bg-pink-400 px-3 rounded-lg text-white cursor-pointer"
                         >
                           <span className="flex items-center gap-2 text-lg font-medium">
@@ -165,14 +170,14 @@ const [courseData,setCourseData]= useState([])
                               className={`transition-transform duration-300 ${syllabus[moduleKey] ? "rotate-180" : "rotate-0"
                                 }`}
                             />
-                            {t.module}
+                            {t.lesson}
                           </span>
                           <span>({t.totalTime})</span>
                         </div>
                         {/* Lessons */}
                         {syllabus[moduleKey] && (
                           <ul className="flex flex-col gap-2 mt-2">
-                            {t.lessons.map((lesson, j) => (
+                            {lessons.map((lesson, j) => (
                               <li
                                 key={j}
                                 className="flex justify-between rounded-xl hover:bg-gray-100 transition-all px-6 py-4 w-full"
@@ -329,7 +334,7 @@ const [courseData,setCourseData]= useState([])
             {opensection === "syllabus" && (
               <div className='px-2 py-3 bg-gray-50 rounded-lg '>
 
-                {courseData.syllabus.map((t, i) => {
+                {sectionArr.map((t, i) => {
                   const moduleKey = `module${i + 1}`;
                   return (
                     <div key={i}>
