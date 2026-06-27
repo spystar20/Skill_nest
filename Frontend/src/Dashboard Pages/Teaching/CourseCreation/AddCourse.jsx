@@ -5,8 +5,11 @@ import api from '@/utils/axios'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import { RxCross1 } from 'react-icons/rx'
+import Dataset from '@/utils/Dataset'
+import Loader from '@/utils/Loader'
 const AddCourse = () => {
-
+const [loading,setLoading] = useState(false)
+const [error,setError] = useState(null)
   const navigate = useNavigate()
   const [formData, setFormData] = useState({
     title: '', desc: '', category: '', duration: '', priceType: '', price: '', difficulty: ''
@@ -15,6 +18,7 @@ const AddCourse = () => {
 const [ preview,setPreview] = useState('')
   const handleSubmit = async () => {
     try {
+            setLoading(true)
       const form = new FormData()
       form.append("title", formData.title)
       form.append("desc", formData.desc)
@@ -32,8 +36,7 @@ const [ preview,setPreview] = useState('')
       }, 1000);
    
     } catch (err) {
-      console.log(err)
-    }
+setError(err.response.data?.message || 'something went wrong')    }finally{setLoading(false)}
   }
 const handlePreview = (e)=>{
 const file = e.target.files[0]
@@ -72,9 +75,11 @@ setPreview(URL.createObjectURL(file))
     { value: 'Marketing', label: 'Marketing' }
   ]
   return (
+    
     <div className=' min-h-screen w-full bg-white/90 px-4 py-6 md:py-12 md:px-12 box-border items-center flex justify-center'>
+   
       <div className='flex flex-col bg-white/85   md:w-2/3  rounded-lg gap-4'>
-
+{loading && <Loader />}
         <div className='flex flex-col gap-12 p-6'>
 
 
@@ -176,8 +181,10 @@ setPreview(URL.createObjectURL(file))
             <div className='flex justify-end '> <span onClick={handleSubmit} className='bg-neutral-700 px-4 border border-black/70 py-0.5 rounded-4xl  text-white/80 flex gap-2 items-center justify-center text-lg hover:scale-95 transition-all duration-200 ease-out  cursor-pointer shadow-2xl '>Submit</span></div>
           </>
         </div>
+      
         <div></div>
       </div>
+     
     </div>
   )
 }

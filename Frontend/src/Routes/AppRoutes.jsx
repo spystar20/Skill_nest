@@ -1,39 +1,42 @@
 import MainLayout from '@/Layout/MainLayout'
-import React from 'react'
+import React, { Suspense } from 'react'
 import {   Route , Routes } from 'react-router-dom'
-import Home from '@/Pages/Home'
-import About from '@/Pages/About'
-import Courses from '@/Pages/Courses'
-import CourseDetails from '@/Pages/CourseDetails'
-import CoursePlayer from '@/Pages/CoursePlayer'
-import Login from '@/AuthPages/Login'
-import SignUp from '@/AuthPages/SignUp'
-import Otp from '@/AuthPages/Otp'
-import VerifyEmail from '@/AuthPages/VerifyEmail'
-import AuthLayout from '@/Layout/AuthLayout'
-import PendingEmailVerification from '@/AuthPages/PendingEmailVerification'
-import ForgotPassword from '@/AuthPages/ForgotPassword'
-import ResetPassword from '@/AuthPages/ResetPassword'
-import Profile from '@/Dashboard Pages/Profile/Profile'
+
+import { lazy } from 'react'
+const Home = lazy(()=>import('@/Pages/Home'))
+const About = lazy(()=>import('@/Pages/About'))
+const Courses = lazy(()=>import('@/Pages/Courses'))
+const CourseDetails = lazy(()=>import('@/Pages/CourseDetails'))
+const CoursePlayer = lazy(()=>import('@/Pages/CoursePlayer'))
+const Login =  lazy(()=>import('@/AuthPages/Login'))
+const SignUp =lazy(()=>import('@/AuthPages/SignUp'))
+const  Otp = lazy  (()=>import('@/AuthPages/Otp'))
+const VerifyEmail = lazy(()=>import('@/AuthPages/VerifyEmail'))
+const AuthLayout =lazy (()=>import('@/Layout/AuthLayout'))
+const PendingEmailVerification = lazy(()=>import('@/AuthPages/PendingEmailVerification'))
+const ForgotPassword = lazy(()=>import('@/AuthPages/ForgotPassword'))
+const ResetPassword =lazy( ()=>import('@/AuthPages/ResetPassword'))
+const Profile = lazy(()=>import('@/Dashboard Pages/Profile/Profile'))
 import DashboardLayout from '@/Layout/DashboardLayout'
-import Security from '@/Dashboard Pages/Security'
-import BecomeTeacher from '@/AuthPages/BecomeTeacher'
-import Teach from '@/Pages/Teach'
-import MyCourse from '@/Dashboard Pages/Teaching/MyCourse'
-import AddCourse from '@/Dashboard Pages/Teaching/CourseCreation/AddCourse'
-import CourseBuilder from '@/Dashboard Pages/Teaching/CourseCreation/CourseBuilder'
-import LessonEditor from '@/Dashboard Pages/Teaching/CourseCreation/LessonEditor'
+const Security = lazy (()=>import('@/Dashboard Pages/Security'))
+const BecomeTeacher = lazy(()=>import('@/AuthPages/BecomeTeacher'))
+const Teach = lazy(()=>import('@/Pages/Teach'))
+const MyCourse = lazy(()=>import('@/Dashboard Pages/Teaching/MyCourse'))
+const AddCourse = lazy(()=>import('@/Dashboard Pages/Teaching/CourseCreation/AddCourse'))
+const CourseBuilder = lazy (()=>import('@/Dashboard Pages/Teaching/CourseCreation/CourseBuilder'))
+const LessonEditor =lazy (()=>import('@/Dashboard Pages/Teaching/CourseCreation/LessonEditor'))
+import Loader from '@/utils/Loader'
 
 const AppRoutes = () => {
   return (
-    
+    <Suspense fallback={<Loader/>}>
          <Routes>
             {/* MAIN LAYOUT */}
             <Route element={<MainLayout/>}>
   <Route path='/' element={<Home/>}/>
   <Route path='/about' element={<About/>}/>
   <Route path='/courses' element={<Courses/>}/>
-   <Route path='/courses/:course_name' element={<CourseDetails/>}/>
+   <Route path='/courses/:course_name/:course_id' element={<CourseDetails/>}/>
      <Route path='/courses/lecture/:course_name' element={<CoursePlayer/>}/>
      <Route path='/Teach' element={<Teach/>}/>
             </Route>
@@ -58,6 +61,7 @@ const AppRoutes = () => {
        <Route path='/security' element={<Security/>}/>
    </Route>
      </Routes>
+     </Suspense>
     
   )
 }

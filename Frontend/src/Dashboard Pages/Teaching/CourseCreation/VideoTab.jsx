@@ -1,5 +1,6 @@
 import { useAuth } from '@/context/AuthContext'
 import api from '@/utils/axios'
+import Loader from '@/utils/Loader'
 import React, { useState } from 'react'
 import { toast } from 'sonner'
 
@@ -7,29 +8,31 @@ const VideoTab = ({lessonId}) => {
     const {user} =useAuth()
     const [video,setVideo]= useState(null)
     const [preview,setPreview]= useState('')
+    const [loading,setLoading]= useState(false)
     const handleUpload = (e)=>{
         const file = e.target.files[0]
 
         setVideo(file)
-console.log(file)
         setPreview(URL.createObjectURL(file))
     }
     const handleVideo = async()=>{
 
         try{
+
           const form = new FormData()
 form.append('video',video)
-console.log(video)
+setLoading(true)
  await api.put(`/course/lesson/${lessonId}/update`,form)
  toast.success('video uploaded')
  setPreview('')
  setVideo(null)
         }catch(err){
             console.log(err)
-        }
+        }finally{setLoading(false)}
     }
   return (
 <div className="bg-white rounded-xl p-6 shadow-sm">
+    {loading && <Loader/>}
 
       <h2 className="text-xl font-semibold mb-6">
         Lesson Video

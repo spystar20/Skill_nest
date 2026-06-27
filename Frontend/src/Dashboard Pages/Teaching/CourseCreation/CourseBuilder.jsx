@@ -1,5 +1,6 @@
 import { useAuth } from '@/context/AuthContext'
 import api from '@/utils/axios'
+import Loader from '@/utils/Loader'
 import ProjectCard from '@/utils/ProjectCard'
 import React, { useEffect, useState } from 'react'
 import { ImBin } from 'react-icons/im'
@@ -16,6 +17,7 @@ const CourseBuilder = () => {
     const [lesson,setLesson]= useState('')
     const [lessonArr,setLessonArr] = useState([])
     const [addsection,setAddsection] = useState(false)
+    const [loading,setLoading]= useState(false)
     const [section,setSection] = useState([])
     const [activeSection,setActiveSection] = useState(null)
     const [expandedSection,setExpandedSection]= useState(null)
@@ -23,13 +25,16 @@ const navigate = useNavigate()
     const {user} = useAuth()
         const handleStatus = async(status)=>{
       try{
+        setLoading(true)
     const res = await api.put(`/course/${courseId}/status`,{status})
     toast.success('course published successfully')
-    setTimeout(() => {
+  
       navigate('/dashboard/teacher/my-courses')
-    }, 1000);
+   
       }catch(err){
         console.log(err)
+      }finally{
+        setLoading(false)
       }
     }
     const fetchCourse = async()=>{
@@ -118,14 +123,13 @@ setLessonArr(prev =>({...prev,[section]:res.data.lessons}))
     }
    }
     useEffect(()=>{
-      console.log(section)
         fetchCourse()
         fetchSection()
     },[])
   return (
 
 <div className="min-h-screen bg-neutral-100 px-10 py-8">
-
+{loading && <Loader/>}
   {/* Header */}
   <div className="flex justify-between items-center mb-8">
     <div>

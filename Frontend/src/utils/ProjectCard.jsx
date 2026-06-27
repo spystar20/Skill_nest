@@ -6,7 +6,7 @@ import { FaHeart, FaCartArrowDown ,FaStar} from 'react-icons/fa'
 import { FiTrendingUp } from 'react-icons/fi'
 import { PiBookDuotone } from 'react-icons/pi'
 import { Link } from 'react-router-dom'
-const ProjectCard = ({img,category,course_name,course_desc,chapters,duration,level,rating,instructor_img,instructor_name,price,id,className=''}) => {
+const ProjectCard = ({img,category,course_id,course_name,course_desc,chapters,duration,level,rating,instructor_img,instructor_name,price,id,className=''}) => {
     const {Liked,toggleLike} = toggleStore()
   return (
        
@@ -23,7 +23,7 @@ const ProjectCard = ({img,category,course_name,course_desc,chapters,duration,lev
                           <FaHeart   onClick={() => toggleLike(id)}
  className={`${Liked.includes(id)?"text-pink-300":"text-black"}`} /></span><span className=' bg-white p-2 rounded-full hover:scale-110 ease-in duration-200 transition-all'><FaCartArrowDown /></span></div>
                       </div>
-   <Link key={id} to={`/courses/${course_name}`}>
+   <Link key={id} to={`/courses/${course_name}/${course_id}`}>
                       <div className=' flex flex-col gap-2 md:gap-4 py-4'>
                         <div className='flex flex-col text-left flex-wrap '>
                           <h2 className='text-sm md:text-base font-semibold leading-snug font-heading text-gray-950'>{course_name}</h2>

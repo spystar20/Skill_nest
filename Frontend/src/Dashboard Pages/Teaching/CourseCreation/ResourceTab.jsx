@@ -1,11 +1,13 @@
 import { useAuth } from '@/context/AuthContext'
 import api from '@/utils/axios'
+import Loader from '@/utils/Loader';
 import React, { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 const ResourcesTab = ({lessonId}) => {
   const {user} = useAuth()
   const [resource,setResource] = useState([])
   const [upload,setUploaded] = useState([])
+  const [loading,setLoading]=useState(false)
   const handlepdf = (e)=>{
     const file = Array.from(e.target.files)
     const formattedFiles = file.map((file)=>({
@@ -26,31 +28,39 @@ try{
     form.append('title',resource.title)
     form.append('resource',resource.file)
   })
+  setLoading(true)
  await api.put(`/course/lesson/${lessonId}/resource-upload`,form)
 toast.success('file uploaded successfully')
 fetchUploaded()
 setResource([])
 }catch(err){
 
-toast.error('error occured')}
+console.log(err)}finally{
+    setLoading(false)
+  }
   }
   const handleDelete = async(resourceId)=>{
     try{
+      setLoading(true)
 const res = await api.delete(`/course/lesson/${lessonId}/resource/${resourceId}/delete`)
-console.log(res)
 toast.success('file deleted')
 fetchUploaded()
     }catch(err){
       console.log(err)
+    }finally{
+      setLoading(false)
     }
   }
   const fetchUploaded = async()=>{
     try{
+      setLoading(true)
 const res = await api.get(`/course/lesson/${lessonId}`)
 setUploaded(res?.data?.lesson?.resources)
 console.log(res)
     }catch(err){
       console.log(err)
+    }finally{
+      setLoading(false)
     }
   }
   useEffect(()=>{
@@ -58,7 +68,7 @@ console.log(res)
   },[])
   return (
    <div className="bg-white rounded-2xl p-6 shadow-sm">
-
+{loading && <Loader/>}
   {/* Header */}
   <div className="mb-6">
     <h2 className="text-2xl font-semibold">
