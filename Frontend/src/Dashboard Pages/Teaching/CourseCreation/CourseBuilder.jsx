@@ -8,7 +8,6 @@ import { MdPlayArrow } from 'react-icons/md'
 import { PiPencil } from 'react-icons/pi'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'sonner'
-
 const CourseBuilder = () => {
     const { courseId } = useParams()
     const [course,setCourse] = useState(null)

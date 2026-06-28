@@ -14,7 +14,7 @@ import { LiaCertificateSolid } from "react-icons/lia";
 import { BsTwitterX } from "react-icons/bs";
 import Rating from '@mui/material/Rating';
 import { useParams } from 'react-router-dom';
-import course from '../data/course';
+import {formatTime} from '../utils/formatDuration'
 import { Link } from 'react-router-dom';
 import api from '@/utils/axios';
 import { useAuth } from '@/context/AuthContext';
@@ -174,7 +174,7 @@ const [lessonsbySection,setLessons]= useState({})
                             />
                             {t.title}
                           </span>
-                          <span>({t.totalTime})</span>
+                          <span>{formatTime(t.duration)} </span>
                         </div>
                         {/* Lessons */}
                         {syllabus[moduleKey] && (
@@ -188,7 +188,7 @@ const [lessonsbySection,setLessons]= useState({})
                                   <FaPlayCircle className="text-sm text-pink-500" />
                                   {lesson.lesson}
                                 </span>
-                                <span className="text-gray-500">{lesson.duration}</span>
+                                <span className="text-gray-500">{formatTime(lesson.duration)}</span>
                               </li>
                             ))}
                           </ul>

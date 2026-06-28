@@ -187,16 +187,22 @@ const result = await cloudinary.uploader.upload(req.file.path,{
 })
 const video =  result.secure_url
 lesson.videoUrl=video
- lesson.duration = result.duration;
+ lesson.duration = Math.round(result.duration);
+
 
  fs.unlinkSync(req.file.path)
 
 }   
 
 await lesson.save()
-const section = await Section.findById(lesson.section)
-const totalDuration = section
-return res.status(200).json({message:'lesson updated',})
+const allLesson = await Lesson.find({section:lesson.section})
+const totalDuration = Math.floor(allLesson.reduce((acc,curr)=>acc+(curr.duration || 0),0))
+const section = await Section.findByIdAndUpdate(lesson.section,{duration:totalDuration})
+const allSection = await Section.find({course:section.course})
+const totalsectionDuration =Math.floor( allSection.reduce((acc,curr)=>acc+(curr.duration || 0),0))
+ 
+const course = await Course.findByIdAndUpdate(section.course,{duration:totalsectionDuration})
+return res.status(200).json({message:'lesson updated'})
  
 })
 

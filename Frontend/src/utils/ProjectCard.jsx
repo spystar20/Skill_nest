@@ -6,8 +6,10 @@ import { FaHeart, FaCartArrowDown ,FaStar} from 'react-icons/fa'
 import { FiTrendingUp } from 'react-icons/fi'
 import { PiBookDuotone } from 'react-icons/pi'
 import { Link } from 'react-router-dom'
+import { formatTime } from './formatDuration'
 const ProjectCard = ({img,category,course_id,course_name,course_desc,chapters,duration,level,rating,instructor_img,instructor_name,price,id,className=''}) => {
     const {Liked,toggleLike} = toggleStore()
+    
   return (
        
          
@@ -33,7 +35,7 @@ const ProjectCard = ({img,category,course_id,course_name,course_desc,chapters,du
 
                         <div className='flex items-center justify-start flex-wrap gap-2 '>
                           <span className=' p-1 md:py-1 md:px-2.5 text-xs lg:text-sm font-medium shadow-sm  font-body  rounded-sm md:rounded-full capitalize   bg-slate-100 text-slate-700 flex flex-row gap-1 md:gap-2 items-center'><span><PiBookDuotone className='text-sm ' /></span>{chapters}</span>
-                          <span className=' p-1 md:py-1 md:px-2.5 text-xs lg:text-sm font-medium shadow-sm font-body   rounded-sm md:rounded-full  bg-slate-100 text-slate-700 flex flex-row gap-1  items-center '><span><CiClock1 className='text-sm ' /></span>{duration}</span>
+                          <span className=' p-1 md:py-1 md:px-2.5 text-xs lg:text-sm font-medium shadow-sm font-body   rounded-sm md:rounded-full  bg-slate-100 text-slate-700 flex flex-row gap-1  items-center '><span><CiClock1 className='text-sm ' /></span> {formatTime(duration) }</span>
                           <span className=" p-1 md:py-1 md:px-2.5 text-xs lg:text-sm font-medium  shadow-sm  rounded-sm md:rounded-full bg-indigo-300 text-white flex gap-1 md:gap-2 items-center">
                             <FiTrendingUp className="text-sm " />
                             {level}      </span>

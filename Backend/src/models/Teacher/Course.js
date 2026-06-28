@@ -9,7 +9,7 @@ const course = new mongoose.Schema({
         type:String,required:true
     },
     duration:{
-        type:Number,required:true
+        type:Number,
     },category:{
         type:String,required:true
     },difficulty:{
