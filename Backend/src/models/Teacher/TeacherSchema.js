@@ -3,7 +3,7 @@ const TeacherSchema =  new mongoose.Schema({
     user:{
 type:mongoose.Schema.Types.ObjectId,ref:"User"
     },
-    title:{
+ title:{
         type:String,required:true
     },experience:{
         type:String,default:''

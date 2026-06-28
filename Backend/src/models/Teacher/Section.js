@@ -8,7 +8,7 @@ title:{
 },course:{
 type:mongoose.Schema.Types.ObjectId,
 ref:'course',required:true
-}
+},duration:Number
 },{timestamps:true})
 
 export default mongoose.model('section',Section)

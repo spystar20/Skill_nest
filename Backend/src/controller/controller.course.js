@@ -10,7 +10,7 @@ import { asyncHandler } from "../middleware/asyncHandler.middleware.js"
 
 export const CreateCoursse = asyncHandler( async (req, res) => {
    
-      const { title, desc, priceType, price, category, duration, difficulty } = req.body
+      const { title, desc, priceType, price, category, difficulty } = req.body
       const instructor = req.user.UserID
       const existingUser = await user.findById(instructor)
       if (!existingUser) {
@@ -35,7 +35,7 @@ export const CreateCoursse = asyncHandler( async (req, res) => {
       const thumbnail = result.secure_url
 
       const newCourse = await Course.create({
-         title, desc, thumbnail, priceType, price, category, duration, difficulty, instructor
+         title, desc, thumbnail, priceType, price, category, difficulty, instructor
       })
    
       return res.status(200).json({ message: "course is created", newCourse })
@@ -188,11 +188,14 @@ const result = await cloudinary.uploader.upload(req.file.path,{
 const video =  result.secure_url
 lesson.videoUrl=video
  lesson.duration = result.duration;
+
  fs.unlinkSync(req.file.path)
 
 }   
 
 await lesson.save()
+const section = await Section.findById(lesson.section)
+const totalDuration = section
 return res.status(200).json({message:'lesson updated',})
  
 })

@@ -24,7 +24,7 @@ const CourseDetails = () => {
 const {course_id} = useParams()
 const [courseData,setCourseData]= useState([])
 const [sectionArr,setSectionArr] = useState([])
-const [lessons,setLessons]= useState([])
+const [lessonsbySection,setLessons]= useState({})
   const [opensection, Setopensection] = useState(null)
   const toggleAccordian = (section) => {
     Setopensection(opensection === section ? null : section)
@@ -41,7 +41,6 @@ const [lessons,setLessons]= useState([])
     toggletab("overview");
     fetchCourseDetails()
     fetchSection()
-    fetchLesson()
   }, []);
   const fetchCourseDetails = async()=>{
     try{
@@ -65,7 +64,9 @@ const [lessons,setLessons]= useState([])
       try{
       const res = await api.get(`/course/lesson/${sectionId}/get-lesson`)
       console.log(res)
-     setLessons(res?.data?.lessons)
+     setLessons(prev=>({
+      ...prev , [sectionId]:res.data.lessons
+     }))
     }catch(err){
       console.log(err)
     }
@@ -158,6 +159,7 @@ const [lessons,setLessons]= useState([])
 
                   {sectionArr.map((t, i) => {
                     const moduleKey = `module${i + 1}`;
+                    console.log(lessonsbySection)
                     return (
                       <div key={i}>
                         {/* Module header */}
@@ -170,23 +172,23 @@ const [lessons,setLessons]= useState([])
                               className={`transition-transform duration-300 ${syllabus[moduleKey] ? "rotate-180" : "rotate-0"
                                 }`}
                             />
-                            {t.lesson}
+                            {t.title}
                           </span>
                           <span>({t.totalTime})</span>
                         </div>
                         {/* Lessons */}
                         {syllabus[moduleKey] && (
                           <ul className="flex flex-col gap-2 mt-2">
-                            {lessons.map((lesson, j) => (
+                            {lessonsbySection[t._id]?.map((lesson, j) => (
                               <li
                                 key={j}
                                 className="flex justify-between rounded-xl hover:bg-gray-100 transition-all px-6 py-4 w-full"
                               >
                                 <span className="flex items-center gap-2">
                                   <FaPlayCircle className="text-sm text-pink-500" />
-                                  {lesson.title}
+                                  {lesson.lesson}
                                 </span>
-                                <span className="text-gray-500">{lesson.time}</span>
+                                <span className="text-gray-500">{lesson.duration}</span>
                               </li>
                             ))}
                           </ul>
@@ -364,7 +366,7 @@ const [lessons,setLessons]= useState([])
                                 <FaPlayCircle className="text-sm text-pink-500" />
                                 {lesson.title}
                               </span>
-                              <span className="text-gray-500">{lesson.time}</span>
+                              <span className="text-gray-500">{lesson.duration}</span>
                             </li>
                           ))}
                         </ul>

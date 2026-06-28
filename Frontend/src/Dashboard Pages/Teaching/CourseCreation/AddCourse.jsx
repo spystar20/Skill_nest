@@ -12,7 +12,7 @@ const [loading,setLoading] = useState(false)
 const [error,setError] = useState(null)
   const navigate = useNavigate()
   const [formData, setFormData] = useState({
-    title: '', desc: '', category: '', duration: '', priceType: '', price: '', difficulty: ''
+    title: '', desc: '', category: '', priceType: '', price: '', difficulty: ''
   })
   const [thumbnail, setThumbnail] = useState('')
 const [ preview,setPreview] = useState('')
@@ -23,7 +23,6 @@ const [ preview,setPreview] = useState('')
       form.append("title", formData.title)
       form.append("desc", formData.desc)
       form.append("category", formData.category)
-      form.append("duration", formData.duration)
       form.append("priceType", formData.priceType)
       form.append("price", formData.price)
       form.append("difficulty", formData.difficulty)
@@ -102,7 +101,7 @@ setPreview(URL.createObjectURL(file))
                     </label>
                     <textarea value={formData.desc} placeholder='Write a short summary of your course (1–2 lines)' onChange={(e) => setFormData({ ...formData, desc: e.target.value })} type='text' className='border placeholder:text-neutral-400  border-black/20 disabled:bg-neutral-100  placeholder:text-sm  focus:ring-1 focus:outline-none focus:ring-neutral-800 rounded-lg px-3 py-2 ' />
                   </div>
-                  <div className='flex gap-1 flex-col'>
+                  {/* <div className='flex gap-1 flex-col'>
                     <label className='text-lg font-medium text-neutral-900 mb-1'>
                       Estimated Duration
                     </label>
@@ -113,7 +112,7 @@ setPreview(URL.createObjectURL(file))
                       placeholder='e.g. 10 Hours'
                       className='border border-black/20 rounded-lg px-3 py-2'
                     />
-                  </div>
+                  </div> */}
                 </div>
                  <div className='border-2 border-black/60 border-dashed rounded-lg p-5 flex flex-col items-center justify-center'>
                 {!preview ? (
