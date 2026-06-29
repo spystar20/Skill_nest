@@ -25,7 +25,8 @@ const {course_id} = useParams()
 const [courseData,setCourseData]= useState([])
 const [sectionArr,setSectionArr] = useState([])
 const [lessonsbySection,setLessons]= useState({})
-  const [opensection, Setopensection] = useState(null)
+const [ teacherData,setTeacherData]= useState([])
+const [opensection, Setopensection] = useState(null)
   const toggleAccordian = (section) => {
     Setopensection(opensection === section ? null : section)
   }
@@ -47,6 +48,8 @@ const [lessonsbySection,setLessons]= useState({})
       const res = await api.get(`/course/${course_id}`)
       console.log(res)
       setCourseData(res?.data?.course)
+      setTeacherData(res?.data?.teacher)
+      
     }catch(err){
       console.log(err)
     }
@@ -110,7 +113,7 @@ const [lessonsbySection,setLessons]= useState({})
             <div className='flex justify-between items-center'><p class="text-lg md:text-2xl font-semibold  bg-clip-text text-transparent bg-gradient-to-tr from-[#0f172a] via-[#1e3a8a] to-[#60a5fa]">
               Rs. {courseData.price}
             </p>
-              <Link to={`/courses/lecture/${courseData.course_name}`}> <button className='px-5 py-2 capitalize text-lg font-semibold  rounded-lg duration-300 transition-all ease-in bg-gradient-to-tr from-[#95b1ee] to-[#728ccd]  hover:scale-95 scale-100 text-white cursor-pointer '>enroll now</button></Link>
+              <Link to={`/courses/${courseData.title}/${courseData._id}/learn`}> <button className='px-5 py-2 capitalize text-lg font-semibold  rounded-lg duration-300 transition-all ease-in bg-gradient-to-tr from-[#95b1ee] to-[#728ccd]  hover:scale-95 scale-100 text-white cursor-pointer '>enroll now</button></Link>
             </div>
 
           </div>
@@ -202,14 +205,14 @@ const [lessonsbySection,setLessons]= useState({})
                 <div className=' py-5 pl-4 '>
                   <div className='flex flex-col  pb-3'>
                     <h2 className='text-xl text-black font-semibold'>
-                      {courseData.instructor_name}
+                      {courseData.instructor?.firstName}
                     </h2>
-                    <span className='text-lg '> ({courseData.instructor.title})</span>
+                    <span className='text-lg '> ({teacherData.title})</span>
                   </div>
                   <div className='flex items-start   gap-7'>
-                    <div className='w-[340px] border rounded-2xl p-4'><img className=' rounded-2xl' src={courseData.instructor_img} alt={courseData.instructor_img} /></div>
+                    <div className='w-[340px] object-cover border rounded-2xl p-4'><img className=' rounded-2xl' src={courseData.instructor?.avatar} alt={courseData.instructor?.avatar} /></div>
                     <div>
-                      <ul className='flex flex-col text-base font-normal w-full gap-1'>
+                      {/* <ul className='flex flex-col text-base font-normal w-full gap-1'>
                         <li className='flex gap-2 '>
                           <span className='flex gap-2 items-center '><FaStar />{courseData.instructor.rating} </span>
                         </li>
@@ -226,7 +229,7 @@ const [lessonsbySection,setLessons]= useState({})
                           <span><FaInstagram className=' bg-pink-400 text-white w-6 h-6 rounded-sm py-1 scale-100 cursor-pointer transition-all ease-out hover:scale-95' />
                           </span>
                         </div></li>
-                      </ul>
+                      </ul> */}
 
                     </div>
                   </div>
@@ -234,13 +237,13 @@ const [lessonsbySection,setLessons]= useState({})
                     <div className='flex flex-col gap-1 '>
                       <h1 className='text-lg font-medium'>About the Instructor:</h1>
                       <p className='font-normal '>
-                        {courseData.instructor.bio}
+                        {courseData.instructor?.Bio}
                       </p>
                     </div>
                     <div className='flex flex-col gap-1 '>
-                      <h1 className='text-lg font-medium'>Teaching Style :</h1>
+                      <h1 className='text-lg font-medium'>Specialization :</h1>
                       <p className='font-normal '>
-                        {courseData.instructor.teaching}
+                        {teacherData.specialization}
                       </p>
                     </div>
                     <div className='flex flex-col gap-1 '>

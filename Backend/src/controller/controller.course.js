@@ -263,11 +263,16 @@ export const CourseSetting =asyncHandler( async(req,res)=>{
 export const getCoursebyId =asyncHandler( async (req, res) => {
   
       const { courseId } = req.params
-      const course = await Course.findById(courseId).populate('instructor', "firstName lastName avatar")
+      const course = await Course.findById(courseId).populate('instructor', "firstName lastName avatar Bio")
       if (!course) {
          return res.status(401).json({ message: 'course not found' })
       }
-      return res.status(200).json({ course })
+      const teacher = await TeacherSchema.findOne({user:course.instructor})
+      if(!teacher){
+                  return res.status(401).json({ message: 'teacher not found' })
+      }
+
+      return res.status(200).json({ course,teacher })
    
 })
 export const GetCourses =asyncHandler( async (req, res) => {
