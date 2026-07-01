@@ -37,7 +37,6 @@ const AppRoutes = () => {
           <Route path='/about' element={<About />} />
           <Route path='/courses' element={<Courses />} />
           <Route path='/courses/:course_name/:course_id' element={<CourseDetails />} />
-          <Route path='/courses/:course_name/:course_id/learn' element={<CoursePlayer />} />
           <Route path='/Teach' element={<Teach />} />
         </Route>
         <Route element={<AuthLayout />}>
@@ -59,6 +58,8 @@ const AppRoutes = () => {
           <Route path='/profile' element={<Profile />} />
           <Route path='/dashboard/teacher/my-courses' element={<MyCourse />} />
           <Route path='/security' element={<Security />} />
+                    <Route path='/courses/:course_name/:course_id/learn' element={<CoursePlayer />} />
+
         </Route>
       </Routes>
     </Suspense>
