@@ -37,9 +37,10 @@ const CoursePlayer = () => {
   fetchcourses()
 }, []);
    const tabs = [ {name:"notes",id:3},{name:"resource",id:4},]
+   const [currentCourse,setCurrentCourse]=useState(null)
+   console.log(`cuurent ${currentCourse}`)
     const {tab,toggletab,toggleModule,syllabus } = usetoggletab()
   const  {course_id} = useParams()
-    // const courseData = featureCourses.find((c)=> c.course_name==course_name)
     const fetchcourses = async()=>{
       try{
 const res = await api.get(`/course/${course_id}`)
@@ -57,6 +58,8 @@ console.log(err)
         // sectionArr.forEach(section => {
         //   fetchLesson(section._id)
         //  });
+          fetchLesson(res?.data?.section[0]._id)
+
         }catch(err){
           console.log(err)
         }
@@ -65,10 +68,12 @@ console.log(err)
       try{
 
       const res = await api.get(`/course/lesson/${sectionId}/get-lesson`)
-      console.log(res)
      setLessons(prev=>({
       ...prev , [sectionId]:res.data.lessons
      }))
+  if(currentCourse === null){
+     setCurrentCourse(res?.data?.lessons[0])
+  }
     }catch(err){
       console.log(err)
     }
@@ -104,7 +109,7 @@ console.log(err)
         <h2 className='text-2xl font-semibold'>{courseData.title}</h2>
         </span>
         <div className='flex flex-col justify-between gap-6'>
-   <div className='p-4 flex-1 rounded-lg bg-white shadow-lg'><video className='w-full h-auto'  src={vid} controls autoPlay> </video></div>
+   <div className='p-4 flex-1 rounded-lg bg-white shadow-lg'><video className='w-full h-auto'  src={currentCourse?.videoUrl} controls autoPlay> </video></div>
   <div className=' pl-2   font-[Outfit] w-full'>
           {/* headings */}           
           <div className='flex flex-row gap-8  w-full text-black text-xl font-semibold '>
@@ -199,7 +204,7 @@ console.log(err)
               key={j}
               className="flex justify-between rounded-xl hover:bg-gray-100 transition-all px-6 py-4 w-full"
             >
-              <span className="flex items-center gap-2">
+              <span className="flex items-center gap-2" onClick={()=>setCurrentCourse(lesson)}>
                 <FaPlayCircle className="text-sm text-pink-500" />
                 {lesson.lesson}
               </span>

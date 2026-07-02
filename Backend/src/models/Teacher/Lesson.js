@@ -13,7 +13,14 @@ const lessonSchema = new mongoose.Schema({
     },
     resources: [
         {
-            title: String,url:String
+            title: String,url:String,type:{type:String,enum:["pdf",
+        "link",
+        "github",
+        "youtube",
+        "doc",
+        "ppt",
+        "zip",
+        "code"]}
         },
   
     ],

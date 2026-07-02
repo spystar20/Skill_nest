@@ -1,7 +1,7 @@
 import express from 'express'
 import { middleware } from "../middleware/auth.middleware.js"
 import uploads from "../middleware/multer.js"
-import { getCoursebyId ,CreateCoursse, GetCourses, CreateSection, getSection, createLesson, getLesson, updateLesson, getLessonById, LessonPdfUpload, DeleteResource, CourseSetting, GetCoursesByTeacherId, UpdateCourseStatus, UpdateSection, DeleteSection, deleteLesson, DeleteCourse,} from "../controller/controller.course.js"
+import { getCoursebyId ,CreateCoursse, GetCourses, CreateSection, getSection, createLesson, getLesson, updateLesson, getLessonById, DeleteResource, CourseSetting, GetCoursesByTeacherId, UpdateCourseStatus, UpdateSection, DeleteSection, deleteLesson, DeleteCourse, ResourceUpload,} from "../controller/controller.course.js"
 export const router = express.Router()
 
 // courses
@@ -22,7 +22,7 @@ router.post('/lesson/:sectionId/create-lesson',middleware,createLesson)
 router.get('/lesson/:sectionId/get-lesson',middleware,getLesson)
 router.get('/lesson/:lessonId',middleware,getLessonById)
 router.delete('/lesson/:sectionId/delete',middleware,deleteLesson)
-router.put('/lesson/:lessonId/resource-upload',uploads.array("resource"), middleware,LessonPdfUpload)
+router.put('/lesson/:lessonId/resource-upload',uploads.array("resource"), middleware,ResourceUpload)
 router.delete('/lesson/:lessonId/resource/:resourceId/delete',middleware,DeleteResource)
 router.put('/lesson/:lessonId/update',uploads.single('video'),middleware,updateLesson)
 router.put('/lesson/:lessonId/setting',middleware,CourseSetting)
