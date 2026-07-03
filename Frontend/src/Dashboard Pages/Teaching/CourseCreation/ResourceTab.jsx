@@ -5,11 +5,16 @@ import React, { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import { FiGithub } from 'react-icons/fi';
 import { IoIosLink } from 'react-icons/io';
+import { FaExternalLinkAlt, FaFilePdf, FaYoutube } from 'react-icons/fa';
+import { IoDocumentTextSharp } from 'react-icons/io5';
 const ResourcesTab = ({lessonId}) => {
   const {user} = useAuth()
   const [resourceForm,setResourceForm] = useState({title:'',url:'',type:'pdf',files:[]})
   const [upload,setUploaded] = useState([])
   const [loading,setLoading]=useState(false)
+  const resourceIcons = {
+    pdf:<FaFilePdf/>,doc:<IoDocumentTextSharp/>,github:<FiGithub/>,website:<FaExternalLinkAlt/>,youtube:<FaYoutube/>
+  }
   const handlepdf = (e)=>{
     const file = Array.from(e.target.files)
     const formattedFiles = file.map((file)=>({
@@ -33,10 +38,14 @@ try{
     form.append('type',resourceForm.type)
   })
   setLoading(true)
- await api.put(`/course/lesson/${lessonId}/resource-upload`,form)}else{
+
+ await api.put(`/course/lesson/${lessonId}/resource-upload`,form)
+}else{
   await api.put(`/course/lesson/${lessonId}/resource-upload`,resourceForm)
+
  }
- 
+ setResourceForm({title:'',url:'',type:'pdf',files:[]})
+
 toast.success('resource uploaded successfully')
 fetchUploaded()
 
@@ -115,28 +124,12 @@ console.log(res)
           </select>
         </div>
 
-        {/* Title */}
-        <div className="mb-5">
-          <label  className="block mb-2 font-medium">
-            Title
-          </label>
-
-          <input
-          value={resourceForm.title}
-onChange={(e)=>
-setResourceForm(prev=>({
-    ...prev,
-    title:e.target.value
-}))
-}
-            type="text"
-            placeholder="React Cheat Sheet"
-            className="w-full border rounded-xl p-3"
-          />
-        </div>
+     
 
         {/* Upload Box */}
 {(resourceForm.type === 'pdf' || resourceForm.type === 'doc')&&(
+<>
+{(resourceForm.files.length === 0 )?(
         <div className="border-2 border-dashed rounded-2xl p-8 text-center bg-gray-50">
 
           <div className="text-5xl mb-4">
@@ -162,13 +155,115 @@ setResourceForm(prev=>({
       />
     </label>
 
-        </div>)}
+        </div>):( 
+
+
+         <div className="space-y-4">
+
+  {resourceForm.files.map((file, index) => (
+
+    <div
+      key={index}
+      className="border rounded-2xl p-5 bg-white flex flex-col md:flex-row md:items-center md:justify-between gap-5"
+    >
+
+      {/* Left */}
+      <div className="flex gap-4 flex-1">
+
+        <div className="w-14 h-14 rounded-xl bg-red-100 flex items-center justify-center text-3xl">
+          📄
+        </div>
+
+        <div className="flex-1">
+
+          <p className="font-medium">
+            {file.file.name}
+          </p>
+
+          <p className="text-sm text-gray-500 mb-3">
+            {file.size}
+          </p>
+
+          <label className="text-sm font-medium">
+            Resource Title
+          </label>
+
+          <input
+            value={file.title}
+            onChange={(e) => {
+              const updatedFiles = [...resourceForm.files];
+
+              updatedFiles[index].title = e.target.value;
+
+              setResourceForm((prev) => ({
+                ...prev,
+                files: updatedFiles,
+              }));
+            }}
+            className="mt-2 w-full border rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-black"
+            placeholder="Enter resource title"
+          />
+
+        </div>
+
+      </div>
+
+      {/* Right */}
+      <div className="flex gap-3">
+
+        <button
+          onClick={() => handleRemove(index)}
+          className="px-4 py-2 rounded-lg bg-red-50 text-red-600 hover:bg-red-100"
+        >
+          Remove
+        </button>
+
+      </div>
+
+    </div>
+
+  ))}
+
+  {/* Add More Files */}
+
+  <label className="inline-block cursor-pointer bg-black text-white px-5 py-3 rounded-xl hover:bg-neutral-800">
+
+    + Add More Files
+
+    <input
+      type="file"
+      multiple
+      className="hidden"
+      onChange={handlepdf}
+    />
+
+  </label>
+
+</div>)} </>)}
 
 
         {/* URL */}
 {(resourceForm.type !=='pdf' && resourceForm.type !== 'doc')&&(
         <div className="mb-5">
+   {/* Title */}
+        <div className="mb-5">
+          <label  className="block mb-2 font-medium">
+            Title
+          </label>
 
+          <input
+          value={resourceForm.title}
+onChange={(e)=>
+setResourceForm(prev=>({
+    ...prev,
+    title:e.target.value
+}))
+}
+            type="text"
+            placeholder="React Cheat Sheet"
+            className="w-full border rounded-xl p-3"
+          />
+        </div>
           <label className="block mb-2 font-medium">
             External URL
           </label>
@@ -192,7 +287,6 @@ setResourceForm(prev=>({
         <button onClick={handleUpload} className="w-full mt-4 mx-auto bg-black hover:bg-black/70 text-white rounded-xl py-3 font-medium">
           Save Resource
         </button>
-        <button onClick={handleRemove}>remove</button>
 
       </div>
 
@@ -207,7 +301,7 @@ setResourceForm(prev=>({
           </h3>
 
           <span className="bg-gray-100 rounded-full px-4 py-2 text-sm">
-            6 Resources
+          {upload.length}
           </span>
 
         </div>
@@ -224,100 +318,26 @@ setResourceForm(prev=>({
 
         <div className="space-y-4">
 
-         
-            <div
-              
-              className="border rounded-2xl p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4 hover:shadow-sm transition"
-            >
-
-              <div className="flex items-start gap-4">
-
-                <div className="text-3xl">
-                  📄
-                </div>
-
-                <div>
-
-                  <h4 className="font-semibold">
-                    React Notes.pdf
-                  </h4>
-
-                  <p className="text-gray-500 text-sm">
-                    PDF • 2.4 MB
-                  </p>
-
-                </div>
-
-              </div>
-
-              <div className="flex flex-wrap gap-3">
-
-                <button className="px-4 py-2 rounded-lg bg-blue-50 text-blue-600">
-                  View
-                </button>
-
-                <button className="px-4 py-2 rounded-lg bg-red-50 text-red-600">
-                  Delete
-                </button>
-
-              </div>
-
-            </div>
-            <div className="border rounded-2xl p-5 flex justify-between items-center hover:shadow-sm transition">
-
-      <div className="flex items-center gap-4">
-
-        <div className="w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center text-2xl">
-          <FiGithub />
-        </div>
-
-        <div>
-
-          <h4 className="font-semibold">
-            GitHub Repository
-          </h4>
-
-          <p className="text-sm text-gray-500">
-            External Link
-          </p>
-
-        </div>
-
-      </div>
-
-      <div className="flex gap-3">
-
-        <button className="text-blue-600 hover:underline">
-          Open
-        </button>
-
-        <button className="text-red-500 hover:underline">
-          Delete
-        </button>
-
-      </div>
-
-    </div>
-
+       
     {/* Website */}
 
-   
-    <div className="border rounded-2xl p-5 flex justify-between items-center hover:shadow-sm transition">
+   {upload.map((resource)=>(
+    <div key={resource._id} className="border rounded-2xl p-5 flex justify-between items-center hover:shadow-sm transition">
 
       <div className="flex items-center gap-4">
 
-        <div className="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center text-blue-500 text-xl">
-          <IoIosLink />
+        <div className="w-12 h-12 rounded-xl bg-black flex items-center justify-center text-white text-xl">
+          {resourceIcons[resource.type]}
         </div>
 
         <div>
 
           <h4 className="font-semibold">
-            MDN JavaScript Guide
+            {resource.title}
           </h4>
 
           <p className="text-sm text-gray-500">
-            Website
+            {resource.type}
           </p>
 
         </div>
@@ -326,18 +346,18 @@ setResourceForm(prev=>({
 
       <div className="flex gap-3">
 
-        <button className="text-blue-600 hover:underline">
+        <a href={resource.url} target='_blank' className="text-blue-600 hover:underline">
           Open
-        </button>
+        </a>
 
-        <button className="text-red-500 hover:underline">
+        <button onClick={()=>handleDelete(resource._id)} className="text-red-500 hover:underline">
           Delete
         </button>
 
       </div>
 
     </div>
-
+   ))}
         </div>
 
       </div>
