@@ -232,7 +232,7 @@ return res.status(200).json({message:'lesson updated'})
  
 // })
 export const ResourceUpload =asyncHandler( async(req,res)=>{
-   
+   console.log(req.files[0]);
 const {lessonId}= req.params
 const lesson = await Lesson.findById(lessonId)
 if(!lesson){
@@ -245,7 +245,7 @@ for (let i = 0; i < req.files.length; i++) {
    const result = await cloudinary.uploader.upload(req.files[i].path,{
    resource_type:'raw',folder:'skillnest-courses/pdf'
 }) 
-
+console.log(result)
 resources.push({
    title:titles[i],url:result.secure_url,type:req.body.type
 })}

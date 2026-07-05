@@ -7,14 +7,13 @@ import { FiGithub } from 'react-icons/fi';
 import { IoIosLink } from 'react-icons/io';
 import { FaExternalLinkAlt, FaFilePdf, FaYoutube } from 'react-icons/fa';
 import { IoDocumentTextSharp } from 'react-icons/io5';
+import { resourceIcons } from '@/utils/ResourceIcon';
 const ResourcesTab = ({lessonId}) => {
   const {user} = useAuth()
   const [resourceForm,setResourceForm] = useState({title:'',url:'',type:'pdf',files:[]})
   const [upload,setUploaded] = useState([])
   const [loading,setLoading]=useState(false)
-  const resourceIcons = {
-    pdf:<FaFilePdf/>,doc:<IoDocumentTextSharp/>,github:<FiGithub/>,website:<FaExternalLinkAlt/>,youtube:<FaYoutube/>
-  }
+
   const handlepdf = (e)=>{
     const file = Array.from(e.target.files)
     const formattedFiles = file.map((file)=>({

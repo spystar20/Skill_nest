@@ -19,7 +19,9 @@ import { FiExternalLink } from "react-icons/fi";
 import { GoRepoTemplate } from "react-icons/go";
 import { IoDocumentTextOutline } from "react-icons/io5";
 import { FiGithub } from "react-icons/fi";
-
+import { FaFilePdf, FaExternalLinkAlt, FaYoutube } from 'react-icons/fa';
+import { FiGithub } from 'react-icons/fi';
+import { IoDocumentTextSharp } from 'react-icons/io5';   
 import Quill from 'quill'
 import "quill/dist/quill.snow.css"; // Quill's default styling
 import api from '@/utils/axios'
@@ -31,6 +33,10 @@ const CoursePlayer = () => {
   const [teacherData,setTeacherData]=useState([])
   const [ sectionArr,setSectionArr]=useState([])
   const [ lesson,setLessons]=useState({})
+  const [resource,setResource]=useState([])
+ const resourceIcons = {
+    pdf:<FaFilePdf/>,doc:<IoDocumentTextSharp/>,github:<FiGithub/>,website:<FaExternalLinkAlt/>,youtube:<FaYoutube/>
+  }
    useEffect(() => {
   toggletab("syllabus");
   fetchSection()
@@ -71,8 +77,10 @@ console.log(err)
      setLessons(prev=>({
       ...prev , [sectionId]:res.data.lessons
      }))
+  
   if(currentCourse === null){
      setCurrentCourse(res?.data?.lessons[0])
+     setResource(currentCourse.resource)
   }
     }catch(err){
       console.log(err)
@@ -130,12 +138,15 @@ console.log(err)
    <span className='flex gap-7 pr-6 pb-7 justify-end items-center'><button className='text-lg py-1 px-6 rounded-sm capitalize border border-black hover:text-white hover:bg-black transition-all box-content cursor-pointer'>cancel</button><button className='text-lg py-1 px-6 rounded-sm capitalize   border text-white border-pink-400 bg-pink-400 hover:scale-95 scale-100 transition-all '>save</button></span>
    </div>
       ): tab==="resource" ?(
-        <div className='py-7 px-4 flex  flex-wrap justify-between items-center gap-9'>
+        <>
+        {resources.map((resource,index)=>(
+        <div key={index} className='py-7 px-4 flex  flex-wrap justify-between items-center gap-9'>
             <div className='flex flex-col gap-4'>
           <h2 className='text-xl font-medium flex items-center gap-2'><span>
             <FaFolderOpen  className='text-xl'/></span>Core Resources</h2>
+            
             <ul className='flex flex-col gap-2 text-gray-800 '>
-              <li><a className='flex group gap-2 hover:text-pink-300 cursor-pointer items-center font-medium hover:underline text-normal transition-all duration-75 ease-in'><span><FaRegFilePdf  className='text-xl group-hover:-translate-y-0.5 '/></span>PDF Notes </a></li>
+              <li><a className='flex group gap-2 hover:text-pink-300 cursor-pointer items-center font-medium hover:underline text-normal transition-all duration-75 ease-in'><span  className='text-xl group-hover:-translate-y-0.5 '>{resourceIcons[resource.type]}</span>{resource.title} </a></li>
                 <li><a className='flex group gap-2 hover:text-pink-300 cursor-pointer items-center font-medium hover:underline text-normal transition-all duration-75 ease-in'><span><FaRegFileCode  className='text-xl group-hover:-translate-y-0.5 '/></span>Code Files</a></li>
                   <li><a className='flex group gap-2 hover:text-pink-300 cursor-pointer items-center font-medium hover:underline text-normal transition-all duration-75 ease-in'><span><IoDocumentAttachOutline className='text-xl group-hover:-translate-y-0.5 '/></span>Assignments & Worksheets</a></li>
         
@@ -162,7 +173,8 @@ console.log(err)
             </ul>
             </div>
         </div>
-
+        ))}
+</>
       ):null}
      <div>
 
