@@ -18,7 +18,6 @@ import {IoDocumentAttachOutline } from "react-icons/io5";
 import { FiExternalLink } from "react-icons/fi";
 import { GoRepoTemplate } from "react-icons/go";
 import { IoDocumentTextOutline } from "react-icons/io5";
-import { FiGithub } from "react-icons/fi";
 import { FaFilePdf, FaExternalLinkAlt, FaYoutube } from 'react-icons/fa';
 import { FiGithub } from 'react-icons/fi';
 import { IoDocumentTextSharp } from 'react-icons/io5';   
@@ -33,7 +32,6 @@ const CoursePlayer = () => {
   const [teacherData,setTeacherData]=useState([])
   const [ sectionArr,setSectionArr]=useState([])
   const [ lesson,setLessons]=useState({})
-  const [resource,setResource]=useState([])
  const resourceIcons = {
     pdf:<FaFilePdf/>,doc:<IoDocumentTextSharp/>,github:<FiGithub/>,website:<FaExternalLinkAlt/>,youtube:<FaYoutube/>
   }
@@ -44,7 +42,7 @@ const CoursePlayer = () => {
 }, []);
    const tabs = [ {name:"notes",id:3},{name:"resource",id:4},]
    const [currentCourse,setCurrentCourse]=useState(null)
-   console.log(`cuurent ${currentCourse}`)
+   const resources = currentCourse?.resources || [];
     const {tab,toggletab,toggleModule,syllabus } = usetoggletab()
   const  {course_id} = useParams()
     const fetchcourses = async()=>{
@@ -80,13 +78,13 @@ console.log(err)
   
   if(currentCourse === null){
      setCurrentCourse(res?.data?.lessons[0])
-     setResource(currentCourse.resource)
   }
     }catch(err){
       console.log(err)
     }
   
   }
+  
     const editorRef = useRef(null)
     const [quill,setquill] = useState(null)
     useEffect(()=>{
@@ -117,7 +115,7 @@ console.log(err)
         <h2 className='text-2xl font-semibold'>{courseData.title}</h2>
         </span>
         <div className='flex flex-col justify-between gap-6'>
-   <div className='p-4 flex-1 rounded-lg bg-white shadow-lg'><video className='w-full h-auto'  src={currentCourse?.videoUrl} controls autoPlay> </video></div>
+   <div className='p-4 flex-1 rounded-lg bg-white shadow-lg'><video className='w-full h-auto aspect-video'  src={currentCourse?.videoUrl} controls autoPlay> </video></div>
   <div className=' pl-2   font-[Outfit] w-full'>
           {/* headings */}           
           <div className='flex flex-row gap-8  w-full text-black text-xl font-semibold '>
@@ -139,41 +137,48 @@ console.log(err)
    </div>
       ): tab==="resource" ?(
         <>
-        {resources.map((resource,index)=>(
-        <div key={index} className='py-7 px-4 flex  flex-wrap justify-between items-center gap-9'>
-            <div className='flex flex-col gap-4'>
+       {resources?.length === 0? (
+        <div>No resources</div>
+       ):(
+        <>
+        
+        <div  className='py-7 px-4 flex  flex-wrap justify-between items-center gap-9'>
+        
+             <div  className='flex flex-col gap-4'>
           <h2 className='text-xl font-medium flex items-center gap-2'><span>
             <FaFolderOpen  className='text-xl'/></span>Core Resources</h2>
-            
-            <ul className='flex flex-col gap-2 text-gray-800 '>
-              <li><a className='flex group gap-2 hover:text-pink-300 cursor-pointer items-center font-medium hover:underline text-normal transition-all duration-75 ease-in'><span  className='text-xl group-hover:-translate-y-0.5 '>{resourceIcons[resource.type]}</span>{resource.title} </a></li>
-                <li><a className='flex group gap-2 hover:text-pink-300 cursor-pointer items-center font-medium hover:underline text-normal transition-all duration-75 ease-in'><span><FaRegFileCode  className='text-xl group-hover:-translate-y-0.5 '/></span>Code Files</a></li>
-                  <li><a className='flex group gap-2 hover:text-pink-300 cursor-pointer items-center font-medium hover:underline text-normal transition-all duration-75 ease-in'><span><IoDocumentAttachOutline className='text-xl group-hover:-translate-y-0.5 '/></span>Assignments & Worksheets</a></li>
-        
+           {resources?.map((resource,index)=>(
+            <React.Fragment  key={index}>
+       {  (resource.type === 'pdf' || resource.type === 'doc') && (
+              <ul className='flex flex-col gap-2 text-gray-800 '>
+              <li><a href={resource.url} target='_blank' className='flex group gap-2 hover:text-pink-300 cursor-pointer items-center font-medium hover:underline text-normal transition-all duration-75 ease-in'><span  className='text-xl group-hover:-translate-y-0.5 '>{resourceIcons[resource.type]}</span>{resource.title} </a></li>      
             </ul>
-            </div>
-          <div className='flex flex-col gap-4'>
+          )}
+         </React.Fragment> ))}
+              </div>
+             
+                  <div className='flex flex-col gap-4'>
           <h2 className='text-xl font-medium flex items-center gap-1'><span>
             <FiExternalLink className='text-xl'/></span>External Learning Support</h2>
-            <ul className='flex flex-col gap-2  text-gray-800'>
-              <li><a className='flex group gap-1 hover:text-pink-300 cursor-pointer items-center font-medium hover:underline text-normal transition-all duration-75 ease-in'><span><FiGithub    className='text-xl group-hover:-translate-y-0.5 '/></span>Github Repo Link </a></li>
-                <li><a className='flex group gap-1 hover:text-pink-300 cursor-pointer items-center font-medium hover:underline text-normal transition-all duration-75 ease-in'><span><IoIosLink
- className='text-xl group-hover:-translate-y-0.5 '/></span>Reference Links</a></li>
-                  <li><a className='flex group gap-1 hover:text-pink-300 cursor-pointer items-center font-medium hover:underline text-normal transition-all duration-75 ease-in'><span><IoDocumentsOutline   className='text-xl group-hover:-translate-y-0.5 '/></span>Cheat Sheets</a></li>      
-            </ul>
-            </div>
-             <div className='flex flex-col gap-4'>
-          <h2 className='text-xl font-medium flex items-center gap-1'><span>
-            <MdOutlineWorkspacePremium  className='text-xl'/></span>Skill Boosters </h2>
-            <ul className='flex flex-col gap-2  text-gray-800'>
-              <li><a className='flex group gap-1 hover:text-pink-300 cursor-pointer items-center font-medium hover:underline text-normal transition-all duration-75 ease-in'><span><GoRepoTemplate    className='text-xl group-hover:-translate-y-0.5 '/></span>Templates & Assets</a></li>
-                <li><a className='flex group gap-1 hover:text-pink-300 cursor-pointer items-center font-medium hover:underline text-normal transition-all duration-75 ease-in'><span><IoDocumentTextOutline className='text-xl group-hover:-translate-y-0.5 '/></span>Case Studies</a></li>
-              
+             {resources?.map((resource,index)=>(
+                <React.Fragment key={index}>
+                {(resource.type !== 'pdf' && resource.type!=='doc')&&(
         
+            <ul className='flex flex-col gap-2  text-gray-800'>
+              <li><a href={resource.url} target='_blank' className='flex group gap-1 hover:text-pink-300 cursor-pointer items-center font-medium hover:underline text-normal transition-all duration-75 ease-in'><span className='text-xl group-hover:-translate-y-0.5 '>{resourceIcons[resource.type]}</span>{resource.title} Link </a></li>
+               
             </ul>
+            
+            )}
+            </React.Fragment>
+ ))}
             </div>
+         
+          
         </div>
-        ))}
+       
+        </>
+        ) }
 </>
       ):null}
      <div>
