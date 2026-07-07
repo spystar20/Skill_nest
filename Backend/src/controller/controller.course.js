@@ -6,6 +6,7 @@ import fs from 'fs'
 import Section from "../models/Teacher/Section.js"
 import Lesson from "../models/Teacher/Lesson.js"
 import { asyncHandler } from "../middleware/asyncHandler.middleware.js"
+import { diff } from "util"
 
 
 export const CreateCoursse = asyncHandler( async (req, res) => {
@@ -308,10 +309,49 @@ export const getCoursebyId =asyncHandler( async (req, res) => {
       return res.status(200).json({ course,teacher })
    
 })
-export const GetCourses =asyncHandler( async (req, res) => {
-   
-      const courses = await Course.find().populate("instructor", "firstName")
+export const GetCourses = asyncHandler( async (req, res) => {
+       const {search,category,difficulty,priceType,minPrice,maxPrice,sort}= req.query
+       const filter = {status:'published'}
+       const sortOptions={}
+       if(search){
+         filter.title = {
+            $regex:search,
+            $options:'i'
+         }
+       } 
+       if(category){
+         filter.category = {
+            $regex:`^${category}$`,
+            $options:'i'
+         }
+       }
+       if(difficulty){
+         filter.difficulty=difficulty
+       }
+       if(priceType){
+         filter.priceType=priceType
+       }
+       if(minPrice && maxPrice){
+         filter.price={
+            $gte:Number(minPrice),
+            $lte:Number(maxPrice)
 
+         }
+       }
+       if(sort === 'newest'){
+         sortOptions.createdAt=-1
+       }
+       if(sort==='oldest'){
+         sortOptions.createdAt=1
+       }
+       if(sort==='price-low'){
+         sortOptions.price = 1
+       }
+       if(sort==='price-high'){
+         sortOptions.price=-1
+       }
+      const courses = await Course.find(filter).sort(sortOptions).populate("instructor", "firstName")
+      
       return res.status(200).json({ message: "courses sent", courses })
 
 })
