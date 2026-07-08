@@ -356,7 +356,8 @@ export const GetCourses = asyncHandler( async (req, res) => {
 
 })
 export const GetCourseCategories = asyncHandler(async(req,res)=>{
-   const category = (await Course.distinct('category')).filter(Boolean)
+   const category = await Course.distinct('category')
+   console.log(category)
    return res.status(200).json({message:'categories sent',category})
 })
 export const GetCoursesByTeacherId = asyncHandler(async(req,res)=>{

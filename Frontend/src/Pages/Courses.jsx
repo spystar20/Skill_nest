@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import {  FaSearch, FaSortAlphaDownAlt } from "react-icons/fa";
+import { FaSearch, FaSortAlphaDownAlt } from "react-icons/fa";
 import { MdOutlineKeyboardArrowDown } from 'react-icons/md';
 import Course from '../data/course'
 import courseCategories from '../data/CourseCategories';
@@ -12,46 +12,76 @@ import ProjectCard from '@/utils/ProjectCard';
 import api from '@/utils/axios';
 import { Import } from 'lucide-react';
 const Courses = () => {
-  const [ courses , setCourses] = useState(null)
-  const [categories,setCategories]=useState([])
-  const [Filter,setFilter]=useState({
-    search:'',category:'',sort:'',priceType:'',minPrice:'',maxPrice:'',difficulty:''
+  const [courses, setCourses] = useState(null)
+  const [categories, setCategories] = useState([])
+  const [openFilter,SetOpenFilter] = useState(false)
+  const [ showSort,setShowSort] = useState(false)
+  const [openCourseCategories,setOpenCourseCategories]=useState(false)
+const  handleToggleFilter = ()=>{
+  SetOpenFilter(!openFilter)
+}
+const handleSort = ()=>{
+  setShowSort(!showSort)
+}
+const handleToggleCategories = ()=>{
+  setOpenCourseCategories(!openCourseCategories)
+}
+  const [filter, setFilter] = useState({
+    search: '', category: '', sort: '', priceType: '', minPrice: '', maxPrice: '', difficulty: ''
   })
-  useEffect(()=>{
+  const params = {}
+  if (filter.search) {
+    params.search = filter.search
+  }
+  if (filter.category) {
+    params.category = filter.category
+  }
+  if (filter.sort) {
+    params.sort = filter.sort
+  }
+  if (filter.priceType) {
+    params.priceType = filter.priceType
+  }
+  if (filter.minPrice) {
+    params.minPrice = filter.minPrice
+  }
+  if (filter.maxPrice) {
+    params.maxPrice = filter.maxPrice
+  }
+  if (filter.difficulty) {
+    params.difficulty = filter.difficulty
+  }
+  useEffect(() => {
     handleCourses()
-    fetchCategories
+    fetchCategories()
     console.log(courses)
-  },[Filter])
-  const fetchCategories = async()=>{
-    try{
-const res = await api.get('/course/category')
-setCategories(res?.data?.category)
-console.log(categories)
-    }catch(err){
+  }, [filter])
+  const fetchCategories = async () => {
+    try {
+      const res = await api.get('/course/category')
+
+      setCategories(res?.data?.category)
+      console.log(res)
+    } catch (err) {
       console.log(err)
     }
   }
- const handleCourses = async()=>{
-  try{
-const res =await api.get('/course/',{withCredentials:true}
-)
-setCourses(res?.data?.courses)
+  const handleCourses = async () => {
+    try {
+      const res = await api.get('/course/', { params }, { withCredentials: true }
+      )
+      setCourses(res?.data?.courses)
 
-  console.log(res)
+      console.log(res)
 
-  }catch(err){
-console.log(err)
+    } catch (err) {
+      console.log(err)
+    }
   }
- }
-const handleFilter = async()=>{
-  try{
-    
-  }
-}
 
-  const star = [5, 4, 3, 2, 1]
+  // const star = [5, 4, 3, 2, 1]
 
-  const comingSoon = FinalArr.length === 0;
+  const comingSoon = courses?.length === 0;
   // const [page, setPage] = useState(1)
   // const itemsPerPage = 6
 
@@ -66,36 +96,36 @@ const handleFilter = async()=>{
       </div>
       {/* search and sort */}
       <div className='md:p-6 p-3  flex justify-center gap-2 md:gap-4 items-center shadow-xs font-body'>
-        <button onClick={()=>toggle("filter")} className='hidden md:block text-base h-12 px-3 font-normal text-gray-700  capitalize border  cursor-pointer rounded-lg  hover:bg-gray-100'>
+        <button onClick={handleToggleFilter} className='hidden md:block text-base h-12 px-3 font-normal text-gray-700  capitalize border  cursor-pointer rounded-lg  hover:bg-gray-100'>
           filter
         </button>
-        <button  onClick={()=>toggle("filter")} className='md:hidden text-lg h-12 px-4 font-normal text-gray-700  capitalize border  cursor-pointer rounded-lg  hover:bg-gray-100'>
-          <IoFilterSharp/>
+        <button onClick={handleToggleFilter} className='md:hidden text-lg h-12 px-4 font-normal text-gray-700  capitalize border  cursor-pointer rounded-lg  hover:bg-gray-100'>
+          <IoFilterSharp />
         </button>
         <div className='relative'>
-          <button onClick={() => toggle("showSort")} className=' hidden md:block text-base h-12 px-8 text-gray-700 font-normal capitalize border cursor-pointer rounded-lg  hover:bg-gray-100 '>
+          <button onClick={handleSort} className=' hidden md:block text-base h-12 px-8 text-gray-700 font-normal capitalize border cursor-pointer rounded-lg  hover:bg-gray-100 '>
             sort
           </button>
-          <button onClick={() => toggle("showSort")} className='md:hidden text-lg h-12 px-3 text-gray-700 font-normal capitalize border cursor-pointer rounded-lg  hover:bg-gray-100' >
-          <FaSortAlphaDownAlt/>
+          <button onClick={handleSort} className='md:hidden text-lg h-12 px-3 text-gray-700 font-normal capitalize border cursor-pointer rounded-lg  hover:bg-gray-100' >
+            <FaSortAlphaDownAlt />
           </button>
           <ul className={`absolute flex flex-col bg-gradient-to-tr from-[#95b1ee] to-[#728ccd] shadow-2xl mt-2 capitalize font-semibold text-white rounded-lg z-[10000]   cursor-pointer transition-all ease-out duration-300 w-34  ${showSort ? 'visible translate-y-0' : 'invisible -translate-y-6'}`}>
             <li className=' hover:bg-black  hover:text-white  text-white p-3 rounded-t-lg  '>
               popular
             </li>
-            <li onClick={() => handleSort("price")} className=' hover:bg-black  hover:text-white  text-white p-3 '>
+            <li className=' hover:bg-black  hover:text-white  text-white p-3 '>
               Price
             </li>
-            <li onClick={() => handleSort("rating")} className='hover:bg-black  hover:text-white text-white p-3 '>
+            <li className='hover:bg-black  hover:text-white text-white p-3 '>
               rating
             </li>
-            <li onClick={() => handleSort("views")} className=' hover:bg-black  hover:text-white text-white p-3 rounded-b-lg '>
+            <li className=' hover:bg-black  hover:text-white text-white p-3 rounded-b-lg '>
               views
             </li>
           </ul>
         </div>
         <div className='flex-1 overflow-hidden rounded-lg border flex justify-between items-center'>
-          <input value={search} onChange={(e) => setFilter("search", e.target.value)} type="text" className=' flex-1 h-full text-base  border-none outline-none placeholder:capitalize placeholder:font-[Roboto] placeholder:text-gray-900 placeholder:font-light px-2 md:px-4 ' placeholder='search desired courses' />
+          <input value={filter.search} onChange={(e) => setFilter((prev) => ({ ...prev, search: e.target.value }))} type="text" className=' flex-1 h-full text-base  border-none outline-none placeholder:capitalize placeholder:font-[Roboto] placeholder:text-gray-900 placeholder:font-light px-2 md:px-4 ' placeholder='search desired courses' />
           <span className='h-11 text-white
 bg-gradient-to-tr from-[#95b1ee] to-[#728ccd]
 transition-all duration-300 px-3  md:px-4  flex items-center rounded-lg'><FaSearch className='text-xl scale-100 hover:scale-125 cursor-pointer text-white' /></span>
@@ -103,41 +133,43 @@ transition-all duration-300 px-3  md:px-4  flex items-center rounded-lg'><FaSear
       </div>
 
       {/* filter */}
-      <div className={`flex relative items-start transition-all duration-300 ease-out ${filter?'gap-8':'gap-0'}`}>
+      <div className={`flex relative items-start transition-all duration-300 ease-out ${openFilter ? 'gap-8' : 'gap-0'}`}>
 
-        <aside   className={`transition-all absolute top-2 bg-white z-[99] h-full md:sticky md:top-24 duration-300 overflow-hidden shrink-0
-  ${filter ? 'w-[300px] p-6 border rounded-2xl' : 'w-0 p-0 border-0'}
+        <aside className={`transition-all absolute top-2 bg-white z-[99] h-full md:sticky md:top-24 duration-300 overflow-hidden shrink-0
+  ${openFilter ? 'w-[300px] p-6 border rounded-2xl' : 'w-0 p-0 border-0'}
   `}
->
-          <div className=' font-[Outfit] w-full '> <h2 onClick={() => toggle("openCourseCategories")} className='text-lg font-semibold mb-3 flex justify-between items-center '>Categories <span><MdOutlineKeyboardArrowDown className={`text-2xl text-gray-600 rotate-0 transition-all cursor-pointer ease-out ${openCourseCategories ? 'rotate-180' : 'rotate-0'}`} /></span></h2> {openCourseCategories && courseCategories.map((course, index) => { return (<div key={index}> <div onClick={() => toggleSubCategories(course.category)} className='flex items-center pt-2 hide '> <label> <span className='flex justify-center items-center'> <input type="checkbox" className='w-3 cursor-pointer border-none h-3 accent-pink-400' name={course.category} checked={selectCourse === course.category} onChange={() => setFilter("selectCourse", course.category)} value={course.category} id="" /> <span className='text-base text-gray-700 px-3 text-wrap capitalize '>{course.category}</span> </span> </label> <span ><MdOutlineKeyboardArrowDown className='text-xl cursor-pointer text-gray-700 ' /></span> </div> {openSubCategories[course.category] && course.subcategories && (<div className='pl-4'> {course.subcategories.map((subc, index) => { return (<div key={index} className='flex items-center py-2 '> <label className='flex justify-start items-center hover:bg-gray-50 cursor-pointer w-full' >  <input type="checkbox" onChange={() => setFilter("selectSubCategories", subc)} checked={selectSubCategories === subc} value={subc} className=' border-none accent-pink-400' name="web development" id="" /> <span className='text-base font-normal text-gray-700 px-3 capitalize'>{subc}</span>  </label> </div>) })} </div>)} </div>) })} </div>
+        >
+<div  className=' font-[Outfit] w-full '>
+ <h2 onClick={handleToggleCategories} className='text-lg font-semibold mb-3 flex justify-between items-center '>Categories <span><MdOutlineKeyboardArrowDown className={`text-2xl text-gray-600 rotate-0 transition-all cursor-pointer ease-out ${openCourseCategories ? 'rotate-180' : 'rotate-0'}`} /></span></h2> 
+ {
+  openCourseCategories && categories?.map((category,index)=>(
+    <React.Fragment key={index}>
+    <div className='flex items-center pt-2 hide '>
+     <label className='flex justify-center items-center gap-1'>
+      <input type="checkbox"  value={category} onChange={(e)=>setFilter((prev)=>({...prev,category:e.target.value}))}  className='w-3 cursor-pointer border-none h-3 accent-black' name="" id="" />
+      {category}
+     </label>
+    </div>
+    </React.Fragment>
+  ))
+ }
+</div>
+        
           {/* Rating */}
-          <div className='font-[Outfit] w-full'>
-             <h2 className='text-lg font-medium mb-3 flex justify-between items-center capitalize '>rating<span><MdOutlineKeyboardArrowDown className='text-2xl font-black' /></span></h2> 
-             <div> 
-              <div> {star.map((star, index) => { return (<div className='flex items-center  ' key={index}>
-                 <label className='flex gap-3 py-2 rounded-lg transition hover:bg-gray-50 cursor-pointer w-full justify-start items-center' > <input type="radio" className=' border-none accent-pink-400' onChange={(e) => setFilter("rating", Number(e.target.value))} checked={Number(rating) === star} value={star} name={star} id="" /> <span className='text-base text-gray-700 font-medium capitalize'>{star} & above</span> </label> </div>) })} </div> </div> </div>
+          {/* <div className='font-[Outfit] w-full'>
+            <h2 className='text-lg font-medium mb-3 flex justify-between items-center capitalize '>rating<span><MdOutlineKeyboardArrowDown className='text-2xl font-black' /></span></h2>
+            <div>
+              <div> {star.map((star, index) => {
+                return (<div className='flex items-center  ' key={index}>
+                  <label className='flex gap-3 py-2 rounded-lg transition hover:bg-gray-50 cursor-pointer w-full justify-start items-center' > <input type="radio" className=' border-none accent-pink-400' onChange={(e) => setFilter("rating", Number(e.target.value))} checked={Number(rating) === star} value={star} name={star} id="" /> <span className='text-base text-gray-700 font-medium capitalize'>{star} & above</span> </label> </div>)
+              })} </div> </div> </div> */}
           {/* price */}
           <div className='font-[Outfit]  w-full'>
             <h2 className='text-lg font-semibold mb-3 flex justify-between items-center  capitalize '>price<span><MdOutlineKeyboardArrowDown className='text-2xl text-gray-600' /></span></h2>
             <div className='space-y-1'>
-              {PriceArr.map((arr, index) => {
-                return (
-                  <div key={index} >
-                    <div className='flex items-center   '>
-                      <label className='flex gap-3 py-2 rounded-lg transition hover:bg-gray-50 cursor-pointer w-full  justify-start items-center'>
-
-                        <input type="radio" onChange={(e) => setFilter("price", e.target.value)} checked={price === arr.rate} value={arr.rate} className=' border-none accent-pink-400' id="" />
-                        <span className='text-base font-medium text-gray-700 capitalize'>{arr.rate}</span>
-
-                      </label>
-                    </div>
-                  </div>
-                )
-              })}
-
+        
             </div>
           </div>
-
         </aside>
 
         {/* courses */}
@@ -147,11 +179,11 @@ transition-all duration-300 px-3  md:px-4  flex items-center rounded-lg'><FaSear
           </div>
         ) : (
           <div className='flex-1 min-w-0'>
-            <div className={`grid  gap-4 px-5 py-4 md:py-10 grid-cols-1 ${filter?'md:grid-cols-3 ':'md:grid-cols-4'}`}>
+            <div className={`grid  gap-4 px-5 py-4 md:py-10 grid-cols-1 ${filter ? 'md:grid-cols-3 ' : 'md:grid-cols-4'}`}>
               {courses?.map((course, index) => {
                 return (
-               
-                 <ProjectCard img={course.thumbnail} course_id={course._id} price={course.price} key={index} category={course.category} course_desc={course.desc} course_name={course.title} chapters={12} duration={course.duration} level={course.difficulty} rating={5} instructor_img={course.thumbnail} instructor_name={course.instructor.firstName} />
+
+                  <ProjectCard img={course.thumbnail} course_id={course._id} price={course.price} key={index} category={course.category} course_desc={course.desc} course_name={course.title} chapters={12} duration={course.duration} level={course.difficulty} rating={5} instructor_img={course.thumbnail} instructor_name={course.instructor.firstName} />
                 )
               })}
 
@@ -176,10 +208,6 @@ transition-all duration-300 px-3  md:px-4  flex items-center rounded-lg'><FaSear
             </div> */}
           </div>)}
       </div>
-
-
-
-
     </div>
   )
 }

@@ -7,10 +7,12 @@ export const router = express.Router()
 // courses
 router.post('/createNew',middleware,uploads.single("thumbnail"),CreateCoursse)
 router.get('/',GetCourses)
+router.get('/category',middleware,GetCourseCategories)
+
 router.get('/:courseId',middleware,getCoursebyId)
+
 router.put('/:courseId/status',middleware,UpdateCourseStatus)
 router.delete('/:courseId',middleware,DeleteCourse)
-router.get('/category',middleware,GetCourseCategories)
 // section
 router.post('/:courseId/create-section',middleware,CreateSection)
 router.get('/:courseId/get-section',middleware,getSection)
