@@ -13,10 +13,24 @@ import api from '@/utils/axios';
 import { Import } from 'lucide-react';
 const Courses = () => {
   const [ courses , setCourses] = useState(null)
+  const [categories,setCategories]=useState([])
+  const [Filter,setFilter]=useState({
+    search:'',category:'',sort:'',priceType:'',minPrice:'',maxPrice:'',difficulty:''
+  })
   useEffect(()=>{
     handleCourses()
+    fetchCategories
     console.log(courses)
-  },[])
+  },[Filter])
+  const fetchCategories = async()=>{
+    try{
+const res = await api.get('/course/category')
+setCategories(res?.data?.category)
+console.log(categories)
+    }catch(err){
+      console.log(err)
+    }
+  }
  const handleCourses = async()=>{
   try{
 const res =await api.get('/course/',{withCredentials:true}
@@ -29,29 +43,21 @@ setCourses(res?.data?.courses)
 console.log(err)
   }
  }
-  const { openCourseCategories, showSort, openSubCategories,  toggle, toggleSubCategories ,filter,} = toggleStore()
+const handleFilter = async()=>{
+  try{
+    
+  }
+}
 
-  const { selectCourse, selectSubCategories, price, rating, search, sortBy, handleSearch, handleCategories, handleSubCategories, handleSort, handleRating, setFilter } = useCourseStore()
-
-  const PriceArr = [{ rate: 'free' }, { rate: 'paid' }]
   const star = [5, 4, 3, 2, 1]
-  const FilteredArray = Course.filter((course) => {
-    const searchFields = `${course.category}${course.subcategory}${course.instructor_name}${course.course_desc}${course.price}${Number(course.duration)}`.toLowerCase()
-    return ((selectCourse === '' || selectCourse === course.category) && (selectSubCategories === '' || selectSubCategories === course.subcategory) && (price === '' || price.toLowerCase() === course.price.toLowerCase()) && (rating === '' || course.rating >= rating) && (search === '' || searchFields.includes(search.toLowerCase()))
-    )
-  })
-  const FinalArr = [...FilteredArray].sort((a, b) => {
-    if (sortBy === "price") return a.price - b.price
-    if (sortBy === "rating") return b.rating - a.rating
-    if (sortBy === " views") return b.view - a.view
-  })
-  const comingSoon = FinalArr.length === 0;
-  const [page, setPage] = useState(1)
-  const itemsPerPage = 6
 
-  const startIndex = (page - 1) * itemsPerPage
-  const endIndex = startIndex + itemsPerPage
-  const CurrentCourse = FinalArr.slice(startIndex, endIndex)
+  const comingSoon = FinalArr.length === 0;
+  // const [page, setPage] = useState(1)
+  // const itemsPerPage = 6
+
+  // const startIndex = (page - 1) * itemsPerPage
+  // const endIndex = startIndex + itemsPerPage
+  // const CurrentCourse = FinalArr.slice(startIndex, endIndex)
   return (
     <div className='min-h-screen bg-white w-full font-[Roboto]'>
       <div className='w-full flex flex-col min-h-[320px] gap-3 pt-23 justify-center items-center text-white  home-bg'>
@@ -134,10 +140,6 @@ transition-all duration-300 px-3  md:px-4  flex items-center rounded-lg'><FaSear
 
         </aside>
 
-
-
-
-
         {/* courses */}
         {comingSoon ? (
           <div className="text-center flex justify-center items-center h-[20vh] w-full text-xl font-[Merienda] font-semibold text-gray-500 py-4">
@@ -154,7 +156,7 @@ transition-all duration-300 px-3  md:px-4  flex items-center rounded-lg'><FaSear
               })}
 
             </div>
-            <div className='flex justify-center py-6'>
+            {/* <div className='flex justify-center py-6'>
               <Pagination
                 count={Math.ceil(FinalArr.length / itemsPerPage)}
                 page={page}
@@ -171,7 +173,7 @@ transition-all duration-300 px-3  md:px-4  flex items-center rounded-lg'><FaSear
                 }}
               />
 
-            </div>
+            </div> */}
           </div>)}
       </div>
 
