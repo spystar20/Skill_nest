@@ -11,6 +11,7 @@ import Pagination from '@mui/material/Pagination';
 import ProjectCard from '@/utils/ProjectCard';
 import api from '@/utils/axios';
 import { Import } from 'lucide-react';
+import FilterComponent from '@/utils/FilterComponent';
 const Courses = () => {
   const [courses, setCourses] = useState(null)
   const [categories, setCategories] = useState([])
@@ -109,6 +110,9 @@ const handleToggleCategories = ()=>{
           <button onClick={handleSort} className='md:hidden text-lg h-12 px-3 text-gray-700 font-normal capitalize border cursor-pointer rounded-lg  hover:bg-gray-100' >
             <FaSortAlphaDownAlt />
           </button>
+          <select name="" id="">
+            <option value=""></option>
+          </select>
           <ul className={`absolute flex flex-col bg-gradient-to-tr from-[#95b1ee] to-[#728ccd] shadow-2xl mt-2 capitalize font-semibold text-white rounded-lg z-[10000]   cursor-pointer transition-all ease-out duration-300 w-34  ${showSort ? 'visible translate-y-0' : 'invisible -translate-y-6'}`}>
             <li className=' hover:bg-black  hover:text-white  text-white p-3 rounded-t-lg  '>
               popular
@@ -155,6 +159,7 @@ transition-all duration-300 px-3  md:px-4  flex items-center rounded-lg'><FaSear
  }
 </div>
         
+        <FilterComponent title="category" setFilter={setFilter} filterKey={categories} optionArray={categories}/>
           {/* Rating */}
           {/* <div className='font-[Outfit] w-full'>
             <h2 className='text-lg font-medium mb-3 flex justify-between items-center capitalize '>rating<span><MdOutlineKeyboardArrowDown className='text-2xl font-black' /></span></h2>
