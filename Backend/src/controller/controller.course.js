@@ -351,8 +351,20 @@ export const GetCourses = asyncHandler( async (req, res) => {
          sortOptions.price=-1
        }
       const courses = await Course.find(filter).sort(sortOptions).populate("instructor", "firstName")
-      
-      return res.status(200).json({ message: "courses sent", courses })
+      const PriceRange = await Course.aggregate([
+        { $match:{
+            status:'published'
+         }},
+        { $group:{
+            _id:null,minPrice:{
+               $min:'$price'
+            },maxPrice:{
+               $max:"$price"           }
+         }}
+      ])
+        
+
+      return res.status(200).json({ message: "courses sent", courses,PriceRange })
 
 })
 export const GetCourseCategories = asyncHandler(async(req,res)=>{
