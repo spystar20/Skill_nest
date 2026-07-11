@@ -364,7 +364,7 @@ export const GetCourses = asyncHandler( async (req, res) => {
       ])
         
 
-      return res.status(200).json({ message: "courses sent", courses,PriceRange })
+      return res.status(200).json({ message: "courses sent", courses,PriceRange})
 
 })
 export const GetCourseCategories = asyncHandler(async(req,res)=>{

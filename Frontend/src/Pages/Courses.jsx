@@ -13,23 +13,25 @@ import api from '@/utils/axios';
 import { Import } from 'lucide-react';
 import FilterComponent from '@/utils/FilterComponent';
 import { Slider } from '@mui/material';
+import { RxCross2 } from 'react-icons/rx';
+import FilterChip from '@/utils/FilterChip';
 const Courses = () => {
   const [courses, setCourses] = useState(null)
   const [categories, setCategories] = useState([])
-  const [openFilter,SetOpenFilter] = useState(false)
-  const [ showSort,setShowSort] = useState(false  )
-  const [priceRange,SetPriceRange]=useState({min:0,max:0})
-const [sliderValue, setSliderValue] = useState([0, 0]);
-const [sortOption,setSortOptions]=useState('newest') 
-const  handleToggleFilter = ()=>{
-  SetOpenFilter(!openFilter)
-}
-const handleSort = ()=>{
-  setShowSort(!showSort)
-}
+  const [openFilter, SetOpenFilter] = useState(false)
+  const [showSort, setShowSort] = useState(false)
+  const [priceRange, SetPriceRange] = useState({ min: 0, max: 0 })
+  const [sliderValue, setSliderValue] = useState([0, 0]);
+  const [sortOption, setSortOptions] = useState('newest')
+  const handleToggleFilter = () => {
+    SetOpenFilter(!openFilter)
+  }
+  const handleSort = () => {
+    setShowSort(!showSort)
+  }
 
   const [filter, setFilter] = useState({
-    search: '', category: '', sort:sortOption, priceType: '', minPrice: '', maxPrice: '', difficulty: ''
+    search: '', category: '', sort: sortOption, priceType: '', minPrice: '', maxPrice: '', difficulty: ''
   })
   const params = {}
   if (filter.search) {
@@ -54,23 +56,23 @@ const handleSort = ()=>{
     params.difficulty = filter.difficulty
   }
   useEffect(() => {
-   const timer = setTimeout(() => {
+    const timer = setTimeout(() => {
       handleCourses()
     }, 500);
-  return ()=>clearTimeout(timer)
+    return () => clearTimeout(timer)
   }, [filter])
   useEffect(() => {
-  fetchCategories();
-}, []);
-useEffect(() => {
-   if(priceRange.min === 0 && courses){
+    fetchCategories();
+  }, []);
+  useEffect(() => {
+    if (priceRange.min === 0 && courses) {
       setSliderValue([priceRange.min, priceRange.max])
-   }
-}, [priceRange])
+    }
+  }, [priceRange])
   const fetchCategories = async () => {
     try {
       const res = await api.get('/course/category')
-      
+
       setCategories(res?.data?.category)
       console.log(res)
     } catch (err) {
@@ -83,22 +85,22 @@ useEffect(() => {
       )
       setCourses(res?.data?.courses)
       const min = res?.data?.PriceRange[0]?.minPrice
-      const max=res?.data?.PriceRange[0]?.maxPrice
-SetPriceRange({min,max})
+      const max = res?.data?.PriceRange[0]?.maxPrice
+      SetPriceRange({ min, max })
       console.log(res)
 
     } catch (err) {
       console.log(err)
     }
   }
-const handleSlider = (event,newValue)=>{
- setSliderValue(newValue),
- setFilter((prev)=>({...prev,minPrice:newValue[0],maxPrice:newValue[1]}))
-}
+  const handleSlider = (event, newValue) => {
+    setSliderValue(newValue),
+      setFilter((prev) => ({ ...prev, minPrice: newValue[0], maxPrice: newValue[1] }))
+  }
 
-const handleSortOptions = (option)=>{
-setFilter((prev)=>({...prev,sort:option}))
-}
+  const handleSortOptions = (option) => {
+    setFilter((prev) => ({ ...prev, sort: option }))
+  }
   // const star = [5, 4, 3, 2, 1]
 
   const comingSoon = courses?.length === 0;
@@ -109,7 +111,7 @@ setFilter((prev)=>({...prev,sort:option}))
   // const endIndex = startIndex + itemsPerPage
   // const CurrentCourse = FinalArr.slice(startIndex, endIndex)
   return (
-    <div className='min-h-screen bg-white w-full font-[Roboto]'>
+    <div className='min-h-screen bg-white w-full font-[Outfit]'>
       <div className='w-full flex flex-col min-h-[320px] gap-3 pt-23 justify-center items-center text-white  home-bg'>
         <h2 className='text-5xl font-semibold font-[Outfit]  capitalize '>courses</h2>
         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi, labore.</p>
@@ -129,27 +131,27 @@ setFilter((prev)=>({...prev,sort:option}))
           <button onClick={handleSort} className='md:hidden text-lg h-12 px-3 text-gray-700 font-normal capitalize border cursor-pointer rounded-lg  hover:bg-gray-100' >
             <FaSortAlphaDownAlt />
           </button>
-         
-          <ul  className={`absolute flex flex-col bg-gradient-to-tr from-[#95b1ee] to-[#728ccd] shadow-2xl mt-2 capitalize font-medium text-white rounded-lg z-[10000] text-sm  cursor-pointer transition-all ease-out duration-300 w-[150px]  ${showSort ? 'visible translate-y-0' : 'invisible -translate-y-6'}`}>
-            <li onClick={()=>{handleSortOptions('newest'),setShowSort(false)}} className=' hover:bg-black  hover:text-white  text-white p-2 rounded-t-lg  '>
+
+          <ul className={`absolute flex flex-col bg-gradient-to-tr from-[#95b1ee] to-[#728ccd] shadow-2xl mt-2 capitalize font-medium text-white rounded-lg z-[10000] text-sm  cursor-pointer transition-all ease-out duration-300 w-[150px]  ${showSort ? 'visible translate-y-0' : 'invisible -translate-y-6'}`}>
+            <li onClick={() => { handleSortOptions('newest'), setShowSort(false) }} className=' hover:bg-black  hover:text-white  text-white p-2 rounded-t-lg  '>
               newest
             </li>
-            <li onClick={()=>{handleSortOptions('oldest'),setShowSort(false)}} className=' hover:bg-black  hover:text-white  text-white p-2 '>
+            <li onClick={() => { handleSortOptions('oldest'), setShowSort(false) }} className=' hover:bg-black  hover:text-white  text-white p-2 '>
               oldest
             </li>
-            <li onClick={()=>{handleSortOptions('price-high'),setShowSort(false)}} className='hover:bg-black  hover:text-white text-white p-2 '>
-Price: High to low
+            <li onClick={() => { handleSortOptions('price-high'), setShowSort(false) }} className='hover:bg-black  hover:text-white text-white p-2 '>
+              Price: High to low
             </li>
-            <li onClick={()=>{handleSortOptions('price-low'),setShowSort(false)}}  className=' hover:bg-black  hover:text-white text-white p-2 rounded-b-lg '>
+            <li onClick={() => { handleSortOptions('price-low'), setShowSort(false) }} className=' hover:bg-black  hover:text-white text-white p-2 rounded-b-lg '>
               Price: low to high
             </li>
           </ul>
         </div>
         <div className='flex-1 overflow-hidden rounded-lg border flex justify-between items-center'>
-          <input value={filter.search} onChange={(e) => setFilter((prev) => ({ ...prev, search: e.target.value }))} type="text" className=' flex-1 h-full text-base  border-none outline-none placeholder:capitalize placeholder:font-[Roboto] placeholder:text-gray-900 placeholder:font-light px-2 md:px-4 ' placeholder='search desired courses' />
-          <span className='h-11 text-white
+          <input value={filter.search} onChange={(e) => setFilter((prev) => ({ ...prev, search: e.target.value }))} type="text" className='w-[200px] md:w-full h-full text-base  border-none outline-none placeholder:capitalize placeholder:font-[Roboto] placeholder:text-gray-900 placeholder:font-light px-1 md:px-4 ' placeholder='search desired courses' />
+          <span className='h-11 text-white 
 bg-gradient-to-tr from-[#95b1ee] to-[#728ccd]
-transition-all duration-300 px-3  md:px-4  flex items-center rounded-lg'><FaSearch className='text-xl scale-100 hover:scale-125 cursor-pointer text-white' /></span>
+transition-all duration-300 px-1  md:px-4  flex items-center justify-center rounded-lg flex-1'><FaSearch className=' md:text-xl self-center scale-100 hover:scale-125 cursor-pointer text-white' /></span>
         </div>
       </div>
 
@@ -161,17 +163,17 @@ transition-all duration-300 px-3  md:px-4  flex items-center rounded-lg'><FaSear
   `}
         >
 
-        <FilterComponent title="Categories" filters={filter} setFilter={setFilter} filterKey="category" optionArray={categories}/>
-        <FilterComponent title="Difficulty" filters={filter} setFilter={setFilter} filterKey="difficulty" optionArray={['Beginner','Intermediate','Advanced']}/>
-        <FilterComponent title="Price Type" filters={filter} setFilter={setFilter} filterKey="priceType" optionArray={['Free',"Paid"]}/>
-  <Slider  
-   getAriaLabel={() => 'Price range'}
-  value={sliderValue}
-  min={priceRange.min}
-  max={priceRange.max}
-  onChange={handleSlider}
-  valueLabelDisplay="auto"
-/>
+          <FilterComponent title="Categories" filters={filter} setFilter={setFilter} filterKey="category" optionArray={categories} />
+          <FilterComponent title="Difficulty" filters={filter} setFilter={setFilter} filterKey="difficulty" optionArray={['Beginner', 'Intermediate', 'Advanced']} />
+          <FilterComponent title="Price Type" filters={filter} setFilter={setFilter} filterKey="priceType" optionArray={['Free', "Paid"]} />
+          <Slider
+            getAriaLabel={() => 'Price range'}
+            value={sliderValue}
+            min={priceRange.min}
+            max={priceRange.max}
+            onChange={handleSlider}
+            valueLabelDisplay="auto"
+          />
           {/* Rating */}
           {/* <div className='font-[Outfit] w-full'>
             <h2 className='text-lg font-medium mb-3 flex justify-between items-center capitalize '>rating<span><MdOutlineKeyboardArrowDown className='text-2xl font-black' /></span></h2>
@@ -181,7 +183,7 @@ transition-all duration-300 px-3  md:px-4  flex items-center rounded-lg'><FaSear
                   <label className='flex gap-3 py-2 rounded-lg transition hover:bg-gray-50 cursor-pointer w-full justify-start items-center' > <input type="radio" className=' border-none accent-pink-400' onChange={(e) => setFilter("rating", Number(e.target.value))} checked={Number(rating) === star} value={star} name={star} id="" /> <span className='text-base text-gray-700 font-medium capitalize'>{star} & above</span> </label> </div>)
               })} </div> </div> </div> */}
           {/* price */}
-        
+
         </aside>
 
         {/* courses */}
@@ -190,8 +192,21 @@ transition-all duration-300 px-3  md:px-4  flex items-center rounded-lg'><FaSear
             🚀 Courses will be available soon
           </div>
         ) : (
-          <div className='flex-1 min-w-0'>
-            <div className={`grid  gap-4 px-5 py-4 md:py-10 grid-cols-1 ${filter ? 'md:grid-cols-3 ' : 'md:grid-cols-4'}`}>
+
+          <div className='flex-1 min-w-0 px-5 '>
+
+<div className='flex flex-wrap overflow-x-auto md:gap-2'>
+            <FilterChip filter={filter.category} onRemove={() => setFilter(prev => ({ ...prev, category: '' }))} />
+            <FilterChip filter={filter.difficulty} onRemove={() => setFilter(prev => ({ ...prev, difficulty: '' }))} />
+            <FilterChip filter={filter.priceType} onRemove={() =>setFilter(prev => ({ ...prev, priceType: '' }))} />
+            <FilterChip filter={
+  filter.minPrice && filter.maxPrice
+    ? `₹${filter.minPrice} - ₹${filter.maxPrice}`
+    : ''
+} onRemove={ () =>{setFilter(prev => ({ ...prev, minPrice: '' ,maxPrice:''})),setSliderValue([priceRange.min,priceRange.max])}} />
+</div>
+          
+            <div className={`grid  gap-4  py-2 md:py-6 grid-cols-1 ${filter ? 'md:grid-cols-3 ' : 'md:grid-cols-4'}`}>
               {courses?.map((course, index) => {
                 return (
 
