@@ -13,14 +13,16 @@ import { usetoggletab } from '../Store/UseToggleTab';
 import { LiaCertificateSolid } from "react-icons/lia";
 import { BsTwitterX } from "react-icons/bs";
 import Rating from '@mui/material/Rating';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import {formatTime} from '../utils/formatDuration'
 import { Link } from 'react-router-dom';
 import api from '@/utils/axios';
 import { useAuth } from '@/context/AuthContext';
+import { toast } from 'sonner';
 
 const CourseDetails = () => {
   const {user} = useAuth()
+  const navigate = useNavigate()
 const {course_id} = useParams()
 const [courseData,setCourseData]= useState([])
 const [sectionArr,setSectionArr] = useState([])
@@ -30,14 +32,22 @@ const [opensection, Setopensection] = useState(null)
   const toggleAccordian = (section) => {
     Setopensection(opensection === section ? null : section)
   }
-
+ const handleEnrollment = async()=>{
+  try{
+  const res = await api.post(`/course/enroll/${course_id}`)
+  console.log({'enroll':res})
+  toast.success('enrolled')
+  setTimeout(() => {
+    navigate('/dashboard/student/my-courses')
+  }, 1000);
+}
+  catch(Err){
+    console.log(Err)
+  }
+ }
   const tabs = [{ name: "overview", id: 1 }, { name: "syllabus", id: 2 }, { name: "instructor", id: 3 }, { name: "review", id: 4 }]
   const { tab, toggletab, toggleModule, syllabus } = usetoggletab()
-  const { course_name } = useParams()
-  // const courseData = course.find((c) => c.course_name == course_name)
-  // if (!courseData) {
-  //   return <h1>course not found</h1>
-  // }
+
   useEffect(() => {
     toggletab("overview");
     fetchCourseDetails()
@@ -113,7 +123,7 @@ const [opensection, Setopensection] = useState(null)
             <div className='flex justify-between items-center'><p class="text-lg md:text-2xl font-semibold  bg-clip-text text-transparent bg-gradient-to-tr from-[#0f172a] via-[#1e3a8a] to-[#60a5fa]">
               Rs. {courseData.price}
             </p>
-              <Link to={`/courses/${courseData.title}/${courseData._id}/learn`}> <button className='px-5 py-2 capitalize text-lg font-semibold  rounded-lg duration-300 transition-all ease-in bg-gradient-to-tr from-[#95b1ee] to-[#728ccd]  hover:scale-95 scale-100 text-white cursor-pointer '>enroll now</button></Link>
+              <Link> <button onClick={handleEnrollment} className='px-5 py-2 capitalize text-lg font-semibold  rounded-lg duration-300 transition-all ease-in bg-gradient-to-tr from-[#95b1ee] to-[#728ccd]  hover:scale-95 scale-100 text-white cursor-pointer '>enroll now</button></Link>
             </div>
 
           </div>

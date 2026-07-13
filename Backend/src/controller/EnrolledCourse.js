@@ -1,10 +1,10 @@
-import { asyncHandler } from "../middleware/asyncHandler.middleware";
-import Course from "../models/Teacher/Course";
-import Enrollment from "../models/Teacher/Enrollment";
-import userModel from "../models/user.model";
+import { asyncHandler } from "../middleware/asyncHandler.middleware.js";
+import Course from "../models/Teacher/Course.js";
+import Enrollment from "../models/Teacher/Enrollment.js";
+import userModel from "../models/user.model.js";
 
 export const Enroll = asyncHandler(async(req , res)=>{
-    const userId = req.user.
+    const userId = req.user.UserID
      const {courseId} = req.params 
      const existingUser = await userModel.findById(userId)
          if(!existingUser){

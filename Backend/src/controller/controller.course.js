@@ -207,31 +207,6 @@ return res.status(200).json({message:'lesson updated'})
  
 })
 
-// export const LessonPdfUpload =asyncHandler( async(req,res)=>{
-   
-// const {lessonId}= req.params
-// const lesson = await Lesson.findById(lessonId)
-// if(!lesson){
-//    return res.status(404).json({message:'lesson not found'})
-// }
-// const titles = Array.isArray(req.body.title) ? req.body.title: [req.body.title]
-// const resources = []
-
-// for (let i = 0; i < req.files.length; i++) {
-//    const result = await cloudinary.uploader.upload(req.files[i].path,{
-//    resource_type:'raw',folder:'skillnest-courses/pdf'
-// }) 
-
-// resources.push({
-//    title:titles[i],url:result.secure_url
-// })
-//    }
-//    lesson.resources.push(...resources)
-
-// await lesson.save()
-// return res.status(200).json({message:"pdf uploaded",})
- 
-// })
 export const ResourceUpload =asyncHandler( async(req,res)=>{
    console.log(req.files[0]);
 const {lessonId}= req.params
