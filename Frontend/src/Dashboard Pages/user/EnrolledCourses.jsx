@@ -1,3 +1,4 @@
+import EnrolledCourseCard from '@/utils/EnrolledCourseCard'
 import ProjectCard from '@/utils/ProjectCard'
 import React from 'react'
 import { FaAngleDoubleLeft } from 'react-icons/fa'
@@ -17,10 +18,11 @@ const EnrolledCourses = () => {
         <h4 className='text-xl font-medium'>
           Continue
         </h4>
-        <div className=' overflow-x-scroll flex'>
+        <div className='w-full overflow-x-scroll grid grid-cols-3'>
           {['demo1','demo2','demo3'].map((course,index)=>(
-<ProjectCard key={index} course_name={course}/>
+<EnrolledCourseCard key={index} img='https://i.pinimg.com/736x/dd/ce/a8/ddcea8f3c96bb4432e872a57accc3538.jpg' instructor_name='khushi' course_name='Lorem ipsum dolor sit amet. demo'/>
 ))}
+
         </div>
       </div>
     </div>
