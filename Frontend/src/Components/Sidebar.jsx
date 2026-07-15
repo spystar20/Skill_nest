@@ -10,7 +10,7 @@ import { Link, NavLink } from 'react-router-dom'
 const Sidebar = () => {
  const {user} = useAuth()
   return (
-    <div className='h-screen hidden bg-[#0a1931] w-64  fixed left-0 top-0 backdrop-blur-lg  bg-opacity-40 text-white md:flex flex-col '>
+    <div className='h-screen z-[240605] hidden bg-[#0a1931] w-64  fixed left-0 top-0 backdrop-blur-lg  bg-opacity-40 text-white md:flex flex-col '>
         <div>
   <div className="flex items-center gap-2 p-3">
           <GiNestBirds className="text-white text-3xl" />
