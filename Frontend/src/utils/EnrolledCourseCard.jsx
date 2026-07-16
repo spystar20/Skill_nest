@@ -1,7 +1,9 @@
+import { CircularProgress } from '@mui/material'
 import React from 'react'
 import { FaPlayCircle } from 'react-icons/fa'
+import CircularWithValueLabel from './CircularProgressWithLabel'
 
-const EnrolledCourseCard = ({className,LessonsLeft,img,course_name,instructor_name}) => {
+const EnrolledCourseCard = ({className,LessonsLeft,img,course_name,instructor_name,progressPercent}) => {
   return (
     <div className={`cards rounded-lg flex group hover:shadow-xl   flex-col gap-4 md:rounded-xl p-2  md:p-3 ${className}`}>
         <div className='relative  cursor-pointer '>
@@ -17,13 +19,12 @@ const EnrolledCourseCard = ({className,LessonsLeft,img,course_name,instructor_na
                           <p className='text-xs/4 md:text-sm mt-1 text-wrap font-body text-gray-700 line-clamp-1 capitalize '>By {instructor_name}
                           </p>
                         </div>
-<div className='w-full flex flex-col gap-4'>
-<div className='w-full'>
- <span className='flex text-sm justify-between text-black/80 capitalize mb-1'>progress  <span className='font-medium ml-1'>80%</span> </span> 
- <div className='w-full h-2 bg-black/30 rounded-full'><div className='bg-[#0A1931] h-2 rounded-full w-1/2'></div>
- </div>
+<div className='w-full flex items-center justify-between gap-4'>
+<div className='items-center flex  gap-2 justify-center '>
+ <span className='flex text-base justify-between text-black/80 capitalize mb-1'>progress </span> <CircularWithValueLabel  progress={progressPercent}/> 
+
 </div>
-<button className='text-white cursor-pointer text-center rounded-full text-base font-medium hover:bg-[#0A1931]/80 duration-300 ease-in bg-[#0A1931] px-4 py-1.5'>
+<button className='text-white  cursor-pointer text-center rounded-full text-base font-medium hover:bg-[#0A1931]/80 duration-300 ease-in bg-[#0A1931] px-4 py-1.5'>
     Continue 
 </button>
 </div></div>
