@@ -21,7 +21,7 @@ const EnrolledCourses = () => {
           
 Continue where you left off and track your progress.
         </h4>
-        <div className='w-full rounded-2xl overflow-x-auto no-scrollbar flex gap-6'>
+        <div className='w-full rounded-2xl overflow-x-auto no-scrollbar flex gap-6 '>
           {['demo1','demo2','demo3',4,5].map((course,index)=>(
 <EnrolledCourseCard key={index} progressPercent={100} className="shrink-0 max-w-[300px]" img='https://i.pinimg.com/736x/dd/ce/a8/ddcea8f3c96bb4432e872a57accc3538.jpg' instructor_name='khushi' course_name='Lorem ipsum dolor sit amet. demo'/>
 ))}

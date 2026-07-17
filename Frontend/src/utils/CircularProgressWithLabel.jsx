@@ -50,5 +50,5 @@ CircularProgressWithLabel.propTypes = {
 export default function CircularWithValueLabel({progress}) {
  
 
-  return <CircularProgressWithLabel si value={progress} />;
+  return <CircularProgressWithLabel  value={progress} />;
 }

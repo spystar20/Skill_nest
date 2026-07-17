@@ -5,7 +5,8 @@ import CircularWithValueLabel from './CircularProgressWithLabel'
 
 const EnrolledCourseCard = ({className,LessonsLeft,img,course_name,instructor_name,progressPercent}) => {
   return (
-    <div className={`cards rounded-lg flex group hover:shadow-xl   flex-col gap-4 md:rounded-xl p-2  md:p-3 ${className}`}>
+    <div className={`cards rounded-lg flex group hover:shadow-xl   flex-col gap-4 md:rounded-xl p-2  md:p-3 ${className}`}   style={{ outline: "2px solid red" }}
+>
         <div className='relative  cursor-pointer '>
                         <img src={img} className='aspect-[16/10] object-top object-cover rounded-2xl shadow group-hover:brightness-50 transition-all ease-in duration-200' alt="" />
                         <span className="py-1 px-3 text-sm shadow-lg bg-black/70 backdrop-blur rounded-full absolute top-3 left-3 text-white font-body">
@@ -19,8 +20,8 @@ const EnrolledCourseCard = ({className,LessonsLeft,img,course_name,instructor_na
                           <p className='text-xs/4 md:text-sm mt-1 text-wrap font-body text-gray-700 line-clamp-1 capitalize '>By {instructor_name}
                           </p>
                         </div>
-<div className='w-full flex items-center justify-between gap-4'>
-<div className='items-center flex  gap-2 justify-center '>
+<div className='w-full flex   items-center justify-between'>
+<div className='items-center flex gap-2 justify-center '>
  <span className='flex text-base justify-between text-black/80 capitalize mb-1'>progress </span> <CircularWithValueLabel  progress={progressPercent}/> 
 
 </div>
