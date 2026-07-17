@@ -21,10 +21,12 @@ const EnrolledCourses = () => {
           
 Continue where you left off and track your progress.
         </h4>
-        <div className='w-full rounded-2xl overflow-x-auto no-scrollbar flex gap-6 '>
+        <div className='overflow-x-auto no-scrollbar w-full'>
+        <div className=' rounded-2xl flex gap-6 box-border'>
           {['demo1','demo2','demo3',4,5].map((course,index)=>(
-<EnrolledCourseCard key={index} progressPercent={100} className="shrink-0 max-w-[300px]" img='https://i.pinimg.com/736x/dd/ce/a8/ddcea8f3c96bb4432e872a57accc3538.jpg' instructor_name='khushi' course_name='Lorem ipsum dolor sit amet. demo'/>
+<EnrolledCourseCard key={index} progressPercent={100} className="max-w-[300px] shrink-0" img='https://i.pinimg.com/736x/dd/ce/a8/ddcea8f3c96bb4432e872a57accc3538.jpg' instructor_name='khushi' course_name='Lorem ipsum dolor sit amet. demo'/>
 ))}
+</div>
 
         </div>
       </div>
@@ -48,9 +50,9 @@ transition-all duration-300 px-1  md:px-2  flex items-center justify-center roun
         </div>
         </div>
        {/* enrolled courses */}
-       <div className='grid grid-cols-4 gap-5 py-4'>
+       <div className=' grid gap-5 grid-cols-4  py-4'>
    {['demo1','demo2','demo3',4,5].map((course,index)=>(
-<EnrolledCourseCard key={index} className="shrink-0 max-w-[300px]" img='https://i.pinimg.com/736x/dd/ce/a8/ddcea8f3c96bb4432e872a57accc3538.jpg' instructor_name='khushi' course_name='Lorem ipsum dolor sit amet. demo'/>
+<EnrolledCourseCard key={index} className="shrink-0 max-w-[300px]" img='https://i.pinimg.com/736x/dd/ce/a8/ddcea8f3c96bb4432e872a57accc3538.jpg' progressPercent={90} instructor_name='khushi' course_name='Lorem ipsum dolor sit amet. demo'/>
 ))}
        </div>
       </div>
