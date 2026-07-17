@@ -52,7 +52,7 @@ transition-all duration-300 px-1  md:px-2  flex items-center justify-center roun
        {/* enrolled courses */}
        <div className=' grid gap-5 grid-cols-4  py-4'>
    {['demo1','demo2','demo3',4,5].map((course,index)=>(
-<EnrolledCourseCard key={index} className="shrink-0 max-w-[300px]" img='https://i.pinimg.com/736x/dd/ce/a8/ddcea8f3c96bb4432e872a57accc3538.jpg' progressPercent={90} instructor_name='khushi' course_name='Lorem ipsum dolor sit amet. demo'/>
+<EnrolledCourseCard key={index} status='completed' className="shrink-0 max-w-[300px]" img='https://i.pinimg.com/736x/dd/ce/a8/ddcea8f3c96bb4432e872a57accc3538.jpg' progressPercent={90} instructor_name='khushi' course_name='Lorem ipsum dolor sit amet. demo'/>
 ))}
        </div>
       </div>
