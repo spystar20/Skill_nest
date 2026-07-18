@@ -310,7 +310,6 @@ export const GetCourses = asyncHandler( async (req, res) => {
          filter.price={
             $gte:Number(minPrice),
             $lte:Number(maxPrice)
-
          }
        }
        if(sort === 'newest'){
