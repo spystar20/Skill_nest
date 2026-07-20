@@ -13,6 +13,7 @@ router.get('/:courseId',middleware,getCoursebyId)
 router.put('/:courseId/status',middleware,UpdateCourseStatus)
 router.delete('/:courseId',middleware,DeleteCourse)
 router.post('/enroll/:courseId',middleware,Enroll)
+router.post('/buy-course/:courseId')
 // section
 router.post('/:courseId/create-section',middleware,CreateSection)
 router.get('/:courseId/get-section',middleware,getSection)

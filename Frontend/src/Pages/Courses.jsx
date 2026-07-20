@@ -23,6 +23,7 @@ const Courses = () => {
   const [priceRange, SetPriceRange] = useState({ min: 0, max: 0 })
   const [sliderValue, setSliderValue] = useState([0, 0]);
   const [sortOption, setSortOptions] = useState('newest')
+
   const handleToggleFilter = () => {
     SetOpenFilter(!openFilter)
   }
@@ -97,7 +98,7 @@ const Courses = () => {
     setSliderValue(newValue),
       setFilter((prev) => ({ ...prev, minPrice: newValue[0], maxPrice: newValue[1] }))
   }
-
+  
   const handleSortOptions = (option) => {
     setFilter((prev) => ({ ...prev, sort: option }))
   }
