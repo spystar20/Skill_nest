@@ -15,7 +15,7 @@ import FilterComponent from '@/utils/FilterComponent';
 import { Slider } from '@mui/material';
 import { RxCross2 } from 'react-icons/rx';
 import FilterChip from '@/utils/FilterChip';
-import { handlePayment } from '@/Store/usePaymentStore';
+import { paymentStore } from '@/Store/usePaymentStore';
 const Courses = () => {
   const [courses, setCourses] = useState(null)
   const [categories, setCategories] = useState([])
@@ -24,7 +24,7 @@ const Courses = () => {
   const [priceRange, SetPriceRange] = useState({ min: 0, max: 0 })
   const [sliderValue, setSliderValue] = useState([0, 0]);
   const [sortOption, setSortOptions] = useState('newest')
-
+ const {handlePayment}=paymentStore()
   const handleToggleFilter = () => {
     SetOpenFilter(!openFilter)
   }
