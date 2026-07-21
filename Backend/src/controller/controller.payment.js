@@ -1,6 +1,6 @@
 import { asyncHandler } from "../middleware/asyncHandler.middleware.js";
 import PaymentModel from "../models/PaymentModel.js";
-import Course from "../models/Teacher/Course";
+import Course from "../models/Teacher/Course.js";
 import { razorpay } from "../../Config/razorpay.js";
 export const createOrder = asyncHandler(async(req,res)=>{
 const {courseId}=req.params

@@ -15,6 +15,7 @@ import FilterComponent from '@/utils/FilterComponent';
 import { Slider } from '@mui/material';
 import { RxCross2 } from 'react-icons/rx';
 import FilterChip from '@/utils/FilterChip';
+import { handlePayment } from '@/Store/usePaymentStore';
 const Courses = () => {
   const [courses, setCourses] = useState(null)
   const [categories, setCategories] = useState([])
@@ -211,7 +212,7 @@ transition-all duration-300 px-1  md:px-4  flex items-center justify-center roun
               {courses?.map((course, index) => {
                 return (
 
-                  <ProjectCard img={course.thumbnail} course_id={course._id} price={course.price} key={index} category={course.category} course_desc={course.desc} course_name={course.title} chapters={12} duration={course.duration} level={course.difficulty} rating={5} instructor_img={course.thumbnail} instructor_name={course.instructor.firstName} />
+                  <ProjectCard onBuy={()=>handlePayment(course._id)} img={course.thumbnail} course_id={course._id} price={course.price} key={index} category={course.category} course_desc={course.desc} course_name={course.title} chapters={12} duration={course.duration} level={course.difficulty} rating={5} instructor_img={course.thumbnail} instructor_name={course.instructor.firstName} />
                 )
               })}
 

@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import Course from '../data/course'
 export const useCourseStore = create((set)=>({
 
     selectCourse:'',selectSubCategories:'',price:'',rating:'',search:'',sortBy:{},
