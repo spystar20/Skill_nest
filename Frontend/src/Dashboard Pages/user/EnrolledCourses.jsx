@@ -1,11 +1,29 @@
+import { useAuth } from '@/context/AuthContext'
+import api from '@/utils/axios'
 import EnrolledCourseCard from '@/utils/EnrolledCourseCard'
 import EnrollFilterPill from '@/utils/EnrollFilterPill'
 import ProjectCard from '@/utils/ProjectCard'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { FaAngleDoubleLeft, FaSearch } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
 
 const EnrolledCourses = () => {
+  const {user}=useAuth
+  const [enrolledCourses,setEnrolledCourses] = useState([])
+ 
+  const fetchEnrolledCourses = async()=>{
+    try{
+const res = await api.get('/course/enrolled')
+setEnrolledCourses(res?.data?.courses)
+console.log(res?.data?.courses)
+    }catch(err){
+      console.log(err)
+    }
+  }
+  const startedCourse = enrolledCourses?.filter(course=>course.completedLessons.length>0)
+   useEffect(()=>{
+fetchEnrolledCourses()
+  },[])
   return (
     <div className='w-full bg-neutral-100 min-h-screen overflow-x-hidden px-2 md:px-8 py-3 flex flex-col gap-6 '>
    <div className='flex justify-between items-center'> 
@@ -16,20 +34,57 @@ const EnrolledCourses = () => {
       </Link>
       </div>
 {/* continue course */}
-      <div className='w-full '>
-        <h4 className='text-gray-600 text-lg mb-3'>
-          
-Continue where you left off and track your progress.
-        </h4>
-        <div className='overflow-x-auto no-scrollbar w-full'>
-        <div className=' rounded-2xl flex gap-6 box-border'>
-          {['demo1','demo2','demo3',4,5].map((course,index)=>(
-<EnrolledCourseCard key={index} progressPercent={100} className="max-w-[300px] shrink-0" img='https://i.pinimg.com/736x/dd/ce/a8/ddcea8f3c96bb4432e872a57accc3538.jpg' instructor_name='khushi' course_name='Lorem ipsum dolor sit amet. demo'/>
-))}
+     <div className="w-full">
+  <h4 className="text-gray-600 text-lg mb-3">
+    Continue where you left off and track your progress.
+  </h4>
+
+  <div className="overflow-x-auto no-scrollbar w-full">
+    {startedCourse.length === 0 ? (
+      <div className="w-full min-h-[220px] rounded-3xl border border-dashed border-gray-300 bg-white flex flex-col items-center justify-center text-center px-6 py-10 shadow-sm">
+    {/* Icon */}
+    <div className="w-[280px] object-cover h-34 rounded-2xl bg-indigo-50 flex items-center justify-center mb-5">
+      <img  src="https://i.pinimg.com/1200x/03/86/d3/0386d374c8c476a62e36108781bee89e.jpg" alt="" />
+    </div>
+
+    {/* Heading */}
+    <h3 className="text-xl font-semibold text-gray-900 font-heading">
+      Ready to start learning?
+    </h3>
+
+    {/* Description */}
+    <p className="text-sm md:text-base text-gray-500 max-w-md mt-2 leading-relaxed">
+      You haven't started any of your enrolled courses yet.
+      Pick a course below and begin your learning journey.
+    </p>
+
+    {/* CTA */}
+    <button
+      className="mt-5 px-6 py-2.5 rounded-full bg-[#0A1931] text-white text-sm font-medium
+      hover:scale-105 transition-all duration-300 shadow-md cursor-pointer"
+    >
+      Start Learning
+    </button>
+
+  </div>
+) : (
+  <div className="rounded-2xl flex gap-6 box-border">
+    {startedCourse.map((course) => (
+      <EnrolledCourseCard
+        key={course._id}
+        progressPercent={100}
+        className="max-w-[300px] shrink-0"
+        img={course.courseId.thumbnail}
+        instructor_name="khushi"
+        course_name={course.courseId.title}
+      />
+    ))}
+  </div>
+)}
+
+  </div>
 </div>
 
-        </div>
-      </div>
       <div className='flex flex-col gap-4 py-6'>
         <h3 className='text-xl font-semibold capitalize font-heading' >Enrolled Courses (5)</h3>
         {/* search and filter */}
@@ -51,8 +106,8 @@ transition-all duration-300 px-1  md:px-2  flex items-center justify-center roun
         </div>
        {/* enrolled courses */}
        <div className=' grid gap-5 grid-cols-4  py-4'>
-   {['demo1','demo2','demo3',4,5].map((course,index)=>(
-<EnrolledCourseCard key={index} status='completed' className="shrink-0 max-w-[300px]" img='https://i.pinimg.com/736x/dd/ce/a8/ddcea8f3c96bb4432e872a57accc3538.jpg' progressPercent={90} instructor_name='khushi' course_name='Lorem ipsum dolor sit amet. demo'/>
+   {enrolledCourses?.map((course,index)=>(
+<EnrolledCourseCard key={index} status='completed' className="shrink-0 max-w-[300px]" img={course.courseId.thumbnail} progressPercent={90} instructor_name='khushi' course_name={course.courseId.title}/>
 ))}
        </div>
       </div>

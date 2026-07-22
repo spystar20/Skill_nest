@@ -2,21 +2,21 @@ import express from 'express'
 import { middleware } from "../middleware/auth.middleware.js"
 import uploads from "../middleware/multer.js"
 import { getCoursebyId ,CreateCoursse, GetCourses, CreateSection, getSection, createLesson, getLesson, updateLesson, getLessonById, DeleteResource, CourseSetting, GetCoursesByTeacherId, UpdateCourseStatus, UpdateSection, DeleteSection, deleteLesson, DeleteCourse, ResourceUpload, GetCourseCategories,} from "../controller/controller.course.js"
-import { Enroll } from '../controller/EnrolledCourse.js'
+import { Enroll, EnrolledCourse } from '../controller/EnrolledCourse.js'
 import { createOrder, verifyPayment } from '../controller/controller.payment.js'
 export const router = express.Router()
 
 // courses
-router.post('/createNew',middleware,uploads.single("thumbnail"),CreateCoursse)
 router.get('/',GetCourses)
 router.get('/category',middleware,GetCourseCategories)
+router.post('/createNew',middleware,uploads.single("thumbnail"),CreateCoursse)
+router.post('/payment/verify',middleware,verifyPayment)
+router.get('/enrolled',middleware,EnrolledCourse)
+router.post('/enroll/:courseId',middleware,Enroll)
+router.post('/buy-course/:courseId',middleware,createOrder)
 router.get('/:courseId',middleware,getCoursebyId)
 router.put('/:courseId/status',middleware,UpdateCourseStatus)
 router.delete('/:courseId',middleware,DeleteCourse)
-router.post('/enroll/:courseId',middleware,Enroll)
-router.post('/buy-course/:courseId',middleware,createOrder)
-router.post('/payment/verify',middleware,verifyPayment)
-
 // section
 router.post('/:courseId/create-section',middleware,CreateSection)
 router.get('/:courseId/get-section',middleware,getSection)

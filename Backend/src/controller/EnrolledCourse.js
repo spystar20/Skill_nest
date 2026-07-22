@@ -29,10 +29,14 @@ userId:userId,courseId:courseId
 })
 
 export const EnrolledCourse =asyncHandler(async(req,res)=>{
-     const {userId}=req.user.UserID
-     const courses = await Enrollment.find({userId:userId})
+     const userId=req.user.UserID
+     console.log(userId)
+     // const user = await Enrollment.findOne({userId})
+     // console.log(user)
+     const courses = await Enrollment.find({userId:userId}).populate('courseId')
      if(!courses){
           return res.status(401).json({message:'no course purchased'})
      }
+   
      return res.status(200).json({courses})
 })

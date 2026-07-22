@@ -9,7 +9,7 @@ const EnrollmentSchema = new mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,ref:'course',required:true,unique:true
     },
     paymentId:{
-type:string , required:true
+type:String , required:true
     },
     completedLessons:[{type:mongoose.Schema.Types.ObjectId,ref:'lesson'}],
     completed:{
