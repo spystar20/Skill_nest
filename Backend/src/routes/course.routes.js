@@ -3,7 +3,7 @@ import { middleware } from "../middleware/auth.middleware.js"
 import uploads from "../middleware/multer.js"
 import { getCoursebyId ,CreateCoursse, GetCourses, CreateSection, getSection, createLesson, getLesson, updateLesson, getLessonById, DeleteResource, CourseSetting, GetCoursesByTeacherId, UpdateCourseStatus, UpdateSection, DeleteSection, deleteLesson, DeleteCourse, ResourceUpload, GetCourseCategories,} from "../controller/controller.course.js"
 import { Enroll } from '../controller/EnrolledCourse.js'
-import { createOrder } from '../controller/controller.payment.js'
+import { createOrder, verifyPayment } from '../controller/controller.payment.js'
 export const router = express.Router()
 
 // courses
@@ -15,6 +15,8 @@ router.put('/:courseId/status',middleware,UpdateCourseStatus)
 router.delete('/:courseId',middleware,DeleteCourse)
 router.post('/enroll/:courseId',middleware,Enroll)
 router.post('/buy-course/:courseId',middleware,createOrder)
+router.post('/payment/verify',middleware,verifyPayment)
+
 // section
 router.post('/:courseId/create-section',middleware,CreateSection)
 router.get('/:courseId/get-section',middleware,getSection)

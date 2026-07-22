@@ -64,11 +64,7 @@ const ProjectCard = ({img,category,course_id,course_name,course_desc,chapters,du
                             </div>
                       </div>
                               </Link>
-
-                    </div>
-         
-  
-
+                                  </div>
     
   )
 }

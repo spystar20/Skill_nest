@@ -2,7 +2,8 @@ import { asyncHandler } from "../middleware/asyncHandler.middleware.js";
 import PaymentModel from "../models/PaymentModel.js";
 import Course from "../models/Teacher/Course.js";
 import { razorpay } from "../../Config/razorpay.js";
-
+import crypto from 'crypto'
+import Enrollment from "../models/Teacher/Enrollment.js";
 export const createOrder = asyncHandler(async(req,res)=>{
 const {courseId}=req.params
 const userId= req.user.UserID
@@ -24,9 +25,18 @@ return res.status(200).json({order,key:process.env.RAZORPAY_KEY_ID})
 
 export const verifyPayment =asyncHandler( async(req,res)=>{
 const {orderId,paymentId,signature} = req.body
-const generatedSignature = crypto.create('sha256',process.env.process.env.RAZORPAY_SECRET_KEY).update(`${orderId}|${paymentId}`).digest('hex')
+const generatedSignature = crypto.createHmac('sha256',process.env.RAZORPAY_SECRET_KEY).update(`${orderId}|${paymentId}`).digest('hex')
 if(generatedSignature !== signature){
     return res.status(403).json({message:'payment unsuccessfull'})
 }
+const payment = await PaymentModel.findOneAndUpdate({razorpayOrderId:orderId},{status:'paid',razorpayPaymentId:paymentId,paidAt:Date.now()},{new:true,runValidators:true})
+console.log(payment)
+const existingEnrollment = await Enrollment.findOne({userId:payment.userId,courseId:payment.courseId})
+if(!existingEnrollment){
+await Enrollment.create({
+    userId:payment.userId,courseId:payment.courseId,paymentId:payment.razorpayPaymentId
+})
+}
 
+return res.status(201).json({message:'course purchased'})
 })
