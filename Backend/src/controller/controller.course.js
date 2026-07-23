@@ -7,6 +7,7 @@ import Section from "../models/Teacher/Section.js"
 import Lesson from "../models/Teacher/Lesson.js"
 import { asyncHandler } from "../middleware/asyncHandler.middleware.js"
 import { diff } from "util"
+import Enrollment from "../models/Teacher/Enrollment.js"
 
 
 export const CreateCoursse = asyncHandler( async (req, res) => {
@@ -336,9 +337,16 @@ export const GetCourses = asyncHandler( async (req, res) => {
                $max:"$price"           }
          }}
       ])
-        
+      const enrollments = await Enrollment.find({userId:req.user.UserID})
+     const courseWithStatus = courses.map((course)=>{
+      const enrollment = enrollments.find(enrollment=>enrollment.courseId.toString()===course._id.toString())
+      return {
+         ...course.toObject(),
+         enrollment:enrollment?enrollment.status:null
 
-      return res.status(200).json({ message: "courses sent", courses,PriceRange})
+      }
+     })
+      return res.status(200).json({ message: "courses sent", courses:courseWithStatus,PriceRange})
 
 })
 export const GetCourseCategories = asyncHandler(async(req,res)=>{

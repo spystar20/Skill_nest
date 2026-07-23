@@ -15,7 +15,10 @@ type:String , required:true
     completed:{
         type:Boolean,default:false
     }
-
+,
+status:{
+    type:String,default:'not-started',enum:['not-started','in-progress','completed']
+},
 },{timestamps:true})
 
 

@@ -7,7 +7,7 @@ import { FiTrendingUp } from 'react-icons/fi'
 import { PiBookDuotone } from 'react-icons/pi'
 import { Link } from 'react-router-dom'
 import { formatTime } from './formatDuration'
-const ProjectCard = ({img,category,course_id,course_name,course_desc,chapters,duration,level,rating,instructor_img,instructor_name,price,id,className='',onBuy}) => {
+const ProjectCard = ({img,category,course_id,course_name,course_desc,chapters,duration,level,rating,instructor_img,instructor_name,price,id,className='',onBuy,status}) => {
     const {Liked,toggleLike} = toggleStore()
     const stopNavigation = (e) => {
   e.preventDefault();
@@ -53,15 +53,49 @@ const ProjectCard = ({img,category,course_id,course_name,course_desc,chapters,du
                             <span className='font-medium text-xs  md:text-sm '>instructor</span>
                           </div>
                         </div>
-                        <div className='flex flex-col mt-auto md:flex-row md:items-center gap-2 items-start  justify-between'>
+                        <div className='flex flex-col mt-2 md:flex-row md:items-center gap-2 items-start  justify-between'>
+                          {(status === null) &&(
+                            <>
                           <div className="flex  items-center gap-3">
                          
                             <span className=" text-lg md:text-2xl font-semibold text-indigo-900">₹{price}</span>
                           </div>
                           <div className='w-full md:w-1/2 '>
-                            <button onClick={(e)=>{stopNavigation(e),onBuy(course_id)}} className=' transition-all bg-gradient-to-tr from-[#95b1ee] to-[#728ccd] font-[Comic_Relief]  cursor-pointer text-white rounded-full md:py-1.5 py-1 px-5 w-full text-lg box capitalize font-medium hover:scale-95'>buy now</button>
-                            </div>
-                            </div>
+                              <button onClick={(e)=>{stopNavigation(e),onBuy(course_id)}} className=' transition-all bg-gradient-to-tr from-[#95b1ee] to-[#728ccd]  font-heading cursor-pointer text-white rounded-full md:py-1.5 py-1 px-5 w-full text-lg box capitalize font-medium hover:scale-95'>buy now</button>
+                          </div>
+                          </>
+                          )}
+                        <>
+                            
+        {status === "not-started" && (
+          <>
+            <button className=' transition-all bg-gradient-to-tr from-[#95b1ee] to-[#728ccd] font-heading cursor-pointer text-white rounded-full md:py-1.5 py-1 px-5 w-full text-lg box capitalize font-medium hover:scale-95'>
+              Start Learning
+            </button>
+          </>
+        )}
+
+        {/* IN PROGRESS */}
+
+        {status === "in-progress" && (
+          <>
+
+
+            <button className=' transition-all bg-gradient-to-tr from-[#95b1ee] to-[#728ccd] font-headingcursor-pointer text-white rounded-full md:py-1.5 py-1 px-5 w-full text-lg box capitalize font-medium hover:scale-95'>
+              Continue Learning
+            </button>
+          </>
+        )}
+
+        {/* COMPLETED */}
+
+        {status === "completed" && (
+            <button className=' transition-all bg-gradient-to-tr from-[#95b1ee] to-[#728ccd] font-heading  cursor-pointer text-white rounded-full md:py-1.5 py-1 px-5 w-full text-lg box capitalize font-medium hover:scale-95'>
+              Review Course
+            </button>
+        
+        )}
+</>                            </div>
                       </div>
                               </Link>
                                   </div>

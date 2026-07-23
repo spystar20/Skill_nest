@@ -7,7 +7,7 @@ export const Enroll = asyncHandler(async(req , res)=>{
     const userId = req.user.UserID
      const {courseId} = req.params 
      const course = await Course.findById(courseId)
-
+await course.save()
       if(!course){
                 return res.status(404).json({message:'course not found'})
      }
@@ -30,10 +30,9 @@ userId:userId,courseId:courseId
 
 export const EnrolledCourse =asyncHandler(async(req,res)=>{
      const userId=req.user.UserID
-     console.log(userId)
-     // const user = await Enrollment.findOne({userId})
-     // console.log(user)
+  
      const courses = await Enrollment.find({userId:userId}).populate('courseId')
+     
      if(!courses){
           return res.status(401).json({message:'no course purchased'})
      }

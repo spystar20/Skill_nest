@@ -24,12 +24,12 @@ import { IoDocumentTextSharp } from 'react-icons/io5';
 import Quill from 'quill'
 import "quill/dist/quill.snow.css"; // Quill's default styling
 import api from '@/utils/axios'
+import { useFetchStore } from '@/Store/FetchStore'
 
 
 
 const CoursePlayer = () => {
-  const [ courseData,setCourseData]= useState([])
-  const [teacherData,setTeacherData]=useState([])
+  const {course,fetchCourseById}=useFetchStore()
   const [ sectionArr,setSectionArr]=useState([])
   const [ lesson,setLessons]=useState({})
  const resourceIcons = {
@@ -38,31 +38,20 @@ const CoursePlayer = () => {
    useEffect(() => {
   toggletab("syllabus");
   fetchSection()
-  fetchcourses()
+fetchCourseById(course_id)
 }, []);
    const tabs = [ {name:"notes",id:3},{name:"resource",id:4},]
    const [currentCourse,setCurrentCourse]=useState(null)
    const resources = currentCourse?.resources || [];
     const {tab,toggletab,toggleModule,syllabus } = usetoggletab()
   const  {course_id} = useParams()
-    const fetchcourses = async()=>{
-      try{
-const res = await api.get(`/course/${course_id}`)
-setCourseData(res?.data?.course)
-setTeacherData(res?.data?.teacher)
-      }catch(err){
-console.log(err)
-      }
-    }
+   
       const fetchSection = async()=>{
            try{
           const res = await api.get(`/course/${course_id}/get-section`)
           console.log(res)
          setSectionArr(res?.data?.section)
-        // sectionArr.forEach(section => {
-        //   fetchLesson(section._id)
-        //  });
-          fetchLesson(res?.data?.section[0]._id)
+         fetchLesson(res?.data?.section[0]._id)
 
         }catch(err){
           console.log(err)
@@ -112,7 +101,7 @@ console.log(err)
       <div className='flex flex-col gap-1' >
         <span className='flex flex-col gap-0'>
       
-        <h2 className='text-2xl font-semibold'>{courseData.title}</h2>
+        <h2 className='text-2xl font-semibold'>{course?.title}</h2>
         </span>
         <div className='flex flex-col justify-between gap-6'>
    <div className='p-4 flex-1 rounded-lg bg-white shadow-lg'><video className='w-full h-auto aspect-video'  src={currentCourse?.videoUrl} controls autoPlay> </video></div>

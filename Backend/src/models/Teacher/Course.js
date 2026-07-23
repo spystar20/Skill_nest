@@ -30,7 +30,7 @@ status:{
 }
 ,lessonCount:{
     type:Number,default:0
-},
+}
 },{timestamps:true})
 
 export default mongoose.model('course',course)

@@ -7,7 +7,7 @@ import { createOrder, verifyPayment } from '../controller/controller.payment.js'
 export const router = express.Router()
 
 // courses
-router.get('/',GetCourses)
+router.get('/',middleware,GetCourses)
 router.get('/category',middleware,GetCourseCategories)
 router.post('/createNew',middleware,uploads.single("thumbnail"),CreateCoursse)
 router.post('/payment/verify',middleware,verifyPayment)

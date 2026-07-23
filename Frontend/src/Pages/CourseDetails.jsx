@@ -19,15 +19,15 @@ import { Link } from 'react-router-dom';
 import api from '@/utils/axios';
 import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
+import { useFetchStore } from '@/Store/FetchStore';
 
 const CourseDetails = () => {
   const {user} = useAuth()
   const navigate = useNavigate()
 const {course_id} = useParams()
-const [courseData,setCourseData]= useState([])
+const {course,teacher,fetchCourseById}=useFetchStore()
 const [sectionArr,setSectionArr] = useState([])
 const [lessonsbySection,setLessons]= useState({})
-const [ teacherData,setTeacherData]= useState([])
 const [opensection, Setopensection] = useState(null)
   const toggleAccordian = (section) => {
     Setopensection(opensection === section ? null : section)
@@ -50,20 +50,10 @@ const [opensection, Setopensection] = useState(null)
 
   useEffect(() => {
     toggletab("overview");
-    fetchCourseDetails()
-    fetchSection()
+fetchCourseById(course_id)   
+ fetchSection()
   }, []);
-  const fetchCourseDetails = async()=>{
-    try{
-      const res = await api.get(`/course/${course_id}`)
-      console.log(res)
-      setCourseData(res?.data?.course)
-      setTeacherData(res?.data?.teacher)
-      
-    }catch(err){
-      console.log(err)
-    }
-  }
+ 
   const fetchSection = async()=>{
        try{
       const res = await api.get(`/course/${course_id}/get-section`)
@@ -91,13 +81,13 @@ const [opensection, Setopensection] = useState(null)
       <div className='w-full min-h-[320px] pt-23 pb-12 relative grid-cols-1  grid md:grid-cols-2 justify-between items-center gap-3  text-white  home-bg'>
         {/* course info */}
         <div className='flex flex-col order-2 md:order-1 gap-7 items-center  md:items-end justify-center   md:py-12'>
-          <h2 className='text-xl md:text-3xl font-semibold font-[Outfit]  capitalize '>{courseData.title} </h2>
+          <h2 className='text-xl md:text-3xl font-semibold font-[Outfit]  capitalize '>{course?.title} </h2>
           <div className='flex flex-wrap justify-center items-center gap-3 md:gap-6'>
             <span className='  py-1 px-2.5 text-sm   font-medium shadow-sm font-body rounded-full  bg-slate-100 text-slate-700 flex flex-row gap-1  items-center '>
-              <SiBookstack className=' font-bold text-sm md:text-2xl' />{courseData.lessonCount} lessons
+              <SiBookstack className=' font-bold text-sm md:text-2xl' />{course?.lessonCount} lessons
             </span>
             <span className='  py-1 px-2.5 text-sm   font-medium shadow-sm font-body rounded-full  bg-slate-100 text-slate-700 flex flex-row gap-1  items-center '>
-              <IoTime className='font-bold  text-sm md:text-2xl ' />{courseData.duration}
+              <IoTime className='font-bold  text-sm md:text-2xl ' />{course?.duration}
             </span>
             <span className='  py-1 px-2.5 text-sm   font-medium shadow-sm font-body rounded-full  bg-slate-100 text-slate-700 flex flex-row gap-1  items-center '>
 
@@ -108,9 +98,9 @@ const [opensection, Setopensection] = useState(null)
           </div>
           <div className='flex items-center justify-center w-[60%]'>
             <div className='flex justify-start items-center gap-3'>
-              <div><img src={courseData?.instructor?.avatar} className='w-16 rounded-full ' alt={courseData.instructor?.firstName} /></div>
+              <div><img src={course?.instructor?.avatar} className='w-16 rounded-full ' alt={course?.instructor?.firstName} /></div>
               <div className='flex flex-col justify-start items-start capitalize font-[outfit]'>
-                <span className='text-lg font-medium'>{courseData.instructor?.firstName}</span>
+                <span className='text-lg font-medium'>{course?.instructor?.firstName}</span>
                 <span className='font-medium text-sm '>instructor</span>
               </div>
             </div>
@@ -119,9 +109,9 @@ const [opensection, Setopensection] = useState(null)
         </div>
         <div className='flex flex-col order-1 md:order-2 my-6   items-center justify-center '>
           <div className='flex flex-col cursor-pointer max-w-sm shadow-2xl bg-white  gap-3 rounded-2xl  p-3'>
-            <div><img src={courseData.thumbnail} className='drop-shadow-xs rounded-2xl object-cover rounded-t-2xl transform hover:scale-105 transition-transform duration-300 w-[320px] ' alt="" /></div>
+            <div><img src={course?.thumbnail} className='drop-shadow-xs rounded-2xl object-cover rounded-t-2xl transform hover:scale-105 transition-transform duration-300 w-[320px] ' alt="" /></div>
             <div className='flex justify-between items-center'><p class="text-lg md:text-2xl font-semibold  bg-clip-text text-transparent bg-gradient-to-tr from-[#0f172a] via-[#1e3a8a] to-[#60a5fa]">
-              Rs. {courseData.price}
+              Rs. {course?.price}
             </p>
               <Link> <button onClick={handleEnrollment} className='px-5 py-2 capitalize text-lg font-semibold  rounded-lg duration-300 transition-all ease-in bg-gradient-to-tr from-[#95b1ee] to-[#728ccd]  hover:scale-95 scale-100 text-white cursor-pointer '>enroll now</button></Link>
             </div>
@@ -149,7 +139,7 @@ const [opensection, Setopensection] = useState(null)
                   <div className='flex flex-col  gap-1 py-6'>
                     <h1 className='text-lg font-medium'>Course Description</h1>
                     <p className='font-normal '>
-                      {courseData.desc}
+                      {course?.desc}
                     </p>
                   </div>
             
@@ -215,12 +205,12 @@ const [opensection, Setopensection] = useState(null)
                 <div className=' py-5 pl-4 '>
                   <div className='flex flex-col  pb-3'>
                     <h2 className='text-xl text-black font-semibold'>
-                      {courseData.instructor?.firstName}
+                      {course?.instructor?.firstName}
                     </h2>
-                    <span className='text-lg '> ({teacherData.title})</span>
+                    <span className='text-lg '> ({teacher?.title})</span>
                   </div>
                   <div className='flex items-start   gap-7'>
-                    <div className='w-[340px] object-cover border rounded-2xl p-4'><img className=' rounded-2xl' src={courseData.instructor?.avatar} alt={courseData.instructor?.avatar} /></div>
+                    <div className='w-[340px] object-cover border rounded-2xl p-4'><img className=' rounded-2xl' src={course?.instructor?.avatar} alt={course?.instructor?.avatar} /></div>
                     <div>
                       {/* <ul className='flex flex-col text-base font-normal w-full gap-1'>
                         <li className='flex gap-2 '>
@@ -247,13 +237,13 @@ const [opensection, Setopensection] = useState(null)
                     <div className='flex flex-col gap-1 '>
                       <h1 className='text-lg font-medium'>About the Instructor:</h1>
                       <p className='font-normal '>
-                        {courseData.instructor?.Bio}
+                        {course?.instructor?.Bio}
                       </p>
                     </div>
                     <div className='flex flex-col gap-1 '>
                       <h1 className='text-lg font-medium'>Specialization :</h1>
                       <p className='font-normal '>
-                        {teacherData.specialization}
+                        {teacher.specialization}
                       </p>
                     </div>
                     <div className='flex flex-col gap-1 '>
@@ -308,13 +298,13 @@ const [opensection, Setopensection] = useState(null)
                 <div className='flex flex-col  gap-1 '>
                   <h1 className='text-lg font-medium'>Course Description</h1>
                   <p className='font-normal '>
-                    {courseData.overview.description}
+                    {course?.overview.description}
                   </p>
                 </div>
                 <div className='flex flex-col gap-1 '>
                   <h2 className='text-lg font-medium'>What you’ll learn</h2>
                   <ul className='flex flex-col list-disc list-outside pl-5'>
-                    {courseData.overview.learn.map((list) => {
+                    {course?.overview.learn.map((list) => {
                       return (
                         <li>{list}</li>)
                     })}
@@ -323,7 +313,7 @@ const [opensection, Setopensection] = useState(null)
                 <div className='flex flex-col gap-1 py-5'>
                   <h2 className='text-lg font-medium'>Who this course is for</h2>
                   <ul className='flex flex-col list-disc list-outside pl-5'>
-                    {courseData.overview.highlights.map((list) => {
+                    {course?.overview.highlights.map((list) => {
                       return (
                         <li>{list}</li>
                       )
@@ -333,7 +323,7 @@ const [opensection, Setopensection] = useState(null)
                 <div className='flex flex-col gap-1 py-3'>
                   <h2 className='text-lg font-medium'>Requirements</h2>
                   <ul className='flex flex-col list-disc list-outside pl-5'>
-                    {courseData.overview.requirements.map((list) => {
+                    {course?.overview.requirements.map((list) => {
                       return (
                         <li>
                           {list}
@@ -396,23 +386,23 @@ const [opensection, Setopensection] = useState(null)
               <div className='px-2 py-3 bg-gray-50 rounded-lg ' >
                 <div className='flex flex-col  pb-3'>
                   <h2 className='text-xl text-black font-semibold'>
-                    {courseData.instructor_name}
+                    {course?.instructor_name}
                   </h2>
-                  <span className='text-lg '> ({courseData.instructor.title})</span>
+                  <span className='text-lg '> ({course?.instructor.title})</span>
                 </div>
                 <div className='flex items-start   gap-7'>
-                  <div className='w-[340px] border rounded-2xl p-4'><img className=' rounded-2xl' src={courseData.instructor_img} alt={courseData.instructor_img} /></div>
+                  <div className='w-[340px] border rounded-2xl p-4'><img className=' rounded-2xl' src={course?.instructor_img} alt={course?.instructor_img} /></div>
                   <div>
                     <ul className='flex flex-col text-base font-normal w-full gap-1'>
                       <li className='flex gap-2 '>
-                        <span className='flex gap-2 items-center '><FaStar />{courseData.instructor.rating} </span>
+                        <span className='flex gap-2 items-center '><FaStar />{course?.instructor.rating} </span>
                       </li>
                       <li>
-                        <span className='flex gap-2 items-center '><LiaCertificateSolid /> {courseData.instructor.reviews} </span>
+                        <span className='flex gap-2 items-center '><LiaCertificateSolid /> {course?.instructor.reviews} </span>
                       </li>
-                      <li><span className='flex gap-2 items-center '><MdOutlinePeopleAlt />{courseData.instructor.students}</span></li>
+                      <li><span className='flex gap-2 items-center '><MdOutlinePeopleAlt />{course?.instructor.students}</span></li>
                       <li>
-                        <span className='flex gap-2 items-center '><FaPlayCircle />{courseData.instructor.courses}</span>
+                        <span className='flex gap-2 items-center '><FaPlayCircle />{course?.instructor.courses}</span>
                       </li>
                       <li className='mt-3'> <div className='flex gap-1 text-lg'>
                         <span className='cursor-pointer'><FaFacebookF className=' bg-pink-400 text-white w-6 h-6 rounded-sm py-1 scale-100 cursor-pointer transition-all ease-out hover:scale-95' /></span>
@@ -428,13 +418,13 @@ const [opensection, Setopensection] = useState(null)
                   <div className='flex flex-col gap-1 '>
                     <h1 className='text-lg font-medium'>About the Instructor:</h1>
                     <p className='font-normal '>
-                      {courseData.instructor.bio}
+                      {course.instructor.bio}
                     </p>
                   </div>
                   <div className='flex flex-col gap-1 '>
                     <h1 className='text-lg font-medium'>Teaching Style :</h1>
                     <p className='font-normal '>
-                      {courseData.instructor.teaching}
+                      {course?.instructor.teaching}
                     </p>
                   </div>
                   <div className='flex flex-col gap-1 '>

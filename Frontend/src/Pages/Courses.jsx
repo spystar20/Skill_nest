@@ -5,7 +5,7 @@ import Course from '../data/course'
 import courseCategories from '../data/CourseCategories';
 import { IoFilterSharp, IoTime } from "react-icons/io5";
 import { toggleStore } from '../Store/toggleStore';
-import { useCourseStore } from '../Store/CourseFunc';
+import {  useFetchStore } from '../Store/FetchStore';
 import Pagination from '@mui/material/Pagination';
 
 import ProjectCard from '@/utils/ProjectCard';
@@ -17,13 +17,12 @@ import { RxCross2 } from 'react-icons/rx';
 import FilterChip from '@/utils/FilterChip';
 import { paymentStore } from '@/Store/usePaymentStore';
 const Courses = () => {
-  const [courses, setCourses] = useState(null)
   const [categories, setCategories] = useState([])
   const [openFilter, SetOpenFilter] = useState(false)
   const [showSort, setShowSort] = useState(false)
-  const [priceRange, SetPriceRange] = useState({ min: 0, max: 0 })
   const [sliderValue, setSliderValue] = useState([0, 0]);
   const [sortOption, setSortOptions] = useState('newest')
+  const {courses,priceRange,fetchFilteredCourses}=useFetchStore()
  const {handlePayment}=paymentStore()
   const handleToggleFilter = () => {
     SetOpenFilter(!openFilter)
@@ -59,16 +58,16 @@ const Courses = () => {
   }
   useEffect(() => {
     const timer = setTimeout(() => {
-      handleCourses()
-    }, 500);
+    fetchFilteredCourses(params)
+   }, 500);
     return () => clearTimeout(timer)
   }, [filter])
   useEffect(() => {
     fetchCategories();
   }, []);
   useEffect(() => {
-    if (priceRange.min === 0 && courses) {
-      setSliderValue([priceRange.min, priceRange.max])
+    if (priceRange?.min === 0 && courses) {
+      setSliderValue([priceRange?.min, priceRange?.max])
     }
   }, [priceRange])
   const fetchCategories = async () => {
@@ -81,25 +80,12 @@ const Courses = () => {
       console.log(err)
     }
   }
-  const handleCourses = async () => {
-    try {
-      const res = await api.get('/course/', { params }, { withCredentials: true }
-      )
-      setCourses(res?.data?.courses)
-      const min = res?.data?.PriceRange[0]?.minPrice
-      const max = res?.data?.PriceRange[0]?.maxPrice
-      SetPriceRange({ min, max })
-      console.log(res)
 
-    } catch (err) {
-      console.log(err)
-    }
-  }
   const handleSlider = (event, newValue) => {
     setSliderValue(newValue),
       setFilter((prev) => ({ ...prev, minPrice: newValue[0], maxPrice: newValue[1] }))
   }
-  
+
   const handleSortOptions = (option) => {
     setFilter((prev) => ({ ...prev, sort: option }))
   }
@@ -171,8 +157,8 @@ transition-all duration-300 px-1  md:px-4  flex items-center justify-center roun
           <Slider
             getAriaLabel={() => 'Price range'}
             value={sliderValue}
-            min={priceRange.min}
-            max={priceRange.max}
+            min={priceRange?.min}
+            max={priceRange?.max}
             onChange={handleSlider}
             valueLabelDisplay="auto"
           />
@@ -212,7 +198,7 @@ transition-all duration-300 px-1  md:px-4  flex items-center justify-center roun
               {courses?.map((course, index) => {
                 return (
 
-                  <ProjectCard onBuy={()=>handlePayment(course._id)} img={course.thumbnail} course_id={course._id} price={course.price} key={index} category={course.category} course_desc={course.desc} course_name={course.title} chapters={12} duration={course.duration} level={course.difficulty} rating={5} instructor_img={course.thumbnail} instructor_name={course.instructor.firstName} />
+                  <ProjectCard onBuy={()=>handlePayment(course._id)} status={course.enrollment}  img={course.thumbnail} course_id={course._id} price={course.price} key={index} category={course.category} course_desc={course.desc} course_name={course.title} chapters={12} duration={course.duration} level={course.difficulty} rating={5} instructor_img={course.thumbnail} instructor_name={course.instructor.firstName} />
                 )
               })}
 

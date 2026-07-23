@@ -1,4 +1,5 @@
 import { useAuth } from '@/context/AuthContext'
+import { useFetchStore } from '@/Store/FetchStore'
 import api from '@/utils/axios'
 import EnrolledCourseCard from '@/utils/EnrolledCourseCard'
 import EnrollFilterPill from '@/utils/EnrollFilterPill'
@@ -9,17 +10,8 @@ import { Link } from 'react-router-dom'
 
 const EnrolledCourses = () => {
   const {user}=useAuth
-  const [enrolledCourses,setEnrolledCourses] = useState([])
- 
-  const fetchEnrolledCourses = async()=>{
-    try{
-const res = await api.get('/course/enrolled')
-setEnrolledCourses(res?.data?.courses)
-console.log(res?.data?.courses)
-    }catch(err){
-      console.log(err)
-    }
-  }
+const {fetchEnrolledCourses,enrolledCourses}=useFetchStore() 
+
   const startedCourse = enrolledCourses?.filter(course=>course.completedLessons.length>0)
    useEffect(()=>{
 fetchEnrolledCourses()
@@ -71,6 +63,7 @@ fetchEnrolledCourses()
   <div className="rounded-2xl flex gap-6 box-border">
     {startedCourse.map((course) => (
       <EnrolledCourseCard
+      status={course.status}
         key={course._id}
         progressPercent={100}
         className="max-w-[300px] shrink-0"
@@ -107,7 +100,8 @@ transition-all duration-300 px-1  md:px-2  flex items-center justify-center roun
        {/* enrolled courses */}
        <div className=' grid gap-5 grid-cols-4  py-4'>
    {enrolledCourses?.map((course,index)=>(
-<EnrolledCourseCard key={index} status='completed' className="shrink-0 max-w-[300px]" img={course.courseId.thumbnail} progressPercent={90} instructor_name='khushi' course_name={course.courseId.title}/>
+<EnrolledCourseCard key={index}  status={course.status}
+  className="shrink-0 max-w-[300px]" img={course.courseId.thumbnail} progressPercent={90} instructor_name='khushi' course_name={course.courseId.title}/>
 ))}
        </div>
       </div>

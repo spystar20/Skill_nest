@@ -30,12 +30,12 @@ if(generatedSignature !== signature){
     return res.status(403).json({message:'payment unsuccessfull'})
 }
 const payment = await PaymentModel.findOneAndUpdate({razorpayOrderId:orderId},{status:'paid',razorpayPaymentId:paymentId,paidAt:Date.now()},{new:true,runValidators:true})
-console.log(payment)
 const existingEnrollment = await Enrollment.findOne({userId:payment.userId,courseId:payment.courseId})
 if(!existingEnrollment){
 await Enrollment.create({
     userId:payment.userId,courseId:payment.courseId,paymentId:payment.razorpayPaymentId
 })
+
 }
 
 return res.status(201).json({message:'course purchased'})
