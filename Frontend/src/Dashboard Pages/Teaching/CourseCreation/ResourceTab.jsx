@@ -3,17 +3,14 @@ import api from '@/utils/axios'
 import Loader from '@/utils/Loader';
 import React, { useEffect, useState } from 'react'
 import { toast } from 'sonner'
-import { FiGithub } from 'react-icons/fi';
-import { IoIosLink } from 'react-icons/io';
-import { FaExternalLinkAlt, FaFilePdf, FaYoutube } from 'react-icons/fa';
-import { IoDocumentTextSharp } from 'react-icons/io5';
+
 import { resourceIcons } from '@/utils/ResourceIcon';
+import { useFetchStore } from '@/Store/FetchStore';
 const ResourcesTab = ({lessonId}) => {
   const {user} = useAuth()
   const [resourceForm,setResourceForm] = useState({title:'',url:'',type:'pdf',files:[]})
-  const [upload,setUploaded] = useState([])
   const [loading,setLoading]=useState(false)
-
+const {fetchUploadedResource,uploadedResource}=useFetchStore()
   const handlepdf = (e)=>{
     const file = Array.from(e.target.files)
     const formattedFiles = file.map((file)=>({
@@ -46,7 +43,7 @@ try{
  setResourceForm({title:'',url:'',type:'pdf',files:[]})
 
 toast.success('resource uploaded successfully')
-fetchUploaded()
+fetchUploadedResource(lessonId)
 
 }catch(err){
 
@@ -59,28 +56,26 @@ console.log(err)}finally{
       setLoading(true)
 const res = await api.delete(`/course/lesson/${lessonId}/resource/${resourceId}/delete`)
 toast.success('resource deleted')
-fetchUploaded()
-    }catch(err){
+fetchUploadedResource(lessonId)    }catch(err){
       console.log(err)
     }finally{
       setLoading(false)
     }
   }
-  const fetchUploaded = async()=>{
-    try{
-      setLoading(true)
-const res = await api.get(`/course/lesson/${lessonId}`)
-setUploaded(res?.data?.lesson?.resources)
-console.log(res)
-    }catch(err){
-      console.log(err)
-    }finally{
-      setLoading(false)
-    }
-  }
+//   const fetchUploaded = async()=>{
+//     try{
+//       setLoading(true)
+// const res = await api.get(`/course/lesson/${lessonId}`)
+// setUploaded(res?.data?.lesson?.resources)
+// console.log(res)
+//     }catch(err){
+//       console.log(err)
+//     }finally{
+//       setLoading(false)
+//     }
+//   }
   useEffect(()=>{
-    fetchUploaded()
-  },[])
+fetchUploadedResource(lessonId)  },[])
   return (
   <div className="min-h-screen bg-gray-50 p-4 md:p-6">
 
@@ -300,7 +295,7 @@ setResourceForm(prev=>({
           </h3>
 
           <span className="bg-gray-100 rounded-full px-4 py-2 text-sm">
-          {upload.length}
+          {uploadedResource.length}
           </span>
 
         </div>
@@ -320,7 +315,7 @@ setResourceForm(prev=>({
        
     {/* Website */}
 
-   {upload.map((resource)=>(
+   {uploadedResource.map((resource)=>(
     <div key={resource._id} className="border rounded-2xl p-5 flex justify-between items-center hover:shadow-sm transition">
 
       <div className="flex items-center gap-4">

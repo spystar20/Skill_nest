@@ -93,146 +93,330 @@ fetchCourseById(course_id)
       }
     })
   return (
-    <div className='bg-white min-h-screen capitalize font-[Outfit]  py-5 pl-5'>
-<div>
-    <div>
-   
-     <div className='flex  gap-2'>
-      <div className='flex flex-col gap-1' >
-        <span className='flex flex-col gap-0'>
-      
-        <h2 className='text-2xl font-semibold'>{course?.title}</h2>
-        </span>
-        <div className='flex flex-col justify-between gap-6'>
-   <div className='p-4 flex-1 rounded-lg bg-white shadow-lg'><video className='w-full h-auto aspect-video'  src={currentCourse?.videoUrl} controls autoPlay> </video></div>
-  <div className=' pl-2   font-[Outfit] w-full'>
-          {/* headings */}           
-          <div className='flex flex-row gap-8  w-full text-black text-xl font-semibold '>
-              {tabs.map((t)=>{return(
-            <a key={t.id} onClick={()=>toggletab(t.name)} className={`cursor-pointer capitalize flex hover:text-pink-400 p-2 ${tab === t.name ? " underline-offset-8 underline  text-pink-400" :"text-black "}`}>{t.name}</a>
-                 )})}         
-          </div>      
-<div>
-          {/* overview */}
-     {tab==="notes"?(
-        
-   <div className='flex flex-col gap-6 '><div className='pt-7  px-3'> 
-   <div className='pb-6'>
-    <p className='flex justify-between items-center border py-2 px-5 rounded-lg hover:bg-gray-100'><span className='text-lg text-gray-900 normal-case'>Create new note at <span>00.00</span></span> <span><CiCirclePlus className='text-xl text-bold cursor-pointer bg-gray-800 text-white rounded-full'/>
-</span></p>
-   </div>
-    <div><div ref={editorRef} style={{ minHeight: "200px" }}></div></div></div>
-   <span className='flex gap-7 pr-6 pb-7 justify-end items-center'><button className='text-lg py-1 px-6 rounded-sm capitalize border border-black hover:text-white hover:bg-black transition-all box-content cursor-pointer'>cancel</button><button className='text-lg py-1 px-6 rounded-sm capitalize   border text-white border-pink-400 bg-pink-400 hover:scale-95 scale-100 transition-all '>save</button></span>
-   </div>
-      ): tab==="resource" ?(
-        <>
-       {resources?.length === 0? (
-        <div>No resources</div>
-       ):(
-        <>
-        
-        <div  className='py-7 px-4 flex  flex-wrap justify-between items-center gap-9'>
-        
-             <div  className='flex flex-col gap-4'>
-          <h2 className='text-xl font-medium flex items-center gap-2'><span>
-            <FaFolderOpen  className='text-xl'/></span>Core Resources</h2>
-           {resources?.map((resource,index)=>(
-            <React.Fragment  key={index}>
-       {  (resource.type === 'pdf' || resource.type === 'doc') && (
-              <ul className='flex flex-col gap-2 text-gray-800 '>
-              <li><a href={resource.url} target='_blank' className='flex group gap-2 hover:text-pink-300 cursor-pointer items-center font-medium hover:underline text-normal transition-all duration-75 ease-in'><span  className='text-xl group-hover:-translate-y-0.5 '>{resourceIcons[resource.type]}</span>{resource.title} </a></li>      
-            </ul>
-          )}
-         </React.Fragment> ))}
-              </div>
-             
-                  <div className='flex flex-col gap-4'>
-          <h2 className='text-xl font-medium flex items-center gap-1'><span>
-            <FiExternalLink className='text-xl'/></span>External Learning Support</h2>
-             {resources?.map((resource,index)=>(
-                <React.Fragment key={index}>
-                {(resource.type !== 'pdf' && resource.type!=='doc')&&(
-        
-            <ul className='flex flex-col gap-2  text-gray-800'>
-              <li><a href={resource.url} target='_blank' className='flex group gap-1 hover:text-pink-300 cursor-pointer items-center font-medium hover:underline text-normal transition-all duration-75 ease-in'><span className='text-xl group-hover:-translate-y-0.5 '>{resourceIcons[resource.type]}</span>{resource.title} Link </a></li>
-               
-            </ul>
-            
-            )}
-            </React.Fragment>
- ))}
-            </div>
-         
-          
-        </div>
-       
-        </>
-        ) }
-</>
-      ):null}
-     <div>
-
-     </div>
-</div>
-        </div>
-  </div>
-  </div>
-
-    <div className='flex flex-col items-start basis-11/12  sticky top-0 self-start '>
-  <div className=' shadow-lg rounded-lg rounded-r-none border-gray-200 font-medium p-3.5 border border-r-0 bg-gray-50 pl-5 w-full flex justify-between items-center'><h2 className='text-2xl inline text-gray-800 '>course content</h2> <span><RxCross2  className='text-lg mr-3.5 cursor-pointer hover:bg-gray-300 hover:rounded-full w-5 h-5'/>
-</span></div>
-      <div  className='p-3 pt-1 w-full  flex flex-col gap-1  overflow-y-scroll'>
-{sectionArr.map((t, i) => {
-  const moduleKey = `module${i + 1}`; 
-  return (
-    <div key={i}>
-      {/* Module header */}
-      <div
-        onClick={() => {toggleModule(moduleKey),fetchLesson(t._id)}}
-        className="flex  justify-between items-center py-5 bg-pink-400 px-3 rounded-lg rounded-b-none text-white cursor-pointer"
-      >
-        <span className="flex items-center gap-2 text-lg font-medium">
-          <TiArrowSortedDown
-            className={`transition-transform duration-300 ${
-              syllabus[moduleKey] ? "rotate-180" : "rotate-0"
-            }`}
-          />
-          {t.title}
-        </span>
-        <span>({t.duration})</span>
-      </div>
-      {/* Lessons */}
-      {syllabus[moduleKey] && (
-        <div className='bg-pink-400 p-2 rounded-lg rounded-t-none'>
-        <ul className="flex flex-col gap-2 bg-white rounded-lg">
-          {lesson[t._id]?.map((lesson, j) => (
-            <li
-              key={j}
-              className="flex justify-between rounded-xl hover:bg-gray-100 transition-all px-6 py-4 w-full"
-            >
-              <span className="flex items-center gap-2" onClick={()=>setCurrentCourse(lesson)}>
-                <FaPlayCircle className="text-sm text-pink-500" />
-                {lesson.lesson}
-              </span>
-              <span className="text-gray-500">{lesson.duration}</span>
-            </li>
-          ))}
-        </ul>
-        </div>
-      )}
-    </div>
-  );
-})}
-
-          
-  </div> 
-  </div>
-     </div>
-    
-       </div>
   
-</div>
+  <div className="min-h-screen w-full bg-neutral-50 font-[Outfit]">
+
+    <div className="mx-auto w-full max-w-[1800px] px-3 py-4 sm:px-5 md:px-8 lg:px-10">
+
+      {/* COURSE TITLE */}
+      <div className="mb-5">
+        <h2 className="text-xl font-semibold text-gray-900 sm:text-2xl md:text-3xl">
+          {course?.title}
+        </h2>
+
+        {currentCourse?.lesson && (
+          <p className="mt-1 text-sm text-gray-500 md:text-base">
+            Currently watching:{" "}
+            <span className="font-medium text-gray-800">
+              {currentCourse.lesson}
+            </span>
+          </p>
+        )}
+      </div>
+
+
+      {/* MAIN COURSE PLAYER LAYOUT */}
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_380px] xl:grid-cols-[minmax(0,1fr)_430px]">
+
+        {/* ================= LEFT SIDE ================= */}
+        <main className="min-w-0">
+
+          {/* VIDEO */}
+          <div className="overflow-hidden rounded-xl bg-white p-2 shadow-md sm:p-4">
+            <video
+              className="aspect-video w-full rounded-lg bg-black object-contain"
+              src={currentCourse?.videoUrl}
+              controls
+              autoPlay
+            />
+          </div>
+
+
+          {/* LESSON INFORMATION */}
+          <div className="mt-5 overflow-hidden rounded-xl bg-white shadow-sm">
+
+            {/* TABS */}
+            <div className="flex w-full overflow-x-auto border-b border-gray-200 px-3 sm:px-5">
+              {tabs.map((t) => (
+                <button
+                  key={t.id}
+                  onClick={() => toggletab(t.name)}
+                  className={`relative shrink-0 px-4 py-3 text-sm font-semibold capitalize transition-all duration-200 sm:px-6 sm:py-4 sm:text-base ${
+                    tab === t.name
+                      ? "text-pink-500"
+                      : "text-gray-600 hover:text-pink-400"
+                  }`}
+                >
+                  {t.name}
+
+                  {tab === t.name && (
+                    <span className="absolute bottom-0 left-0 h-[2px] w-full rounded-full bg-pink-500" />
+                  )}
+                </button>
+              ))}
+            </div>
+
+
+            {/* TAB CONTENT */}
+            <div className="p-4 sm:p-6 md:p-8">
+
+              {/* ================= NOTES ================= */}
+              {tab === "notes" && (
+                <div className="flex flex-col gap-6">
+
+                  <div>
+                    <div className="mb-5 flex items-center justify-between rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 transition hover:border-pink-200 sm:px-5">
+                      <span className="text-sm text-gray-800 sm:text-base">
+                        Create new note at{" "}
+                        <span className="font-semibold">
+                          00.00
+                        </span>
+                      </span>
+
+                      <CiCirclePlus className="cursor-pointer rounded-full bg-gray-900 text-2xl text-white transition hover:scale-110" />
+                    </div>
+
+                    <div
+                      ref={editorRef}
+                      className="min-h-[200px] overflow-hidden rounded-lg"
+                    />
+                  </div>
+
+                  <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+                    <button
+                      className="w-full rounded-lg border border-gray-900 px-6 py-2 text-sm capitalize transition hover:bg-gray-900 hover:text-white sm:w-auto sm:text-base"
+                    >
+                      cancel
+                    </button>
+
+                    <button
+                      className="w-full rounded-lg border border-pink-400 bg-pink-400 px-6 py-2 text-sm capitalize text-white transition hover:bg-pink-500 sm:w-auto sm:text-base"
+                    >
+                      save
+                    </button>
+                  </div>
+
+                </div>
+              )}
+
+
+              {/* ================= RESOURCES ================= */}
+              {tab === "resource" && (
+                <>
+                  {resources?.length === 0 ? (
+                    <div className="flex min-h-[150px] items-center justify-center text-sm text-gray-500">
+                      No resources available for this lesson.
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+
+                      {/* CORE RESOURCES */}
+                      <div className="space-y-4">
+                        <h2 className="flex items-center gap-2 text-lg font-semibold text-gray-900 sm:text-xl">
+                          <FaFolderOpen />
+                          Core Resources
+                        </h2>
+
+                        <div className="space-y-2">
+                          {resources?.map((resource, index) => (
+                            <React.Fragment key={index}>
+                              {(resource.type === "pdf" ||
+                                resource.type === "doc") && (
+                                <a
+                                  href={resource.url}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="group flex items-center gap-3 rounded-lg border border-gray-100 p-3 text-sm font-medium text-gray-700 transition hover:border-pink-200 hover:bg-pink-50 hover:text-pink-500 sm:text-base"
+                                >
+                                  <span className="text-xl transition group-hover:-translate-y-0.5">
+                                    {resourceIcons[resource.type]}
+                                  </span>
+
+                                  <span className="break-all">
+                                    {resource.title}
+                                  </span>
+                                </a>
+                              )}
+                            </React.Fragment>
+                          ))}
+                        </div>
+                      </div>
+
+
+                      {/* EXTERNAL RESOURCES */}
+                      <div className="space-y-4">
+                        <h2 className="flex items-center gap-2 text-lg font-semibold text-gray-900 sm:text-xl">
+                          <FiExternalLink />
+                          External Learning Support
+                        </h2>
+
+                        <div className="space-y-2">
+                          {resources?.map((resource, index) => (
+                            <React.Fragment key={index}>
+                              {resource.type !== "pdf" &&
+                                resource.type !== "doc" && (
+                                  <a
+                                    href={resource.url}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="group flex items-center gap-3 rounded-lg border border-gray-100 p-3 text-sm font-medium text-gray-700 transition hover:border-pink-200 hover:bg-pink-50 hover:text-pink-500 sm:text-base"
+                                  >
+                                    <span className="text-xl transition group-hover:-translate-y-0.5">
+                                      {resourceIcons[resource.type]}
+                                    </span>
+
+                                    <span className="break-all">
+                                      {resource.title}
+                                    </span>
+
+                                    <FiExternalLink className="ml-auto shrink-0 text-sm" />
+                                  </a>
+                                )}
+                            </React.Fragment>
+                          ))}
+                        </div>
+                      </div>
+
+                    </div>
+                  )}
+                </>
+              )}
+
+            </div>
+          </div>
+        </main>
+
+
+        {/* ================= RIGHT SIDE / COURSE CONTENT ================= */}
+        <aside className="min-w-0 lg:sticky lg:top-5 lg:h-[calc(100vh-40px)]">
+
+          <div className="flex h-full flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-md">
+
+            {/* SIDEBAR HEADER */}
+            <div className="flex shrink-0 items-center justify-between border-b border-gray-200 bg-gray-50 px-4 py-4 sm:px-5">
+              <div>
+                <h2 className="text-lg font-semibold text-gray-900 sm:text-xl">
+                  Course Content
+                </h2>
+
+                <p className="mt-1 text-xs text-gray-500 sm:text-sm">
+                  {sectionArr?.length || 0} modules
+                </p>
+              </div>
+
+              <button className="rounded-full p-2 transition hover:bg-gray-200">
+                <RxCross2 className="text-lg text-gray-700" />
+              </button>
+            </div>
+
+
+            {/* MODULE LIST */}
+            <div className="flex-1 space-y-2 overflow-y-auto p-3 sm:p-4">
+
+              {sectionArr.map((t, i) => {
+                const moduleKey = `module${i + 1}`;
+
+                return (
+                  <div
+                    key={i}
+                    className="overflow-hidden rounded-xl border border-gray-200"
+                  >
+
+                    {/* MODULE HEADER */}
+                    <button
+                      onClick={() => {
+                        toggleModule(moduleKey);
+                        fetchLesson(t._id);
+                      }}
+                      className={`flex w-full items-center justify-between gap-3 px-4 py-4 text-left transition ${
+                        syllabus[moduleKey]
+                          ? "bg-pink-400 text-white"
+                          : "bg-white text-gray-900 hover:bg-pink-50"
+                      }`}
+                    >
+                      <span className="flex min-w-0 items-center gap-2">
+                        <TiArrowSortedDown
+                          className={`shrink-0 text-xl transition-transform duration-300 ${
+                            syllabus[moduleKey]
+                              ? "rotate-180"
+                              : "rotate-0"
+                          }`}
+                        />
+
+                        <span className="truncate text-sm font-semibold sm:text-base">
+                          {t.title}
+                        </span>
+                      </span>
+
+                      <span className="shrink-0 text-xs sm:text-sm">
+                        {t.duration}
+                      </span>
+                    </button>
+
+
+                    {/* LESSONS */}
+                    {syllabus[moduleKey] && (
+                      <div className="bg-pink-50 p-2">
+
+                        <ul className="space-y-1">
+
+                          {lesson[t._id]?.map((lesson, j) => (
+                            <li
+                              key={j}
+                              onClick={() => setCurrentCourse(lesson)}
+                              className={`group flex cursor-pointer items-center justify-between gap-3 rounded-lg px-3 py-3 transition sm:px-4 ${
+                                currentCourse?._id === lesson._id
+                                  ? "bg-pink-100 text-pink-600"
+                                  : "bg-white text-gray-700 hover:bg-gray-100"
+                              }`}
+                            >
+
+                              <span className="flex min-w-0 items-center gap-3">
+
+                                <FaPlayCircle
+                                  className={`shrink-0 text-sm ${
+                                    currentCourse?._id === lesson._id
+                                      ? "text-pink-500"
+                                      : "text-gray-400 group-hover:text-pink-400"
+                                  }`}
+                                />
+
+                                <span className="truncate text-sm font-medium">
+                                  {lesson.lesson}
+                                </span>
+
+                              </span>
+
+                              <span className="shrink-0 text-xs text-gray-400">
+                                {lesson.duration}
+                              </span>
+
+                            </li>
+                          ))}
+
+                        </ul>
+
+                      </div>
+                    )}
+
+                  </div>
+                );
+              })}
+
+            </div>
+
+          </div>
+
+        </aside>
+
+      </div>
+
     </div>
+
+  </div>
+
+
+
   )
 }
 
