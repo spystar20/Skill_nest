@@ -25,8 +25,7 @@ const CourseDetails = () => {
   const {user} = useAuth()
   const navigate = useNavigate()
 const {course_id} = useParams()
-const {course,teacher,fetchCourseById}=useFetchStore()
-const [sectionArr,setSectionArr] = useState([])
+const {course,teacher,fetchCourseById,fetchSection,section}=useFetchStore()
 const [lessonsbySection,setLessons]= useState({})
 const [opensection, Setopensection] = useState(null)
   const toggleAccordian = (section) => {
@@ -51,18 +50,9 @@ const [opensection, Setopensection] = useState(null)
   useEffect(() => {
     toggletab("overview");
 fetchCourseById(course_id)   
- fetchSection()
+ fetchSection(course_id)
   }, []);
- 
-  const fetchSection = async()=>{
-       try{
-      const res = await api.get(`/course/${course_id}/get-section`)
-      console.log(res)
-     setSectionArr(res?.data?.section)
-    }catch(err){
-      console.log(err)
-    }
-  }
+
   const fetchLesson = async(sectionId)=>{
       try{
       const res = await api.get(`/course/lesson/${sectionId}/get-lesson`)
@@ -160,7 +150,7 @@ fetchCourseById(course_id)
 
                 <div className='py-10'>
 
-                  {sectionArr.map((t, i) => {
+                  {section.map((t, i) => {
                     const moduleKey = `module${i + 1}`;
                     console.log(lessonsbySection)
                     return (
@@ -339,7 +329,7 @@ fetchCourseById(course_id)
             {opensection === "syllabus" && (
               <div className='px-2 py-3 bg-gray-50 rounded-lg '>
 
-                {sectionArr.map((t, i) => {
+                {section.map((t, i) => {
                   const moduleKey = `module${i + 1}`;
                   return (
                     <div key={i}>

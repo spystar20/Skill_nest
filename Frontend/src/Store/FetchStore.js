@@ -4,6 +4,8 @@ export const useFetchStore = create((set)=>({
 loading:false,
 uploadedResource:[],
 courses:[],
+section:[],
+lesson:{},
 PriceRange:{
   min:0,max:0
 },
@@ -45,6 +47,25 @@ set({enrolledCourses:res?.data?.courses || []})
 }catch(err){
   console.log(err)
 }
- }
-   
+ },
+  fetchSection:async(courseId)=>{
+    try{
+  const res =await api.get(`/course/${courseId}/get-section`) 
+  set({section:res?.data?.section ||[]})
+    }catch(err){
+      console.log(err)
+    }
+
+  },
+  fetchLesson:async(sectionId)=>{
+    try{
+  const res = await api.get(`/course/lesson/${sectionId}/get-lesson`)
+set((state)=>({lesson:{
+  ...state.lesson,
+  [sectionId]:res?.data?.lessons || []
+}}))
+    }catch(err){
+console.log(err)
+    }
+  }
 }))

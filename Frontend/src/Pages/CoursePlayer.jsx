@@ -1,62 +1,49 @@
 import React, { useEffect, useRef, useState } from 'react'
-import featureCourses from '../data/course'
 import { useParams } from 'react-router-dom'
-import vid from '../assets/Vid.mp4'
 import { FaPlayCircle,FaStar } from 'react-icons/fa'
 import { TiArrowSortedDown } from 'react-icons/ti'
 import { usetoggletab } from '../Store/UseToggleTab'
-import { LiaCertificateSolid } from 'react-icons/lia'
-import { MdOutlinePeopleAlt,MdOutlineWorkspacePremium  } from 'react-icons/md'
 import { FaFacebookF  ,FaInstagram,FaRegFilePdf ,FaRegFileCode ,FaFolderOpen } from "react-icons/fa";
-import { IoIosLink } from "react-icons/io";
-import { IoDocumentsOutline } from "react-icons/io5";
-import {  BsTwitterX } from "react-icons/bs";
 import { RxCross2 } from "react-icons/rx";
 import { CiCirclePlus } from "react-icons/ci";
-import Rating from '@mui/material/Rating';
-import {IoDocumentAttachOutline } from "react-icons/io5";
 import { FiExternalLink } from "react-icons/fi";
-import { GoRepoTemplate } from "react-icons/go";
-import { IoDocumentTextOutline } from "react-icons/io5";
-import { FaFilePdf, FaExternalLinkAlt, FaYoutube } from 'react-icons/fa';
-import { FiGithub } from 'react-icons/fi';
-import { IoDocumentTextSharp } from 'react-icons/io5';   
 import Quill from 'quill'
 import "quill/dist/quill.snow.css"; // Quill's default styling
 import api from '@/utils/axios'
 import { useFetchStore } from '@/Store/FetchStore'
-
-
+import { formatTime } from '@/utils/formatDuration'
+import { resourceIcons } from '@/utils/ResourceIcon'
 
 const CoursePlayer = () => {
-  const {course,fetchCourseById}=useFetchStore()
-  const [ sectionArr,setSectionArr]=useState([])
+  const {course,fetchCourseById,fetchSection,section}=useFetchStore()
+  
   const [ lesson,setLessons]=useState({})
- const resourceIcons = {
-    pdf:<FaFilePdf/>,doc:<IoDocumentTextSharp/>,github:<FiGithub/>,website:<FaExternalLinkAlt/>,youtube:<FaYoutube/>
-  }
+  const [completedLessons, setCompletedLessons] = useState([]);
+     const [currentCourse,setCurrentCourse]=useState(null)
+
+  const handleMarkComplete = () => {
+  if (!currentCourse?._id) return;
+
+  setCompletedLessons((prev) => {
+    if (prev.includes(currentCourse._id)) {
+      return prev.filter((id) => id !== currentCourse._id);
+    }
+
+    return [...prev, currentCourse._id];
+  });
+};
+
    useEffect(() => {
   toggletab("syllabus");
-  fetchSection()
+  fetchSection(course_id)
 fetchCourseById(course_id)
 }, []);
    const tabs = [ {name:"notes",id:3},{name:"resource",id:4},]
-   const [currentCourse,setCurrentCourse]=useState(null)
    const resources = currentCourse?.resources || [];
     const {tab,toggletab,toggleModule,syllabus } = usetoggletab()
   const  {course_id} = useParams()
    
-      const fetchSection = async()=>{
-           try{
-          const res = await api.get(`/course/${course_id}/get-section`)
-          console.log(res)
-         setSectionArr(res?.data?.section)
-         fetchLesson(res?.data?.section[0]._id)
-
-        }catch(err){
-          console.log(err)
-        }
-      } 
+     
        const fetchLesson = async(sectionId)=>{
       try{
 
@@ -129,6 +116,41 @@ fetchCourseById(course_id)
               controls
               autoPlay
             />
+            <div className="mt-4 flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+
+  <div>
+    <h3 className="text-sm font-semibold text-gray-900 sm:text-base">
+      {currentCourse?.lesson}
+    </h3>
+
+    <p className="mt-1 text-xs text-gray-500 sm:text-sm">
+      {completedLessons.includes(currentCourse?._id)
+        ? "You've completed this lesson."
+        : "Finish this lesson and mark it as complete."}
+    </p>
+  </div>
+
+  <button
+    onClick={handleMarkComplete}
+    className={`flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium transition-all ${
+      completedLessons.includes(currentCourse?._id)
+        ? "bg-green-100 text-green-700 hover:bg-green-200"
+        : "bg-pink-400 text-white hover:bg-pink-500"
+    }`}
+  >
+    {completedLessons.includes(currentCourse?._id) ? (
+      <>
+        <span>✓</span>
+        Completed
+      </>
+    ) : (
+      <>
+        Mark as complete
+      </>
+    )}
+  </button>
+
+</div>
           </div>
 
 
@@ -300,7 +322,7 @@ fetchCourseById(course_id)
                 </h2>
 
                 <p className="mt-1 text-xs text-gray-500 sm:text-sm">
-                  {sectionArr?.length || 0} modules
+                  {section?.length || 0} modules
                 </p>
               </div>
 
@@ -313,7 +335,7 @@ fetchCourseById(course_id)
             {/* MODULE LIST */}
             <div className="flex-1 space-y-2 overflow-y-auto p-3 sm:p-4">
 
-              {sectionArr.map((t, i) => {
+              {section.map((t, i) => {
                 const moduleKey = `module${i + 1}`;
 
                 return (
@@ -349,7 +371,7 @@ fetchCourseById(course_id)
                       </span>
 
                       <span className="shrink-0 text-xs sm:text-sm">
-                        {t.duration}
+                    { formatTime(t.duration)}
                       </span>
                     </button>
 
@@ -360,39 +382,55 @@ fetchCourseById(course_id)
 
                         <ul className="space-y-1">
 
-                          {lesson[t._id]?.map((lesson, j) => (
-                            <li
-                              key={j}
-                              onClick={() => setCurrentCourse(lesson)}
-                              className={`group flex cursor-pointer items-center justify-between gap-3 rounded-lg px-3 py-3 transition sm:px-4 ${
-                                currentCourse?._id === lesson._id
-                                  ? "bg-pink-100 text-pink-600"
-                                  : "bg-white text-gray-700 hover:bg-gray-100"
-                              }`}
-                            >
+                        {lesson[t._id]?.map((lesson, j) => {
 
-                              <span className="flex min-w-0 items-center gap-3">
+  const isCompleted = completedLessons.includes(lesson._id);
+  const isCurrent = currentCourse?._id === lesson._id;
 
-                                <FaPlayCircle
-                                  className={`shrink-0 text-sm ${
-                                    currentCourse?._id === lesson._id
-                                      ? "text-pink-500"
-                                      : "text-gray-400 group-hover:text-pink-400"
-                                  }`}
-                                />
+  return (
+    <li
+      key={j}
+      onClick={() => setCurrentCourse(lesson)}
+      className={`group flex cursor-pointer items-center justify-between gap-3 rounded-lg px-3 py-3 transition sm:px-4 ${
+        isCurrent
+          ? "bg-pink-100 text-pink-600"
+          : "bg-white text-gray-700 hover:bg-gray-100"
+      }`}
+    >
 
-                                <span className="truncate text-sm font-medium">
-                                  {lesson.lesson}
-                                </span>
+      <span className="flex min-w-0 items-center gap-3">
 
-                              </span>
+        <FaPlayCircle
+          className={`shrink-0 text-sm ${
+            isCurrent
+              ? "text-pink-500"
+              : "text-gray-400 group-hover:text-pink-400"
+          }`}
+        />
 
-                              <span className="shrink-0 text-xs text-gray-400">
-                                {lesson.duration}
-                              </span>
+        <span className="truncate text-sm font-medium">
+          {lesson.lesson}
+        </span>
 
-                            </li>
-                          ))}
+      </span>
+
+      <span className="flex shrink-0 items-center gap-3">
+
+        <span className="text-xs text-gray-400">
+          {lesson.duration}
+        </span>
+
+        {isCompleted && (
+          <span className="flex h-5 w-5 items-center justify-center rounded-full bg-green-500 text-xs text-white">
+            ✓
+          </span>
+        )}
+
+      </span>
+
+    </li>
+  );
+})}
 
                         </ul>
 

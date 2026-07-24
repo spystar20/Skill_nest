@@ -1,4 +1,5 @@
 import { useAuth } from '@/context/AuthContext'
+import { useFetchStore } from '@/Store/FetchStore'
 import api from '@/utils/axios'
 import Loader from '@/utils/Loader'
 import ProjectCard from '@/utils/ProjectCard'
@@ -10,16 +11,18 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'sonner'
 const CourseBuilder = () => {
     const { courseId } = useParams()
-    const [course,setCourse] = useState(null)
+    // const [course,setCourse] = useState(null)
     const [title,setTitle] = useState('')
     const [editingSection, setEditingSection] = useState(null)
     const [lesson,setLesson]= useState('')
     const [lessonArr,setLessonArr] = useState([])
     const [addsection,setAddsection] = useState(false)
     const [loading,setLoading]= useState(false)
-    const [section,setSection] = useState([])
+    // const [section,setSection] = useState([])
     const [activeSection,setActiveSection] = useState(null)
     const [expandedSection,setExpandedSection]= useState(null)
+    const {course,teacher,fetchCourseById,fetchSection,section}=useFetchStore()
+    
 const navigate = useNavigate()
     const {user} = useAuth()
         const handleStatus = async(status)=>{
@@ -36,14 +39,7 @@ const navigate = useNavigate()
         setLoading(false)
       }
     }
-    const fetchCourse = async()=>{
-        try{
-const res = await api.get(`/course/${courseId}`)
-setCourse(res?.data?.course)
-        }catch(err){
-console.log(err)
-        }
-    }
+ 
     const handleToggleSection = ()=>{
         setAddsection(!addsection)
     }
@@ -51,7 +47,7 @@ console.log(err)
         try{
 const res = await api.post(`/course/${courseId}/create-section`,{title})
 toast.success('section created')
-await fetchSection()
+await fetchSection(courseId)
 setAddsection(false)
 setTitle('')
         }catch(err){
@@ -67,22 +63,14 @@ console.log(err)
         console.log(err)
       }
     }
-    const fetchSection = async()=>{
-      try{
-const res =await api.get(`/course/${courseId}/get-section`) 
-setSection(res.data.section)
-console.log(res)
-      }catch(Err){
 
-      }
-    }
     const handleLesson = async(section)=>{
       try{
         const res = await api.post(`/course/lesson/${section}/create-lesson`,{lesson})
          toast.success('lesson added')
 setLesson('')
 setAddsection(false)
-fetchSection()
+fetchSection(courseId)
 fetchLesson(section)
          console.log(res)
       }catch(err){
@@ -122,9 +110,8 @@ setLessonArr(prev =>({...prev,[section]:res.data.lessons}))
     }
    }
     useEffect(()=>{
-        fetchCourse()
-        fetchSection()
-    },[])
+        fetchCourseById(courseId)
+fetchSection(courseId)    },[])
   return (
 
 <div className="min-h-screen bg-neutral-100 px-10 py-8">
