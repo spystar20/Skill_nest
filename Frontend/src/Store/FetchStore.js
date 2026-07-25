@@ -13,6 +13,7 @@ course:null,
 teacher:null,
 enrolledCourses:[],
 enrolledCourse:[],
+progress:0,
    fetchFilteredCourses : async(params)=>{
 try{
         const res = await api.get('/course/', { params }, { withCredentials: true })
@@ -44,8 +45,9 @@ set({uploadedResource:res?.data?.lesson?.resources||[]})
  fetchEnrolledCourses:async()=>{
 try{
 const res = await api.get('/course/enrolled')
+console.log(res)
 set({enrolledCourses:res?.data?.courses || []})
-
+set({Progress:res?.data?.progress || 0})
 }catch(err){
   console.log(err)
 }
@@ -53,6 +55,7 @@ set({enrolledCourses:res?.data?.courses || []})
  fetchEnrolledCourseById:async(enrollmentId)=>{
   try{
     const res = await api.get(`/student/enrolledCourse/${enrollmentId}/learn`)
+    console.log(res)
 set({enrolledCourse:res?.data?.enrollment||[]})
 console.log(res)
   }

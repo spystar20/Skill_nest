@@ -72,7 +72,7 @@ const EnrolledCourseCard = ({
               Ready to begin your learning journey.
             </p>
 
- <Link to={`/courses/${course_name}/${enrollmentId}/learn`} className="rounded-full w-full bg-[#0A1931] text-white py-2.5 font-medium hover:bg-[#13284b] transition"> 
+ <Link to={`/courses/${course_name}/${enrollmentId}/learn`} className="rounded-full w-full bg-[#0A1931] text-white py-2.5 font-medium hover:bg-[#13284b] transition text-center"> 
        
               Start Learning
             
@@ -105,7 +105,7 @@ const EnrolledCourseCard = ({
                 />
               </div>
             </div>
- <Link to={`/courses/${course_name}/${enrollmentId}/learn` } className="rounded-full w-full bg-[#0A1931] text-white py-2.5 font-medium hover:bg-[#13284b] transition"> 
+ <Link to={`/courses/${course_name}/${enrollmentId}/learn` } className="rounded-full text-center w-full bg-[#0A1931] text-white py-2.5 font-medium hover:bg-[#13284b] transition"> 
          
               Continue Learning
          
@@ -134,7 +134,7 @@ const EnrolledCourseCard = ({
               </div>
             </div>
  <Link to={`/courses/${course_name}/${enrollmentId}/learn`}> 
-            <button className="rounded-full border border-[#0A1931] text-[#0A1931] py-2.5 font-medium hover:bg-[#0A1931] hover:text-white transition w-full">
+            <button className="rounded-full border border-[#0A1931] text-[#0A1931] py-2.5 font-medium hover:bg-[#0A1931] hover:text-white transition w-full text-center">
               Review Course
             </button>
             </Link>

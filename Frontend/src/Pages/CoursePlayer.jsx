@@ -17,24 +17,26 @@ import { resourceIcons } from '@/utils/ResourceIcon'
 const CoursePlayer = () => {
     const  {enrollmentId} = useParams()
 
-  const {course,fetchEnrolledCourseById,enrolledCourse,fetchSection,section}=useFetchStore()
+  const {fetchEnrolledCourseById,enrolledCourse,fetchSection,section}=useFetchStore()
   
   const [ lesson,setLessons]=useState({})
   const [completedLessons, setCompletedLessons] = useState([]);
      const [currentCourse,setCurrentCourse]=useState(null)
 
-  const handleMarkComplete = () => {
-  if (!currentCourse?._id) return;
-
-  setCompletedLessons((prev) => {
-    if (prev.includes(currentCourse._id)) {
-      return prev.filter((id) => id !== currentCourse._id);
-    }
-
-    return [...prev, currentCourse._id];
-  });
+  const handleMarkComplete = async(lessonId) => {
+ try{
+const res = await api.put(`/student/enrolledCourse/${enrollmentId}/${lessonId}/completed`)
+console.log(res)
+setCompletedLessons(res?.data?.enrollmentData?.completedLessons)
+ }catch(err){
+console.log(err)
+ }
 };
-
+useEffect(() => {
+  if (enrolledCourse?.completedLessons) {
+    setCompletedLessons(enrolledCourse.completedLessons);
+  }
+}, [enrolledCourse]);
    useEffect(() => {
   toggletab("syllabus");
 fetchEnrolledCourseById(enrollmentId)
@@ -138,7 +140,9 @@ useEffect(() => {
   </div>
 
   <button
-    onClick={handleMarkComplete}
+    disabled={completedLessons.includes(currentCourse?._id)}
+
+    onClick={()=>handleMarkComplete(currentCourse?._id)}
     className={`flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium transition-all ${
       completedLessons.includes(currentCourse?._id)
         ? "bg-green-100 text-green-700 hover:bg-green-200"

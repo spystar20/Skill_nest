@@ -15,6 +15,7 @@ const {fetchEnrolledCourses,enrolledCourses}=useFetchStore()
   const startedCourse = enrolledCourses?.filter(course=>course.completedLessons.length>0)
    useEffect(()=>{
 fetchEnrolledCourses()
+console.log(enrolledCourses)
   },[])
   return (
     <div className='w-full bg-neutral-100 min-h-screen overflow-x-hidden px-2 md:px-8 py-3 flex flex-col gap-6 '>
@@ -65,7 +66,7 @@ fetchEnrolledCourses()
       <EnrolledCourseCard
       status={course.status}
         key={course._id}
-        progressPercent={100}
+        progressPercent={course.progress}
         className="max-w-[300px] shrink-0"
         img={course.courseId.thumbnail}
         instructor_name="khushi"

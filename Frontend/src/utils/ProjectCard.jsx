@@ -71,7 +71,7 @@ const ProjectCard = ({img,category,enrollmentId,course_id,course_name,course_des
                             
         {status === "not-started" && (
           <>
-           <Link to={`/courses/${course_name}/${enrollmentId}/learn`} className=' transition-all bg-gradient-to-tr from-[#95b1ee] to-[#728ccd] font-heading cursor-pointer text-white rounded-full md:py-1.5 py-1 px-5 w-full text-lg box capitalize font-medium hover:scale-95'> 
+           <Link to={`/courses/${course_name}/${enrollmentId}/learn`} className=' transition-all bg-gradient-to-tr from-[#95b1ee] to-[#728ccd] font-heading cursor-pointer text-white rounded-full md:py-1.5 py-1 px-5 w-full text-lg box capitalize font-medium hover:scale-95 text-center'> 
               Start Learning
       
             </Link> 
@@ -84,7 +84,7 @@ const ProjectCard = ({img,category,enrollmentId,course_id,course_name,course_des
           <>
 
 
-                  <Link to={`/courses/${course_name}/${enrollmentId}/learn`} className=' transition-all bg-gradient-to-tr from-[#95b1ee] to-[#728ccd] font-headingcursor-pointer text-white rounded-full md:py-1.5 py-1 px-5 w-full text-lg box capitalize font-medium hover:scale-95'> 
+                  <Link to={`/courses/${course_name}/${enrollmentId}/learn`} className=' transition-all bg-gradient-to-tr from-[#95b1ee] to-[#728ccd] font-headingcursor-pointer text-white rounded-full md:py-1.5 py-1 px-5 w-full text-lg box capitalize font-medium hover:scale-95 text-center'> 
 
               Continue Learning
             
@@ -95,7 +95,7 @@ const ProjectCard = ({img,category,enrollmentId,course_id,course_name,course_des
         {/* COMPLETED */}
 
         {status === "completed" && (
-          <Link to={`/courses/${course_name}/${enrollmentId}/learn`} className=' transition-all bg-gradient-to-tr from-[#95b1ee] to-[#728ccd] font-heading  cursor-pointer text-white rounded-full md:py-1.5 py-1 px-5 w-full text-lg box capitalize font-medium hover:scale-95'>
+          <Link to={`/courses/${course_name}/${enrollmentId}/learn`} className=' transition-all bg-gradient-to-tr from-[#95b1ee] to-[#728ccd] font-heading  cursor-pointer text-white rounded-full md:py-1.5 py-1 px-5 w-full text-lg box capitalize font-medium hover:scale-95 text-center'>
 
               Review Course
            </Link>

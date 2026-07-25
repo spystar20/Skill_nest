@@ -47,7 +47,40 @@ export const getEnrolledCoursebyId =asyncHandler( async (req, res) => {
       if (!enrollment) {
          return res.status(401).json({ message: 'enrolled user not found' })
       }
- 
-      return res.status(200).json({enrollment })
+ const course = await Course.findById(enrollment.courseId)
+ const totalLesson = course.lessonCount
+ const lessonCompleted = enrollment.completedLessons.length 
+ const progress = totalLesson > 0 ?  Math.round((lessonCompleted/totalLesson)*100):0
+console.log(progress)
+      return res.status(200).json({enrollment ,progress})
    
+})
+export const UpdateEnrolledProgress =asyncHandler(async(req,res)=>{
+const {lessonId,enrollmentId}=req.params
+const enrollmentData = await Enrollment.findById(enrollmentId)
+
+
+if(!enrollmentData){
+     return res.status(403).json({message:'user not enrolled'})
+}
+const course = await Course.findById(enrollmentData.courseId)
+const alreadyCompleted = enrollmentData.completedLessons.some((id)=>id.toString()===lessonId)
+if(alreadyCompleted){
+          return res.status(400).json({message:'lesson already marked completed'})
+}
+enrollmentData.completedLessons.push(lessonId)
+const lessonCompleted = enrollmentData.completedLessons.length
+
+const TotalLesson = course.lessonCount
+
+if(lessonCompleted === TotalLesson){
+     enrollmentData.status='completed',
+     enrollmentData.completed=true
+}else{
+     enrollmentData.status = 'in-progress'
+}
+const progress = TotalLesson > 0 ? Math.round((lessonCompleted/TotalLesson)*100):0
+await enrollmentData.save()
+
+return res.status(200).json({message:'lesson marked completed',enrollmentData,progress})
 })
