@@ -70,6 +70,7 @@ fetchEnrolledCourses()
         img={course.courseId.thumbnail}
         instructor_name="khushi"
         course_name={course.courseId.title}
+        course_id={course._id}
       />
     ))}
   </div>
@@ -100,7 +101,7 @@ transition-all duration-300 px-1  md:px-2  flex items-center justify-center roun
        {/* enrolled courses */}
        <div className=' grid gap-5 grid-cols-4  py-4'>
    {enrolledCourses?.map((course,index)=>(
-<EnrolledCourseCard key={index}  status={course.status}
+<EnrolledCourseCard key={index} course_id={course._id}  status={course.status}
   className="shrink-0 max-w-[300px]" img={course.courseId.thumbnail} progressPercent={90} instructor_name='khushi' course_name={course.courseId.title}/>
 ))}
        </div>

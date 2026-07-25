@@ -1,7 +1,9 @@
 import React from "react";
 import { FaCheckCircle, FaPlayCircle } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const EnrolledCourseCard = ({
+  enrollmentId,
   className,
   LessonsLeft,
   img,
@@ -70,9 +72,11 @@ const EnrolledCourseCard = ({
               Ready to begin your learning journey.
             </p>
 
-            <button className="rounded-full bg-[#0A1931] text-white py-2.5 font-medium hover:bg-[#13284b] transition">
+ <Link to={`/courses/${course_name}/${enrollmentId}/learn`} className="rounded-full w-full bg-[#0A1931] text-white py-2.5 font-medium hover:bg-[#13284b] transition"> 
+       
               Start Learning
-            </button>
+            
+            </Link>
           </>
         )}
 
@@ -101,10 +105,11 @@ const EnrolledCourseCard = ({
                 />
               </div>
             </div>
-
-            <button className="rounded-full bg-[#0A1931] text-white py-2.5 font-medium hover:bg-[#13284b] transition">
+ <Link to={`/courses/${course_name}/${enrollmentId}/learn` } className="rounded-full w-full bg-[#0A1931] text-white py-2.5 font-medium hover:bg-[#13284b] transition"> 
+         
               Continue Learning
-            </button>
+         
+            </Link>
           </>
         )}
 
@@ -128,10 +133,11 @@ const EnrolledCourseCard = ({
                 <div className="h-full w-full bg-green-600 rounded-full" />
               </div>
             </div>
-
-            <button className="rounded-full border border-[#0A1931] text-[#0A1931] py-2.5 font-medium hover:bg-[#0A1931] hover:text-white transition">
+ <Link to={`/courses/${course_name}/${enrollmentId}/learn`}> 
+            <button className="rounded-full border border-[#0A1931] text-[#0A1931] py-2.5 font-medium hover:bg-[#0A1931] hover:text-white transition w-full">
               Review Course
             </button>
+            </Link>
           </>
         )}
       </div>

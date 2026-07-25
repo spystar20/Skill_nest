@@ -273,7 +273,9 @@ export const CourseSetting =asyncHandler( async(req,res)=>{
 export const getCoursebyId =asyncHandler( async (req, res) => {
   
       const { courseId } = req.params
+      console.log(courseId)
       const course = await Course.findById(courseId).populate('instructor', "firstName lastName avatar Bio")
+      console.log(course)
       if (!course) {
          return res.status(401).json({ message: 'course not found' })
       }
@@ -342,7 +344,7 @@ export const GetCourses = asyncHandler( async (req, res) => {
       const enrollment = enrollments.find(enrollment=>enrollment.courseId.toString()===course._id.toString())
       return {
          ...course.toObject(),
-         enrollment:enrollment?enrollment.status:null
+         enrollment:enrollment?enrollment:null
 
       }
      })

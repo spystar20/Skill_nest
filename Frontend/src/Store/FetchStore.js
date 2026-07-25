@@ -12,13 +12,14 @@ PriceRange:{
 course:null,
 teacher:null,
 enrolledCourses:[],
+enrolledCourse:[],
    fetchFilteredCourses : async(params)=>{
 try{
         const res = await api.get('/course/', { params }, { withCredentials: true })
         const min = res?.data?.PriceRange[0]?.minPrice
         const max = res?.data?.PriceRange[0]?.maxPrice
  set({courses:res?.data?.courses||[],PriceRange:{min,max}})
-
+console.log(res)
 }catch(err){
             console.log(err)
 
@@ -27,6 +28,7 @@ try{
   fetchCourseById:async(course_id)=>{
    const res = await api.get(`/course/${course_id}`)
    set({course:res?.data?.course,teacher:res?.data?.teacher})
+   console.log(res)
   },
   fetchUploadedResource:async(lessonId)=>{
     try{
@@ -47,6 +49,16 @@ set({enrolledCourses:res?.data?.courses || []})
 }catch(err){
   console.log(err)
 }
+ },
+ fetchEnrolledCourseById:async(enrollmentId)=>{
+  try{
+    const res = await api.get(`/student/enrolledCourse/${enrollmentId}/learn`)
+set({enrolledCourse:res?.data?.enrollment||[]})
+console.log(res)
+  }
+  catch(err){
+
+  }
  },
   fetchSection:async(courseId)=>{
     try{

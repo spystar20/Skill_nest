@@ -60,7 +60,7 @@ const AppRoutes = () => {
           <Route path='/dashboard/teacher/my-courses' element={<MyCourse />} />
           <Route path='/dashboard/student/my-courses' element={<EnrolledCourses/>}/> 
           <Route path='/security' element={<Security />} />
-                    <Route path='/courses/:course_name/:course_id/learn' element={<CoursePlayer />} />
+                    <Route path='/courses/:course_name/:enrollmentId/learn' element={<CoursePlayer />} />
 
         </Route>
       </Routes>

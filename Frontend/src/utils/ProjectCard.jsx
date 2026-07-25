@@ -7,7 +7,7 @@ import { FiTrendingUp } from 'react-icons/fi'
 import { PiBookDuotone } from 'react-icons/pi'
 import { Link } from 'react-router-dom'
 import { formatTime } from './formatDuration'
-const ProjectCard = ({img,category,course_id,course_name,course_desc,chapters,duration,level,rating,instructor_img,instructor_name,price,id,className='',onBuy,status}) => {
+const ProjectCard = ({img,category,enrollmentId,course_id,course_name,course_desc,chapters,duration,level,rating,instructor_img,instructor_name,price,id,className='',onBuy,status}) => {
     const {Liked,toggleLike} = toggleStore()
     const stopNavigation = (e) => {
   e.preventDefault();
@@ -15,8 +15,8 @@ const ProjectCard = ({img,category,course_id,course_name,course_desc,chapters,du
 };
   return (
        
-           <div  className={`cards rounded-lg  md:rounded-4xl p-2  md:p-5 ${className}`}>
-         <Link key={id} to={`/courses/${course_name}/${course_id}`}>
+           <div key={id}  className={`cards rounded-lg  md:rounded-4xl p-2  md:p-5 ${className}`}>
+         <Link to={`/courses/${course_name}/${course_id}`}>
 
                       <div className='relative group cursor-pointer '>
                         <img src={img} className='aspect-square object-cover rounded-2xl shadow group-hover:brightness-50 transition-all ease-in duration-200' alt="" />
@@ -28,7 +28,8 @@ const ProjectCard = ({img,category,course_id,course_name,course_desc,chapters,du
                           <FaHeart   onClick={(e) => {toggleLike(id),stopNavigation(e)}}
  className={`${Liked.includes(id)?"text-pink-300":"text-black"}`} /></span><span className=' bg-white p-2 rounded-full hover:scale-110 ease-in duration-200 transition-all'><FaCartArrowDown onClick={(e)=>{stopNavigation(e)}} /></span></div>
                       </div>
-  
+                                </Link>
+
                       <div className=' flex flex-col gap-2 md:gap-4 py-4'>
                         <div className='flex flex-col text-left flex-wrap '>
                           <h2 className='text-sm md:text-base font-semibold leading-snug font-heading text-gray-950'>{course_name}</h2>
@@ -53,6 +54,7 @@ const ProjectCard = ({img,category,course_id,course_name,course_desc,chapters,du
                             <span className='font-medium text-xs  md:text-sm '>instructor</span>
                           </div>
                         </div>
+
                         <div className='flex flex-col mt-2 md:flex-row md:items-center gap-2 items-start  justify-between'>
                           {(status === null) &&(
                             <>
@@ -69,9 +71,10 @@ const ProjectCard = ({img,category,course_id,course_name,course_desc,chapters,du
                             
         {status === "not-started" && (
           <>
-            <button className=' transition-all bg-gradient-to-tr from-[#95b1ee] to-[#728ccd] font-heading cursor-pointer text-white rounded-full md:py-1.5 py-1 px-5 w-full text-lg box capitalize font-medium hover:scale-95'>
+           <Link to={`/courses/${course_name}/${enrollmentId}/learn`} className=' transition-all bg-gradient-to-tr from-[#95b1ee] to-[#728ccd] font-heading cursor-pointer text-white rounded-full md:py-1.5 py-1 px-5 w-full text-lg box capitalize font-medium hover:scale-95'> 
               Start Learning
-            </button>
+      
+            </Link> 
           </>
         )}
 
@@ -81,23 +84,25 @@ const ProjectCard = ({img,category,course_id,course_name,course_desc,chapters,du
           <>
 
 
-            <button className=' transition-all bg-gradient-to-tr from-[#95b1ee] to-[#728ccd] font-headingcursor-pointer text-white rounded-full md:py-1.5 py-1 px-5 w-full text-lg box capitalize font-medium hover:scale-95'>
+                  <Link to={`/courses/${course_name}/${enrollmentId}/learn`} className=' transition-all bg-gradient-to-tr from-[#95b1ee] to-[#728ccd] font-headingcursor-pointer text-white rounded-full md:py-1.5 py-1 px-5 w-full text-lg box capitalize font-medium hover:scale-95'> 
+
               Continue Learning
-            </button>
+            
+            </Link> 
           </>
         )}
 
         {/* COMPLETED */}
 
         {status === "completed" && (
-            <button className=' transition-all bg-gradient-to-tr from-[#95b1ee] to-[#728ccd] font-heading  cursor-pointer text-white rounded-full md:py-1.5 py-1 px-5 w-full text-lg box capitalize font-medium hover:scale-95'>
+          <Link to={`/courses/${course_name}/${enrollmentId}/learn`} className=' transition-all bg-gradient-to-tr from-[#95b1ee] to-[#728ccd] font-heading  cursor-pointer text-white rounded-full md:py-1.5 py-1 px-5 w-full text-lg box capitalize font-medium hover:scale-95'>
+
               Review Course
-            </button>
+           </Link>
         
         )}
 </>                            </div>
                       </div>
-                              </Link>
                                   </div>
     
   )

@@ -39,3 +39,15 @@ export const EnrolledCourse =asyncHandler(async(req,res)=>{
    
      return res.status(200).json({courses})
 })
+
+export const getEnrolledCoursebyId =asyncHandler( async (req, res) => {
+  
+      const { enrollmentId } = req.params
+      const enrollment = await Enrollment.findById(enrollmentId).populate('courseId')
+      if (!enrollment) {
+         return res.status(401).json({ message: 'enrolled user not found' })
+      }
+ 
+      return res.status(200).json({enrollment })
+   
+})

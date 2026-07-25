@@ -15,7 +15,9 @@ import { formatTime } from '@/utils/formatDuration'
 import { resourceIcons } from '@/utils/ResourceIcon'
 
 const CoursePlayer = () => {
-  const {course,fetchCourseById,fetchSection,section}=useFetchStore()
+    const  {enrollmentId} = useParams()
+
+  const {course,fetchEnrolledCourseById,enrolledCourse,fetchSection,section}=useFetchStore()
   
   const [ lesson,setLessons]=useState({})
   const [completedLessons, setCompletedLessons] = useState([]);
@@ -35,13 +37,18 @@ const CoursePlayer = () => {
 
    useEffect(() => {
   toggletab("syllabus");
-  fetchSection(course_id)
-fetchCourseById(course_id)
-}, []);
+fetchEnrolledCourseById(enrollmentId)
+}, [enrollmentId]);
+useEffect(() => {
+  const courseId = enrolledCourse?.courseId?._id;
+
+  if (!courseId) return;
+
+  fetchSection(courseId);
+}, [enrolledCourse]);
    const tabs = [ {name:"notes",id:3},{name:"resource",id:4},]
    const resources = currentCourse?.resources || [];
     const {tab,toggletab,toggleModule,syllabus } = usetoggletab()
-  const  {course_id} = useParams()
    
      
        const fetchLesson = async(sectionId)=>{
@@ -88,7 +95,7 @@ fetchCourseById(course_id)
       {/* COURSE TITLE */}
       <div className="mb-5">
         <h2 className="text-xl font-semibold text-gray-900 sm:text-2xl md:text-3xl">
-          {course?.title}
+          {enrolledCourse?.courseId?.title}
         </h2>
 
         {currentCourse?.lesson && (
