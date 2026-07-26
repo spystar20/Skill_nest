@@ -31,13 +31,19 @@ userId:userId,courseId:courseId
 export const EnrolledCourse =asyncHandler(async(req,res)=>{
      const userId=req.user.UserID
   
-     const courses = await Enrollment.find({userId:userId}).populate('courseId')
+     const enrolledCourses = await Enrollment.find({userId:userId}).populate('courseId')
      
-     if(!courses){
+     if(!enrolledCourses){
           return res.status(401).json({message:'no course purchased'})
      }
-   
-     return res.status(200).json({courses})
+     
+ const enrolledCoursesProgress = enrolledCourses.map((enrolledCourse)=>{
+  const totalLesson = enrolledCourse.courseId.lessonCount       
+          const completedLessons = enrolledCourse.completedLessons.length
+          const progress = totalLesson > 0 ? Math.round((completedLessons/totalLesson)*100):0
+    return {...enrolledCourse.toObject(),progress}      
+})
+     return res.status(200).json({enrolledCoursesProgress})
 })
 
 export const getEnrolledCoursebyId =asyncHandler( async (req, res) => {
@@ -51,7 +57,6 @@ export const getEnrolledCoursebyId =asyncHandler( async (req, res) => {
  const totalLesson = course.lessonCount
  const lessonCompleted = enrollment.completedLessons.length 
  const progress = totalLesson > 0 ?  Math.round((lessonCompleted/totalLesson)*100):0
-console.log(progress)
       return res.status(200).json({enrollment ,progress})
    
 })

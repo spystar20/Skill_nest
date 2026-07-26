@@ -46,7 +46,7 @@ set({uploadedResource:res?.data?.lesson?.resources||[]})
 try{
 const res = await api.get('/course/enrolled')
 console.log(res)
-set({enrolledCourses:res?.data?.courses || []})
+set({enrolledCourses:res?.data?.enrolledCoursesProgress || []})
 set({Progress:res?.data?.progress || 0})
 }catch(err){
   console.log(err)
