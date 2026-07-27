@@ -13,12 +13,15 @@ import api from '@/utils/axios'
 import { useFetchStore } from '@/Store/FetchStore'
 import { formatTime } from '@/utils/formatDuration'
 import { resourceIcons } from '@/utils/ResourceIcon'
+import { useEnrolledCourseById } from '@/hooks/EnrollmentHooks/useEnrolledCourses'
+import Loader from '@/utils/Loader'
+import Dataset from '@/utils/Dataset'
 
 const CoursePlayer = () => {
     const  {enrollmentId} = useParams()
+const {section,fetchSection}= useFetchStore()
+   const {isLoading,isError,data:enrolledCourse}=useEnrolledCourseById(enrollmentId)
 
-  const {fetchEnrolledCourseById,enrolledCourse,fetchSection,section}=useFetchStore()
-  
   const [ lesson,setLessons]=useState({})
   const [completedLessons, setCompletedLessons] = useState([]);
      const [currentCourse,setCurrentCourse]=useState(null)
@@ -39,8 +42,7 @@ useEffect(() => {
 }, [enrolledCourse]);
    useEffect(() => {
   toggletab("syllabus");
-fetchEnrolledCourseById(enrollmentId)
-}, [enrollmentId]);
+}, []);
 useEffect(() => {
   const courseId = enrolledCourse?.courseId?._id;
 
@@ -88,8 +90,9 @@ useEffect(() => {
        setquill(q)
       }
     })
+
   return (
-  
+  <Dataset loading={isLoading} error={isError}>
   <div className="min-h-screen w-full bg-neutral-50 font-[Outfit]">
 
     <div className="mx-auto w-full max-w-[1800px] px-3 py-4 sm:px-5 md:px-8 lg:px-10">
@@ -463,7 +466,7 @@ useEffect(() => {
     </div>
 
   </div>
-
+</Dataset>
 
 
   )

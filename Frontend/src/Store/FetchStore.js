@@ -42,27 +42,7 @@ set({uploadedResource:res?.data?.lesson?.resources||[]})
       set({loading:false})
     }
   },
- fetchEnrolledCourses:async()=>{
-try{
-const res = await api.get('/course/enrolled')
-console.log(res)
-set({enrolledCourses:res?.data?.enrolledCoursesProgress || []})
-set({Progress:res?.data?.progress || 0})
-}catch(err){
-  console.log(err)
-}
- },
- fetchEnrolledCourseById:async(enrollmentId)=>{
-  try{
-    const res = await api.get(`/student/enrolledCourse/${enrollmentId}/learn`)
-    console.log(res)
-set({enrolledCourse:res?.data?.enrollment||[]})
-console.log(res)
-  }
-  catch(err){
 
-  }
- },
   fetchSection:async(courseId)=>{
     try{
   const res =await api.get(`/course/${courseId}/get-section`) 

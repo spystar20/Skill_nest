@@ -1,6 +1,8 @@
 import { useAuth } from '@/context/AuthContext'
+import { useEnrolledCourses } from '@/hooks/EnrollmentHooks/useEnrolledCourses'
 import { useFetchStore } from '@/Store/FetchStore'
 import api from '@/utils/axios'
+import Dataset from '@/utils/Dataset'
 import EnrolledCourseCard from '@/utils/EnrolledCourseCard'
 import EnrollFilterPill from '@/utils/EnrollFilterPill'
 import ProjectCard from '@/utils/ProjectCard'
@@ -10,13 +12,15 @@ import { Link } from 'react-router-dom'
 
 const EnrolledCourses = () => {
   const {user}=useAuth
-const {fetchEnrolledCourses,enrolledCourses}=useFetchStore() 
+const {isLoading,isError,data} = useEnrolledCourses()
+  const enrolledCoursesProgress = data?.enrolledCoursesProgress || []
 
-  const startedCourse = enrolledCourses?.filter(course=>course.completedLessons.length>0)
-   useEffect(()=>{
-fetchEnrolledCourses()
-  },[])
+  const startedCourse = enrolledCoursesProgress.filter(course=>course.completedLessons.length>0)
+
+
   return (
+           <Dataset loading={isLoading} error={isError}>
+
     <div className='w-full bg-neutral-100 min-h-screen overflow-x-hidden px-2 md:px-8 py-3 flex flex-col gap-6 '>
    <div className='flex justify-between items-center'> 
     <h2 className='text-3xl font-bold font-heading'>Learning</h2>
@@ -70,7 +74,7 @@ fetchEnrolledCourses()
         img={course.courseId.thumbnail}
         instructor_name="khushi"
         course_name={course.courseId.title}
-        course_id={course._id}
+ course_id={course.courseId._id} enrollmentId={course._id}      
       />
     ))}
   </div>
@@ -100,13 +104,15 @@ transition-all duration-300 px-1  md:px-2  flex items-center justify-center roun
         </div>
        {/* enrolled courses */}
        <div className=' grid gap-5 grid-cols-4  py-4'>
-   {enrolledCourses?.map((course,index)=>(
-<EnrolledCourseCard key={index} course_id={course._id}  status={course.status}
+   {enrolledCoursesProgress?.map((course,index)=>(
+<EnrolledCourseCard key={index} course_id={course.courseId._id} enrollmentId={course._id}  status={course.status}
   className="shrink-0 max-w-[300px]" img={course.courseId.thumbnail} progressPercent={course.progress} instructor_name='khushi' course_name={course.courseId.title}/>
 ))}
        </div>
+    
       </div>
     </div>
+       </Dataset>
   )
 }
 
