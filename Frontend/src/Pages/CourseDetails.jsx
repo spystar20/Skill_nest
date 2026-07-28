@@ -20,12 +20,16 @@ import api from '@/utils/axios';
 import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
 import { useFetchStore } from '@/Store/FetchStore';
+import { useCourseById, useSection } from '@/hooks/CoursesHooks/useCourse';
 
 const CourseDetails = () => {
   const {user} = useAuth()
   const navigate = useNavigate()
 const {course_id} = useParams()
-const {course,teacher,fetchCourseById,fetchSection,section}=useFetchStore()
+   const {isLoading:courseLoading,isError:courseError,data}=useCourseById(course_id)
+    const {isLoading:sectionLoading,isError:sectionError,data:section}=useSection(course_id)
+    const course = data.course || []
+    const teacher = data.teacher || []
 const [lessonsbySection,setLessons]= useState({})
 const [opensection, Setopensection] = useState(null)
   const toggleAccordian = (section) => {
@@ -49,8 +53,7 @@ const [opensection, Setopensection] = useState(null)
 
   useEffect(() => {
     toggletab("overview");
-fetchCourseById(course_id)   
- fetchSection(course_id)
+
   }, []);
 
   const fetchLesson = async(sectionId)=>{

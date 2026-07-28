@@ -1,4 +1,5 @@
 import { useAuth } from '@/context/AuthContext'
+import { useCourseById, useLessons, useSection } from '@/hooks/CoursesHooks/useCourse'
 import { useFetchStore } from '@/Store/FetchStore'
 import api from '@/utils/axios'
 import Loader from '@/utils/Loader'
@@ -11,18 +12,29 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'sonner'
 const CourseBuilder = () => {
     const { courseId } = useParams()
-    // const [course,setCourse] = useState(null)
     const [title,setTitle] = useState('')
     const [editingSection, setEditingSection] = useState(null)
     const [lesson,setLesson]= useState('')
-    const [lessonArr,setLessonArr] = useState([])
     const [addsection,setAddsection] = useState(false)
     const [loading,setLoading]= useState(false)
     // const [section,setSection] = useState([])
     const [activeSection,setActiveSection] = useState(null)
     const [expandedSection,setExpandedSection]= useState(null)
-    const {course,teacher,fetchCourseById,fetchSection,section}=useFetchStore()
     
+   const handleExpandedSection = (sectionId) =>{
+    if(expandedSection === sectionId){
+      setExpandedSection(null)
+    }else{
+      setExpandedSection(sectionId)
+      // fetchLesson(sectionId)
+    }
+   }
+    const {isLoading:courseLoading,isError:courseError,data}=useCourseById(courseId)
+    const {isLoading:sectionLoading,isError:sectionError,data:section}=useSection(courseId)
+    const {isLoading:lessonLoading,isError:lessonError,data:lessons}=useLessons(expandedSection)
+    const lessonArr = lessons || []
+    const course= data?.course ||[]
+    console.log(lessonArr)
 const navigate = useNavigate()
     const {user} = useAuth()
         const handleStatus = async(status)=>{
@@ -57,7 +69,7 @@ console.log(err)
     const editSectioni = async(sectionId)=>{
       try{
   const res = await api.put(`/course/section/${sectionId}/edit-section`,{title})
-  await fetchSection()
+  // await fetchSection()
   toast.success('section title updated')
       }catch(err){
         console.log(err)
@@ -70,8 +82,8 @@ console.log(err)
          toast.success('lesson added')
 setLesson('')
 setAddsection(false)
-fetchSection(courseId)
-fetchLesson(section)
+// fetchSection(courseId)
+// fetchLesson(section)
          console.log(res)
       }catch(err){
 
@@ -82,7 +94,7 @@ console.log(err)
       try{
 const res = await api.delete(`/course/section/${sectionId}/delete`)
 toast.success('section deleted successfully')
-await fetchSection()
+// await fetchSection()
       }catch(Err){
         console.log(Err)
       }
@@ -90,28 +102,14 @@ await fetchSection()
     const deleteLesson = async(sectionId)=>{
       try{
 await api.delete(`/course/lesson/${sectionId}/delete`)
-await fetchLesson(sectionId)
+// await fetchLesson(sectionId)
 toast.success('lesson deleted successfully')
       }catch(err){
         console.log(err)
       }
     }
-    const fetchLesson = async(section)=>{
-const res = await api.get(`/course/lesson/${section}/get-lesson`)
 
-setLessonArr(prev =>({...prev,[section]:res.data.lessons}))
-    }
-   const handleExpandedSection = (sectionId) =>{
-    if(expandedSection === sectionId){
-      setExpandedSection(null)
-    }else{
-      setExpandedSection(sectionId)
-      fetchLesson(sectionId)
-    }
-   }
-    useEffect(()=>{
-        fetchCourseById(courseId)
-fetchSection(courseId)    },[])
+
   return (
 
 <div className="min-h-screen bg-neutral-100 px-10 py-8">
@@ -308,7 +306,7 @@ fetchSection(courseId)    },[])
                 {/* Lessons */}
                 <div className="space-y-2">
 
-                  {lessonArr[section._id]?.map((lesson) => (
+                  {lessonArr?.map((lesson) => (
                     <div
                       key={lesson._id}
                       className="ml-8 flex items-center justify-between bg-neutral-50 px-4 py-3 rounded-lg cursor-pointer"

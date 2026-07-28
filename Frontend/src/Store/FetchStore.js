@@ -14,23 +14,8 @@ teacher:null,
 enrolledCourses:[],
 enrolledCourse:[],
 progress:0,
-   fetchFilteredCourses : async(params)=>{
-try{
-        const res = await api.get('/course/', { params }, { withCredentials: true })
-        const min = res?.data?.PriceRange[0]?.minPrice
-        const max = res?.data?.PriceRange[0]?.maxPrice
- set({courses:res?.data?.courses||[],PriceRange:{min,max}})
-console.log(res)
-}catch(err){
-            console.log(err)
 
-}
-  },
-  fetchCourseById:async(course_id)=>{
-   const res = await api.get(`/course/${course_id}`)
-   set({course:res?.data?.course,teacher:res?.data?.teacher})
-   console.log(res)
-  },
+ 
   fetchUploadedResource:async(lessonId)=>{
     try{
 set({loading:true})
@@ -43,24 +28,5 @@ set({uploadedResource:res?.data?.lesson?.resources||[]})
     }
   },
 
-  fetchSection:async(courseId)=>{
-    try{
-  const res =await api.get(`/course/${courseId}/get-section`) 
-  set({section:res?.data?.section ||[]})
-    }catch(err){
-      console.log(err)
-    }
-
-  },
-  fetchLesson:async(sectionId)=>{
-    try{
-  const res = await api.get(`/course/lesson/${sectionId}/get-lesson`)
-set((state)=>({lesson:{
-  ...state.lesson,
-  [sectionId]:res?.data?.lessons || []
-}}))
-    }catch(err){
-console.log(err)
-    }
-  }
+ 
 }))

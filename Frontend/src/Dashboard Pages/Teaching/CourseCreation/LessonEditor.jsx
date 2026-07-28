@@ -6,6 +6,7 @@ import { Link, useParams } from 'react-router-dom'
 import api from '@/utils/axios'
 import { toast } from 'sonner'
 import { useAuth } from '@/context/AuthContext'
+import { useLessons } from '@/hooks/CoursesHooks/useCourse'
 
 const LessonEditor = () => { 
   const {user} = useAuth()
@@ -14,6 +15,7 @@ const LessonEditor = () => {
     const [title,setTitle] = useState(null)
     const [description,setDescription] = useState('')
     const {lessonId} = useParams()
+    const {isLoading,isError,data}=useLessons()
     const fetchLesson = async()=>{
         try{
 const res =await api.get(`/course/lesson/${lessonId}`)

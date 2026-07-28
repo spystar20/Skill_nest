@@ -16,13 +16,12 @@ import { Slider } from '@mui/material';
 import { RxCross2 } from 'react-icons/rx';
 import FilterChip from '@/utils/FilterChip';
 import { paymentStore } from '@/Store/usePaymentStore';
+import { useCategories, useFilteredCourse } from '@/hooks/CoursesHooks/useCourse';
 const Courses = () => {
-  const [categories, setCategories] = useState([])
   const [openFilter, SetOpenFilter] = useState(false)
   const [showSort, setShowSort] = useState(false)
   const [sliderValue, setSliderValue] = useState([0, 0]);
   const [sortOption, setSortOptions] = useState('newest')
-  const {courses,priceRange,fetchFilteredCourses}=useFetchStore()
  const {handlePayment}=paymentStore()
   const handleToggleFilter = () => {
     SetOpenFilter(!openFilter)
@@ -56,30 +55,26 @@ const Courses = () => {
   if (filter.difficulty) {
     params.difficulty = filter.difficulty
   }
-  useEffect(() => {
-    const timer = setTimeout(() => {
-    fetchFilteredCourses(params)
-   }, 500);
-    return () => clearTimeout(timer)
-  }, [filter])
-  useEffect(() => {
-    fetchCategories();
-  }, []);
+ const {
+  isLoading: coursesLoading,
+  isError: coursesError,
+data:courseData
+} = useFilteredCourse(params)
+
+const {
+  isLoading: categoriesLoading,
+  isError: categoriesError,
+  data: categories
+} = useCategories()
+ const priceRange = courseData?.PriceRange
+ const courses=courseData?.courses
+
+
   useEffect(() => {
     if (priceRange?.min === 0 && courses) {
       setSliderValue([priceRange?.min, priceRange?.max])
     }
   }, [priceRange])
-  const fetchCategories = async () => {
-    try {
-      const res = await api.get('/course/category')
-
-      setCategories(res?.data?.category)
-      console.log(res)
-    } catch (err) {
-      console.log(err)
-    }
-  }
 
   const handleSlider = (event, newValue) => {
     setSliderValue(newValue),

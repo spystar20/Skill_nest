@@ -16,12 +16,14 @@ import { resourceIcons } from '@/utils/ResourceIcon'
 import { useEnrolledCourseById } from '@/hooks/EnrollmentHooks/useEnrolledCourses'
 import Loader from '@/utils/Loader'
 import Dataset from '@/utils/Dataset'
+import { useSection } from '@/hooks/CoursesHooks/useCourse'
 
 const CoursePlayer = () => {
     const  {enrollmentId} = useParams()
-const {section,fetchSection}= useFetchStore()
-   const {isLoading,isError,data:enrolledCourse}=useEnrolledCourseById(enrollmentId)
+  const courseId = enrolledCourse?.courseId?._id;
 
+   const {isLoading,isError,data:enrolledCourse}=useEnrolledCourseById(enrollmentId)
+   const {isLoading:courseLoading,isError:courseError,data:section}=useSection(courseId)
   const [ lesson,setLessons]=useState({})
   const [completedLessons, setCompletedLessons] = useState([]);
      const [currentCourse,setCurrentCourse]=useState(null)
@@ -43,13 +45,7 @@ useEffect(() => {
    useEffect(() => {
   toggletab("syllabus");
 }, []);
-useEffect(() => {
-  const courseId = enrolledCourse?.courseId?._id;
 
-  if (!courseId) return;
-
-  fetchSection(courseId);
-}, [enrolledCourse]);
    const tabs = [ {name:"notes",id:3},{name:"resource",id:4},]
    const resources = currentCourse?.resources || [];
     const {tab,toggletab,toggleModule,syllabus } = usetoggletab()
