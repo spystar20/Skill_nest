@@ -1,39 +1,38 @@
 import React, { useState } from 'react'
-import signup from '../assets/signup.png'
+import signupImg from '../assets/signup.png'
 import { toast } from 'sonner'
 import { Link, useNavigate } from 'react-router-dom'
 import { FaAngleRight } from 'react-icons/fa'
-import api from '@/utils/axios'
+import { useSignUp } from '@/hooks/authHooks'
 
 const SignUp = () => {
-  const [firstName,setName] = useState("")
-    const [email,setEmail] = useState("")
-  const [password,setPassword] = useState("")
-
+  const [firstName, setName] = useState("")
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const { mutate: signUp } = useSignUp()
   const navigate = useNavigate()
-  const handleSubmit = async(e)=>{
+  const handleSubmit = async (e) => {
     e.preventDefault()
-     if(!firstName||!email||!password){
-  toast.error("all fields are required")
-  return;
-}
-  try {
-
-    const res = await api.post('/auth/sign',{firstName,email,password})
-    console.log(res)
-      toast.success("Verify Your Email")
-      setTimeout(() => {
-        navigate(`/pending-email-verification?email=${encodeURIComponent(email)}`)
-      },2000)
-  } catch (err) {
-    console.log(err)
-    console.log(import.meta.env.VITE_BACKEND_URL);
-  }}
+    if (!firstName || !email || !password) {
+      toast.error("all fields are required")
+      return;
+    }
+    signUp({
+      firstName, email, password
+    }, {
+      onSuccess: () => {
+        toast.success("Verify Your Email")
+        setTimeout(() => {
+          navigate(`/pending-email-verification?email=${encodeURIComponent(email)}`)
+        }, 2000)
+      }
+    })
+  }
   return (
     <div className='w-full min-h-screen flex flex-col justify-center items-center  bg-black px-4 py-6 md:p-12 box-border'>
       <div className=' mx-auto bg-white/85  grid grid-col-1 md:grid-cols-2 p-6 rounded-2xl'>
         <div className='hidden md:flex flex-col items-start justify-end  box rounded-2xl p-16'>
-          <img className='login w-full  mb-12' src={signup} alt="" />
+          <img className='login w-full  mb-12' src={signupImg} alt="" />
           <div className='text-white flex flex-col gap-2 '>
             <h6 className='font-body font-semibold text-sm capitalize '>Lorem ipsum dolor sit amet.</h6>
             <h2 className='font-heading font-bold text-5xl'>Lorem ipsum dolor sit amet Lorem, ipsum dolor.</h2>
@@ -52,15 +51,15 @@ const SignUp = () => {
                 <form action="" onSubmit={handleSubmit} className='font-body flex flex-col gap-5'>
                   <div className='flex flex-col gap-1'>
                     <label htmlFor="Name" className='font-medium text-gray-800'>Full Name</label>
-                    <input value={firstName} onChange={(e)=>setName(e.target.value)} type="text" className='border rounded-lg  border-gray-400 p-3 placeholder:capitalize hover:border-[#364c84]  ' placeholder='Enter your full name' />
+                    <input value={firstName} onChange={(e) => setName(e.target.value)} type="text" className='border rounded-lg  border-gray-400 p-3 placeholder:capitalize hover:border-[#364c84]  ' placeholder='Enter your full name' />
                   </div>
                   <div className='flex flex-col gap-1'>
                     <label htmlFor="email" className='font-medium text-gray-800'>Email Address</label>
-                    <input value={email} onChange={(e)=>setEmail(e.target.value)} type="email" name='email' className='border rounded-lg  border-gray-400 p-3 placeholder:capitalize hover:border-[#364c84]  ' placeholder='Enter your email address' />
+                    <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" name='email' className='border rounded-lg  border-gray-400 p-3 placeholder:capitalize hover:border-[#364c84]  ' placeholder='Enter your email address' />
                   </div>
                   <div className='flex flex-col gap-1'>
                     <label htmlFor="password" className='font-medium text-gray-800'>Password</label>
-                    <input value={password} onChange={(e)=>setPassword(e.target.value)} type="password" name="password" className='border rounded-lg  border-gray-400 p-3 placeholder:capitalize hover:border-[#364c84]  ' placeholder='Enter your full Password' />
+                    <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" name="password" className='border rounded-lg  border-gray-400 p-3 placeholder:capitalize hover:border-[#364c84]  ' placeholder='Enter your full Password' />
                   </div>
 
                   <div className='py-3'>
@@ -72,7 +71,7 @@ const SignUp = () => {
                   <div className='flex items-center justify-center gap-3 my-4 px-12'><span className='flex-1 h-px bg-gray-500'></span><span className='text-sm text-gray-700 capitalize'>or continue with</span><span className='flex-1 h-px bg-gray-500'></span></div>
                   {/* social login */}
                   <div className='flex gap-3 items-center justify-center '>
-                   <a href="http://localhost:3000/auth/google"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQRd6qY47iHxIp0wyHdmkwiVUzUXV4rBzTtNQ&s" className='rounded-full w-7 h-7 cursor-pointer hover:scale-110 hover:brightness-110 transition-all ease-in duration-100' alt="google" /></a>
+                    <a href="http://localhost:3000/auth/google"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQRd6qY47iHxIp0wyHdmkwiVUzUXV4rBzTtNQ&s" className='rounded-full w-7 h-7 cursor-pointer hover:scale-110 hover:brightness-110 transition-all ease-in duration-100' alt="google" /></a>
                     <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" className='rounded-full w-7 h-7 cursor-pointer hover:scale-110 hover:brightness-110 transition-all ease-in duration-100' alt="google" />
                     <img src="https://img.freepik.com/premium-vector/instagram-vector-logo-icon-social-media-logotype_901408-392.jpg?semt=ais_hybrid&w=740&q=80" className='rounded-full w-7 h-7 cursor-pointer hover:scale-110 hover:brightness-110 transition-all ease-in duration-100' alt="google" />
                   </div>
@@ -86,11 +85,11 @@ const SignUp = () => {
           </div>
         </div>
       </div>
-         <Link to="/"><div className='text-white flex gap-4 items-center justify-center mt-3'>Back to Home <FaAngleRight/></div></Link> 
-      
+      <Link to="/"><div className='text-white flex gap-4 items-center justify-center mt-3'>Back to Home <FaAngleRight /></div></Link>
+
     </div>
 
-  
+
 
   )
 }

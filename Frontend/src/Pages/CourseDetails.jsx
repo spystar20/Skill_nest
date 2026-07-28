@@ -19,19 +19,20 @@ import { Link } from 'react-router-dom';
 import api from '@/utils/axios';
 import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
-import { useFetchStore } from '@/Store/FetchStore';
-import { useCourseById, useSection } from '@/hooks/CoursesHooks/useCourse';
+import { useCourseById, useLessons, useSection } from '@/hooks/CoursesHooks/useCourse';
 
 const CourseDetails = () => {
   const {user} = useAuth()
   const navigate = useNavigate()
 const {course_id} = useParams()
+const [sectionId,setsectionId]=useState(null)
+const [opensection, Setopensection] = useState(null)
    const {isLoading:courseLoading,isError:courseError,data}=useCourseById(course_id)
     const {isLoading:sectionLoading,isError:sectionError,data:section}=useSection(course_id)
-    const course = data.course || []
-    const teacher = data.teacher || []
-const [lessonsbySection,setLessons]= useState({})
-const [opensection, Setopensection] = useState(null)
+        const {isLoading:lessonLoading,isError:lessonError,data:lesson}=useLessons(sectionId)
+    
+    const course = data?.course || []
+    const teacher = data?.teacher || []
   const toggleAccordian = (section) => {
     Setopensection(opensection === section ? null : section)
   }
@@ -56,18 +57,6 @@ const [opensection, Setopensection] = useState(null)
 
   }, []);
 
-  const fetchLesson = async(sectionId)=>{
-      try{
-      const res = await api.get(`/course/lesson/${sectionId}/get-lesson`)
-      console.log(res)
-     setLessons(prev=>({
-      ...prev , [sectionId]:res.data.lessons
-     }))
-    }catch(err){
-      console.log(err)
-    }
-  
-  }
   return (
     <div className=' bg-white  w-full min-h-screen font-[Roboto] '>
 
@@ -155,12 +144,11 @@ const [opensection, Setopensection] = useState(null)
 
                   {section.map((t, i) => {
                     const moduleKey = `module${i + 1}`;
-                    console.log(lessonsbySection)
                     return (
                       <div key={i}>
                         {/* Module header */}
                         <div
-                          onClick={() => {toggleModule(moduleKey),fetchLesson(t._id)}}
+                          onClick={() => {toggleModule(moduleKey),setsectionId(t._id)}}
                           className="flex my-1 justify-between items-center py-5 bg-pink-400 px-3 rounded-lg text-white cursor-pointer"
                         >
                           <span className="flex items-center gap-2 text-lg font-medium">
@@ -175,7 +163,7 @@ const [opensection, Setopensection] = useState(null)
                         {/* Lessons */}
                         {syllabus[moduleKey] && (
                           <ul className="flex flex-col gap-2 mt-2">
-                            {lessonsbySection[t._id]?.map((lesson, j) => (
+                            {lesson?.map((lesson, j) => (
                               <li
                                 key={j}
                                 className="flex justify-between rounded-xl hover:bg-gray-100 transition-all px-6 py-4 w-full"
@@ -332,7 +320,7 @@ const [opensection, Setopensection] = useState(null)
             {opensection === "syllabus" && (
               <div className='px-2 py-3 bg-gray-50 rounded-lg '>
 
-                {section.map((t, i) => {
+                {section?.map((t, i) => {
                   const moduleKey = `module${i + 1}`;
                   return (
                     <div key={i}>

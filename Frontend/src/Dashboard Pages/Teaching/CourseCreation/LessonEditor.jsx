@@ -6,25 +6,16 @@ import { Link, useParams } from 'react-router-dom'
 import api from '@/utils/axios'
 import { toast } from 'sonner'
 import { useAuth } from '@/context/AuthContext'
-import { useLessons } from '@/hooks/CoursesHooks/useCourse'
+import { useLessonById, useLessons } from '@/hooks/CoursesHooks/useCourse'
 
 const LessonEditor = () => { 
   const {user} = useAuth()
   const {courseId} = useParams()
     const [active,setActive] = useState("lesson info")
-    const [title,setTitle] = useState(null)
     const [description,setDescription] = useState('')
     const {lessonId} = useParams()
-    const {isLoading,isError,data}=useLessons()
-    const fetchLesson = async()=>{
-        try{
-const res =await api.get(`/course/lesson/${lessonId}`)
-console.log(res)
-setTitle(res?.data?.lesson?.lesson)
-        }catch(err){
-            console.log(err)
-        }
-    }
+    const {isLoading,isError,data}=useLessonById(lessonId)
+ const title = data?.lesson || ''
 const handleLesson = async()=>{
     try{
 const res =await api.put(`/course/lesson/${lessonId}/update`,{title,description})
@@ -36,9 +27,6 @@ console.log(err)
     }
 }
 
-    useEffect(()=>{
-        fetchLesson()
-    },[])
   return (
 <div className="min-h-screen bg-neutral-100">
 

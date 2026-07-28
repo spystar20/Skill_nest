@@ -3,14 +3,13 @@ import api from '@/utils/axios'
 import Loader from '@/utils/Loader';
 import React, { useEffect, useState } from 'react'
 import { toast } from 'sonner'
-
 import { resourceIcons } from '@/utils/ResourceIcon';
-import { useFetchStore } from '@/Store/FetchStore';
+import { useUploadedResources } from '@/hooks/CoursesHooks/useCourse';
 const ResourcesTab = ({lessonId}) => {
   const {user} = useAuth()
   const [resourceForm,setResourceForm] = useState({title:'',url:'',type:'pdf',files:[]})
   const [loading,setLoading]=useState(false)
-const {fetchUploadedResource,uploadedResource}=useFetchStore()
+const {isLoading,isError,data:uploadedResource}=useUploadedResources(lessonId)
   const handlepdf = (e)=>{
     const file = Array.from(e.target.files)
     const formattedFiles = file.map((file)=>({
@@ -62,20 +61,7 @@ fetchUploadedResource(lessonId)    }catch(err){
       setLoading(false)
     }
   }
-//   const fetchUploaded = async()=>{
-//     try{
-//       setLoading(true)
-// const res = await api.get(`/course/lesson/${lessonId}`)
-// setUploaded(res?.data?.lesson?.resources)
-// console.log(res)
-//     }catch(err){
-//       console.log(err)
-//     }finally{
-//       setLoading(false)
-//     }
-//   }
-  useEffect(()=>{
-fetchUploadedResource(lessonId)  },[])
+
   return (
   <div className="min-h-screen bg-gray-50 p-4 md:p-6">
 

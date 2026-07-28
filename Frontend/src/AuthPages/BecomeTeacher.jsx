@@ -5,11 +5,13 @@ import api from '@/utils/axios'
 import { useAuth } from '@/context/AuthContext'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
+import { usecreateTeacherProfile } from '@/hooks/authHooks'
 
 const BecomeTeacher = () => {
-  const {setUser,user} = useAuth()
+  const {setUser} = useAuth()
   const [step,setStep] = useState(1)
   const navigate = useNavigate()
+  const {mutate:createProfile}=usecreateTeacherProfile()
 const [formData,setFormData] = useState({
 title:'',experience:'',specialization:'',organization:'',website:'',linkdin:'',bio:''
 })
@@ -28,17 +30,16 @@ title:'',experience:'',specialization:'',organization:'',website:'',linkdin:'',b
   { value: 'Design', label: 'Design' },
   { value: 'Marketing', label: 'Marketing' }
     ]
-    const handleNew = async()=>{
-      try{
-        const res = await api.post('/teacher/becomeTeacher',formData,{withCredentials:true})
-setUser({...res.data.existingUser,...res.data.newTeacher})
+  const handleNew = async()=>{
+      createProfile(formData,{
+        onSuccess:(data)=>{
+setUser({...data?.existingUser,...data?.newTeacher})
 toast.success('role updated')
 setTimeout(() => {
-  navigate('/profile'),user
+  navigate('/profile')
 }, 1000);
-      }catch(err){
-console.log(err)
-      }
+        }
+      })
     }
   return (
     <div className=' min-h-screen w-full bg-white/90 px-4 py-6 md:py-32 md:px-12 box-border items-center flex justify-center'>

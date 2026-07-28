@@ -1,13 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { FaSearch, FaSortAlphaDownAlt } from "react-icons/fa";
 import { MdOutlineKeyboardArrowDown } from 'react-icons/md';
-import Course from '../data/course'
 import courseCategories from '../data/CourseCategories';
 import { IoFilterSharp, IoTime } from "react-icons/io5";
-import { toggleStore } from '../Store/toggleStore';
-import {  useFetchStore } from '../Store/FetchStore';
 import Pagination from '@mui/material/Pagination';
-
 import ProjectCard from '@/utils/ProjectCard';
 import api from '@/utils/axios';
 import { Import } from 'lucide-react';

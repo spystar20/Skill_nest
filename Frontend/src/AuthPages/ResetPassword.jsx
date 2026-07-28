@@ -1,14 +1,15 @@
 import React, { useState } from 'react'
 import login from '../assets/login.png'
-import { Link, useNavigate, useSearchParams } from 'react-router-dom'
+import {  useNavigate, useSearchParams } from 'react-router-dom'
 import { toast } from 'sonner'
-import api from '@/utils/axios'
+import { useResetPassword } from '@/hooks/authHooks'
 const ResetPassword = () => {
   const [newpassword, setPassword] = useState('')
     const [ConfirmPassword, setConfirmPassword] = useState('')
     const [searchParams]= useSearchParams()
     const email = searchParams.get("email")
     const otp = searchParams.get("otp")
+    const {mutate:resetPassword}=useResetPassword()
   const navigate = useNavigate()
   const handleLogin = async (e) => {
     e.preventDefault()
@@ -18,15 +19,15 @@ const ResetPassword = () => {
     if(ConfirmPassword !== newpassword){
       return toast.error("Passwords do not match")
     }
-    try {
-      const res = await api.post('/auth/reset-password', { email, otp,newpassword }, { withCredentials: true })
-      console.log(res)
-   toast.success("Password updated successfully")
+    resetPassword({email, otp,newpassword},{
+      onSuccess:()=>{
+           toast.success("Password updated successfully")
    setTimeout(()=>{
 navigate('/login')
    },2000)
-    } catch (err) {
-toast.error(err.response?.data?.message || "Reset failed")    }
+      }
+    })
+  
   }
   return (
 

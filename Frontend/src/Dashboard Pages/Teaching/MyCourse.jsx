@@ -11,28 +11,16 @@ import api from '@/utils/axios';
 import {formatDistanceToNow} from 'date-fns'
 import { toast } from 'sonner';
 import Dataset from '@/utils/Dataset';
+import { useTeacherCourses } from '@/hooks/CoursesHooks/useCourse';
 
 
 const MyCourse = () => {
         const { user } = useAuth()
         console.log(user)
 const [sort, setSort] = useState("");
-const [ Course,setCourse] = useState([])
-const [error,setError]=useState(null)
-const[loading,setLoading]=useState(true)
 
-const fetchCourses = async()=>{
-  try{
-    setLoading(true)
-const res = await api.get('/teacher/dashboard/my-courses')
-setCourse(res?.data?.courses)
+const {isLoading,isError,data:Course}=useTeacherCourses()
 
-  }catch(err){
-setError(err.res?.data?.message)
-  }finally{
-    setLoading(false)
-  }
-}
 const DeleteCourse = async(courseId)=>{
   try{
 await api.delete(`/course/${courseId}`)
@@ -43,9 +31,6 @@ toast.success('course deleted successfully')
     console.log(Err)
   }
 }
-useEffect(()=>{
-      fetchCourses()
-},[])
   return (
      
         <div className='w-full bg-neutral-200 min-h-screen px-2 md:px-8 py-3 flex flex-col gap-6 '>
@@ -79,8 +64,8 @@ useEffect(()=>{
 <Link to='/dashboard/teacher/add-course'><button className=' flex items-center justify-center gap-2 bg-dashboard p-2 rounded-lg text-white hover:bg-dashboard/90 transition-discrete cursor-pointer'><FiPlus className='text-xl'/>New Course</button></Link>
        
           </div> 
-          <Dataset loading={loading} error={error} >
-          {Course.map((course)=> { 
+          <Dataset loading={isLoading} error={isError} >
+          {Course?.map((course)=> { 
  return(
 
    <div key={course._id} className="flex items-center justify-between border p-3 rounded-2xl hover:shadow-md transition  my-4">

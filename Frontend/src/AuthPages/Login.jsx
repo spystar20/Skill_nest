@@ -1,40 +1,41 @@
 import React, { useState } from 'react'
-import login from '../assets/login.png'
+import loginImg from '../assets/login.png'
 import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
-import api from '@/utils/axios'
 import { FaAngleRight } from 'react-icons/fa'
 import { useAuth } from '@/context/AuthContext'
+import { useLogin } from '@/hooks/authHooks'
 const Login = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [rememberme, setRememberMe] = useState(false)
   const navigate = useNavigate()
   const {setUser } = useAuth()
-  const handleLogin = async (e) => {
+  const {mutate:login}=useLogin()
+ const handleLogin = async (e) => {
     e.preventDefault()
-    try {
-      const res = await api.post('/auth/login', { email, password, rememberme }, { withCredentials: true })
-      console.log(res)
-      if (res.data.isEmailVerified !== true) {
-        navigate('/pending-email-verification'),{state:{email:res.data.email}}
+    login({
+       email, password, rememberme
+    },{
+      onSuccess:(data)=>{
+           if (data?.isEmailVerified !== true) {
+        navigate('/pending-email-verification'),{state:{email:data?.email}}
          
       }else{
         navigate('/')
       toast.success("Login Successfull")
-      setUser(res.data.existingUser)
-console.log(res)
-console.log(setUser)
+      setUser(data?.existingUser)
       }
-    } catch (err) {
-toast.error(err.response?.data?.message || "Login failed")    }
+      }
+    }
+  )
   }
   return (
 
     <div className=' min-h-screen w-full bg-black px-4 py-6 md:py-32 md:px-12 box-border'>
       <div className='bg-white/85 grid-col-1 md:grid grid-cols-2 p-6 md:p-6 rounded-2xl'>
         <div className=' hidden md:flex flex-col items-start justify-end box rounded-2xl p-16'>
-          <img className='login w-[516px]' src={login} alt="" />
+          <img className='login w-[516px]' src={loginImg} alt="" />
           <div className='text-white flex flex-col gap-2 '>
             <h6 className='font-body font-semibold text-sm capitalize '>Lorem ipsum dolor sit amet.</h6>
             <h2 className='font-heading font-bold text-5xl'>Lorem ipsum dolor sit amet Lorem, ipsum dolor.</h2>

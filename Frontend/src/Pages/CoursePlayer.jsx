@@ -1,31 +1,29 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { FaPlayCircle,FaStar } from 'react-icons/fa'
+import { FaPlayCircle, } from 'react-icons/fa'
 import { TiArrowSortedDown } from 'react-icons/ti'
 import { usetoggletab } from '../Store/UseToggleTab'
-import { FaFacebookF  ,FaInstagram,FaRegFilePdf ,FaRegFileCode ,FaFolderOpen } from "react-icons/fa";
+import {FaFolderOpen } from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
 import { CiCirclePlus } from "react-icons/ci";
 import { FiExternalLink } from "react-icons/fi";
 import Quill from 'quill'
 import "quill/dist/quill.snow.css"; // Quill's default styling
 import api from '@/utils/axios'
-import { useFetchStore } from '@/Store/FetchStore'
 import { formatTime } from '@/utils/formatDuration'
 import { resourceIcons } from '@/utils/ResourceIcon'
 import { useEnrolledCourseById } from '@/hooks/EnrollmentHooks/useEnrolledCourses'
-import Loader from '@/utils/Loader'
 import Dataset from '@/utils/Dataset'
-import { useSection } from '@/hooks/CoursesHooks/useCourse'
+import { useLessons, useSection } from '@/hooks/CoursesHooks/useCourse'
 
 const CoursePlayer = () => {
     const  {enrollmentId} = useParams()
   const courseId = enrolledCourse?.courseId?._id;
-
+const  [ sectionId,setSectionId]=useState(null)
    const {isLoading,isError,data:enrolledCourse}=useEnrolledCourseById(enrollmentId)
    const {isLoading:courseLoading,isError:courseError,data:section}=useSection(courseId)
-  const [ lesson,setLessons]=useState({})
-  const [completedLessons, setCompletedLessons] = useState([]);
+       const {isLoading:lessonLoading,isError:lessonError,data:lesson}=useLessons(sectionId)
+     const [completedLessons, setCompletedLessons] = useState([]);
      const [currentCourse,setCurrentCourse]=useState(null)
 
   const handleMarkComplete = async(lessonId) => {
@@ -49,25 +47,7 @@ useEffect(() => {
    const tabs = [ {name:"notes",id:3},{name:"resource",id:4},]
    const resources = currentCourse?.resources || [];
     const {tab,toggletab,toggleModule,syllabus } = usetoggletab()
-   
-     
-       const fetchLesson = async(sectionId)=>{
-      try{
-
-      const res = await api.get(`/course/lesson/${sectionId}/get-lesson`)
-     setLessons(prev=>({
-      ...prev , [sectionId]:res.data.lessons
-     }))
-  
-  if(currentCourse === null){
-     setCurrentCourse(res?.data?.lessons[0])
-  }
-    }catch(err){
-      console.log(err)
-    }
-  
-  }
-  
+ 
     const editorRef = useRef(null)
     const [quill,setquill] = useState(null)
     useEffect(()=>{
@@ -358,7 +338,7 @@ useEffect(() => {
                     <button
                       onClick={() => {
                         toggleModule(moduleKey);
-                        fetchLesson(t._id);
+                        setSectionId(t._id);
                       }}
                       className={`flex w-full items-center justify-between gap-3 px-4 py-4 text-left transition ${
                         syllabus[moduleKey]

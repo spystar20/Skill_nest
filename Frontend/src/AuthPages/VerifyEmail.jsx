@@ -3,32 +3,37 @@ import { MdMarkEmailRead } from 'react-icons/md'
 import { ImCross } from "react-icons/im";
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'sonner'
-
 import { Link } from 'react-router-dom';
-import api from '@/utils/axios';
+import { useVerifyEmail } from '@/hooks/authHooks';
 const VerifyEmail = () => {
     const [state,setState] = useState("loading")
     const [searchParams] = useSearchParams()
     const token = searchParams.get("token")
+    const {mutate}=useVerifyEmail()
     const navigate = useNavigate()
 
 useEffect(()=>{
 const verifymail = async ()=>{
-try{
+
 if(!token){
     setState("error")
     toast.error("token not found ")
     return
 }
- await api.post("/auth/verify-email",{token})
- setState("success")
+mutate({
+token
+},{
+    onSuccess:()=>{
+         setState("success")
 setTimeout(() => {
     navigate('/login')
 }, 3000);
-}catch{
-toast.error("error occured")
-
-    }}
+    },
+    onError:()=>{
+        setState('error')
+    }
+})
+ }
 verifymail()}, [token,navigate])
   return (
     <div className='bg-black w-full min-h-screen p-6 md:p-12 flex items-center justify-center'>

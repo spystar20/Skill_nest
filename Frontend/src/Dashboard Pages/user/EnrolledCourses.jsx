@@ -1,6 +1,5 @@
 import { useAuth } from '@/context/AuthContext'
 import { useEnrolledCourses } from '@/hooks/EnrollmentHooks/useEnrolledCourses'
-import { useFetchStore } from '@/Store/FetchStore'
 import api from '@/utils/axios'
 import Dataset from '@/utils/Dataset'
 import EnrolledCourseCard from '@/utils/EnrolledCourseCard'
