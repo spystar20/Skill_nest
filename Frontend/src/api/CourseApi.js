@@ -25,6 +25,8 @@ export const fetchCategories = async () => {
 // get all section in a course by course id 
 export const fetchSection = async (course_id) => {
     const res = await api.get(`/course/${course_id}/get-section`)
+      console.log('📦 UPDATED SECTIONS FROM API:', res.data)
+
     return res.data.section
 }
 // get lessons by sectionId
@@ -45,3 +47,5 @@ export const fetchUploadedResource = async (lessonId) => {
     const res = await api.get(`/course/lesson/${lessonId}`)
     return res.data.lesson.resources
 }
+
+// mutation apis

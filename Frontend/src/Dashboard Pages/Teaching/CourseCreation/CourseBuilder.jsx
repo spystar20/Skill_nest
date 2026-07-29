@@ -1,6 +1,6 @@
 import { useAuth } from '@/context/AuthContext'
+import { useCreateSection, usePublishCourse } from '@/hooks/CoursesHooks/courseMutation'
 import { useCourseById, useLessons, useSection } from '@/hooks/CoursesHooks/useCourse'
-import { useFetchStore } from '@/Store/FetchStore'
 import api from '@/utils/axios'
 import Loader from '@/utils/Loader'
 import ProjectCard from '@/utils/ProjectCard'
@@ -16,8 +16,6 @@ const CourseBuilder = () => {
     const [editingSection, setEditingSection] = useState(null)
     const [lesson,setLesson]= useState('')
     const [addsection,setAddsection] = useState(false)
-    const [loading,setLoading]= useState(false)
-    // const [section,setSection] = useState([])
     const [activeSection,setActiveSection] = useState(null)
     const [expandedSection,setExpandedSection]= useState(null)
     
@@ -32,39 +30,35 @@ const CourseBuilder = () => {
     const {isLoading:courseLoading,isError:courseError,data}=useCourseById(courseId)
     const {isLoading:sectionLoading,isError:sectionError,data:section}=useSection(courseId)
     const {isLoading:lessonLoading,isError:lessonError,data:lessons}=useLessons(expandedSection)
+    const {mutate:publishCourse}=usePublishCourse()
+    const {mutate:createSection}=useCreateSection()
     const lessonArr = lessons || []
     const course= data?.course ||[]
     console.log(lessonArr)
 const navigate = useNavigate()
     const {user} = useAuth()
         const handleStatus = async(status)=>{
-      try{
-        setLoading(true)
-    const res = await api.put(`/course/${courseId}/status`,{status})
-    toast.success('course published successfully')
+publishCourse({courseId,status},{
+  onSuccess:()=>{
+        toast.success('course published successfully')
   
       navigate('/dashboard/teacher/my-courses')
-   
-      }catch(err){
-        console.log(err)
-      }finally{
-        setLoading(false)
-      }
+  }
+})
     }
  
     const handleToggleSection = ()=>{
         setAddsection(!addsection)
     }
-    const handleSection = async()=>{
-        try{
-const res = await api.post(`/course/${courseId}/create-section`,{title})
+    const handleSection = ()=>{
+createSection({courseId,title},{
+  onSuccess:()=>{
 toast.success('section created')
-await fetchSection(courseId)
 setAddsection(false)
 setTitle('')
-        }catch(err){
-console.log(err)
-        }
+
+  }
+})
     }
     const editSectioni = async(sectionId)=>{
       try{
@@ -113,7 +107,7 @@ toast.success('lesson deleted successfully')
   return (
 
 <div className="min-h-screen bg-neutral-100 px-10 py-8">
-{loading && <Loader/>}
+{courseLoading && <Loader/>}
   {/* Header */}
   <div className="flex justify-between items-center mb-8">
     <div>

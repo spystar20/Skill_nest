@@ -1,5 +1,5 @@
-import { fetchCategories, fetchCourseById, fetchFilteredCourses, fetchLesson, fetchLessonById, fetchSection, fetchTeacherCourses, fetchUploadedResource } from "@/api/CourseApi";
-import { useQuery } from "@tanstack/react-query";
+import {  fetchCategories, fetchCourseById, fetchFilteredCourses, fetchLesson, fetchLessonById, fetchSection, fetchTeacherCourses, fetchUploadedResource } from "@/api/CourseApi";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 export const useFilteredCourse = (filters)=>useQuery({
     queryKey:['filteredCourses',filters],
@@ -16,10 +16,10 @@ queryKey:['course',course_id],
 queryFn:()=>fetchCourseById(course_id),
 enabled:!!course_id
 })
-export const useSection = (course_id)=>useQuery({
-    queryKey:['sections',course_id],
-    queryFn:()=>fetchSection(course_id),
-    enabled:!!course_id
+export const useSection = (courseId)=>useQuery({
+    queryKey:['sections',courseId],
+    queryFn:()=>fetchSection(courseId), 
+    enabled:!!courseId
 })
 export const useLessons = (sectionId)=>useQuery({
     queryKey:['lessons',sectionId],
@@ -40,3 +40,5 @@ export const useTeacherCourses = ()=>useQuery({
     queryKey:['coursesTeacher'],
     queryFn:()=>fetchTeacherCourses()
 })
+
+// mutation

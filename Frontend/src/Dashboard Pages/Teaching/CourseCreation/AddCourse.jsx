@@ -1,24 +1,22 @@
 import React, { useState } from 'react'
 import CreatableSelect from 'react-select/creatable'
 import Select from 'react-select'
-import api from '@/utils/axios'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import { RxCross1 } from 'react-icons/rx'
-import Dataset from '@/utils/Dataset'
 import Loader from '@/utils/Loader'
+import { useCreateCourse } from '@/hooks/CoursesHooks/courseMutation'
 const AddCourse = () => {
-const [loading,setLoading] = useState(false)
-const [error,setError] = useState(null)
+
   const navigate = useNavigate()
   const [formData, setFormData] = useState({
     title: '', desc: '', category: '', priceType: '', price: '', difficulty: ''
   })
   const [thumbnail, setThumbnail] = useState('')
 const [ preview,setPreview] = useState('')
-  const handleSubmit = async () => {
-    try {
-            setLoading(true)
+const {mutate:createCourse,isPending}=useCreateCourse()
+  const handleSubmit =  () => {
+
       const form = new FormData()
       form.append("title", formData.title)
       form.append("desc", formData.desc)
@@ -27,15 +25,14 @@ const [ preview,setPreview] = useState('')
       form.append("price", formData.price)
       form.append("difficulty", formData.difficulty)
       form.append("thumbnail", thumbnail)
-     
-      const res = await api.post('/course/createNew', form, { withCredentials: true })
-      toast.success("course uploaded succesfully")
+     createCourse(form,{
+      onSuccess:(data)=>{
+     toast.success("course uploaded succesfully")
       setTimeout(() => {
-        navigate(`/dashboard/teacher/courses/${res.data.newCourse._id}/edit`)
+        navigate(`/dashboard/teacher/courses/${data?.newCourse._id}/edit`)
       }, 1000);
-   
-    } catch (err) {
-setError(err.response.data?.message || 'something went wrong')    }finally{setLoading(false)}
+      }
+     })
   }
 const handlePreview = (e)=>{
 const file = e.target.files[0]
@@ -78,7 +75,7 @@ setPreview(URL.createObjectURL(file))
     <div className=' min-h-screen w-full bg-white/90 px-4 py-6 md:py-12 md:px-12 box-border items-center flex justify-center'>
    
       <div className='flex flex-col bg-white/85   md:w-2/3  rounded-lg gap-4'>
-{loading && <Loader />}
+{isPending && <Loader />}
         <div className='flex flex-col gap-12 p-6'>
 
 

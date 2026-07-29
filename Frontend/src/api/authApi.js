@@ -23,3 +23,11 @@ export const createTeacherProfile=async(data)=>{
             const res = await api.post('/teacher/becomeTeacher',data)
 return res.data
 }
+export const updateProfile = async(formData)=>{
+ const res = await api.put('/student/update/profile', formData)
+return res.data.existingUser
+}
+export const updateTeacherPorfile = async(formdata)=>{
+  const res = await api.put('/teacher/update/Teacher-Profile',formdata)
+return res.data.Teacher
+}

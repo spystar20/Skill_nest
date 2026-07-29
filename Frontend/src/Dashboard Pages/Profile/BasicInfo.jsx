@@ -1,4 +1,5 @@
 import { useAuth } from '@/context/AuthContext'
+import { useUpadteProfile } from '@/hooks/authHooks'
 import api from '@/utils/axios'
 import React, { useEffect, useState } from 'react'
 import { PiPencil } from 'react-icons/pi'
@@ -32,17 +33,18 @@ const BasicInfo = () => {
             })
         }
     }, [user])
+    const { mutate: updateProfile } = useUpadteProfile()
     const [editing, setEditing] = useState(false)
     const handleUpdate = async () => {
-        try {
-            const res = await api.put('/student/update/profile', formData, { withCredentials: true })
-            setEditing(false),
-                setUser(res.data.existingUser)
+        updateProfile(
+            formData , {
+            onSuccess: (data) => {
+                setEditing(false)
+                setUser(data)
                 toast.success('profile updated')
-            console.log(res)
-        } catch (err) {
-            console.log(err)
+            }
         }
+        )
     }
     const handleCancel = () => {
         setFormData({
@@ -59,7 +61,7 @@ const BasicInfo = () => {
     }
     return (
         <div className='md:px-6 px-2 py-4 border border-neutral-200 rounded-2xl mt-4' >
-            <div className='flex md:justify-between items-center flex-wrap'><h2 className='text-lg font-semibold capitalize font-heading' >Basic Information</h2> <span onClick={() => setEditing(true)} className={`bg-neutral-200 px-3 md:px-4 border border-black/15 py-0.5 rounded-4xl text-sm gap-1 text-black/70 flex md:gap-2 items-center justify-center md:text-lg hover:scale-95 transition-all duration-200 ease-out  cursor-pointer shadow-2xl  ${editing? 'opacity-0  -translate-x-4':'opacity-100  translate-x-4  '} `}><PiPencil />Edit</span> </div>
+            <div className='flex md:justify-between items-center flex-wrap'><h2 className='text-lg font-semibold capitalize font-heading' >Basic Information</h2> <span onClick={() => setEditing(true)} className={`bg-neutral-200 px-3 md:px-4 border border-black/15 py-0.5 rounded-4xl text-sm gap-1 text-black/70 flex md:gap-2 items-center justify-center md:text-lg hover:scale-95 transition-all duration-200 ease-out  cursor-pointer shadow-2xl  ${editing ? 'opacity-0  -translate-x-4' : 'opacity-100  translate-x-4  '} `}><PiPencil />Edit</span> </div>
 
             <form action="get" className='py-6 lg:max-w-10/12 flex flex-col gap-6'>
                 <div className='grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-12'>
@@ -130,13 +132,13 @@ const BasicInfo = () => {
             </form>
             {editing && (
 
-    
-            <div className='flex gap-4 justify-end'> 
-                 <span onClick={() => handleCancel()} className='bg-red-600 px-4 border border-red-400/15 py-0.5 rounded-4xl  text-white flex gap-2 items-center justify-center text-lg hover:scale-95 transition-all duration-200 ease-out  cursor-pointer shadow-2xl '>Cancel</span> 
-                 <span onClick={() => handleUpdate()} className='bg-neutral-700 px-4 border border-black/70 py-0.5 rounded-4xl  text-white/80 flex gap-2 items-center justify-center text-lg hover:scale-95 transition-all duration-200 ease-out  cursor-pointer shadow-2xl '>Save</span></div>
-       
-        )}
-         </div>
+
+                <div className='flex gap-4 justify-end'>
+                    <span onClick={() => handleCancel()} className='bg-red-600 px-4 border border-red-400/15 py-0.5 rounded-4xl  text-white flex gap-2 items-center justify-center text-lg hover:scale-95 transition-all duration-200 ease-out  cursor-pointer shadow-2xl '>Cancel</span>
+                    <span onClick={() => handleUpdate()} className='bg-neutral-700 px-4 border border-black/70 py-0.5 rounded-4xl  text-white/80 flex gap-2 items-center justify-center text-lg hover:scale-95 transition-all duration-200 ease-out  cursor-pointer shadow-2xl '>Save</span></div>
+
+            )}
+        </div>
     )
 }
 

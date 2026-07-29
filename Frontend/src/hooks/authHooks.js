@@ -1,28 +1,39 @@
-import { createTeacherProfile, Login, resetPassword, signUp, verifyEmail } from "@/api/authApi"
+import { createTeacherProfile, Login, resetPassword, signUp, updateProfile, updateTeacherPorfile, verifyEmail } from "@/api/authApi"
 import { useMutation } from "@tanstack/react-query"
 
-export const useSignUp = ()=>{
+export const useSignUp = () => {
     return useMutation({
-        mutationFn:signUp
+        mutationFn: signUp
     })
 }
-export const useLogin = ()=>{
+export const useLogin = () => {
     return useMutation({
-        mutationFn:Login
+        mutationFn: Login
     })
 }
-export const useVerifyEmail = ()=>{
+export const useVerifyEmail = () => {
     return useMutation({
-        mutationFn:verifyEmail
+        mutationFn: verifyEmail
     })
 }
-export const useResetPassword = ()=>{
+export const useResetPassword = () => {
     return useMutation({
-        mutationFn:resetPassword
+        mutationFn: resetPassword
     })
 }
-export const usecreateTeacherProfile = ()=>{
+export const usecreateTeacherProfile = () => {
     return useMutation({
-        mutationFn:createTeacherProfile
+        mutationFn: createTeacherProfile
+    })
+}
+export const useUpdateTeacherProfile = (formdata) => {
+    return useMutation({
+        mutationFn: updateTeacherPorfile
+    })
+}
+
+export const useUpadteProfile = (formdata) => {
+    return useMutation({
+        mutationFn: updateProfile
     })
 }
