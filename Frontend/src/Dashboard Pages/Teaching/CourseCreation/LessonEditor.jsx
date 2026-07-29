@@ -3,28 +3,25 @@ import VideoTab from './VideoTab'
 import ResourcesTab from './ResourceTab'
 import SettingsTab from './SettingsTab'
 import { Link, useParams } from 'react-router-dom'
-import api from '@/utils/axios'
 import { toast } from 'sonner'
 import { useAuth } from '@/context/AuthContext'
-import { useLessonById, useLessons } from '@/hooks/CoursesHooks/useCourse'
+import { useLessonById } from '@/hooks/CoursesHooks/useCourse'
+import { useEditLesson } from '@/hooks/CoursesHooks/courseMutation'
 
 const LessonEditor = () => { 
   const {user} = useAuth()
-  const {courseId} = useParams()
+  const {courseId,sectionId,lessonId} = useParams()
     const [active,setActive] = useState("lesson info")
     const [description,setDescription] = useState('')
-    const {lessonId} = useParams()
     const {isLoading,isError,data}=useLessonById(lessonId)
+    const {mutate:editLesson}=useEditLesson()
  const title = data?.lesson || ''
-const handleLesson = async()=>{
-    try{
-const res =await api.put(`/course/lesson/${lessonId}/update`,{title,description})
-console.log(res)
-toast.success('course updated')
-setActive('video')
-    }catch(err){
-console.log(err)
+const handleLesson =()=>{
+  editLesson({title,description,sectionId,lessonId},{
+    onSuccess:()=>{
+      toast.success('course updated')
     }
+  })
 }
 
   return (
@@ -118,10 +115,10 @@ onChange={(e)=>setTitle(e.target.value)}
     </button>
   </div>
 )} 
-{active === 'video' &&(<VideoTab lessonId={lessonId}/>)}
- {active === 'resources'&&(<ResourcesTab lessonId={lessonId}/>
+{active === 'video' &&(<VideoTab lessonId={lessonId} sectionId={sectionId}/>)}
+ {active === 'resources'&&(<ResourcesTab lessonId={lessonId} sectionId={sectionId}/>
 )}
-{active==='settings'&& (<SettingsTab lessonId={lessonId}/>
+{active==='settings'&& (<SettingsTab lessonId={lessonId} sectionId={sectionId}/>
 )}
     </div>
 
