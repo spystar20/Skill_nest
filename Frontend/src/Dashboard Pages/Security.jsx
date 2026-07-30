@@ -1,9 +1,10 @@
 import { useAuth } from '@/context/AuthContext'
 import React from 'react'
 import {  BsCamera, BsCheck, BsEye } from 'react-icons/bs'
-import {  FaRegFolder } from 'react-icons/fa'
+import {  FaAngleDoubleLeft, FaRegFolder } from 'react-icons/fa'
 import { ImBin } from 'react-icons/im'
 import { PiPencil } from 'react-icons/pi'
+import { Link } from 'react-router-dom'
 const Security = () => {
     const {user} = useAuth()
 

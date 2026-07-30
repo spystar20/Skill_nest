@@ -14,7 +14,7 @@ import { LiaCertificateSolid } from "react-icons/lia";
 import { BsTwitterX } from "react-icons/bs";
 import Rating from '@mui/material/Rating';
 import { useNavigate, useParams } from 'react-router-dom';
-import {formatTime} from '../utils/formatDuration'
+import { formatTime } from '../utils/formatDuration'
 import { Link } from 'react-router-dom';
 import api from '@/utils/axios';
 import { useAuth } from '@/context/AuthContext';
@@ -22,33 +22,34 @@ import { toast } from 'sonner';
 import { useCourseById, useLessons, useSection } from '@/hooks/CoursesHooks/useCourse';
 
 const CourseDetails = () => {
-  const {user} = useAuth()
+  const { user } = useAuth()
   const navigate = useNavigate()
-const {course_id} = useParams()
-const [sectionId,setsectionId]=useState(null)
-const [opensection, Setopensection] = useState(null)
-   const {isLoading:courseLoading,isError:courseError,data}=useCourseById(course_id)
-    const {isLoading:sectionLoading,isError:sectionError,data:section}=useSection(course_id)
-        const {isLoading:lessonLoading,isError:lessonError,data:lesson}=useLessons(sectionId)
-    
-    const course = data?.course || []
-    const teacher = data?.teacher || []
+  const { course_id } = useParams()
+  const [sectionId, setsectionId] = useState(null)
+  const [opensection, Setopensection] = useState(null)
+  const { isLoading: courseLoading, isError: courseError, data } = useCourseById(course_id)
+  const { isLoading: sectionLoading, isError: sectionError, data: section } = useSection(course_id)
+  const { isLoading: lessonLoading, isError: lessonError, data: lesson } = useLessons(sectionId)
+
+  const course = data?.course || []
+  const teacher = data?.teacher || []
   const toggleAccordian = (section) => {
     Setopensection(opensection === section ? null : section)
   }
- const handleEnrollment = async()=>{
-  try{
-  const res = await api.post(`/course/enroll/${course_id}`)
-  console.log({'enroll':res})
-  toast.success('enrolled')
-  setTimeout(() => {
-    navigate('/dashboard/student/my-courses')
-  }, 1000);
-}
-  catch(Err){
-    console.log(Err)
+  
+  const handleEnrollment = async () => {
+    try {
+      const res = await api.post(`/course/enroll/${course_id}`)
+      console.log({ 'enroll': res })
+      toast.success('enrolled')
+      setTimeout(() => {
+        navigate('/dashboard/student/my-courses')
+      }, 1000);
+    }
+    catch (Err) {
+      console.log(Err)
+    }
   }
- }
   const tabs = [{ name: "overview", id: 1 }, { name: "syllabus", id: 2 }, { name: "instructor", id: 3 }, { name: "review", id: 4 }]
   const { tab, toggletab, toggleModule, syllabus } = usetoggletab()
 
@@ -124,7 +125,7 @@ const [opensection, Setopensection] = useState(null)
                       {course?.desc}
                     </p>
                   </div>
-            
+
                   {/* <div className='flex flex-col gap-1 py-3'>
                     <h2 className='text-lg font-medium'>Requirements</h2>
                     <ul className='flex flex-col list-disc list-outside pl-5'>
@@ -148,7 +149,7 @@ const [opensection, Setopensection] = useState(null)
                       <div key={i}>
                         {/* Module header */}
                         <div
-                          onClick={() => {toggleModule(moduleKey),setsectionId(t._id)}}
+                          onClick={() => { toggleModule(moduleKey), setsectionId(t._id) }}
                           className="flex my-1 justify-between items-center py-5 bg-pink-400 px-3 rounded-lg text-white cursor-pointer"
                         >
                           <span className="flex items-center gap-2 text-lg font-medium">
@@ -273,7 +274,7 @@ const [opensection, Setopensection] = useState(null)
 
         <div className=' flex flex-col gap-3 order-2 md:order-1 md:hidden'>
           <div onClick={() => toggleAccordian("overview")} className=' flex-col flex px-6 duration-200 transition-all ease-in'>
-            <span className='flex justify-between items-center text-lg font-normal bg-slate-900 text-white rounded-lg px-3 py-2 '> <h2 >Overview </h2>{opensection === "overview" ? (<FaMinus className='text-xs' />) :(<FaPlus className='text-xs' />)}</span>
+            <span className='flex justify-between items-center text-lg font-normal bg-slate-900 text-white rounded-lg px-3 py-2 '> <h2 >Overview </h2>{opensection === "overview" ? (<FaMinus className='text-xs' />) : (<FaPlus className='text-xs' />)}</span>
             {opensection === "overview" && (
               <div className='px-2 py-3 bg-gray-50 rounded-lg '>
                 <div className='flex flex-col  gap-1 '>
@@ -316,7 +317,7 @@ const [opensection, Setopensection] = useState(null)
               </div>)}
           </div>
           <div onClick={() => toggleAccordian("syllabus")} className=' flex-col flex px-6 '>
-            <span className='flex justify-between items-center text-lg font-medium bg-slate-900 text-white rounded-lg px-3 py-2 '> <h2 >Syllabus </h2>{opensection === "syllabus" ? (<FaMinus className='text-xs' />) :(<FaPlus className='text-xs' />)}</span>
+            <span className='flex justify-between items-center text-lg font-medium bg-slate-900 text-white rounded-lg px-3 py-2 '> <h2 >Syllabus </h2>{opensection === "syllabus" ? (<FaMinus className='text-xs' />) : (<FaPlus className='text-xs' />)}</span>
             {opensection === "syllabus" && (
               <div className='px-2 py-3 bg-gray-50 rounded-lg '>
 
@@ -362,7 +363,7 @@ const [opensection, Setopensection] = useState(null)
               </div>)}
           </div>
           <div onClick={() => toggleAccordian("instructor")} className=' flex-col flex px-6 '>
-            <span className='flex justify-between items-center text-lg font-medium bg-slate-900 text-white rounded-lg px-3 py-2 '> <h2 >Instructor </h2>{opensection === "insturctor" ? (<FaMinus className='text-xs' />) :(<FaPlus className='text-xs' />)}</span>
+            <span className='flex justify-between items-center text-lg font-medium bg-slate-900 text-white rounded-lg px-3 py-2 '> <h2 >Instructor </h2>{opensection === "insturctor" ? (<FaMinus className='text-xs' />) : (<FaPlus className='text-xs' />)}</span>
             {opensection === "instructor" && (
               <div className='px-2 py-3 bg-gray-50 rounded-lg ' >
                 <div className='flex flex-col  pb-3'>

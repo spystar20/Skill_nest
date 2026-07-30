@@ -18,6 +18,20 @@ export const usePublishCourse = () => {
         }
     })
 }
+// delete course only by teacher 
+export const useDeleteCourse = ()=>{
+    const queryClient = useQueryClient()
+return useMutation({
+    mutationFn:async({courseId})=>{
+        await api.delete(`/course/${courseId}`) 
+    },
+    onSuccess:async(_,variables)=>{
+await queryClient.invalidateQueries({
+    queryKey:['coursesTeacher']
+})
+    }
+})
+}
 // create section 
 export const useCreateSection = () => {
     const queryClient = useQueryClient()
@@ -134,16 +148,20 @@ export const useDeleteResources = () => {
             const res = await api.delete(`/course/lesson/${lessonId}/resource/${resourceId}/delete`)
         },
         onSuccess: async (_, variables) => {
-            await Promise.all([
-                queryClient.invalidateQueries({
-                    queryKey: ['resources', variables.lessonId],
-                }),
-                queryClient.invalidateQueries({
-                    queryKey: ['lessons', variables.sectionId]
-                })
+            await queryClient.invalidateQueries({
+                queryKey: ['resources', variables.lessonId],
+            })
 
-            ])
         }
+    })
+}
+export const useVideoUpload = () => {
+    return useMutation({
+        mutationFn: async ({  video, lessonId }) => {
+            const form = new FormData()
+            form.append('video', video)
+            await api.put(`/course/lesson/${lessonId}/update`, form)
+        },
     })
 }
 // delete lesson
@@ -164,4 +182,24 @@ export const useDeleteLesson = () => {
             ])
         }
     })
+}
+export const useMarkLessonComplete =()=>{
+    const queryClient = useQueryClient()
+return useMutation({
+    mutationFn:async({enrollmentId,lessonId,courseId,sectionId})=>{
+        const res = await api.put(`/student/enrolledCourse/${enrollmentId}/${lessonId}/completed`)
+        return res.data
+    },
+    onSuccess:async(_,variables)=>{
+await Promise.all([
+   await queryClient.invalidateQueries({
+                queryKey: ['sections', variables.courseId]
+            }),
+             await queryClient.invalidateQueries({
+                queryKey: ['lessons', variables.sectionId]
+            })
+
+])
+    }
+})
 }

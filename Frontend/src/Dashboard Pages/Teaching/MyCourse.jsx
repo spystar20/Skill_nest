@@ -12,6 +12,7 @@ import {formatDistanceToNow} from 'date-fns'
 import { toast } from 'sonner';
 import Dataset from '@/utils/Dataset';
 import { useTeacherCourses } from '@/hooks/CoursesHooks/useCourse';
+import { useDeleteCourse } from '@/hooks/CoursesHooks/courseMutation';
 
 
 const MyCourse = () => {
@@ -20,16 +21,14 @@ const MyCourse = () => {
 const [sort, setSort] = useState("");
 
 const {isLoading,isError,data:Course}=useTeacherCourses()
+const{mutate:CourseDeleteMutation}=useDeleteCourse()
+const DeleteCourse = (courseId)=>{
+  CourseDeleteMutation({courseId},{
+    onSuccess:()=>{
+      toast.success('course deleted successfully')
 
-const DeleteCourse = async(courseId)=>{
-  try{
-await api.delete(`/course/${courseId}`)
-await fetchCourses()
-toast.success('course deleted successfully')
-  }
-  catch(Err){
-    console.log(Err)
-  }
+    }
+  })
 }
   return (
      

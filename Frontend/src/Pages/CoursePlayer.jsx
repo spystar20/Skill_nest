@@ -9,31 +9,33 @@ import { CiCirclePlus } from "react-icons/ci";
 import { FiExternalLink } from "react-icons/fi";
 import Quill from 'quill'
 import "quill/dist/quill.snow.css"; // Quill's default styling
-import api from '@/utils/axios'
 import { formatTime } from '@/utils/formatDuration'
 import { resourceIcons } from '@/utils/ResourceIcon'
 import { useEnrolledCourseById } from '@/hooks/EnrollmentHooks/useEnrolledCourses'
 import Dataset from '@/utils/Dataset'
 import { useLessons, useSection } from '@/hooks/CoursesHooks/useCourse'
+import { useMarkLessonComplete } from '@/hooks/CoursesHooks/courseMutation'
 
 const CoursePlayer = () => {
     const  {enrollmentId} = useParams()
-  const courseId = enrolledCourse?.courseId?._id;
 const  [ sectionId,setSectionId]=useState(null)
    const {isLoading,isError,data:enrolledCourse}=useEnrolledCourseById(enrollmentId)
+     const courseId = enrolledCourse?.courseId?._id;
+
    const {isLoading:courseLoading,isError:courseError,data:section}=useSection(courseId)
        const {isLoading:lessonLoading,isError:lessonError,data:lesson}=useLessons(sectionId)
+       const {mutate:MarkComplete}=useMarkLessonComplete()
      const [completedLessons, setCompletedLessons] = useState([]);
      const [currentCourse,setCurrentCourse]=useState(null)
 
-  const handleMarkComplete = async(lessonId) => {
- try{
-const res = await api.put(`/student/enrolledCourse/${enrollmentId}/${lessonId}/completed`)
-console.log(res)
-setCompletedLessons(res?.data?.enrollmentData?.completedLessons)
- }catch(err){
-console.log(err)
- }
+  const handleMarkComplete = (lessonId) => {
+MarkComplete({enrollmentId,lessonId,courseId,sectionId},{
+  onSuccess:(data)=>{
+    setCompletedLessons(data?.enrollmentData?.completedLessons)
+
+  }
+})
+
 };
 useEffect(() => {
   if (enrolledCourse?.completedLessons) {
@@ -325,7 +327,7 @@ useEffect(() => {
             {/* MODULE LIST */}
             <div className="flex-1 space-y-2 overflow-y-auto p-3 sm:p-4">
 
-              {section.map((t, i) => {
+              {section?.map((t, i) => {
                 const moduleKey = `module${i + 1}`;
 
                 return (
@@ -372,7 +374,7 @@ useEffect(() => {
 
                         <ul className="space-y-1">
 
-                        {lesson[t._id]?.map((lesson, j) => {
+                        {lesson?.map((lesson, j) => {
 
   const isCompleted = completedLessons.includes(lesson._id);
   const isCurrent = currentCourse?._id === lesson._id;
