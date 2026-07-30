@@ -153,16 +153,52 @@ return res.status(200).json({message:'lesson deleted successfully'})
 export const getLesson =asyncHandler( async(req,res)=>{
    
       const {sectionId} = req.params
-const lessons = await Lesson.find({section:sectionId})
+const lessons = await Lesson.find({section:sectionId}).select('_id lesson order duration isPreview').sort({order:1})
 return res.status(200).json({lessons})
 
 })
 
 export const getLessonById = asyncHandler( async(req,res)=>{
-   
+   const user = req.user.UserID
 const {lessonId} = req.params
 const lesson = await Lesson.findById(lessonId)
+    if (!lesson) {
+        return res.status(404).json({
+            message: 'lesson not found'
+        })
+    }
 
+  const section = await Section.findById(lesson.section)
+      if (!section) {
+        return res.status(404).json({
+            message: 'section not found'
+        })
+    }
+  const course = await Course.findById(section.course)
+      if (!course) {
+        return res.status(404).json({
+            message: 'course not found'
+        })
+    }
+
+    if(user.role === "teacher" && user.toString() === course.instructor.toString()){
+   return res.status(200).json({lesson})
+
+  }
+     if (lesson.isPreview === true) {
+        const previewLesson = {
+            ...lesson.toObject(),
+            resources: []
+        }
+
+        return res.status(200).json({
+            lesson: previewLesson
+        })
+    }
+  const enrollment = await Enrollment.findOne({userId:user,courseId:course._id})
+  if(!enrollment){
+   return res.status(403).json({message:'please enroll in this course'})
+  }
 return res.status(200).json({lesson})
  
 })

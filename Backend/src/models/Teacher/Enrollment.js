@@ -1,15 +1,14 @@
 import mongoose, { Schema } from 'mongoose'
-import { stringify } from 'querystring'
 const EnrollmentSchema = new mongoose.Schema({
     userId:{
         type:mongoose.Schema.Types.ObjectId,
         ref:'user',required:true
     },
     courseId:{
-        type:mongoose.Schema.Types.ObjectId,ref:'course',required:true,unique:true
+        type:mongoose.Schema.Types.ObjectId,ref:'course',required:true,
     },
     paymentId:{
-type:String , required:true
+type:String , 
     },
     completedLessons:[{type:mongoose.Schema.Types.ObjectId,ref:'lesson'}],
     completed:{

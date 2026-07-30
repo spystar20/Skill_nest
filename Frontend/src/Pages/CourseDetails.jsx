@@ -143,7 +143,7 @@ const CourseDetails = () => {
 
                 <div className='py-10'>
 
-                  {section.map((t, i) => {
+                  {section?.map((t, i) => {
                     const moduleKey = `module${i + 1}`;
                     return (
                       <div key={i}>
