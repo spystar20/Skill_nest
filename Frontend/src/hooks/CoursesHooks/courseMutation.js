@@ -1,3 +1,4 @@
+import { useAuth } from "@/context/AuthContext"
 import api from "@/utils/axios"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 // creates course
@@ -18,19 +19,71 @@ export const usePublishCourse = () => {
         }
     })
 }
-// delete course only by teacher 
-export const useDeleteCourse = ()=>{
+export const useBuyCourse = () => {
+    const queryClient =  useQueryClient()
+                const { user } = useAuth()
+
+    return useMutation({
+        mutationFn: async ({ courseId }) => {
+            const res = await api.post(`/course/buy-course/${courseId}`)
+            const { order, key } = res.data
+            const options = {
+                key,
+                amount: order.amount,
+                currency: order.currency,
+                order_id: order.id,
+                name: 'Skillnest',
+                description: 'Course Purchase',
+                handler: async function (response) {
+                    const res = await api.post('/course/payment/verify', {
+                        orderId: response.razorpay_order_id,
+                        paymentId: response.razorpay_payment_id,
+                        signature: response.razorpay_signature
+                    })
+                },
+                prefill: {
+                    name: user?.name,
+                    email: user?.email
+                }
+            }
+            const razorpay = new window.Razorpay(options)
+            razorpay.open()
+        },
+        onSuccess:async(_,variables)=>{
+await queryClient.invalidateQueries({
+    queryKey:['course',variables.courseId]
+})
+
+        },
+        
+    })
+}
+export const useFreeCourse = ()=>{
     const queryClient = useQueryClient()
-return useMutation({
-    mutationFn:async({courseId})=>{
-        await api.delete(`/course/${courseId}`) 
+    return useMutation({
+        mutationFn:async(course_id)=>{
+      const res = await api.post(`/course/enroll/${course_id}`)
     },
     onSuccess:async(_,variables)=>{
 await queryClient.invalidateQueries({
-    queryKey:['coursesTeacher']
+    queryKey:['course',variables.course_id]
 })
     }
 })
+}
+// delete course only by teacher 
+export const useDeleteCourse = () => {
+    const queryClient = useQueryClient()
+    return useMutation({
+        mutationFn: async ( courseId ) => {
+            await api.delete(`/course/${courseId}`)
+        },
+        onSuccess: async (_, variables) => {
+            await queryClient.invalidateQueries({
+                queryKey: ['coursesTeacher']
+            })
+        }
+    })
 }
 // create section 
 export const useCreateSection = () => {
@@ -157,7 +210,7 @@ export const useDeleteResources = () => {
 }
 export const useVideoUpload = () => {
     return useMutation({
-        mutationFn: async ({  video, lessonId }) => {
+        mutationFn: async ({ video, lessonId }) => {
             const form = new FormData()
             form.append('video', video)
             await api.put(`/course/lesson/${lessonId}/update`, form)
@@ -183,23 +236,23 @@ export const useDeleteLesson = () => {
         }
     })
 }
-export const useMarkLessonComplete =()=>{
+export const useMarkLessonComplete = () => {
     const queryClient = useQueryClient()
-return useMutation({
-    mutationFn:async({enrollmentId,lessonId,courseId,sectionId})=>{
-        const res = await api.put(`/student/enrolledCourse/${enrollmentId}/${lessonId}/completed`)
-        return res.data
-    },
-    onSuccess:async(_,variables)=>{
-await Promise.all([
-   await queryClient.invalidateQueries({
-                queryKey: ['sections', variables.courseId]
-            }),
-             await queryClient.invalidateQueries({
-                queryKey: ['lessons', variables.sectionId]
-            })
+    return useMutation({
+        mutationFn: async ({ enrollmentId, lessonId, courseId, sectionId }) => {
+            const res = await api.put(`/student/enrolledCourse/${enrollmentId}/${lessonId}/completed`)
+            return res.data
+        },
+        onSuccess: async (_, variables) => {
+            await Promise.all([
+                await queryClient.invalidateQueries({
+                    queryKey: ['sections', variables.courseId]
+                }),
+                await queryClient.invalidateQueries({
+                    queryKey: ['lessons', variables.sectionId]
+                })
 
-])
-    }
-})
+            ])
+        }
+    })
 }

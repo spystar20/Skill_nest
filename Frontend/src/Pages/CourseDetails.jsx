@@ -20,6 +20,9 @@ import api from '@/utils/axios';
 import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
 import { useCourseById, useLessons, useSection } from '@/hooks/CoursesHooks/useCourse';
+import CourseOverview from './CourseDetails/CourseOverview';
+import CourseInstructor from './CourseDetails/CourseInstructor';
+import CourseReviews from './CourseDetails/CourseReviews';
 
 const CourseDetails = () => {
   const { user } = useAuth()
@@ -36,11 +39,10 @@ const CourseDetails = () => {
   const toggleAccordian = (section) => {
     Setopensection(opensection === section ? null : section)
   }
-  
+
   const handleEnrollment = async () => {
     try {
       const res = await api.post(`/course/enroll/${course_id}`)
-      console.log({ 'enroll': res })
       toast.success('enrolled')
       setTimeout(() => {
         navigate('/dashboard/student/my-courses')
@@ -60,213 +62,204 @@ const CourseDetails = () => {
 
   return (
     <div className=' bg-white  w-full min-h-screen font-[Roboto] '>
+      {/* hero section */}
+    
+<section className="bg-gradient-to-br from-[#071120] via-[#0A1931] to-[#163A6B] pt-28 pb-16 text-white">
+  <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-[1fr_380px] gap-10 items-start">
 
-      <div className='w-full min-h-[320px] pt-23 pb-12 relative grid-cols-1  grid md:grid-cols-2 justify-between items-center gap-3  text-white  home-bg'>
-        {/* course info */}
-        <div className='flex flex-col order-2 md:order-1 gap-7 items-center  md:items-end justify-center   md:py-12'>
-          <h2 className='text-xl md:text-3xl font-semibold font-[Outfit]  capitalize '>{course?.title} </h2>
-          <div className='flex flex-wrap justify-center items-center gap-3 md:gap-6'>
-            <span className='  py-1 px-2.5 text-sm   font-medium shadow-sm font-body rounded-full  bg-slate-100 text-slate-700 flex flex-row gap-1  items-center '>
-              <SiBookstack className=' font-bold text-sm md:text-2xl' />{course?.lessonCount} lessons
-            </span>
-            <span className='  py-1 px-2.5 text-sm   font-medium shadow-sm font-body rounded-full  bg-slate-100 text-slate-700 flex flex-row gap-1  items-center '>
-              <IoTime className='font-bold  text-sm md:text-2xl ' />{course?.duration}
-            </span>
-            <span className='  py-1 px-2.5 text-sm   font-medium shadow-sm font-body rounded-full  bg-slate-100 text-slate-700 flex flex-row gap-1  items-center '>
+    {/* Left */}
+    <div>
+      <span className="inline-flex px-4 py-1 rounded-full bg-white/10 backdrop-blur text-sm font-medium">
+        {course?.category}
+      </span>
 
-              {/* <FaEye className=' font-bold  text-sm md:text-2xl' />{courseData.view} */}
-            </span>
-            {/* <Rating name="read-only" value='5' className='bg-yellow-100 rounded-full px-3' precision={0.5} readOnly /> */}
+      <h1 className="mt-5 text-5xl font-heading font-bold leading-tight">
+        {course?.title}
+      </h1>
 
-          </div>
-          <div className='flex items-center justify-center w-[60%]'>
-            <div className='flex justify-start items-center gap-3'>
-              <div><img src={course?.instructor?.avatar} className='w-16 rounded-full ' alt={course?.instructor?.firstName} /></div>
-              <div className='flex flex-col justify-start items-start capitalize font-[outfit]'>
-                <span className='text-lg font-medium'>{course?.instructor?.firstName}</span>
-                <span className='font-medium text-sm '>instructor</span>
-              </div>
-            </div>
-            {/* <Rating  name="read-only" value={courseData.rating} className='bg-yellow-100 rounded-full px-3' precision={0.5} readOnly/> */}
-          </div>
+      <p className="mt-4 text-lg text-gray-300 leading-8 max-w-3xl">
+        {course?.desc}
+      </p>
+
+      <div className="flex flex-wrap gap-3 mt-6">
+        <span className="bg-white/10 px-4 py-2 rounded-full flex items-center gap-2">
+          <SiBookstack /> {course?.lessonCount} Lessons
+        </span>
+
+        <span className="bg-white/10 px-4 py-2 rounded-full flex items-center gap-2">
+          <IoTime /> {formatTime(course?.duration)}
+        </span>
+
+        <span className="bg-white/10 px-4 py-2 rounded-full flex items-center gap-2">
+          <LuMessageCircleMore /> {course?.difficulty}
+        </span>
+      </div>
+
+      <div className="flex items-center gap-4 mt-8">
+        <img
+          src={course?.instructor?.avatar}
+          className="w-14 h-14 rounded-full object-cover border-2 border-white"
+          alt={course?.instructor?.firstName}
+        />
+
+        <div>
+          <p className="font-semibold text-lg">{course?.instructor?.firstName}</p>
+          <p className="text-gray-300">Instructor</p>
         </div>
-        <div className='flex flex-col order-1 md:order-2 my-6   items-center justify-center '>
-          <div className='flex flex-col cursor-pointer max-w-sm shadow-2xl bg-white  gap-3 rounded-2xl  p-3'>
-            <div><img src={course?.thumbnail} className='drop-shadow-xs rounded-2xl object-cover rounded-t-2xl transform hover:scale-105 transition-transform duration-300 w-[320px] ' alt="" /></div>
-            <div className='flex justify-between items-center'><p class="text-lg md:text-2xl font-semibold  bg-clip-text text-transparent bg-gradient-to-tr from-[#0f172a] via-[#1e3a8a] to-[#60a5fa]">
-              Rs. {course?.price}
-            </p>
-              <Link> <button onClick={handleEnrollment} className='px-5 py-2 capitalize text-lg font-semibold  rounded-lg duration-300 transition-all ease-in bg-gradient-to-tr from-[#95b1ee] to-[#728ccd]  hover:scale-95 scale-100 text-white cursor-pointer '>enroll now</button></Link>
-            </div>
+      </div>
+    </div>
 
-          </div>
+    {/* Course Card */}
+    <div className="w-full max-w-sm mx-auto bg-white/80 rounded-2xl p-3 shadow-xl border ">
+      <div className="overflow-hidden rounded-xl">
+        <img
+          src={course?.thumbnail}
+          className="w-full h-52 object-cover rounded-xl transition-transform duration-300 hover:scale-105"
+          alt={course?.title}
+        />
+      </div>
 
+      <div className="flex justify-between items-center gap-4 pt-3">
+        <p className="text-xl font-semibold font-heading text-button">
+          ₹{course?.price}
+        </p>
 
-        </div></div>
+        <button
+          onClick={handleEnrollment}
+          className="px-5 py-2.5 rounded-xl bg-button text-white font-heading font-medium hover:opacity-90 transition"
+        >
+          Enroll Now
+        </button>
+      </div>
+    </div>
+
+  </div>
+</section>
+
       <div className='grid grid-cols-1 md:grid-cols-2 w-full py-5 gap-8'>
         {/* for desktop  */}
         <div className='w-full hidden md:inline-flex order-2 md:order-1  justify-center'>
           <div className=' font-[Outfit] max-w-3xl  '>
             {/* headings */}
-            <div className='flex flex-wrap items-center justify-center gap-16   text-black text-xl font-semibold '>
-              {tabs.map((t) => {
-                return (
-                  <a key={t.id} onClick={() => toggletab(t.name)} className={`cursor-pointer capitalize flex hover:text-pink-400 p-2 ${tab === t.name ? " underline-offset-8 underline  text-pink-400" : "text-black "}`}>{t.name}</a>
-                )
-              })}
+            <div className="sticky top-20 z-30 bg-white py-5 border-b">
+
+              <div className="flex justify-center">
+
+                <div className="bg-gray-100 rounded-2xl p-2 flex gap-2">
+
+                  {tabs.map((t) => (
+
+                    <button
+                      key={t.id}
+                      onClick={() => toggletab(t.name)}
+                      className={`px-8 py-3 rounded-xl transition-all duration-300 font-medium
+
+                    ${tab === t.name
+                          ? "bg-[#0A1931] text-white shadow-lg"
+                          : "text-gray-600 hover:bg-white"
+                        }
+
+                    `}
+                    >
+
+                      {t.name}
+
+                    </button>
+
+                  ))}
+
+                </div>
+
+              </div>
+
             </div>
             <div>
               {/* overview */}
               {tab === "overview" ? (
-                <div className=''>
-                  <div className='flex flex-col  gap-1 py-6'>
-                    <h1 className='text-lg font-medium'>Course Description</h1>
-                    <p className='font-normal '>
-                      {course?.desc}
-                    </p>
-                  </div>
-
-                  {/* <div className='flex flex-col gap-1 py-3'>
-                    <h2 className='text-lg font-medium'>Requirements</h2>
-                    <ul className='flex flex-col list-disc list-outside pl-5'>
-                       {courseData.overview.requirements.map((list) => {
-                        return (
-                          <li>
-                            {list}
-                          </li>
-                        )
-                      })} 
-                    </ul>
-                  </div> */}
-                </div>
+                
+         <CourseOverview description={course?.desc}  />
               ) : tab === "syllabus" ? (
+<div className="space-y-5 py-6">
+  {section?.map((sec, i) => {
+    const key = `module${i + 1}`;
 
-                <div className='py-10'>
+    return (
+      <div key={sec._id} className="border rounded-2xl bg-white shadow-sm overflow-hidden">
+        <button
+          onClick={() => {
+            toggleModule(key);
+            setsectionId(sec._id);
+          }}
+          className="w-full flex justify-between items-center p-4 hover:bg-slate-50 transition"
+        >
+          <div>
+            <p className="text-sm text-gray-400">Module {i + 1}</p>
+            <h3 className="text-lg font-semibold font-heading text-dashboard">
+              {sec.title}
+            </h3>
+            <p className="text-sm text-gray-500">
+              {lesson?.length || 0} Lessons • {formatTime(sec.duration)}
+            </p>
+          </div>
 
-                  {section?.map((t, i) => {
-                    const moduleKey = `module${i + 1}`;
-                    return (
-                      <div key={i}>
-                        {/* Module header */}
-                        <div
-                          onClick={() => { toggleModule(moduleKey), setsectionId(t._id) }}
-                          className="flex my-1 justify-between items-center py-5 bg-pink-400 px-3 rounded-lg text-white cursor-pointer"
-                        >
-                          <span className="flex items-center gap-2 text-lg font-medium">
-                            <TiArrowSortedDown
-                              className={`transition-transform duration-300 ${syllabus[moduleKey] ? "rotate-180" : "rotate-0"
-                                }`}
-                            />
-                            {t.title}
-                          </span>
-                          <span>{formatTime(t.duration)} </span>
-                        </div>
-                        {/* Lessons */}
-                        {syllabus[moduleKey] && (
-                          <ul className="flex flex-col gap-2 mt-2">
-                            {lesson?.map((lesson, j) => (
-                              <li
-                                key={j}
-                                className="flex justify-between rounded-xl hover:bg-gray-100 transition-all px-6 py-4 w-full"
-                              >
-                                <span className="flex items-center gap-2">
-                                  <FaPlayCircle className="text-sm text-pink-500" />
-                                  {lesson.lesson}
-                                </span>
-                                <span className="text-gray-500">{formatTime(lesson.duration)}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        )}
-                      </div>
-                    );
-                  })}
+          <TiArrowSortedDown
+            className={`text-xl transition ${syllabus[key] ? "rotate-180" : ""}`}
+          />
+        </button>
 
+        {syllabus[key] && (
+          <div className="border-t bg-slate-50">
+            {lesson?.map((item) => (
+              <div key={item._id} className="flex justify-between items-center px-5 py-3 border-b last:border-none">
+                <div className="flex items-center gap-3">
+                  <FaPlayCircle className="text-button" />
+                  <span>{item.lesson}</span>
+                  {item.isPreview && (
+                    <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">
+                      Preview
+                    </span>
+                  )}
                 </div>
+                <span className="text-sm text-gray-500">
+                  {formatTime(item.duration)}
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  })}
+</div>
               ) : tab === "instructor" ? (
-                <div className=' py-5 pl-4 '>
-                  <div className='flex flex-col  pb-3'>
-                    <h2 className='text-xl text-black font-semibold'>
-                      {course?.instructor?.firstName}
-                    </h2>
-                    <span className='text-lg '> ({teacher?.title})</span>
-                  </div>
-                  <div className='flex items-start   gap-7'>
-                    <div className='w-[340px] object-cover border rounded-2xl p-4'><img className=' rounded-2xl' src={course?.instructor?.avatar} alt={course?.instructor?.avatar} /></div>
-                    <div>
-                      {/* <ul className='flex flex-col text-base font-normal w-full gap-1'>
-                        <li className='flex gap-2 '>
-                          <span className='flex gap-2 items-center '><FaStar />{courseData.instructor.rating} </span>
-                        </li>
-                        <li>
-                          <span className='flex gap-2 items-center '><LiaCertificateSolid /> {courseData.instructor.reviews} </span>
-                        </li>
-                        <li><span className='flex gap-2 items-center '><MdOutlinePeopleAlt />{courseData.instructor.students}</span></li>
-                        <li>
-                          <span className='flex gap-2 items-center '><FaPlayCircle />{courseData.instructor.courses}</span>
-                        </li>
-                        <li className='mt-3'> <div className='flex gap-1 text-lg'>
-                          <span className='cursor-pointer'><FaFacebookF className=' bg-pink-400 text-white w-6 h-6 rounded-sm py-1 scale-100 cursor-pointer transition-all ease-out hover:scale-95' /></span>
-                          <span><BsTwitterX className=' bg-pink-400 text-white w-6 h-6 rounded-sm py-1 scale-100 cursor-pointer transition-all ease-out hover:scale-95' /></span>
-                          <span><FaInstagram className=' bg-pink-400 text-white w-6 h-6 rounded-sm py-1 scale-100 cursor-pointer transition-all ease-out hover:scale-95' />
-                          </span>
-                        </div></li>
-                      </ul> */}
+              
+                <CourseInstructor firstName={course?.instructor?.firstName} title={teacher?.title} bio={course?.instructor?.Bio} specialization= {teacher.specialization} avatar={course?.instructor?.avatar}/>
+              ) :tab === "review" ? (
 
-                    </div>
-                  </div>
-                  <div className='gap-4 flex flex-col py-5'>
-                    <div className='flex flex-col gap-1 '>
-                      <h1 className='text-lg font-medium'>About the Instructor:</h1>
-                      <p className='font-normal '>
-                        {course?.instructor?.Bio}
-                      </p>
-                    </div>
-                    <div className='flex flex-col gap-1 '>
-                      <h1 className='text-lg font-medium'>Specialization :</h1>
-                      <p className='font-normal '>
-                        {teacher.specialization}
-                      </p>
-                    </div>
-                    <div className='flex flex-col gap-1 '>
-                      <h2 className='text-lg font-medium'>Highlights:</h2>
-                      <ul className='flex flex-col list-disc list-outside pl-5'>
-                        {/* {courseData.instructor} */}
-                        <li>Designed apps & websites for international clients in tech and e-commerce</li>
-                        <li>Specialist in wireframing, user flows, and usability testing</li>
-                        <li>Featured in multiple design publications and online communities</li>
-                        <li>Mentored 5,000+ students worldwide through workshops and online classes</li>
+  <div className="py-6">
 
-                      </ul>
+    {!course?.reviews?.length ? (
+      <div className="border border-dashed rounded-2xl p-8 text-center">
+        <div className="text-4xl">
+          ⭐
+        </div>
+        <h2 className="mt-3 text-2xl font-heading font-semibold text-dashboard">
+          No reviews yet
+        </h2>
 
-                    </div>
-                  </div>
-
-                </div>
-              ) : tab === "review" ? (
-                <div className='grid grid-cols-1 gap-5 justify-center items-center  py-10 w-full'>
-
-                  {courseData.reviews.map((rev) => {
-                    return (
-                      <div className='flex flex-col gap-4 border py-5 px-3 w-full rounded-2xl shadow-xl'>
-                        <div className='flex gap-3'>
-                          <img className=' w-16 rounded-full' src={rev.img} alt={rev.img} />
-                          <div className='flex flex-col items-start  justify-start '>
-                            <span className='font-medium' >{rev.name}</span>
-                            <Rating name="read-only" value={rev.rating} readOnly />
-                          </div>
-                          <div>
-                          </div>
-                        </div>
-                        <p>
-                          {rev.comment}
-                        </p>
-                      </div>
-                    )
-                  })}
-
-                </div>) : null}
-
+        <p className="mt-2 text-gray-500">
+          Be the first learner to share your experience.
+        </p>
+      </div>
+    ) : (
+<div className="space-y-4">
+  {course.reviews.map((review) => (
+    <CourseReviews id={review._id} avatar={review.user.avatar} firstName={review.user.firstName} rating={review.rating} comment={review.comment}/>
+  ))}
+</div>
+    )}
+  </div>
+): null}
             </div>
           </div>
         </div>
@@ -280,13 +273,13 @@ const CourseDetails = () => {
                 <div className='flex flex-col  gap-1 '>
                   <h1 className='text-lg font-medium'>Course Description</h1>
                   <p className='font-normal '>
-                    {course?.overview.description}
+                    {course?.overview?.description}
                   </p>
                 </div>
                 <div className='flex flex-col gap-1 '>
                   <h2 className='text-lg font-medium'>What you’ll learn</h2>
                   <ul className='flex flex-col list-disc list-outside pl-5'>
-                    {course?.overview.learn.map((list) => {
+                    {course?.overview?.learn?.map((list) => {
                       return (
                         <li>{list}</li>)
                     })}
@@ -295,7 +288,7 @@ const CourseDetails = () => {
                 <div className='flex flex-col gap-1 py-5'>
                   <h2 className='text-lg font-medium'>Who this course is for</h2>
                   <ul className='flex flex-col list-disc list-outside pl-5'>
-                    {course?.overview.highlights.map((list) => {
+                    {course?.overview?.highlights?.map((list) => {
                       return (
                         <li>{list}</li>
                       )
@@ -305,7 +298,7 @@ const CourseDetails = () => {
                 <div className='flex flex-col gap-1 py-3'>
                   <h2 className='text-lg font-medium'>Requirements</h2>
                   <ul className='flex flex-col list-disc list-outside pl-5'>
-                    {course?.overview.requirements.map((list) => {
+                    {course?.overview?.requirements.map((list) => {
                       return (
                         <li>
                           {list}
@@ -342,7 +335,7 @@ const CourseDetails = () => {
                       {/* Lessons */}
                       {syllabus[moduleKey] && (
                         <ul className="flex flex-col gap-2 mt-2">
-                          {t.lessons.map((lesson, j) => (
+                          {t?.lessons?.map((lesson, j) => (
                             <li
                               key={j}
                               className="flex justify-between rounded-xl hover:bg-gray-100 transition-all px-6 py-4 w-full"

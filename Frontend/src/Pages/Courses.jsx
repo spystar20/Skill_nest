@@ -13,12 +13,17 @@ import { RxCross2 } from 'react-icons/rx';
 import FilterChip from '@/utils/FilterChip';
 import { paymentStore } from '@/Store/usePaymentStore';
 import { useCategories, useFilteredCourse } from '@/hooks/CoursesHooks/useCourse';
+import { useBuyCourse, useFreeCourse } from '@/hooks/CoursesHooks/courseMutation';
+import { toast } from 'sonner';
+import { useNavigate } from 'react-router-dom';
 const Courses = () => {
   const [openFilter, SetOpenFilter] = useState(false)
   const [showSort, setShowSort] = useState(false)
   const [sliderValue, setSliderValue] = useState([0, 0]);
   const [sortOption, setSortOptions] = useState('newest')
- const {handlePayment}=paymentStore()
+  const navigate = useNavigate()
+ const {mutate:buyCourse}=useBuyCourse()
+ const{mutate:freeCourse}=useFreeCourse()
   const handleToggleFilter = () => {
     SetOpenFilter(!openFilter)
   }
@@ -89,6 +94,21 @@ const {
   // const startIndex = (page - 1) * itemsPerPage
   // const endIndex = startIndex + itemsPerPage
   // const CurrentCourse = FinalArr.slice(startIndex, endIndex)
+   const handleEnrollment=(course)=>{
+    if(course?.priceType !=='Free'){
+      buyCourse({ courseId: course._id },{onSuccess:()=>{
+        toast.success("Redirecting to payment...")
+          
+      }})
+    }else{
+      freeCourse({ course_id: course._id },{onSuccess:()=>{
+        toast.success('Course Purchased')
+              setTimeout(() => {
+                navigate('/dashboard/student/my-courses')
+              }, 1000);
+      }})
+    }
+   }
   return (
     <div className='min-h-screen bg-white w-full font-[Outfit]'>
       <div className='w-full flex flex-col min-h-[320px] gap-3 pt-23 justify-center items-center text-white  home-bg'>
@@ -189,7 +209,7 @@ transition-all duration-300 px-1  md:px-4  flex items-center justify-center roun
               {courses?.map((course, index) => {
                 return (
 
-                  <ProjectCard onBuy={()=>handlePayment(course._id)} status={course.enrollment?.status ?? null}    img={course.thumbnail} enrollmentId={course.enrollment?._id} price={course.price} key={index} category={course.category} course_desc={course.desc} course_id={course._id} course_name={course.title} chapters={12} duration={course.duration} level={course.difficulty} rating={5} instructor_img={course.thumbnail} instructor_name={course.instructor.firstName} />
+                  <ProjectCard onBuy={()=>handleEnrollment(course)} status={course.enrollment?.status ?? null}    img={course.thumbnail} enrollmentId={course.enrollment?._id} price={course.price} key={index} category={course.category} course_desc={course.desc} course_id={course._id} course_name={course.title} chapters={12} duration={course.duration} level={course.difficulty} rating={5} instructor_img={course.thumbnail} instructor_name={course.instructor.firstName} />
                 )
               })}
 

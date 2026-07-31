@@ -56,14 +56,37 @@ const ProjectCard = ({img,category,enrollmentId,course_id,course_name,course_des
                         </div>
 
                         <div className='flex flex-col mt-2 md:flex-row md:items-center gap-2 items-start  justify-between'>
-                          {(status === null) &&(
+                         {(price===0 && status === null)&&(
+                           
+                            <>
+                          <div className="flex  items-center gap-3">
+                         
+{price === 0 ? (
+    <span className="text-xl font-semibold text-green-600">
+        Free
+    </span>
+) : (
+    <span className="text-2xl font-semibold text-indigo-900">
+        ₹{price}
+    </span>
+)}                          </div>
+                          <div className='w-full md:w-1/2 '>
+                              <button onClick={(e)=>{stopNavigation(e),onBuy(course_id)}} className=' transition-all bg-gradient-to-tr from-[#95b1ee] to-[#728ccd]  font-heading cursor-pointer text-white rounded-full md:py-1.5 py-1 px-5 w-full text-lg box capitalize font-medium hover:scale-95'>Enroll now</button>
+                          </div>
+                          </>
+                          
+                         )}
+                          {(status === null && price !== 0) &&(
                             <>
                           <div className="flex  items-center gap-3">
                          
                             <span className=" text-lg md:text-2xl font-semibold text-indigo-900">₹{price}</span>
                           </div>
                           <div className='w-full md:w-1/2 '>
-                              <button onClick={(e)=>{stopNavigation(e),onBuy(course_id)}} className=' transition-all bg-gradient-to-tr from-[#95b1ee] to-[#728ccd]  font-heading cursor-pointer text-white rounded-full md:py-1.5 py-1 px-5 w-full text-lg box capitalize font-medium hover:scale-95'>buy now</button>
+                              <button onClick={(e) => {
+  stopNavigation(e);
+  onBuy();
+}} className=' transition-all bg-gradient-to-tr from-[#95b1ee] to-[#728ccd]  font-heading cursor-pointer text-white rounded-full md:py-1.5 py-1 px-5 w-full text-lg box capitalize font-medium hover:scale-95'>buy now</button>
                           </div>
                           </>
                           )}

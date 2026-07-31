@@ -13,7 +13,8 @@ import Enrollment from "../models/Teacher/Enrollment.js"
 export const CreateCoursse = asyncHandler( async (req, res) => {
    
       const { title, desc, priceType, price, category, difficulty } = req.body
-      const instructor = req.user.UserID
+      const finalPrice = priceType === 'Free'? 0 : price
+            const instructor = req.user.UserID
       const existingUser = await user.findById(instructor)
       if (!existingUser) {
          return res.status(401).json({ message: "user not found" })
@@ -35,9 +36,9 @@ export const CreateCoursse = asyncHandler( async (req, res) => {
       fs.unlinkSync(req.file.path)
 
       const thumbnail = result.secure_url
-
+    
       const newCourse = await Course.create({
-         title, desc, thumbnail, priceType, price, category, difficulty, instructor
+         title, desc, thumbnail, priceType, price:finalPrice, category, difficulty, instructor
       })
    
       return res.status(200).json({ message: "course is created", newCourse })
