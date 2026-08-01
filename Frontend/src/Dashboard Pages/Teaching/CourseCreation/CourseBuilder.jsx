@@ -1,6 +1,6 @@
 import { useAuth } from '@/context/AuthContext'
 import { useCreateLesson, useCreateSection, useDeleteLesson, useDeleteSection, useEditSection, usePublishCourse } from '@/hooks/CoursesHooks/courseMutation'
-import { useCourseById, useLessons, useSection } from '@/hooks/CoursesHooks/useCourse'
+import { useCourseById, useCurriculum, useLessons, useSection } from '@/hooks/CoursesHooks/useCourse'
 import Loader from '@/utils/Loader'
 import ProjectCard from '@/utils/ProjectCard'
 import React, { useState } from 'react'
@@ -28,6 +28,8 @@ const CourseBuilder = () => {
   const { isLoading: courseLoading, isError: courseError, data } = useCourseById(courseId)
   const { isLoading: sectionLoading, isError: sectionError, data: section } = useSection(courseId)
   const { isLoading: lessonLoading, isError: lessonError, data: lessons } = useLessons(expandedSection)
+  const {data:curriculum}=useCurriculum(courseId)
+  console.log(curriculum)
   const { mutate: publishCourse } = usePublishCourse()
   const { mutate: createSection } = useCreateSection()
   const { mutate: editSectionApi } = useEditSection()

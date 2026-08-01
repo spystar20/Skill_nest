@@ -20,7 +20,7 @@ import { Link } from 'react-router-dom';
 import api from '@/utils/axios';
 import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
-import { useCourseById, useLessons, useSection } from '@/hooks/CoursesHooks/useCourse';
+import { useCourseById, useCurriculum, useLessons, useSection } from '@/hooks/CoursesHooks/useCourse';
 import CourseOverview from './CourseDetails/CourseOverview';
 import CourseInstructor from './CourseDetails/CourseInstructor';
 import CourseReviews from './CourseDetails/CourseReviews';
@@ -37,7 +37,8 @@ const CourseDetails = () => {
   const { isLoading: courseLoading, isError: courseError, data } = useCourseById(course_id)
   const { isLoading: sectionLoading, isError: sectionError, data: section } = useSection(course_id)
   const { isLoading: lessonLoading, isError: lessonError, data: lesson } = useLessons(sectionId)
-
+const {data:curriculum}=useCurriculum(course_id)
+console.log(curriculum)
   const course = data?.course || []
   const teacher = data?.teacher || []
   const toggleAccordian = (section) => {
@@ -56,6 +57,7 @@ const CourseDetails = () => {
       console.log(Err)
     }
   }
+
   const tabs = [{ name: "overview", id: 1 }, { name: "syllabus", id: 2 }, { name: "instructor", id: 3 }, { name: "review", id: 4 }]
   const { tab, toggletab, toggleModule, syllabus } = usetoggletab()
 
@@ -131,13 +133,9 @@ const CourseDetails = () => {
         ) : tab === "syllabus" ? (
 
           <div className="space-y-5 py-6">
-
             {section?.map((sec, i) => {
-
               const key = `module${i + 1}`;
-
               return (
-
                 <div
                   key={sec._id}
                   className="border rounded-2xl bg-white shadow-sm overflow-hidden"

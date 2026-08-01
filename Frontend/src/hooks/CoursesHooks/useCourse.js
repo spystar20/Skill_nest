@@ -1,4 +1,4 @@
-import {  fetchCategories, fetchCourseById, fetchFilteredCourses, fetchLesson, fetchLessonById, fetchSection, fetchTeacherCourses, fetchUploadedResource } from "@/api/CourseApi";
+import {  fetchCategories, fetchCourseById, fetchCurriculum, fetchFilteredCourses, fetchLesson, fetchLessonById, fetchSection, fetchTeacherCourses, fetchUploadedResource } from "@/api/CourseApi";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
 export const useFilteredCourse = (filters)=>useQuery({
@@ -41,4 +41,8 @@ export const useTeacherCourses = ()=>useQuery({
     queryFn:()=>fetchTeacherCourses()
 })
 
-// mutation
+export const useCurriculum = (courseId)=>useQuery({
+    queryKey:['curriculum',courseId],
+    queryFn:()=>fetchCurriculum(courseId),
+    enabled:!!courseId
+})

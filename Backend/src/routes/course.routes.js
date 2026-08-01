@@ -20,7 +20,7 @@ router.delete('/:courseId',middleware,DeleteCourse)
 // section
 router.post('/:courseId/create-section',middleware,CreateSection)
 router.get('/:courseId/get-section',middleware,getSection)
-router.get('/section/:courseId',getSectionwithLesson)
+router.get('/curriculum/:courseId',middleware,getSectionwithLesson)
 router.put('/section/:sectionId/edit-section',middleware,UpdateSection)
 router.delete('/section/:sectionId/delete',middleware,DeleteSection)
 
