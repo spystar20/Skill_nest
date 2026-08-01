@@ -1,7 +1,7 @@
 import express from 'express'
 import { middleware } from "../middleware/auth.middleware.js"
 import uploads from "../middleware/multer.js"
-import { getCoursebyId ,CreateCoursse, GetCourses, CreateSection, getSection, createLesson, getLesson, updateLesson, getLessonById, DeleteResource, CourseSetting, GetCoursesByTeacherId, UpdateCourseStatus, UpdateSection, DeleteSection, deleteLesson, DeleteCourse, ResourceUpload, GetCourseCategories,} from "../controller/controller.course.js"
+import { getCoursebyId ,CreateCoursse, GetCourses, CreateSection, getSection, createLesson, getLesson, updateLesson, getLessonById, DeleteResource, CourseSetting, GetCoursesByTeacherId, UpdateCourseStatus, UpdateSection, DeleteSection, deleteLesson, DeleteCourse, ResourceUpload, GetCourseCategories, getSectionwithLesson,} from "../controller/controller.course.js"
 import { Enroll, EnrolledCourse } from '../controller/EnrolledCourse.js'
 import { createOrder, verifyPayment } from '../controller/controller.payment.js'
 export const router = express.Router()
@@ -20,6 +20,7 @@ router.delete('/:courseId',middleware,DeleteCourse)
 // section
 router.post('/:courseId/create-section',middleware,CreateSection)
 router.get('/:courseId/get-section',middleware,getSection)
+router.get('/section/:courseId',getSectionwithLesson)
 router.put('/section/:sectionId/edit-section',middleware,UpdateSection)
 router.delete('/section/:sectionId/delete',middleware,DeleteSection)
 

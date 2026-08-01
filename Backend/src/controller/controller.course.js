@@ -112,7 +112,23 @@ export const getSection =asyncHandler( async (req, res) => {
       const { courseId } = req.params
       const section = await Section.find({ course: courseId })
       return res.status(200).json({ message: 'section sent', section })
-
+       
+})
+export const getSectionwithLesson=asyncHandler(async(req,res)=>{
+   const {courseId}=req.params
+   const section = await Section.find({course:courseId}).sort({order:1}).lean()
+   if(section.length === 0){
+      return res.status(404).json({message:'section not found'})
+   }
+const SectionWithLesson =await Promise.all(section.map(async(section)=>{
+const lessons = await Lesson.find({section:section._id})
+return {
+   ...section,lessons
+}
+}))
+   console.log(section)
+   console.log(SectionWithLesson)
+   return res.status(200).json({SectionWithLesson})
 })
 export const createLesson =asyncHandler( async (req, res) => {
    

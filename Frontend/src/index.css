@@ -322,3 +322,23 @@ box-shadow:
   --sidebar-border:oklch(1 0 0 / 10%);
   --sidebar-ring:oklch(0.556 0 0);
 }
+.hero-course-details {
+  position: relative;
+  background: transparent;
+}
+
+.course-page::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 470px;
+  background: linear-gradient(
+    135deg,
+    #071120,
+    #0A1931,
+    #163A6B
+  );
+  z-index: 0;
+}
