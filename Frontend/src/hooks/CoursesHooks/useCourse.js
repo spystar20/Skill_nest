@@ -50,5 +50,6 @@ export const useCurriculum = (courseId)=>useQuery({
 export const useEnrolledCurriculum = (enrollmentId)=>useQuery({
     queryKey:['enrolledCurriculum',enrollmentId],
     queryFn:()=>fetchEnrolledCurriculum(enrollmentId),
-    enabled:!!enrollmentId
+    enabled:!!enrollmentId,
+    select:(data)=>data.curriculum
 })

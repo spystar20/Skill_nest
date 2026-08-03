@@ -21,8 +21,7 @@ const CoursePlayer = () => {
    const {isLoading,isError,data:enrolledCourse}=useEnrolledCourseById(enrollmentId)
      const courseId = enrolledCourse?.courseId?._id;
        const {data:curriculum}= useEnrolledCurriculum(enrollmentId)
-       const section = curriculum?.curriculum
-       console.log(section)
+     const lesson = curriculum?.lesson
        const {mutate:MarkComplete}=useMarkLessonComplete()
      const [completedLessons, setCompletedLessons] = useState([]);
      const [currentCourse,setCurrentCourse]=useState(null)
@@ -36,18 +35,28 @@ MarkComplete({enrollmentId,lessonId,courseId,sectionId},{
 })
 
 };
+  const newOrder = currentCourse?.order - 1
+  const newLesson =lesson?.filter((lesson)=>lesson.order ===newOrder)
+  console.log(newLesson)
+console.log(newOrder)
+const handlePrevious = ()=>{
+  const newOrder = currentCourse.order - 1
+
+  setCurrentCourse()
+}
 useEffect(() => {
   if (enrolledCourse?.completedLessons) {
     setCompletedLessons(enrolledCourse.completedLessons);
   }
 }, [enrolledCourse]);
    useEffect(() => {
-    if(curriculum && curriculum.length >0){
-   const firstLesson = section[0]?.lesson[0]
+      if(curriculum?.length>0){
+    const firstLesson = curriculum[0]?.lesson[0]
     setCurrentCourse(firstLesson)
-    }
+    console.log(currentCourse)
+  }
   toggletab("syllabus");
-}, []);
+}, [curriculum]);
 
    const tabs = [ {name:"notes",id:3},{name:"resource",id:4},]
    const resources = currentCourse?.resources || [];
@@ -109,6 +118,26 @@ useEffect(() => {
               controls
               autoPlay
             />
+
+            {/* LESSON NAVIGATION */}
+<div className="mt-4 flex items-center justify-between gap-3 rounded-xl border border-gray-200 bg-white p-3 shadow-sm sm:p-4">
+
+  <button
+onClick={handlePrevious}
+    className="flex items-center gap-2 rounded-full border border-gray-200 px-4 py-2.5 text-sm font-medium text-gray-700 transition hover:border-pink-300 hover:bg-pink-50 hover:text-pink-500 disabled:cursor-not-allowed disabled:opacity-40 sm:px-5"
+  >
+    <span>←</span>
+    <span>Previous</span>
+  </button>
+
+  <button
+    className="flex items-center gap-2 rounded-full bg-pink-400 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-pink-500 disabled:cursor-not-allowed disabled:opacity-40 sm:px-5"
+  >
+    <span>Next</span>
+    <span>→</span>
+  </button>
+
+</div>
             <div className="mt-4 flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between">
 
   <div>
@@ -317,7 +346,7 @@ useEffect(() => {
                 </h2>
 
                 <p className="mt-1 text-xs text-gray-500 sm:text-sm">
-                  {section?.length || 0} modules
+                  {curriculum?.length || 0} modules
                 </p>
               </div>
 
@@ -330,7 +359,7 @@ useEffect(() => {
             {/* MODULE LIST */}
             <div className="flex-1 space-y-2 overflow-y-auto p-3 sm:p-4">
 
-              {section?.map((t, i) => {
+              {curriculum?.map((t, i) => {
                 const moduleKey = `module${i + 1}`;
 
                 return (
