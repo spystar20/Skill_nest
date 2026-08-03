@@ -8,6 +8,7 @@ import Lesson from "../models/Teacher/Lesson.js"
 import { asyncHandler } from "../middleware/asyncHandler.middleware.js"
 import { diff } from "util"
 import Enrollment from "../models/Teacher/Enrollment.js"
+import userModel from "../models/user.model.js"
 
 
 export const CreateCoursse = asyncHandler( async (req, res) => {
@@ -326,6 +327,7 @@ export const CourseSetting =asyncHandler( async(req,res)=>{
 export const getCoursebyId =asyncHandler( async (req, res) => {
   
       const { courseId } = req.params
+      const userId = req.user?.UserID
       console.log(courseId)
       const course = await Course.findById(courseId).populate('instructor', "firstName lastName avatar Bio")
       console.log(course)
@@ -336,13 +338,22 @@ export const getCoursebyId =asyncHandler( async (req, res) => {
       if(!teacher){
                   return res.status(401).json({ message: 'teacher not found' })
       }
+      const user = await userModel.findById(userId)
+      if(!user){
+          return res.status(200).json({course,teacher,enrollment:null})
 
-      return res.status(200).json({ course,teacher })
+      }
+      const enrollment = userId ?  await Enrollment.findOne({userId:userId,courseId:courseId}) :null
+
+      return res.status(200).json({ course,teacher,enrollment })
    
 })
 export const GetCourses = asyncHandler( async (req, res) => {
        const {search,category,difficulty,priceType,minPrice,maxPrice,sort}= req.query
        const filter = {status:'published'}
+       const userId =req.user?.UserID
+       console.log("REQ USER:", req.user)
+console.log("USER ID:", userId)
        const sortOptions={}
        if(search){
          filter.title = {
@@ -392,13 +403,20 @@ export const GetCourses = asyncHandler( async (req, res) => {
                $max:"$price"           }
          }}
       ])
-      const enrollments = await Enrollment.find({userId:req.user.UserID})
-     const courseWithStatus = courses.map((course)=>{
+      const enrollments = userId ? await Enrollment.find({userId:userId}) : []
+
+      console.log(`coursesss: ${enrollments}`)
+     const courseWithStatus =  courses.map((course)=>{
       const enrollment = enrollments.find(enrollment=>enrollment.courseId.toString()===course._id.toString())
+        console.log(
+    "COURSE:",
+    course._id.toString(),
+    "ENROLLMENT:",
+    enrollment
+  )
       return {
          ...course.toObject(),
          enrollment:enrollment?enrollment:null
-
       }
      })
       return res.status(200).json({ message: "courses sent", courses:courseWithStatus,PriceRange})

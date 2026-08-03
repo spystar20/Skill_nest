@@ -95,12 +95,14 @@ const {
   // const endIndex = startIndex + itemsPerPage
   // const CurrentCourse = FinalArr.slice(startIndex, endIndex)
    const handleEnrollment=(course)=>{
+    
     if(course?.priceType !=='Free'){
       buyCourse({ courseId: course._id },{onSuccess:()=>{
         toast.success("Redirecting to payment...")
           
       }})
     }else{
+      
       freeCourse({ course_id: course._id },{onSuccess:()=>{
         toast.success('Course Purchased')
               setTimeout(() => {

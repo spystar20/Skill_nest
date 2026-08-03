@@ -1,52 +1,35 @@
 import React, { useEffect, useState } from 'react'
-import { CiHeart } from "react-icons/ci";
-import { SiBookstack } from "react-icons/si";
-import { IoTime } from "react-icons/io5";
-import { FaStar, FaMobileAlt, FaEye, FaPlayCircle, FaFacebookF, FaInstagram, FaPlus, FaMinus } from "react-icons/fa";
-import { MdOndemandVideo, MdOutlineSimCardDownload, MdOutlinePeopleAlt } from "react-icons/md";
+import {  FaMobileAlt,  } from "react-icons/fa";
+import { MdOndemandVideo, MdOutlineSimCardDownload } from "react-icons/md";
 import { TbWorldCheck } from "react-icons/tb";
 import { GrCertificate } from "react-icons/gr";
 import { PiFileAudioBold } from "react-icons/pi";
-import { LuMessageCircleMore } from "react-icons/lu";
-import { TiArrowSortedDown } from "react-icons/ti";
 import { usetoggletab } from '../Store/UseToggleTab';
-
-import { LiaCertificateSolid } from "react-icons/lia";
-import { BsTwitterX } from "react-icons/bs";
 import Rating from '@mui/material/Rating';
 import { useNavigate, useParams } from 'react-router-dom';
-import { formatTime } from '../utils/formatDuration'
-import { Link } from 'react-router-dom';
 import api from '@/utils/axios';
 import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
-import { useCourseById, useCurriculum, useLessons, useSection } from '@/hooks/CoursesHooks/useCourse';
+import { useCourseById, useCurriculum, useLessons } from '@/hooks/CoursesHooks/useCourse';
 import CourseOverview from './CourseDetails/CourseOverview';
 import CourseInstructor from './CourseDetails/CourseInstructor';
 import CourseReviews from './CourseDetails/CourseReviews';
-import { FiTrendingUp } from 'react-icons/fi';
 import HeroSection from './CourseDetails/HeroSection';
 import RelatedCourses from './CourseDetails/RelatedCourses';
 import CourseCurriculum from '@/Components/Courses/curriculum/CourseCurriculum';
+import CourseCard from './CourseDetails/CourseCard';
 
 const CourseDetails = () => {
   const { user } = useAuth()
   const navigate = useNavigate()
   const { course_id } = useParams()
-  const [sectionId, setsectionId] = useState(null)
-  const [opensection, Setopensection] = useState(null)
   const { isLoading: courseLoading, isError: courseError, data } = useCourseById(course_id)
-  // const { isLoading: sectionLoading, isError: sectionError, data: section } = useSection(course_id)
-  const { isLoading: lessonLoading, isError: lessonError, data: lesson } = useLessons(sectionId)
 const {data:curriculum}=useCurriculum(course_id)
 const section = curriculum?.SectionWithLesson || []
 console.log(curriculum)
   const course = data?.course || []
   const teacher = data?.teacher || []
-  const toggleAccordian = (section) => {
-    Setopensection(opensection === section ? null : section)
-  }
-
+const enrollment = data?.enrollment 
   const handleEnrollment = async () => {
     try {
       const res = await api.post(`/course/enroll/${course_id}`)
@@ -61,7 +44,7 @@ console.log(curriculum)
   }
 
   const tabs = [{ name: "overview", id: 1 }, { name: "syllabus", id: 2 }, { name: "instructor", id: 3 }, { name: "review", id: 4 }]
-  const { tab, toggletab, toggleModule, syllabus } = usetoggletab()
+  const { tab, toggletab, } = usetoggletab()
 
   useEffect(() => {
     toggletab("overview");
@@ -215,54 +198,7 @@ console.log(curriculum)
 <div className="relative z-20">
 
   <div className=" sticky  top-6  mt-36  w-full  max-w-[340px]  mx-auto  bg-white  rounded-2xl  shadow-2xl border overflow-hidden"> {/* IMAGE + PRICE */}
-
-    <div className="p-3">
-
-      <div className="overflow-hidden rounded-xl">
-
-        <img
-          src={course?.thumbnail}
-          className="
-            w-full
-            h-52
-            object-cover
-            rounded-xl
-            transition-transform
-            duration-300
-            hover:scale-105
-          "
-          alt={course?.title}
-        />
-
-      </div>
-
-
-      <div className="flex justify-between items-center gap-4 pt-3">
-
-        <p className="text-2xl font-semibold font-heading text-button">
-          ₹{course?.price}
-        </p>
-
-        <button
-          onClick={handleEnrollment}
-          className="
-            px-5
-            py-2.5
-            rounded-xl
-            bg-button
-            text-white
-            font-heading
-            font-medium
-            hover:opacity-90
-            transition
-          "
-        >
-          Enroll Now
-        </button>
-
-      </div>
-
-    </div>
+<CourseCard enrollment={enrollment} course_name={course?.title} handleEnrollment={handleEnrollment} thumbnail={course?.thumbnail} title={course?.title} price={course?.price} />
     {/* FEATURES */}
     <div className="border-t px-4 py-4">
 
@@ -305,7 +241,6 @@ console.log(curriculum)
       </ul>
 
     </div>
-
   </div>
 
 </div>

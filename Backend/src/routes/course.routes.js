@@ -4,17 +4,18 @@ import uploads from "../middleware/multer.js"
 import { getCoursebyId ,CreateCoursse, GetCourses, CreateSection, getSection, createLesson, getLesson, updateLesson, getLessonById, DeleteResource, CourseSetting, GetCoursesByTeacherId, UpdateCourseStatus, UpdateSection, DeleteSection, deleteLesson, DeleteCourse, ResourceUpload, GetCourseCategories, getSectionwithLesson,} from "../controller/controller.course.js"
 import { Enroll, EnrolledCourse } from '../controller/EnrolledCourse.js'
 import { createOrder, verifyPayment } from '../controller/controller.payment.js'
+import { optionalAuth } from '../middleware/optionalAuth.middleware.js'
 export const router = express.Router()
 
 // courses
-router.get('/',middleware,GetCourses)
-router.get('/category',middleware,GetCourseCategories)
+router.get('/',optionalAuth,GetCourses)
+router.get('/category',optionalAuth,GetCourseCategories)
 router.post('/createNew',middleware,uploads.single("thumbnail"),CreateCoursse)
 router.post('/payment/verify',middleware,verifyPayment)
 router.get('/enrolled',middleware,EnrolledCourse)
 router.post('/enroll/:courseId',middleware,Enroll)
 router.post('/buy-course/:courseId',middleware,createOrder)
-router.get('/:courseId',middleware,getCoursebyId)
+router.get('/:courseId',optionalAuth,getCoursebyId)
 router.put('/:courseId/status',middleware,UpdateCourseStatus)
 router.delete('/:courseId',middleware,DeleteCourse)
 // section
