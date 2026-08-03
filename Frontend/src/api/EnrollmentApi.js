@@ -8,7 +8,10 @@ export const fetchEnrolledCourses = async()=>{
 export const fetchEnrolledCourseById= async(enrollmentId)=>{
   
     const res = await api.get(`/student/enrolledCourse/${enrollmentId}/learn`)
-    console.log(res)
     return res.data.enrollment
 
+ }
+ export const fetchEnrolledCurriculum =async(enrollmentId)=>{
+    const res = await api.get(`/course/curriculum/enrolled/${enrollmentId}`)
+return res.data
  }

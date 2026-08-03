@@ -132,16 +132,26 @@ return {
    console.log(SectionWithLesson)
    return res.status(200).json({SectionWithLesson})
 })
+// for enrolled students only
 export const getEnrolledCurriculum = asyncHandler(async(req,res)=>{
-   const {courseId}  = req.params
    const userId = req.user.UserID
-const enrollment = await Enrollment.findOne({userId:userId,courseId:courseId})
+   const {enrollmentId}=req.params
+const enrollment = await Enrollment.findOne({userId:userId,_id:enrollmentId})
+
 if(!enrollment){
    return res.status(403).json({message:'please enroll in the course'})
 } 
-   const course = await Course.findById(courseId)
-
-
+const courseId = enrollment.courseId
+const course = await Course.findById(courseId)
+const section = await Section.find({course:courseId}).sort({order:1}).lean()
+if(!section.length){
+   return res.status(404).json({message:'section not found'})
+}
+const curriculum = await Promise.all(section.map(async (section)=>{
+   const lesson = await Lesson.find({section:section._id})
+   return {...section,lesson}
+}))
+return res.status(200).json({curriculum})
 })
 export const createLesson =asyncHandler( async (req, res) => {
    

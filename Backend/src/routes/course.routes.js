@@ -1,7 +1,7 @@
 import express from 'express'
 import { middleware } from "../middleware/auth.middleware.js"
 import uploads from "../middleware/multer.js"
-import { getCoursebyId ,CreateCoursse, GetCourses, CreateSection, getSection, createLesson, getLesson, updateLesson, getLessonById, DeleteResource, CourseSetting, GetCoursesByTeacherId, UpdateCourseStatus, UpdateSection, DeleteSection, deleteLesson, DeleteCourse, ResourceUpload, GetCourseCategories, getSectionwithLesson,} from "../controller/controller.course.js"
+import { getCoursebyId ,CreateCoursse, GetCourses, CreateSection, getSection, createLesson, getLesson, updateLesson, getLessonById, DeleteResource, CourseSetting, GetCoursesByTeacherId, UpdateCourseStatus, UpdateSection, DeleteSection, deleteLesson, DeleteCourse, ResourceUpload, GetCourseCategories, getCourseCurriculum, getEnrolledCurriculum,} from "../controller/controller.course.js"
 import { Enroll, EnrolledCourse } from '../controller/EnrolledCourse.js'
 import { createOrder, verifyPayment } from '../controller/controller.payment.js'
 import { optionalAuth } from '../middleware/optionalAuth.middleware.js'
@@ -21,7 +21,8 @@ router.delete('/:courseId',middleware,DeleteCourse)
 // section
 router.post('/:courseId/create-section',middleware,CreateSection)
 router.get('/:courseId/get-section',middleware,getSection)
-router.get('/curriculum/:courseId',middleware,getSectionwithLesson)
+router.get('/curriculum/:courseId',middleware,getCourseCurriculum)
+router.get('/curriculum/enrolled/:enrollmentId/',middleware,getEnrolledCurriculum)
 router.put('/section/:sectionId/edit-section',middleware,UpdateSection)
 router.delete('/section/:sectionId/delete',middleware,DeleteSection)
 

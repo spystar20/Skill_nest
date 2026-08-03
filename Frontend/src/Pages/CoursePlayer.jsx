@@ -13,24 +13,20 @@ import { formatTime } from '@/utils/formatDuration'
 import { resourceIcons } from '@/utils/ResourceIcon'
 import { useEnrolledCourseById } from '@/hooks/EnrollmentHooks/useEnrolledCourses'
 import Dataset from '@/utils/Dataset'
-import { useCurriculum, useLessons, useSection } from '@/hooks/CoursesHooks/useCourse'
+import {  useEnrolledCurriculum, useLessons, useSection } from '@/hooks/CoursesHooks/useCourse'
 import { useMarkLessonComplete } from '@/hooks/CoursesHooks/courseMutation'
 
 const CoursePlayer = () => {
     const  {enrollmentId} = useParams()
-const  [ sectionId,setSectionId]=useState(null)
    const {isLoading,isError,data:enrolledCourse}=useEnrolledCourseById(enrollmentId)
      const courseId = enrolledCourse?.courseId?._id;
-
-   const {isLoading:courseLoading,isError:courseError,data:section}=useSection(courseId)
-       const {isLoading:lessonLoading,isError:lessonError,data:lesson}=useLessons(sectionId)
-       const {data:curriculum}= useCurriculum()
+       const {data:curriculum}= useEnrolledCurriculum(enrollmentId)
+       const section = curriculum?.curriculum
+       console.log(section)
        const {mutate:MarkComplete}=useMarkLessonComplete()
      const [completedLessons, setCompletedLessons] = useState([]);
      const [currentCourse,setCurrentCourse]=useState(null)
-useEffect(()=>{
-  setCurrentCourse()
-})
+
   const handleMarkComplete = (lessonId) => {
 MarkComplete({enrollmentId,lessonId,courseId,sectionId},{
   onSuccess:(data)=>{
@@ -46,6 +42,10 @@ useEffect(() => {
   }
 }, [enrolledCourse]);
    useEffect(() => {
+    if(curriculum && curriculum.length >0){
+   const firstLesson = section[0]?.lesson[0]
+    setCurrentCourse(firstLesson)
+    }
   toggletab("syllabus");
 }, []);
 
@@ -343,7 +343,6 @@ useEffect(() => {
                     <button
                       onClick={() => {
                         toggleModule(moduleKey);
-                        setSectionId(t._id);
                       }}
                       className={`flex w-full items-center justify-between gap-3 px-4 py-4 text-left transition ${
                         syllabus[moduleKey]
@@ -377,7 +376,7 @@ useEffect(() => {
 
                         <ul className="space-y-1">
 
-                        {lesson?.map((lesson, j) => {
+                        {t?.lesson?.map((lesson, j) => {
 
   const isCompleted = completedLessons.includes(lesson._id);
   const isCurrent = currentCourse?._id === lesson._id;

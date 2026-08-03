@@ -1,7 +1,8 @@
 import api from "@/utils/axios"
+import axios from "axios"
 
   export const signUp = async(data)=>{
-  const res = await api.post('/auth/sign',data)
+  const res = await axios.post('https://skill-nest-ji98.onrender.com/auth/sign',data)
     return res.data
 }
 
