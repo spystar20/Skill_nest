@@ -5,7 +5,8 @@ import userModel from "../models/user.model.js";
 
 export const Enroll = asyncHandler(async (req, res) => {
      const userId = req.user.UserID
-     const { courseId } = req.params
+     const  {courseId}  = req.params
+     console.log(courseId)
      const course = await Course.findById(courseId)
      if (!course) {
           return res.status(404).json({ message: 'course not found' })
@@ -35,9 +36,9 @@ export const EnrolledCourse = asyncHandler(async (req, res) => {
      if (!enrolledCourses) {
           return res.status(401).json({ message: 'no course purchased' })
      }
-
+ console.log(enrolledCourses)
      const enrolledCoursesProgress = enrolledCourses.map((enrolledCourse) => {
-          const totalLesson = enrolledCourse.courseId.lessonCount
+          const totalLesson = enrolledCourse.courseId.lessonCount 
           const completedLessons = enrolledCourse.completedLessons.length
           const progress = totalLesson > 0 ? Math.round((completedLessons / totalLesson) * 100) : 0
           return { ...enrolledCourse.toObject(), progress }

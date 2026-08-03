@@ -61,7 +61,8 @@ await queryClient.invalidateQueries({
 export const useFreeCourse = ()=>{
     const queryClient = useQueryClient()
     return useMutation({
-        mutationFn:async(course_id)=>{
+        mutationFn:async({course_id})=>{
+            console.log(course_id)
       const res = await api.post(`/course/enroll/${course_id}`)
     },
     onSuccess:async(_,variables)=>{

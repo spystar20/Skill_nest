@@ -115,7 +115,8 @@ export const getSection =asyncHandler( async (req, res) => {
       return res.status(200).json({ message: 'section sent', section })
        
 })
-export const getSectionwithLesson=asyncHandler(async(req,res)=>{
+// for not enrolled students
+export const getCourseCurriculum=asyncHandler(async(req,res)=>{
    const {courseId}=req.params
    const section = await Section.find({course:courseId}).sort({order:1}).lean()
    if(!section.length ){
@@ -130,6 +131,17 @@ return {
    console.log(section)
    console.log(SectionWithLesson)
    return res.status(200).json({SectionWithLesson})
+})
+export const getEnrolledCurriculum = asyncHandler(async(req,res)=>{
+   const {courseId}  = req.params
+   const userId = req.user.UserID
+const enrollment = await Enrollment.findOne({userId:userId,courseId:courseId})
+if(!enrollment){
+   return res.status(403).json({message:'please enroll in the course'})
+} 
+   const course = await Course.findById(courseId)
+
+
 })
 export const createLesson =asyncHandler( async (req, res) => {
    

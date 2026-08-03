@@ -13,7 +13,7 @@ import { formatTime } from '@/utils/formatDuration'
 import { resourceIcons } from '@/utils/ResourceIcon'
 import { useEnrolledCourseById } from '@/hooks/EnrollmentHooks/useEnrolledCourses'
 import Dataset from '@/utils/Dataset'
-import { useLessons, useSection } from '@/hooks/CoursesHooks/useCourse'
+import { useCurriculum, useLessons, useSection } from '@/hooks/CoursesHooks/useCourse'
 import { useMarkLessonComplete } from '@/hooks/CoursesHooks/courseMutation'
 
 const CoursePlayer = () => {
@@ -24,10 +24,13 @@ const  [ sectionId,setSectionId]=useState(null)
 
    const {isLoading:courseLoading,isError:courseError,data:section}=useSection(courseId)
        const {isLoading:lessonLoading,isError:lessonError,data:lesson}=useLessons(sectionId)
+       const {data:curriculum}= useCurriculum()
        const {mutate:MarkComplete}=useMarkLessonComplete()
      const [completedLessons, setCompletedLessons] = useState([]);
      const [currentCourse,setCurrentCourse]=useState(null)
-
+useEffect(()=>{
+  setCurrentCourse()
+})
   const handleMarkComplete = (lessonId) => {
 MarkComplete({enrollmentId,lessonId,courseId,sectionId},{
   onSuccess:(data)=>{
