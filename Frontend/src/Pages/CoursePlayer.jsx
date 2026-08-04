@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom'
 import { FaPlayCircle, } from 'react-icons/fa'
 import { TiArrowSortedDown } from 'react-icons/ti'
 import { usetoggletab } from '../Store/UseToggleTab'
-import {FaFolderOpen } from "react-icons/fa";
+import { FaFolderOpen } from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
 import { CiCirclePlus } from "react-icons/ci";
 import { FiExternalLink } from "react-icons/fi";
@@ -13,532 +13,540 @@ import { formatTime } from '@/utils/formatDuration'
 import { resourceIcons } from '@/utils/ResourceIcon'
 import { useEnrolledCourseById } from '@/hooks/EnrollmentHooks/useEnrolledCourses'
 import Dataset from '@/utils/Dataset'
-import {  useEnrolledCurriculum, useLessons, useSection } from '@/hooks/CoursesHooks/useCourse'
+import { useEnrolledCurriculum, useLessons, useSection } from '@/hooks/CoursesHooks/useCourse'
 import { useMarkLessonComplete } from '@/hooks/CoursesHooks/courseMutation'
 
 const CoursePlayer = () => {
-    const  {enrollmentId} = useParams()
-   const {isLoading,isError,data:enrolledData}=useEnrolledCourseById(enrollmentId)
-   const enrolledCourse = enrolledData?.enrollment
-     const courseId = enrolledCourse?.courseId?._id;
-       const {data:curriculum}= useEnrolledCurriculum(enrollmentId)
-       console.log(curriculum)
-    
-       const {mutate:MarkComplete}=useMarkLessonComplete()
-     const [completedLessons, setCompletedLessons] = useState([]);
-     const [currentCourse,setCurrentCourse]=useState(null)
+  const { enrollmentId } = useParams()
+   const [completedLessons, setCompletedLessons] = useState([]);
+  const [currentCourse, setCurrentCourse] = useState(null)
+  const { isLoading, isError, data: enrolledData } = useEnrolledCourseById(enrollmentId)
+  const enrolledCourse = enrolledData?.enrollment
+  const courseId = enrolledCourse?.courseId?._id;
+  const { data: curriculum } = useEnrolledCurriculum(enrollmentId)
+  const totalLesson = curriculum?.reduce((total, section) => total + (section?.lesson?.length || 0), 0)
+  const tabs = [{ name: "notes", id: 3 }, { name: "resource", id: 4 },]
+  const resources = currentCourse?.resources || [];
+  const { tab, toggletab, toggleModule, syllabus ,openModule} = usetoggletab()
+  const { mutate: MarkComplete } = useMarkLessonComplete()
+ 
+ const currentSection = curriculum?.find(section =>
+  section?.lesson?.some(
+    lesson => lesson._id === currentCourse?._id
+  )
+);
 
-  const handleMarkComplete = (lessonId) => {
-     const currentSection = curriculum?.find(section =>
-    section?.lesson?.some(lesson => lesson._id === lessonId)
-  );
+const currentSectionIndex = curriculum?.findIndex(
+  section => section._id === currentSection?._id
+);
 
-  const sectionId = currentSection?._id;
-MarkComplete({enrollmentId,lessonId,courseId,sectionId},{
-  onSuccess:(data)=>{
-    setCompletedLessons(data?.enrollmentData?.completedLessons)
+const currentLessonIndex = currentSection?.lesson?.findIndex(
+  lesson => lesson._id === currentCourse?._id
+);
+const isFirstLesson =currentSectionIndex === 0 && currentLessonIndex === 0;
+const isLastLesson = currentSectionIndex === (curriculum?.length -1) && currentLessonIndex === currentSection?.lesson?.length-1
+  // acces previous lesson
+  const handlePrevious = () => {
 
-  }
-})
+    if (currentLessonIndex > 0) {
+      const previousLesson = currentSection?.lesson[currentLessonIndex - 1]
+      setCurrentCourse(previousLesson)
+    }
+    if (currentLessonIndex === 0) {
+      if (currentSectionIndex > 0) {
+        const previousSection = curriculum[currentSectionIndex - 1]
+        const previousLesson = previousSection?.lesson?.[previousSection?.lesson?.length - 1]
+        setCurrentCourse(previousLesson)
+        openModule(`module${currentSectionIndex}`)
 
-};
-console.log(currentCourse)
-const handlePrevious = ()=>{
-  const currentSection=curriculum?.find(section=>section?.lesson?.some(lesson=>lesson._id===currentCourse?._id))
-  const currentLessonIndex = currentSection?.lesson?.findIndex(lesson=>lesson._id===currentCourse?._id)
-  if(currentLessonIndex >0){
-    const previousLesson = currentSection?.lesson[currentLessonIndex-1]
-    setCurrentCourse(previousLesson)
-  }
-  if(currentLessonIndex===0){
-    const currentSectionIndex = curriculum?.findIndex(section=>section._id===currentSection?._id)
-    if(currentSectionIndex>0){
-          const previousSection = curriculum[currentSectionIndex - 1]
-          const previousLesson = previousSection?.lesson?.[previousSection?.lesson?.length-1]
-          setCurrentCourse(previousLesson)
+      }
     }
   }
-}
-const handleNext =()=>{
-  const currentSection = curriculum?.find(section=>section?.lesson?.some(lesson=>lesson._id===currentCourse._id))
-  const currentLessonIndex = currentSection?.lesson?.findIndex(lesson=>lesson._id===currentCourse._id)
+  // access next lesson
+  const handleNext = () => {
 
-  if(currentLessonIndex < currentSection.lesson.length-1){
-     const nextLesson = currentSection.lesson[currentLessonIndex + 1]
-    setCurrentCourse(nextLesson)
-  }
-  if(currentLessonIndex === currentSection.lesson.length-1){
-        const currentSectionIndex = curriculum?.findIndex(section=>section._id===currentSection?._id)  
-      if(currentSectionIndex<curriculum.length-1){
-        const nextSection = curriculum[currentSectionIndex+1]
-              const nextLesson = nextSection?.lesson?.[0]
-setCurrentCourse(nextLesson)
- 
+    if (currentLessonIndex < currentSection.lesson.length - 1) {
+      const nextLesson = currentSection.lesson[currentLessonIndex + 1]
+      setCurrentCourse(nextLesson)
+    }
+    if (currentLessonIndex === currentSection.lesson.length - 1) {
+      if (currentSectionIndex < curriculum.length - 1) {
+        const nextSection = curriculum[currentSectionIndex + 1]
+        const nextLesson = nextSection?.lesson?.[0]
+        setCurrentCourse(nextLesson)
+openModule(`module${currentSectionIndex+2}`)
       }
+    }
   }
-}
-useEffect(() => {
-  if (enrolledCourse?.completedLessons) {
-    setCompletedLessons(enrolledCourse.completedLessons);
-  }
-}, [enrolledCourse]);
-   useEffect(() => {
-      if(curriculum?.length>0){
-    const firstLesson = curriculum[0]?.lesson[0]
-    setCurrentCourse(firstLesson)
-    console.log(currentCourse)
-  }
-  toggletab("syllabus");
-}, [curriculum]);
+  // marks lesson complete
+  const handleMarkComplete = (lessonId) => {
+    const currentSection = curriculum?.find(section =>
+      section?.lesson?.some(lesson => lesson._id === lessonId)
+    );
 
-   const tabs = [ {name:"notes",id:3},{name:"resource",id:4},]
-   const resources = currentCourse?.resources || [];
-    const {tab,toggletab,toggleModule,syllabus } = usetoggletab()
-    const editorRef = useRef(null)
-    const [quill,setquill] = useState(null)
-    useEffect(()=>{
-      if(editorRef.current && !quill){
-       const q = new Quill(editorRef.current,{
-        theme:"snow",placeholder:"Enter Your Notes here",modules:{
-          toolbar:[
-           [{ header: [1, 2, false] }],
+    const sectionId = currentSection?._id;
+    MarkComplete({ enrollmentId, lessonId, courseId, sectionId }, {
+      onSuccess: (data) => {
+        setCompletedLessons(data?.enrollmentData?.completedLessons)
+        handleNext()
+      }
+    })
+
+  };
+
+  useEffect(() => {
+    if (enrolledCourse?.completedLessons) {
+      setCompletedLessons(enrolledCourse.completedLessons);
+    }
+  }, [enrolledCourse]);
+  useEffect(() => {
+    if (curriculum?.length > 0) {
+      const firstLesson = curriculum[0]?.lesson[0]
+      setCurrentCourse(firstLesson)
+      console.log(currentCourse)
+    }
+    toggletab("syllabus");
+  }, [curriculum]);
+
+  const editorRef = useRef(null)
+  const [quill, setquill] = useState(null)
+  useEffect(() => {
+    if (editorRef.current && !quill) {
+      const q = new Quill(editorRef.current, {
+        theme: "snow", placeholder: "Enter Your Notes here", modules: {
+          toolbar: [
+            [{ header: [1, 2, false] }],
             ["bold", "italic", "underline", "strike"],
             [{ list: "ordered" }, { list: "bullet" }],
             ["link"],
             ["clean"],
           ]
         }
-       })
-       setquill(q)
-      }
-    })
+      })
+      setquill(q)
+    }
+  })
 
   return (
-  <Dataset loading={isLoading} error={isError}>
-  <div className="min-h-screen w-full bg-neutral-50 font-[Outfit]">
+    <Dataset loading={isLoading} error={isError}>
+      <div className="min-h-screen w-full bg-neutral-50 font-[Outfit]">
 
-    <div className="mx-auto w-full max-w-[1800px] px-3 py-4 sm:px-5 md:px-8 lg:px-10">
+        <div className="mx-auto w-full max-w-[1800px] px-3 py-4 sm:px-5 md:px-8 lg:px-10">
 
-      {/* COURSE TITLE */}
-      <div className="mb-5">
-        <h2 className="text-xl font-semibold text-gray-900 sm:text-2xl md:text-3xl">
-          {enrolledCourse?.courseId?.title}
-        </h2>
+          {/* COURSE TITLE */}
+          <div className="mb-5">
+            <h2 className="text-xl font-semibold text-gray-900 sm:text-2xl md:text-3xl">
+              {enrolledCourse?.courseId?.title}
+            </h2>
 
-        {currentCourse?.lesson && (
-          <p className="mt-1 text-sm text-gray-500 md:text-base">
-            Currently watching:{" "}
-            <span className="font-medium text-gray-800">
-              {currentCourse.lesson}
-            </span>
-          </p>
-        )}
-      </div>
-
-
-      {/* MAIN COURSE PLAYER LAYOUT */}
-      <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_380px] xl:grid-cols-[minmax(0,1fr)_430px]">
-
-        {/* ================= LEFT SIDE ================= */}
-        <main className="min-w-0">
-
-          {/* VIDEO */}
-          <div className="overflow-hidden rounded-xl bg-white p-2 shadow-md sm:p-4">
-            <video
-              className="aspect-video w-full rounded-lg bg-black object-contain"
-              src={currentCourse?.videoUrl}
-              controls
-              autoPlay
-            />
-
-            {/* LESSON NAVIGATION */}
-<div className="mt-4 flex items-center justify-between gap-3 rounded-xl border border-gray-200 bg-white p-3 shadow-sm sm:p-4">
-
-  <button
-onClick={handlePrevious}
-    className="flex items-center gap-2 rounded-full border border-gray-200 px-4 py-2.5 text-sm font-medium text-gray-700 transition hover:border-pink-300 hover:bg-pink-50 hover:text-pink-500 disabled:cursor-not-allowed disabled:opacity-40 sm:px-5"
-  >
-    <span>←</span>
-    <span>Previous</span>
-  </button>
-
-  <button
-  onClick={handleNext}
-    className="flex items-center gap-2 rounded-full bg-pink-400 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-pink-500 disabled:cursor-not-allowed disabled:opacity-40 sm:px-5"
-  >
-    <span>Next</span>
-    <span>→</span>
-  </button>
-
-</div>
-            <div className="mt-4 flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between">
-
-  <div>
-    <h3 className="text-sm font-semibold text-gray-900 sm:text-base">
-      {currentCourse?.lesson}
-    </h3>
-
-    <p className="mt-1 text-xs text-gray-500 sm:text-sm">
-      {completedLessons.includes(currentCourse?._id)
-        ? "You've completed this lesson."
-        : "Finish this lesson and mark it as complete."}
-    </p>
-  </div>
-
-  <button
-    disabled={completedLessons.includes(currentCourse?._id)}
-
-    onClick={()=>handleMarkComplete(currentCourse?._id)}
-    className={`flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium transition-all ${
-      completedLessons.includes(currentCourse?._id)
-        ? "bg-green-100 text-green-700 hover:bg-green-200"
-        : "bg-pink-400 text-white hover:bg-pink-500"
-    }`}
-  >
-    {completedLessons.includes(currentCourse?._id) ? (
-      <>
-        <span>✓</span>
-        Completed
-      </>
-    ) : (
-      <>
-        Mark as complete
-      </>
-    )}
-  </button>
-
-</div>
+            {currentCourse?.lesson && (
+              <p className="mt-1 text-sm text-gray-500 md:text-base">
+                Currently watching:{" "}
+                <span className="font-medium text-gray-800">
+                  {currentCourse.lesson}
+                </span>
+              </p>
+            )}
           </div>
 
 
-          {/* LESSON INFORMATION */}
-          <div className="mt-5 overflow-hidden rounded-xl bg-white shadow-sm">
+          {/* MAIN COURSE PLAYER LAYOUT */}
+          <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_380px] xl:grid-cols-[minmax(0,1fr)_430px]">
 
-            {/* TABS */}
-            <div className="flex w-full overflow-x-auto border-b border-gray-200 px-3 sm:px-5">
-              {tabs.map((t) => (
-                <button
-                  key={t.id}
-                  onClick={() => toggletab(t.name)}
-                  className={`relative shrink-0 px-4 py-3 text-sm font-semibold capitalize transition-all duration-200 sm:px-6 sm:py-4 sm:text-base ${
-                    tab === t.name
-                      ? "text-pink-500"
-                      : "text-gray-600 hover:text-pink-400"
-                  }`}
-                >
-                  {t.name}
+            {/* ================= LEFT SIDE ================= */}
+            <main className="min-w-0">
 
-                  {tab === t.name && (
-                    <span className="absolute bottom-0 left-0 h-[2px] w-full rounded-full bg-pink-500" />
-                  )}
-                </button>
-              ))}
-            </div>
+              {/* VIDEO */}
+              <div className="overflow-hidden rounded-xl bg-white p-2 shadow-md sm:p-4">
+                <video
+                  className="aspect-video w-full rounded-lg bg-black object-contain"
+                  src={currentCourse?.videoUrl}
+                  controls
+                  autoPlay
+                />
 
+                {/* LESSON NAVIGATION */}
+                <div className="mt-4 flex items-center justify-between gap-3 rounded-xl border border-gray-200 bg-white p-3 shadow-sm sm:p-4">
 
-            {/* TAB CONTENT */}
-            <div className="p-4 sm:p-6 md:p-8">
+                  <button
+                    onClick={handlePrevious} disabled={isFirstLesson}
+                    className="flex items-center gap-2 rounded-full border border-gray-200 px-4 py-2.5 text-sm font-medium text-gray-700 transition hover:border-pink-300 hover:bg-pink-50 hover:text-pink-500 disabled:cursor-not-allowed disabled:opacity-40 sm:px-5"
+                  >
+                    <span>←</span>
+                    <span>Previous</span>
+                  </button>
 
-              {/* ================= NOTES ================= */}
-              {tab === "notes" && (
-                <div className="flex flex-col gap-6">
+                  <button
+                    onClick={handleNext} disabled={isLastLesson}
+                    className="flex items-center gap-2 rounded-full bg-pink-400 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-pink-500 disabled:cursor-not-allowed disabled:opacity-40 sm:px-5"
+                  >
+                    <span>Next</span>
+                    <span>→</span>
+                  </button>
+
+                </div>
+                <div className="mt-4 flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between">
 
                   <div>
-                    <div className="mb-5 flex items-center justify-between rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 transition hover:border-pink-200 sm:px-5">
-                      <span className="text-sm text-gray-800 sm:text-base">
-                        Create new note at{" "}
-                        <span className="font-semibold">
-                          00.00
-                        </span>
-                      </span>
+                    <h3 className="text-sm font-semibold text-gray-900 sm:text-base">
+                      {currentCourse?.lesson}
+                    </h3>
 
-                      <CiCirclePlus className="cursor-pointer rounded-full bg-gray-900 text-2xl text-white transition hover:scale-110" />
-                    </div>
-
-                    <div
-                      ref={editorRef}
-                      className="min-h-[200px] overflow-hidden rounded-lg"
-                    />
+                    <p className="mt-1 text-xs text-gray-500 sm:text-sm">
+                      {completedLessons.includes(currentCourse?._id)
+                        ? "You've completed this lesson."
+                        : "Finish this lesson and mark it as complete."}
+                    </p>
                   </div>
 
-                  <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
-                    <button
-                      className="w-full rounded-lg border border-gray-900 px-6 py-2 text-sm capitalize transition hover:bg-gray-900 hover:text-white sm:w-auto sm:text-base"
-                    >
-                      cancel
-                    </button>
+                  <button
+                    disabled={completedLessons.includes(currentCourse?._id)}
 
+                    onClick={() => handleMarkComplete(currentCourse?._id)}
+                    className={`flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium transition-all ${completedLessons.includes(currentCourse?._id)
+                        ? "bg-green-100 text-green-700 hover:bg-green-200"
+                        : "bg-pink-400 text-white hover:bg-pink-500"
+                      }`}
+                  >
+                    {completedLessons.includes(currentCourse?._id) ? (
+                      <>
+                        <span>✓</span>
+                        Completed
+                      </>
+                    ) : (
+                      <>
+                        Mark as complete
+                      </>
+                    )}
+                  </button>
+
+                </div>
+              </div>
+
+
+              {/* LESSON INFORMATION */}
+              <div className="mt-5 overflow-hidden rounded-xl bg-white shadow-sm">
+
+                {/* TABS */}
+                <div className="flex w-full overflow-x-auto border-b border-gray-200 px-3 sm:px-5">
+                  {tabs.map((t) => (
                     <button
-                      className="w-full rounded-lg border border-pink-400 bg-pink-400 px-6 py-2 text-sm capitalize text-white transition hover:bg-pink-500 sm:w-auto sm:text-base"
+                      key={t.id}
+                      onClick={() => toggletab(t.name)}
+                      className={`relative shrink-0 px-4 py-3 text-sm font-semibold capitalize transition-all duration-200 sm:px-6 sm:py-4 sm:text-base ${tab === t.name
+                          ? "text-pink-500"
+                          : "text-gray-600 hover:text-pink-400"
+                        }`}
                     >
-                      save
+                      {t.name}
+
+                      {tab === t.name && (
+                        <span className="absolute bottom-0 left-0 h-[2px] w-full rounded-full bg-pink-500" />
+                      )}
                     </button>
+                  ))}
+                </div>
+
+
+                {/* TAB CONTENT */}
+                <div className="p-4 sm:p-6 md:p-8">
+
+                  {/* ================= NOTES ================= */}
+                  {tab === "notes" && (
+                    <div className="flex flex-col gap-6">
+
+                      <div>
+                        <div className="mb-5 flex items-center justify-between rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 transition hover:border-pink-200 sm:px-5">
+                          <span className="text-sm text-gray-800 sm:text-base">
+                            Create new note at{" "}
+                            <span className="font-semibold">
+                              00.00
+                            </span>
+                          </span>
+
+                          <CiCirclePlus className="cursor-pointer rounded-full bg-gray-900 text-2xl text-white transition hover:scale-110" />
+                        </div>
+
+                        <div
+                          ref={editorRef}
+                          className="min-h-[200px] overflow-hidden rounded-lg"
+                        />
+                      </div>
+
+                      <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+                        <button
+                          className="w-full rounded-lg border border-gray-900 px-6 py-2 text-sm capitalize transition hover:bg-gray-900 hover:text-white sm:w-auto sm:text-base"
+                        >
+                          cancel
+                        </button>
+
+                        <button
+                          className="w-full rounded-lg border border-pink-400 bg-pink-400 px-6 py-2 text-sm capitalize text-white transition hover:bg-pink-500 sm:w-auto sm:text-base"
+                        >
+                          save
+                        </button>
+                      </div>
+
+                    </div>
+                  )}
+
+
+                  {/* ================= RESOURCES ================= */}
+                  {tab === "resource" && (
+                    <>
+                      {resources?.length === 0 ? (
+                        <div className="flex min-h-[150px] items-center justify-center text-sm text-gray-500">
+                          No resources available for this lesson.
+                        </div>
+                      ) : (
+                        <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+
+                          {/* CORE RESOURCES */}
+                          <div className="space-y-4">
+                            <h2 className="flex items-center gap-2 text-lg font-semibold text-gray-900 sm:text-xl">
+                              <FaFolderOpen />
+                              Core Resources
+                            </h2>
+
+                            <div className="space-y-2">
+                              {resources?.map((resource, index) => (
+                                <React.Fragment key={index}>
+                                  {(resource.type === "pdf" ||
+                                    resource.type === "doc") && (
+                                      <a
+                                        href={resource.url}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="group flex items-center gap-3 rounded-lg border border-gray-100 p-3 text-sm font-medium text-gray-700 transition hover:border-pink-200 hover:bg-pink-50 hover:text-pink-500 sm:text-base"
+                                      >
+                                        <span className="text-xl transition group-hover:-translate-y-0.5">
+                                          {resourceIcons[resource.type]}
+                                        </span>
+
+                                        <span className="break-all">
+                                          {resource.title}
+                                        </span>
+                                      </a>
+                                    )}
+                                </React.Fragment>
+                              ))}
+                            </div>
+                          </div>
+
+
+                          {/* EXTERNAL RESOURCES */}
+                          <div className="space-y-4">
+                            <h2 className="flex items-center gap-2 text-lg font-semibold text-gray-900 sm:text-xl">
+                              <FiExternalLink />
+                              External Learning Support
+                            </h2>
+
+                            <div className="space-y-2">
+                              {resources?.map((resource, index) => (
+                                <React.Fragment key={index}>
+                                  {resource.type !== "pdf" &&
+                                    resource.type !== "doc" && (
+                                      <a
+                                        href={resource.url}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="group flex items-center gap-3 rounded-lg border border-gray-100 p-3 text-sm font-medium text-gray-700 transition hover:border-pink-200 hover:bg-pink-50 hover:text-pink-500 sm:text-base"
+                                      >
+                                        <span className="text-xl transition group-hover:-translate-y-0.5">
+                                          {resourceIcons[resource.type]}
+                                        </span>
+
+                                        <span className="break-all">
+                                          {resource.title}
+                                        </span>
+
+                                        <FiExternalLink className="ml-auto shrink-0 text-sm" />
+                                      </a>
+                                    )}
+                                </React.Fragment>
+                              ))}
+                            </div>
+                          </div>
+
+                        </div>
+                      )}
+                    </>
+                  )}
+
+                </div>
+              </div>
+            </main>
+
+
+            {/* ================= RIGHT SIDE / COURSE CONTENT ================= */}
+            <aside className="min-w-0 lg:sticky lg:top-5 lg:h-[calc(100vh-40px)]">
+
+              <div className="flex h-full flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-md">
+
+                {/* SIDEBAR HEADER */}
+                <div className="shrink-0 border-b border-gray-200 bg-gray-50 px-4 py-4 sm:px-5">
+
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h2 className="text-lg font-semibold text-gray-900 sm:text-xl">
+                        Course Content
+                      </h2>
+
+                      <p className="mt-1 text-xs text-gray-500 sm:text-sm">
+                        {curriculum?.length || 0} modules
+                      </p>
+                    </div>
+
+                    <button className="rounded-full p-2 transition hover:bg-gray-200">
+                      <RxCross2 className="text-lg text-gray-700" />
+                    </button>
+                  </div>
+
+                  {/* COURSE PROGRESS */}
+                  <div className="mt-4 rounded-xl border border-gray-200 bg-white p-3">
+
+                    <div className="mb-2 flex items-center justify-between">
+                      <span className="text-xs font-medium text-gray-600 sm:text-sm">
+                        Course Progress
+                      </span>
+
+                      <span className="text-xs font-semibold text-pink-500 sm:text-sm">
+                        {enrolledData?.progress}%
+                      </span>
+                    </div>
+
+                    <div className="h-2 w-full overflow-hidden rounded-full bg-gray-100">
+                      <div
+                        className="h-full rounded-full bg-pink-400 transition-all duration-500"
+                        style={{ width: `${enrolledData?.progress || 0}%` }}
+                      />
+                    </div>
+
+                    <p className="mt-2 text-xs text-gray-400">
+                      {enrolledCourse?.completedLessons.length} of {totalLesson} lessons completed
+                    </p>
+
                   </div>
 
                 </div>
-              )}
 
 
-              {/* ================= RESOURCES ================= */}
-              {tab === "resource" && (
-                <>
-                  {resources?.length === 0 ? (
-                    <div className="flex min-h-[150px] items-center justify-center text-sm text-gray-500">
-                      No resources available for this lesson.
-                    </div>
-                  ) : (
-                    <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+                {/* MODULE LIST */}
+                <div className="flex-1 space-y-2 overflow-y-auto p-3 sm:p-4">
 
-                      {/* CORE RESOURCES */}
-                      <div className="space-y-4">
-                        <h2 className="flex items-center gap-2 text-lg font-semibold text-gray-900 sm:text-xl">
-                          <FaFolderOpen />
-                          Core Resources
-                        </h2>
+                  {curriculum?.map((t, i) => {
+                    const moduleKey = `module${i + 1}`;
 
-                        <div className="space-y-2">
-                          {resources?.map((resource, index) => (
-                            <React.Fragment key={index}>
-                              {(resource.type === "pdf" ||
-                                resource.type === "doc") && (
-                                <a
-                                  href={resource.url}
-                                  target="_blank"
-                                  rel="noreferrer"
-                                  className="group flex items-center gap-3 rounded-lg border border-gray-100 p-3 text-sm font-medium text-gray-700 transition hover:border-pink-200 hover:bg-pink-50 hover:text-pink-500 sm:text-base"
-                                >
-                                  <span className="text-xl transition group-hover:-translate-y-0.5">
-                                    {resourceIcons[resource.type]}
-                                  </span>
+                    return (
+                      <div
+                        key={i}
+                        className="overflow-hidden rounded-xl border border-gray-200"
+                      >
 
-                                  <span className="break-all">
-                                    {resource.title}
-                                  </span>
-                                </a>
-                              )}
-                            </React.Fragment>
-                          ))}
-                        </div>
-                      </div>
+                        {/* MODULE HEADER */}
+                        <button
+                          onClick={() => {
+                            toggleModule(moduleKey);
+                          }}
+                          className={`flex w-full items-center justify-between gap-3 px-4 py-4 text-left transition ${syllabus[moduleKey]
+                              ? "bg-pink-400 text-white"
+                              : "bg-white text-gray-900 hover:bg-pink-50"
+                            }`}
+                        >
+                          <span className="flex min-w-0 items-center gap-2">
+                            <TiArrowSortedDown
+                              className={`shrink-0 text-xl transition-transform duration-300 ${syllabus[moduleKey]
+                                  ? "rotate-180"
+                                  : "rotate-0"
+                                }`}
+                            />
+
+                            <span className="truncate text-sm font-semibold sm:text-base">
+                              {t.title}
+                            </span>
+                          </span>
+
+                          <span className="shrink-0 text-xs sm:text-sm">
+                            {formatTime(t.duration)}
+                          </span>
+                        </button>
 
 
-                      {/* EXTERNAL RESOURCES */}
-                      <div className="space-y-4">
-                        <h2 className="flex items-center gap-2 text-lg font-semibold text-gray-900 sm:text-xl">
-                          <FiExternalLink />
-                          External Learning Support
-                        </h2>
+                        {/* LESSONS */}
+                        {syllabus[moduleKey] && (
+                          <div className="bg-pink-50 p-2">
 
-                        <div className="space-y-2">
-                          {resources?.map((resource, index) => (
-                            <React.Fragment key={index}>
-                              {resource.type !== "pdf" &&
-                                resource.type !== "doc" && (
-                                  <a
-                                    href={resource.url}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    className="group flex items-center gap-3 rounded-lg border border-gray-100 p-3 text-sm font-medium text-gray-700 transition hover:border-pink-200 hover:bg-pink-50 hover:text-pink-500 sm:text-base"
+                            <ul className="space-y-1">
+
+                              {t?.lesson?.map((lesson, j) => {
+
+                                const isCompleted = completedLessons.includes(lesson._id);
+                                const isCurrent = currentCourse?._id === lesson._id;
+
+                                return (
+                                  <li
+                                    key={j}
+                                    onClick={() => setCurrentCourse(lesson)}
+                                    className={`group flex cursor-pointer items-center justify-between gap-3 rounded-lg px-3 py-3 transition sm:px-4 ${isCurrent
+                                        ? "bg-pink-100 text-pink-600"
+                                        : "bg-white text-gray-700 hover:bg-gray-100"
+                                      }`}
                                   >
-                                    <span className="text-xl transition group-hover:-translate-y-0.5">
-                                      {resourceIcons[resource.type]}
+
+                                    <span className="flex min-w-0 items-center gap-3">
+
+                                      <FaPlayCircle
+                                        className={`shrink-0 text-sm ${isCurrent
+                                            ? "text-pink-500"
+                                            : "text-gray-400 group-hover:text-pink-400"
+                                          }`}
+                                      />
+
+                                      <span className="truncate text-sm font-medium">
+                                        {lesson.lesson}
+                                      </span>
+
                                     </span>
 
-                                    <span className="break-all">
-                                      {resource.title}
+                                    <span className="flex shrink-0 items-center gap-3">
+
+                                      <span className="text-xs text-gray-400">
+                                        {lesson.duration}
+                                      </span>
+
+                                      {isCompleted && (
+                                        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-green-500 text-xs text-white">
+                                          ✓
+                                        </span>
+                                      )}
+
                                     </span>
 
-                                    <FiExternalLink className="ml-auto shrink-0 text-sm" />
-                                  </a>
-                                )}
-                            </React.Fragment>
-                          ))}
-                        </div>
-                      </div>
+                                  </li>
+                                );
+                              })}
 
-                    </div>
-                  )}
-                </>
-              )}
+                            </ul>
 
-            </div>
-          </div>
-        </main>
-
-
-        {/* ================= RIGHT SIDE / COURSE CONTENT ================= */}
-        <aside className="min-w-0 lg:sticky lg:top-5 lg:h-[calc(100vh-40px)]">
-
-          <div className="flex h-full flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-md">
-
-          {/* SIDEBAR HEADER */}
-<div className="shrink-0 border-b border-gray-200 bg-gray-50 px-4 py-4 sm:px-5">
-
-  <div className="flex items-center justify-between">
-    <div>
-      <h2 className="text-lg font-semibold text-gray-900 sm:text-xl">
-        Course Content
-      </h2>
-
-      <p className="mt-1 text-xs text-gray-500 sm:text-sm">
-        {curriculum?.length || 0} modules
-      </p>
-    </div>
-
-    <button className="rounded-full p-2 transition hover:bg-gray-200">
-      <RxCross2 className="text-lg text-gray-700" />
-    </button>
-  </div>
-
-  {/* COURSE PROGRESS */}
-  <div className="mt-4 rounded-xl border border-gray-200 bg-white p-3">
-
-    <div className="mb-2 flex items-center justify-between">
-      <span className="text-xs font-medium text-gray-600 sm:text-sm">
-        Course Progress
-      </span>
-
-      <span className="text-xs font-semibold text-pink-500 sm:text-sm">
-        {enrolledData?.progress}%
-      </span>
-    </div>
-
-    <div className="h-2 w-full overflow-hidden rounded-full bg-gray-100">
-      <div
-        className="h-full rounded-full bg-pink-400 transition-all duration-500"
-        style={{ width: "35%" }}
-      />
-    </div>
-
-    <p className="mt-2 text-xs text-gray-400">
-     {enrolledCourse?.completedLessons.length} of {enrolledCourse?.length} lessons completed
-    </p>
-
-  </div>
-
-</div>
-
-
-            {/* MODULE LIST */}
-            <div className="flex-1 space-y-2 overflow-y-auto p-3 sm:p-4">
-
-              {curriculum?.map((t, i) => {
-                const moduleKey = `module${i + 1}`;
-
-                return (
-                  <div
-                    key={i}
-                    className="overflow-hidden rounded-xl border border-gray-200"
-                  >
-
-                    {/* MODULE HEADER */}
-                    <button
-                      onClick={() => {
-                        toggleModule(moduleKey);
-                      }}
-                      className={`flex w-full items-center justify-between gap-3 px-4 py-4 text-left transition ${
-                        syllabus[moduleKey]
-                          ? "bg-pink-400 text-white"
-                          : "bg-white text-gray-900 hover:bg-pink-50"
-                      }`}
-                    >
-                      <span className="flex min-w-0 items-center gap-2">
-                        <TiArrowSortedDown
-                          className={`shrink-0 text-xl transition-transform duration-300 ${
-                            syllabus[moduleKey]
-                              ? "rotate-180"
-                              : "rotate-0"
-                          }`}
-                        />
-
-                        <span className="truncate text-sm font-semibold sm:text-base">
-                          {t.title}
-                        </span>
-                      </span>
-
-                      <span className="shrink-0 text-xs sm:text-sm">
-                    { formatTime(t.duration)}
-                      </span>
-                    </button>
-
-
-                    {/* LESSONS */}
-                    {syllabus[moduleKey] && (
-                      <div className="bg-pink-50 p-2">
-
-                        <ul className="space-y-1">
-
-                        {t?.lesson?.map((lesson, j) => {
-
-  const isCompleted = completedLessons.includes(lesson._id);
-  const isCurrent = currentCourse?._id === lesson._id;
-
-  return (
-    <li
-      key={j}
-      onClick={() => setCurrentCourse(lesson)}
-      className={`group flex cursor-pointer items-center justify-between gap-3 rounded-lg px-3 py-3 transition sm:px-4 ${
-        isCurrent
-          ? "bg-pink-100 text-pink-600"
-          : "bg-white text-gray-700 hover:bg-gray-100"
-      }`}
-    >
-
-      <span className="flex min-w-0 items-center gap-3">
-
-        <FaPlayCircle
-          className={`shrink-0 text-sm ${
-            isCurrent
-              ? "text-pink-500"
-              : "text-gray-400 group-hover:text-pink-400"
-          }`}
-        />
-
-        <span className="truncate text-sm font-medium">
-          {lesson.lesson}
-        </span>
-
-      </span>
-
-      <span className="flex shrink-0 items-center gap-3">
-
-        <span className="text-xs text-gray-400">
-          {lesson.duration}
-        </span>
-
-        {isCompleted && (
-          <span className="flex h-5 w-5 items-center justify-center rounded-full bg-green-500 text-xs text-white">
-            ✓
-          </span>
-        )}
-
-      </span>
-
-    </li>
-  );
-})}
-
-                        </ul>
+                          </div>
+                        )}
 
                       </div>
-                    )}
+                    );
+                  })}
 
-                  </div>
-                );
-              })}
+                </div>
 
-            </div>
+              </div>
+
+            </aside>
 
           </div>
 
-        </aside>
+        </div>
 
       </div>
-
-    </div>
-
-  </div>
-</Dataset>
+    </Dataset>
 
 
   )
