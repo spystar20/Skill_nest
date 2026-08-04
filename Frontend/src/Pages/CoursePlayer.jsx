@@ -18,15 +18,22 @@ import { useMarkLessonComplete } from '@/hooks/CoursesHooks/courseMutation'
 
 const CoursePlayer = () => {
     const  {enrollmentId} = useParams()
-   const {isLoading,isError,data:enrolledCourse}=useEnrolledCourseById(enrollmentId)
+   const {isLoading,isError,data:enrolledData}=useEnrolledCourseById(enrollmentId)
+   const enrolledCourse = enrolledData?.enrollment
      const courseId = enrolledCourse?.courseId?._id;
        const {data:curriculum}= useEnrolledCurriculum(enrollmentId)
-     const lesson = curriculum?.lesson
+       console.log(curriculum)
+    
        const {mutate:MarkComplete}=useMarkLessonComplete()
      const [completedLessons, setCompletedLessons] = useState([]);
      const [currentCourse,setCurrentCourse]=useState(null)
 
   const handleMarkComplete = (lessonId) => {
+     const currentSection = curriculum?.find(section =>
+    section?.lesson?.some(lesson => lesson._id === lessonId)
+  );
+
+  const sectionId = currentSection?._id;
 MarkComplete({enrollmentId,lessonId,courseId,sectionId},{
   onSuccess:(data)=>{
     setCompletedLessons(data?.enrollmentData?.completedLessons)
@@ -35,14 +42,40 @@ MarkComplete({enrollmentId,lessonId,courseId,sectionId},{
 })
 
 };
-  const newOrder = currentCourse?.order - 1
-  const newLesson =lesson?.filter((lesson)=>lesson.order ===newOrder)
-  console.log(newLesson)
-console.log(newOrder)
+console.log(currentCourse)
 const handlePrevious = ()=>{
-  const newOrder = currentCourse.order - 1
+  const currentSection=curriculum?.find(section=>section?.lesson?.some(lesson=>lesson._id===currentCourse?._id))
+  const currentLessonIndex = currentSection?.lesson?.findIndex(lesson=>lesson._id===currentCourse?._id)
+  if(currentLessonIndex >0){
+    const previousLesson = currentSection?.lesson[currentLessonIndex-1]
+    setCurrentCourse(previousLesson)
+  }
+  if(currentLessonIndex===0){
+    const currentSectionIndex = curriculum?.findIndex(section=>section._id===currentSection?._id)
+    if(currentSectionIndex>0){
+          const previousSection = curriculum[currentSectionIndex - 1]
+          const previousLesson = previousSection?.lesson?.[previousSection?.lesson?.length-1]
+          setCurrentCourse(previousLesson)
+    }
+  }
+}
+const handleNext =()=>{
+  const currentSection = curriculum?.find(section=>section?.lesson?.some(lesson=>lesson._id===currentCourse._id))
+  const currentLessonIndex = currentSection?.lesson?.findIndex(lesson=>lesson._id===currentCourse._id)
 
-  setCurrentCourse()
+  if(currentLessonIndex < currentSection.lesson.length-1){
+     const nextLesson = currentSection.lesson[currentLessonIndex + 1]
+    setCurrentCourse(nextLesson)
+  }
+  if(currentLessonIndex === currentSection.lesson.length-1){
+        const currentSectionIndex = curriculum?.findIndex(section=>section._id===currentSection?._id)  
+      if(currentSectionIndex<curriculum.length-1){
+        const nextSection = curriculum[currentSectionIndex+1]
+              const nextLesson = nextSection?.lesson?.[0]
+setCurrentCourse(nextLesson)
+ 
+      }
+  }
 }
 useEffect(() => {
   if (enrolledCourse?.completedLessons) {
@@ -61,7 +94,6 @@ useEffect(() => {
    const tabs = [ {name:"notes",id:3},{name:"resource",id:4},]
    const resources = currentCourse?.resources || [];
     const {tab,toggletab,toggleModule,syllabus } = usetoggletab()
- 
     const editorRef = useRef(null)
     const [quill,setquill] = useState(null)
     useEffect(()=>{
@@ -131,6 +163,7 @@ onClick={handlePrevious}
   </button>
 
   <button
+  onClick={handleNext}
     className="flex items-center gap-2 rounded-full bg-pink-400 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-pink-500 disabled:cursor-not-allowed disabled:opacity-40 sm:px-5"
   >
     <span>Next</span>
@@ -338,22 +371,52 @@ onClick={handlePrevious}
 
           <div className="flex h-full flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-md">
 
-            {/* SIDEBAR HEADER */}
-            <div className="flex shrink-0 items-center justify-between border-b border-gray-200 bg-gray-50 px-4 py-4 sm:px-5">
-              <div>
-                <h2 className="text-lg font-semibold text-gray-900 sm:text-xl">
-                  Course Content
-                </h2>
+          {/* SIDEBAR HEADER */}
+<div className="shrink-0 border-b border-gray-200 bg-gray-50 px-4 py-4 sm:px-5">
 
-                <p className="mt-1 text-xs text-gray-500 sm:text-sm">
-                  {curriculum?.length || 0} modules
-                </p>
-              </div>
+  <div className="flex items-center justify-between">
+    <div>
+      <h2 className="text-lg font-semibold text-gray-900 sm:text-xl">
+        Course Content
+      </h2>
 
-              <button className="rounded-full p-2 transition hover:bg-gray-200">
-                <RxCross2 className="text-lg text-gray-700" />
-              </button>
-            </div>
+      <p className="mt-1 text-xs text-gray-500 sm:text-sm">
+        {curriculum?.length || 0} modules
+      </p>
+    </div>
+
+    <button className="rounded-full p-2 transition hover:bg-gray-200">
+      <RxCross2 className="text-lg text-gray-700" />
+    </button>
+  </div>
+
+  {/* COURSE PROGRESS */}
+  <div className="mt-4 rounded-xl border border-gray-200 bg-white p-3">
+
+    <div className="mb-2 flex items-center justify-between">
+      <span className="text-xs font-medium text-gray-600 sm:text-sm">
+        Course Progress
+      </span>
+
+      <span className="text-xs font-semibold text-pink-500 sm:text-sm">
+        {enrolledData?.progress}%
+      </span>
+    </div>
+
+    <div className="h-2 w-full overflow-hidden rounded-full bg-gray-100">
+      <div
+        className="h-full rounded-full bg-pink-400 transition-all duration-500"
+        style={{ width: "35%" }}
+      />
+    </div>
+
+    <p className="mt-2 text-xs text-gray-400">
+     {enrolledCourse?.completedLessons.length} of {enrolledCourse?.length} lessons completed
+    </p>
+
+  </div>
+
+</div>
 
 
             {/* MODULE LIST */}

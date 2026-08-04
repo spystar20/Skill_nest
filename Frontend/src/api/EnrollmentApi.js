@@ -8,7 +8,7 @@ export const fetchEnrolledCourses = async()=>{
 export const fetchEnrolledCourseById= async(enrollmentId)=>{
   
     const res = await api.get(`/student/enrolledCourse/${enrollmentId}/learn`)
-    return res.data.enrollment
+    return res.data
 
  }
  export const fetchEnrolledCurriculum =async(enrollmentId)=>{
