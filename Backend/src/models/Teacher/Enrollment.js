@@ -11,6 +11,10 @@ const EnrollmentSchema = new mongoose.Schema({
 type:String , 
     },
     completedLessons:[{type:mongoose.Schema.Types.ObjectId,ref:'lesson'}],
+    lastLesson:{
+     type:mongoose.Schema.Types.ObjectId,ref:'lesson',
+     default:null
+    },
     completed:{
         type:Boolean,default:false
     }

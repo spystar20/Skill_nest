@@ -2,7 +2,7 @@ import { asyncHandler } from "../middleware/asyncHandler.middleware.js";
 import Course from "../models/Teacher/Course.js";
 import Enrollment from "../models/Teacher/Enrollment.js";
 import userModel from "../models/user.model.js";
-
+import Lesson from '../models/Teacher/Lesson.js'
 export const Enroll = asyncHandler(async (req, res) => {
      const userId = req.user.UserID
      const  {courseId}  = req.params
@@ -88,4 +88,20 @@ export const UpdateEnrolledProgress = asyncHandler(async (req, res) => {
      await enrollmentData.save()
 
      return res.status(200).json({ message: 'lesson marked completed', enrollmentData, progress })
+})
+
+// update last watched lesson
+export const LastLesson = asyncHandler(async(req,res)=>{
+     const {lessonId,enrollmentId}= req.params
+     const enrollment = await Enrollment.findById(enrollmentId)
+     if(!enrollment){
+          return res.status(404).json('enrolled user not found')
+     }
+    const lesson =  await Lesson.findById(lessonId)
+    if(!lesson){
+               return res.status(404).json('lesson user not found')
+    }
+    enrollment.lastLesson = lessonId
+    await enrollment.save()
+    return res.status(200).json('last lesson updated ')
 })

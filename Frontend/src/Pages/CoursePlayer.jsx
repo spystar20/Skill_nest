@@ -11,7 +11,7 @@ import Quill from 'quill'
 import "quill/dist/quill.snow.css"; // Quill's default styling
 import { formatTime } from '@/utils/formatDuration'
 import { resourceIcons } from '@/utils/ResourceIcon'
-import { useEnrolledCourseById } from '@/hooks/EnrollmentHooks/useEnrolledCourses'
+import { useEnrolledCourseById, useUpdateLastWatched } from '@/hooks/EnrollmentHooks/useEnrolledCourses'
 import Dataset from '@/utils/Dataset'
 import { useEnrolledCurriculum, useLessons, useSection } from '@/hooks/CoursesHooks/useCourse'
 import { useMarkLessonComplete } from '@/hooks/CoursesHooks/courseMutation'
@@ -32,7 +32,7 @@ const CoursePlayer = () => {
   const resources = currentCourse?.resources || [];
   const { tab, toggletab, toggleModule, syllabus ,openModule} = usetoggletab()
   const { mutate: MarkComplete } = useMarkLessonComplete()
- 
+  const {mutate:LastWatched}=useUpdateLastWatched()
  const currentSection = curriculum?.find(section =>
   section?.lesson?.some(
     lesson => lesson._id === currentCourse?._id
@@ -97,7 +97,9 @@ openModule(`module${currentSectionIndex+2}`)
     })
     }
   };
-
+const handleLastWatched = (lessonId)=>{
+  
+}
   useEffect(() => {
     if (enrolledCourse?.completedLessons) {
       setCompletedLessons(enrolledCourse.completedLessons);
@@ -302,10 +304,7 @@ openModule(`module${currentSectionIndex+2}`)
                 </div>
               </div>
             </main>
-
-
             {/* ================= RIGHT SIDE / COURSE CONTENT ================= */}
-          
 <CourseSidebar setCurrentCourse={setCurrentCourse} curriculum={curriculum} enrolledCourse={enrolledCourse} enrolledData={enrolledData} toggleModule={toggleModule} syllabus={syllabus} totalLesson={totalLesson} currentCourse={currentCourse} completedLessons={completedLessons}/>
           </div>
 
