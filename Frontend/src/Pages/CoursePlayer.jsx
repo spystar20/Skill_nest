@@ -15,6 +15,9 @@ import { useEnrolledCourseById } from '@/hooks/EnrollmentHooks/useEnrolledCourse
 import Dataset from '@/utils/Dataset'
 import { useEnrolledCurriculum, useLessons, useSection } from '@/hooks/CoursesHooks/useCourse'
 import { useMarkLessonComplete } from '@/hooks/CoursesHooks/courseMutation'
+import CourseHeader from './CoursePlayerComponents.jsx/CourseHeader'
+import VideoPlayer from './CoursePlayerComponents.jsx/VideoPlayer'
+import CourseSidebar from './CoursePlayerComponents.jsx/CourseSidebar'
 
 const CoursePlayer = () => {
   const { enrollmentId } = useParams()
@@ -80,7 +83,8 @@ openModule(`module${currentSectionIndex+2}`)
   }
   // marks lesson complete
   const handleMarkComplete = (lessonId) => {
-    const currentSection = curriculum?.find(section =>
+    if(!completedLessons.includes(lessonId)){
+ const currentSection = curriculum?.find(section =>
       section?.lesson?.some(lesson => lesson._id === lessonId)
     );
 
@@ -91,7 +95,7 @@ openModule(`module${currentSectionIndex+2}`)
         handleNext()
       }
     })
-
+    }
   };
 
   useEffect(() => {
@@ -134,21 +138,7 @@ openModule(`module${currentSectionIndex+2}`)
         <div className="mx-auto w-full max-w-[1800px] px-3 py-4 sm:px-5 md:px-8 lg:px-10">
 
           {/* COURSE TITLE */}
-          <div className="mb-5">
-            <h2 className="text-xl font-semibold text-gray-900 sm:text-2xl md:text-3xl">
-              {enrolledCourse?.courseId?.title}
-            </h2>
-
-            {currentCourse?.lesson && (
-              <p className="mt-1 text-sm text-gray-500 md:text-base">
-                Currently watching:{" "}
-                <span className="font-medium text-gray-800">
-                  {currentCourse.lesson}
-                </span>
-              </p>
-            )}
-          </div>
-
+<CourseHeader title={enrolledCourse?.courseId?.title} lesson={currentCourse?.lesson}/>
 
           {/* MAIN COURSE PLAYER LAYOUT */}
           <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_380px] xl:grid-cols-[minmax(0,1fr)_430px]">
@@ -157,72 +147,8 @@ openModule(`module${currentSectionIndex+2}`)
             <main className="min-w-0">
 
               {/* VIDEO */}
-              <div className="overflow-hidden rounded-xl bg-white p-2 shadow-md sm:p-4">
-                <video
-                  className="aspect-video w-full rounded-lg bg-black object-contain"
-                  src={currentCourse?.videoUrl}
-                  controls
-                  autoPlay
-                />
 
-                {/* LESSON NAVIGATION */}
-                <div className="mt-4 flex items-center justify-between gap-3 rounded-xl border border-gray-200 bg-white p-3 shadow-sm sm:p-4">
-
-                  <button
-                    onClick={handlePrevious} disabled={isFirstLesson}
-                    className="flex items-center gap-2 rounded-full border border-gray-200 px-4 py-2.5 text-sm font-medium text-gray-700 transition hover:border-pink-300 hover:bg-pink-50 hover:text-pink-500 disabled:cursor-not-allowed disabled:opacity-40 sm:px-5"
-                  >
-                    <span>←</span>
-                    <span>Previous</span>
-                  </button>
-
-                  <button
-                    onClick={handleNext} disabled={isLastLesson}
-                    className="flex items-center gap-2 rounded-full bg-pink-400 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-pink-500 disabled:cursor-not-allowed disabled:opacity-40 sm:px-5"
-                  >
-                    <span>Next</span>
-                    <span>→</span>
-                  </button>
-
-                </div>
-                <div className="mt-4 flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between">
-
-                  <div>
-                    <h3 className="text-sm font-semibold text-gray-900 sm:text-base">
-                      {currentCourse?.lesson}
-                    </h3>
-
-                    <p className="mt-1 text-xs text-gray-500 sm:text-sm">
-                      {completedLessons.includes(currentCourse?._id)
-                        ? "You've completed this lesson."
-                        : "Finish this lesson and mark it as complete."}
-                    </p>
-                  </div>
-
-                  <button
-                    disabled={completedLessons.includes(currentCourse?._id)}
-
-                    onClick={() => handleMarkComplete(currentCourse?._id)}
-                    className={`flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium transition-all ${completedLessons.includes(currentCourse?._id)
-                        ? "bg-green-100 text-green-700 hover:bg-green-200"
-                        : "bg-pink-400 text-white hover:bg-pink-500"
-                      }`}
-                  >
-                    {completedLessons.includes(currentCourse?._id) ? (
-                      <>
-                        <span>✓</span>
-                        Completed
-                      </>
-                    ) : (
-                      <>
-                        Mark as complete
-                      </>
-                    )}
-                  </button>
-
-                </div>
-              </div>
-
+<VideoPlayer lesson={currentCourse} completedLessons={completedLessons} disableNext={isLastLesson} disablePrev={isFirstLesson} handleNext={handleNext} handlePrevious={handlePrevious} handleEnded={()=>handleMarkComplete(currentCourse?._id)}/>
 
               {/* LESSON INFORMATION */}
               <div className="mt-5 overflow-hidden rounded-xl bg-white shadow-sm">
@@ -379,168 +305,8 @@ openModule(`module${currentSectionIndex+2}`)
 
 
             {/* ================= RIGHT SIDE / COURSE CONTENT ================= */}
-            <aside className="min-w-0 lg:sticky lg:top-5 lg:h-[calc(100vh-40px)]">
-
-              <div className="flex h-full flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-md">
-
-                {/* SIDEBAR HEADER */}
-                <div className="shrink-0 border-b border-gray-200 bg-gray-50 px-4 py-4 sm:px-5">
-
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h2 className="text-lg font-semibold text-gray-900 sm:text-xl">
-                        Course Content
-                      </h2>
-
-                      <p className="mt-1 text-xs text-gray-500 sm:text-sm">
-                        {curriculum?.length || 0} modules
-                      </p>
-                    </div>
-
-                    <button className="rounded-full p-2 transition hover:bg-gray-200">
-                      <RxCross2 className="text-lg text-gray-700" />
-                    </button>
-                  </div>
-
-                  {/* COURSE PROGRESS */}
-                  <div className="mt-4 rounded-xl border border-gray-200 bg-white p-3">
-
-                    <div className="mb-2 flex items-center justify-between">
-                      <span className="text-xs font-medium text-gray-600 sm:text-sm">
-                        Course Progress
-                      </span>
-
-                      <span className="text-xs font-semibold text-pink-500 sm:text-sm">
-                        {enrolledData?.progress}%
-                      </span>
-                    </div>
-
-                    <div className="h-2 w-full overflow-hidden rounded-full bg-gray-100">
-                      <div
-                        className="h-full rounded-full bg-pink-400 transition-all duration-500"
-                        style={{ width: `${enrolledData?.progress || 0}%` }}
-                      />
-                    </div>
-
-                    <p className="mt-2 text-xs text-gray-400">
-                      {enrolledCourse?.completedLessons.length} of {totalLesson} lessons completed
-                    </p>
-
-                  </div>
-
-                </div>
-
-
-                {/* MODULE LIST */}
-                <div className="flex-1 space-y-2 overflow-y-auto p-3 sm:p-4">
-
-                  {curriculum?.map((t, i) => {
-                    const moduleKey = `module${i + 1}`;
-
-                    return (
-                      <div
-                        key={i}
-                        className="overflow-hidden rounded-xl border border-gray-200"
-                      >
-
-                        {/* MODULE HEADER */}
-                        <button
-                          onClick={() => {
-                            toggleModule(moduleKey);
-                          }}
-                          className={`flex w-full items-center justify-between gap-3 px-4 py-4 text-left transition ${syllabus[moduleKey]
-                              ? "bg-pink-400 text-white"
-                              : "bg-white text-gray-900 hover:bg-pink-50"
-                            }`}
-                        >
-                          <span className="flex min-w-0 items-center gap-2">
-                            <TiArrowSortedDown
-                              className={`shrink-0 text-xl transition-transform duration-300 ${syllabus[moduleKey]
-                                  ? "rotate-180"
-                                  : "rotate-0"
-                                }`}
-                            />
-
-                            <span className="truncate text-sm font-semibold sm:text-base">
-                              {t.title}
-                            </span>
-                          </span>
-
-                          <span className="shrink-0 text-xs sm:text-sm">
-                            {formatTime(t.duration)}
-                          </span>
-                        </button>
-
-
-                        {/* LESSONS */}
-                        {syllabus[moduleKey] && (
-                          <div className="bg-pink-50 p-2">
-
-                            <ul className="space-y-1">
-
-                              {t?.lesson?.map((lesson, j) => {
-
-                                const isCompleted = completedLessons.includes(lesson._id);
-                                const isCurrent = currentCourse?._id === lesson._id;
-
-                                return (
-                                  <li
-                                    key={j}
-                                    onClick={() => setCurrentCourse(lesson)}
-                                    className={`group flex cursor-pointer items-center justify-between gap-3 rounded-lg px-3 py-3 transition sm:px-4 ${isCurrent
-                                        ? "bg-pink-100 text-pink-600"
-                                        : "bg-white text-gray-700 hover:bg-gray-100"
-                                      }`}
-                                  >
-
-                                    <span className="flex min-w-0 items-center gap-3">
-
-                                      <FaPlayCircle
-                                        className={`shrink-0 text-sm ${isCurrent
-                                            ? "text-pink-500"
-                                            : "text-gray-400 group-hover:text-pink-400"
-                                          }`}
-                                      />
-
-                                      <span className="truncate text-sm font-medium">
-                                        {lesson.lesson}
-                                      </span>
-
-                                    </span>
-
-                                    <span className="flex shrink-0 items-center gap-3">
-
-                                      <span className="text-xs text-gray-400">
-                                        {lesson.duration}
-                                      </span>
-
-                                      {isCompleted && (
-                                        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-green-500 text-xs text-white">
-                                          ✓
-                                        </span>
-                                      )}
-
-                                    </span>
-
-                                  </li>
-                                );
-                              })}
-
-                            </ul>
-
-                          </div>
-                        )}
-
-                      </div>
-                    );
-                  })}
-
-                </div>
-
-              </div>
-
-            </aside>
-
+          
+<CourseSidebar setCurrentCourse={setCurrentCourse} curriculum={curriculum} enrolledCourse={enrolledCourse} enrolledData={enrolledData} toggleModule={toggleModule} syllabus={syllabus} totalLesson={totalLesson} currentCourse={currentCourse} completedLessons={completedLessons}/>
           </div>
 
         </div>
