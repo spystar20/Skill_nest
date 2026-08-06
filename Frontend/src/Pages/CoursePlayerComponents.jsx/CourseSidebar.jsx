@@ -4,7 +4,7 @@ import { FaPlayCircle } from 'react-icons/fa'
 import { RxCross2 } from 'react-icons/rx'
 import { TiArrowSortedDown } from 'react-icons/ti'
 
-const CourseSidebar = ({ curriculum, enrolledData, enrolledCourse, toggleModule, syllabus, totalLesson, completedLessons, currentCourse, setCurrentCourse }) => {
+const CourseSidebar = ({ curriculum, enrolledData, enrolledCourse, toggleModule, syllabus, totalLesson, completedLessons, currentCourse, setCurrentCourse,handleLast }) => {
   return (
     <aside className="min-w-0 lg:sticky lg:top-5 lg:h-[calc(100vh-40px)]">
       <div className="flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card shadow-md">
@@ -90,7 +90,7 @@ const CourseSidebar = ({ curriculum, enrolledData, enrolledCourse, toggleModule,
                         return (
                           <li
                             key={lesson._id}
-                            onClick={() => setCurrentCourse(lesson)}
+                            onClick={() => {setCurrentCourse(lesson),handleLast(lesson._id)}}
                             className={`group flex cursor-pointer items-center justify-between gap-3 rounded-lg px-3 py-3 transition sm:px-4 ${
                               isCurrent
                                 ? 'bg-accent/10 text-accent'

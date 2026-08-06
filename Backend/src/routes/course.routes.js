@@ -2,7 +2,7 @@ import express from 'express'
 import { middleware } from "../middleware/auth.middleware.js"
 import uploads from "../middleware/multer.js"
 import { getCoursebyId ,CreateCoursse, GetCourses, CreateSection, getSection, createLesson, getLesson, updateLesson, getLessonById, DeleteResource, CourseSetting, GetCoursesByTeacherId, UpdateCourseStatus, UpdateSection, DeleteSection, deleteLesson, DeleteCourse, ResourceUpload, GetCourseCategories, getCourseCurriculum, getEnrolledCurriculum,} from "../controller/controller.course.js"
-import { Enroll, EnrolledCourse, LastLesson } from '../controller/EnrolledCourse.js'
+import { Enroll, EnrolledCourse, LastLesson, UpdateWatchedTime } from '../controller/EnrolledCourse.js'
 import { createOrder, verifyPayment } from '../controller/controller.payment.js'
 import { optionalAuth } from '../middleware/optionalAuth.middleware.js'
 export const router = express.Router()
@@ -20,6 +20,7 @@ router.delete('/:courseId',middleware,DeleteCourse)
 
 // enrolledCourse
 router.patch('/enroll/last-watched/:enrollmentId/:lessonId',middleware,LastLesson)
+router.patch('/enroll/Lesson-progress/:enrollmentId/:lessonId',middleware,UpdateWatchedTime)
 router.post('/enroll/:courseId',middleware,Enroll)
 
 // section

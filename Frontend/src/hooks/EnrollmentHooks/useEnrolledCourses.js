@@ -1,5 +1,7 @@
 import { fetchEnrolledCourseById, fetchEnrolledCourses } from "@/api/EnrollmentApi";
+import api from "@/utils/axios";
 import {  useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Variable } from "lucide-react";
 
 export const useEnrolledCourses = ()=> useQuery({
     queryKey:['enrolledCourses'],
@@ -16,13 +18,27 @@ export const useUpdateLastWatched = ()=>{
     const queryClient = useQueryClient()
     return useMutation({
         mutationFn:async({enrollmentId,lessonId})=>{
-            const res = await api.patch(`/enroll/last-watched/${enrollmentId}/${lessonId}`)
-            console.log(res)
+            console.log(lessonId)
+            const res = await api.patch(`/course/enroll/last-watched/${enrollmentId}/${lessonId}`)
         },
  onSuccess:async(_,variables)=>{
     await queryClient.invalidateQueries({
         queryKey:['enrolledCourse',variables.enrollmentId]
     })
  }
+    })
+}
+export const updateLessonProgress = ()=>{
+    const queryClient = useQueryClient()
+    return useMutation({
+        mutationFn:async({enrollmentId,lessonId,watchedTime})=>{
+            const res = await api.patch(`/course/enroll/Lesson-progress/${enrollmentId}/${lessonId}`,watchedTime)
+            console.log(watchedTime)
+        },
+        onSuccess:async(_,variables)=>{
+              await queryClient.invalidateQueries({
+        queryKey:['enrolledCourse',variables.enrollmentId]
+    })
+        }
     })
 }

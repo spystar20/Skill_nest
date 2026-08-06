@@ -1,25 +1,23 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { FaPlayCircle, } from 'react-icons/fa'
-import { TiArrowSortedDown } from 'react-icons/ti'
+
 import { usetoggletab } from '../Store/UseToggleTab'
 import { FaFolderOpen } from "react-icons/fa";
-import { RxCross2 } from "react-icons/rx";
 import { CiCirclePlus } from "react-icons/ci";
 import { FiExternalLink } from "react-icons/fi";
 import Quill from 'quill'
 import "quill/dist/quill.snow.css"; // Quill's default styling
-import { formatTime } from '@/utils/formatDuration'
 import { resourceIcons } from '@/utils/ResourceIcon'
 import { useEnrolledCourseById, useUpdateLastWatched } from '@/hooks/EnrollmentHooks/useEnrolledCourses'
 import Dataset from '@/utils/Dataset'
-import { useEnrolledCurriculum, useLessons, useSection } from '@/hooks/CoursesHooks/useCourse'
+import { useEnrolledCurriculum } from '@/hooks/CoursesHooks/useCourse'
 import { useMarkLessonComplete } from '@/hooks/CoursesHooks/courseMutation'
 import CourseHeader from './CoursePlayerComponents.jsx/CourseHeader'
 import VideoPlayer from './CoursePlayerComponents.jsx/VideoPlayer'
 import CourseSidebar from './CoursePlayerComponents.jsx/CourseSidebar'
 
 const CoursePlayer = () => {
+
   const { enrollmentId } = useParams()
    const [completedLessons, setCompletedLessons] = useState([]);
   const [currentCourse, setCurrentCourse] = useState(null)
@@ -64,6 +62,8 @@ const isLastLesson = currentSectionIndex === (curriculum?.length -1) && currentL
 
       }
     }
+        handleLastWatched(currentCourse?._id)
+
   }
   // access next lesson
   const handleNext = () => {
@@ -80,6 +80,7 @@ const isLastLesson = currentSectionIndex === (curriculum?.length -1) && currentL
 openModule(`module${currentSectionIndex+2}`)
       }
     }
+    handleLastWatched(currentCourse?._id)
   }
   // marks lesson complete
   const handleMarkComplete = (lessonId) => {
@@ -98,7 +99,9 @@ openModule(`module${currentSectionIndex+2}`)
     }
   };
 const handleLastWatched = (lessonId)=>{
-  
+  LastWatched(
+    {enrollmentId,lessonId}
+  )
 }
   useEffect(() => {
     if (enrolledCourse?.completedLessons) {
@@ -106,7 +109,19 @@ const handleLastWatched = (lessonId)=>{
     }
   }, [enrolledCourse]);
   useEffect(() => {
-    if (curriculum?.length > 0) {
+    if(enrolledCourse?.lastLesson){
+
+const section = curriculum?.find(section =>
+  section?.lesson?.some(
+    lesson => lesson?._id === enrolledCourse?.lastLesson
+  )
+);
+const lesson = section?.lesson?.find(lesson=>lesson._id===enrolledCourse?.lastLesson)
+
+    
+      setCurrentCourse(lesson)
+    }
+    if (!enrolledCourse?.lastLesson && curriculum?.length > 0) {
       const firstLesson = curriculum[0]?.lesson[0]
       setCurrentCourse(firstLesson)
       console.log(currentCourse)
@@ -305,7 +320,7 @@ const handleLastWatched = (lessonId)=>{
               </div>
             </main>
             {/* ================= RIGHT SIDE / COURSE CONTENT ================= */}
-<CourseSidebar setCurrentCourse={setCurrentCourse} curriculum={curriculum} enrolledCourse={enrolledCourse} enrolledData={enrolledData} toggleModule={toggleModule} syllabus={syllabus} totalLesson={totalLesson} currentCourse={currentCourse} completedLessons={completedLessons}/>
+<CourseSidebar setCurrentCourse={setCurrentCourse} curriculum={curriculum} enrolledCourse={enrolledCourse} enrolledData={enrolledData} toggleModule={toggleModule} syllabus={syllabus} totalLesson={totalLesson} currentCourse={currentCourse} completedLessons={completedLessons} handleLast={handleLastWatched}/>
           </div>
 
         </div>

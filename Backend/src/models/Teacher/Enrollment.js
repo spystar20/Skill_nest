@@ -1,4 +1,4 @@
-import mongoose, { Schema } from 'mongoose'
+import mongoose, { Mongoose, Schema } from 'mongoose'
 const EnrollmentSchema = new mongoose.Schema({
     userId:{
         type:mongoose.Schema.Types.ObjectId,
@@ -15,6 +15,14 @@ type:String ,
      type:mongoose.Schema.Types.ObjectId,ref:'lesson',
      default:null
     },
+    lessonProgress:[{
+        lessonId:{
+            type:mongoose.Schema.Types.ObjectId,ref:'lesson',default:null
+        },
+        watchedTime:{
+            type:Number,default:0
+        }
+    }],
     completed:{
         type:Boolean,default:false
     }
