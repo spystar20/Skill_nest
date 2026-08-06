@@ -1,7 +1,7 @@
 
 import React from 'react'
 
-const VideoPlayer = ({lesson,completedLessons,handleEnded,handlePrevious,disablePrev,handleNext,disableNext,handleMarkComplete}) => {
+const VideoPlayer = ({lesson,completedLessons,handleEnded,handlePrevious,disablePrev,handleNext,disableNext,handleMarkComplete,timeRef,handleWatch}) => {
   const isCompleted = completedLessons.includes(lesson?._id)
 
   return (
@@ -9,9 +9,15 @@ const VideoPlayer = ({lesson,completedLessons,handleEnded,handlePrevious,disable
       <video
         className="aspect-video w-full rounded-lg bg-black object-contain"
         src={lesson?.videoUrl}
+        onTimeUpdate={(e)=>{ timeRef.current = e.currentTarget.currentTime}}
         controls
         autoPlay
+        onPause={()=>handleWatch(lesson._id)}
         onEnded={handleEnded}
+        onLoadedMetadata={(e)=>{
+          if(timeRef.current>0){
+       e.currentTarget.currentTime=timeRef.current}
+        }}
       />
 
       {/* LESSON NAVIGATION */}

@@ -8,7 +8,7 @@ import { FiExternalLink } from "react-icons/fi";
 import Quill from 'quill'
 import "quill/dist/quill.snow.css"; // Quill's default styling
 import { resourceIcons } from '@/utils/ResourceIcon'
-import { useEnrolledCourseById, useUpdateLastWatched } from '@/hooks/EnrollmentHooks/useEnrolledCourses'
+import { updateLessonProgress, useEnrolledCourseById, useUpdateLastWatched } from '@/hooks/EnrollmentHooks/useEnrolledCourses'
 import Dataset from '@/utils/Dataset'
 import { useEnrolledCurriculum } from '@/hooks/CoursesHooks/useCourse'
 import { useMarkLessonComplete } from '@/hooks/CoursesHooks/courseMutation'
@@ -31,6 +31,8 @@ const CoursePlayer = () => {
   const { tab, toggletab, toggleModule, syllabus ,openModule} = usetoggletab()
   const { mutate: MarkComplete } = useMarkLessonComplete()
   const {mutate:LastWatched}=useUpdateLastWatched()
+  const {mutate:useWatchedTime}=updateLessonProgress()
+  const timeRef = useRef(0)
  const currentSection = curriculum?.find(section =>
   section?.lesson?.some(
     lesson => lesson._id === currentCourse?._id
@@ -103,32 +105,54 @@ const handleLastWatched = (lessonId)=>{
     {enrollmentId,lessonId}
   )
 }
+const handleWatchTime = (lessonId)=>{
+  console.log(lessonId)
+  const watchedTime = timeRef.current
+  console.log(watchedTime)
+  useWatchedTime({lessonId,enrollmentId,watchedTime})
+}
+
+//  stores timestamp
+useEffect(()=>{
+  if(!currentCourse?._id) return;
+ const interval = setInterval(() => {
+  handleWatchTime(currentCourse?._id)
+ }, 10000);
+ return ()=>clearInterval(interval)
+},[currentCourse?._id])
+
   useEffect(() => {
     if (enrolledCourse?.completedLessons) {
       setCompletedLessons(enrolledCourse.completedLessons);
     }
   }, [enrolledCourse]);
+
+  // resuming the previously watched lesson if exists or else first lesson of first section will play 
   useEffect(() => {
     if(enrolledCourse?.lastLesson){
-
 const section = curriculum?.find(section =>
   section?.lesson?.some(
     lesson => lesson?._id === enrolledCourse?.lastLesson
   )
 );
 const lesson = section?.lesson?.find(lesson=>lesson._id===enrolledCourse?.lastLesson)
-
-    
       setCurrentCourse(lesson)
-    }
-    if (!enrolledCourse?.lastLesson && curriculum?.length > 0) {
+    }else{
       const firstLesson = curriculum[0]?.lesson[0]
-      setCurrentCourse(firstLesson)
-      console.log(currentCourse)
-    }
+      setCurrentCourse(firstLesson)    }
     toggletab("syllabus");
-  }, [curriculum]);
+  }, [curriculum,enrolledCourse]);
+  // fetches last watchedTime
+useEffect(() => {
+  if (!currentCourse?._id || !enrolledCourse?.lessonProgress) return
 
+  const progress = enrolledCourse.lessonProgress.find(
+    progress => progress.lessonId?.toString() === currentCourse._id?.toString()
+  )
+
+  timeRef.current = progress?.watchedTime || 0
+
+}, [currentCourse?._id, enrolledCourse?.lessonProgress])
   const editorRef = useRef(null)
   const [quill, setquill] = useState(null)
   useEffect(() => {
@@ -165,7 +189,7 @@ const lesson = section?.lesson?.find(lesson=>lesson._id===enrolledCourse?.lastLe
 
               {/* VIDEO */}
 
-<VideoPlayer lesson={currentCourse} completedLessons={completedLessons} disableNext={isLastLesson} disablePrev={isFirstLesson} handleNext={handleNext} handlePrevious={handlePrevious} handleEnded={()=>handleMarkComplete(currentCourse?._id)}/>
+<VideoPlayer  handleWatch={handleWatchTime} timeRef={timeRef} lesson={currentCourse} completedLessons={completedLessons} disableNext={isLastLesson} disablePrev={isFirstLesson} handleNext={handleNext} handlePrevious={handlePrevious} handleEnded={()=>handleMarkComplete(currentCourse?._id)}/>
 
               {/* LESSON INFORMATION */}
               <div className="mt-5 overflow-hidden rounded-xl bg-white shadow-sm">

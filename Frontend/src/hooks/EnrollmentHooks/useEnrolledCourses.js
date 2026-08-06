@@ -32,8 +32,9 @@ export const updateLessonProgress = ()=>{
     const queryClient = useQueryClient()
     return useMutation({
         mutationFn:async({enrollmentId,lessonId,watchedTime})=>{
-            const res = await api.patch(`/course/enroll/Lesson-progress/${enrollmentId}/${lessonId}`,watchedTime)
+            
             console.log(watchedTime)
+            const res = await api.patch(`/course/enroll/Lesson-progress/${enrollmentId}/${lessonId}`,{watchedTime})
         },
         onSuccess:async(_,variables)=>{
               await queryClient.invalidateQueries({

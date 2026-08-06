@@ -108,12 +108,18 @@ export const LastLesson = asyncHandler(async(req,res)=>{
 export const UpdateWatchedTime = asyncHandler(async(req,res)=>{
      const {enrollmentId,lessonId }= req.params
      const {watchedTime} = req.body
+     console.log(watchedTime)
      const enrollment = await Enrollment.findById(enrollmentId)
      if(!enrollment){
           return res.status(404).json({message:'enrollment not found'})
      }
-  enrollment.lessonProgress.push(lessonId,watchedTime)
+     const existingProgress = enrollment.lessonProgress.find(item=>item.lessonId?.toString()===lessonId)
+     if(existingProgress){
+          existingProgress.watchedTime = watchedTime
+     }else{
+  enrollment.lessonProgress.push({lessonId,watchedTime})
+
+     }
   await enrollment.save()
-  console.log(enrollment)
   return res.status(200).json({message:'lesson progress updated'})
 })
