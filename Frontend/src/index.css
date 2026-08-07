@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Outfit:wght@100..900&family=Merienda:wght@300..900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Comic+Relief:wght@400;700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
-@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&display=swap');@import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/geist";
@@ -12,7 +12,7 @@
   --font-span: Merienda;
   --font-heading: Outfit;
   --font-body: Inter;
-
+  --font-certificate:Bricolage Grotesque;
   /* Primary */
   --color-primary: #0A1931;
   --color-primary-light: #163A6B;
@@ -42,6 +42,30 @@
 --color-error: #DC2626;
 }
 
+.certificate {
+  background:
+    radial-gradient(
+      circle at 20% 15%,
+      rgba(170, 210, 235, 0.45),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 75% 70%,
+      rgba(220, 235, 245, 0.5),
+      transparent 35%
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(70, 100, 120, 0.07) 0 1px,
+      transparent 1px 50px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      rgba(70, 100, 120, 0.07) 0 1px,
+      transparent 1px 50px
+    ),
+    #f5faff;
+}
 .home-bg{
   background: linear-gradient(135deg, #0f172a, #1e3a8a);
   background: linear-gradient(135deg, #0f172a, #1e3a8a, #0f172a);

@@ -27,6 +27,7 @@ const CourseBuilder = lazy(() => import('@/Dashboard Pages/Teaching/CourseCreati
 const LessonEditor = lazy(() => import('@/Dashboard Pages/Teaching/CourseCreation/LessonEditor'))
 import Loader from '@/utils/Loader'
 import EnrolledCourses from '@/Dashboard Pages/user/EnrolledCourses'
+import Certificate from '@/Components/Courses/Certificate'
 
 const AppRoutes = () => {
   return (
@@ -53,14 +54,15 @@ const AppRoutes = () => {
           <Route path='/dashboard/teacher/add-course' element={<AddCourse />} />
           <Route path='/dashboard/teacher/courses/:courseId/edit' element={<CourseBuilder />} />
           <Route path='/courseBuilder/:courseId/section/:sectionId/lesson/:lessonId' element={<LessonEditor />} />
-
+<Route path='/certificate' element={<Certificate/>}/>
         </Route>
         <Route element={<DashboardLayout />}>
           <Route path='/profile' element={<Profile />} />
           <Route path='/dashboard/teacher/my-courses' element={<MyCourse />} />
           <Route path='/dashboard/student/my-courses' element={<EnrolledCourses/>}/> 
           <Route path='/security' element={<Security />} />
-                    <Route path='/courses/:course_name/:enrollmentId/learn' element={<CoursePlayer />} />
+         <Route path='/courses/:course_name/:enrollmentId/learn' element={<CoursePlayer />} />
+
 
         </Route>
       </Routes>
