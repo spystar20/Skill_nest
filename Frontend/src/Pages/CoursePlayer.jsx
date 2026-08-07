@@ -138,8 +138,9 @@ const section = curriculum?.find(section =>
 const lesson = section?.lesson?.find(lesson=>lesson._id===enrolledCourse?.lastLesson)
       setCurrentCourse(lesson)
     }else{
-      const firstLesson = curriculum[0]?.lesson[0]
-      setCurrentCourse(firstLesson)    }
+    const firstLesson = curriculum?.[0]?.lesson?.[0]
+      setCurrentCourse(firstLesson)    
+    }
     toggletab("syllabus");
   }, [curriculum,enrolledCourse]);
   // fetches last watchedTime

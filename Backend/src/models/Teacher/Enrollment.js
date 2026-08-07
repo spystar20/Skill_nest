@@ -25,6 +25,9 @@ type:String ,
     }],
     completed:{
         type:Boolean,default:false
+    },
+    completedAt:{
+        type:Date,default:null
     }
 ,
 status:{

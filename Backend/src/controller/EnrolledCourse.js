@@ -3,10 +3,10 @@ import Course from "../models/Teacher/Course.js";
 import Enrollment from "../models/Teacher/Enrollment.js";
 import userModel from "../models/user.model.js";
 import Lesson from '../models/Teacher/Lesson.js'
+import certficateModel from "../models/student/certficateModel.js";
 export const Enroll = asyncHandler(async (req, res) => {
      const userId = req.user.UserID
      const  {courseId}  = req.params
-     console.log(courseId)
      const course = await Course.findById(courseId)
      if (!course) {
           return res.status(404).json({ message: 'course not found' })
@@ -36,7 +36,6 @@ export const EnrolledCourse = asyncHandler(async (req, res) => {
      if (!enrolledCourses) {
           return res.status(401).json({ message: 'no course purchased' })
      }
- console.log(enrolledCourses)
      const enrolledCoursesProgress = enrolledCourses.map((enrolledCourse) => {
           const totalLesson = enrolledCourse.courseId.lessonCount 
           const completedLessons = enrolledCourse.completedLessons.length
@@ -63,12 +62,14 @@ export const getEnrolledCoursebyId = asyncHandler(async (req, res) => {
 export const UpdateEnrolledProgress = asyncHandler(async (req, res) => {
      const { lessonId, enrollmentId } = req.params
      const enrollmentData = await Enrollment.findById(enrollmentId)
-
-
      if (!enrollmentData) {
           return res.status(403).json({ message: 'user not enrolled' })
      }
      const course = await Course.findById(enrollmentData.courseId)
+     const lesson = await Lesson.findById(lessonId)
+     if(!lesson){
+          return res.status(404).json({message:'lesson not found'})
+     }
      const alreadyCompleted = enrollmentData.completedLessons.some((id) => id.toString() === lessonId)
      if (alreadyCompleted) {
           return res.status(400).json({ message: 'lesson already marked completed' })
@@ -81,15 +82,38 @@ export const UpdateEnrolledProgress = asyncHandler(async (req, res) => {
      if (lessonCompleted === TotalLesson) {
           enrollmentData.status = 'completed',
                enrollmentData.completed = true
+               if(!enrollmentData.completedAt){
+                enrollmentData.completedAt=new Date()
+               }
+                    await enrollmentData.save()
+
+           await   createCertificate(enrollmentId)
      } else {
           enrollmentData.status = 'in-progress'
+               await enrollmentData.save()
+
      }
      const progress = TotalLesson > 0 ? Math.round((lessonCompleted / TotalLesson) * 100) : 0
-     await enrollmentData.save()
 
      return res.status(200).json({ message: 'lesson marked completed', enrollmentData, progress })
 })
+//  creates certifcate after course is completed
+const createCertificate =  (async(enrollmentId)=>{
 
+      const existingEnrollment = await Enrollment.findById(enrollmentId).populate('userId courseId')
+      
+     if(!existingEnrollment){
+throw new Error('enrolled user not found')
+     }
+     const userCertificate = await certficateModel.findOne({enrollmentId})
+     if(userCertificate){
+          return userCertificate
+     }
+ const certificate =   await certficateModel.create({
+     enrollmentId:enrollmentId,issueDate:existingEnrollment.completedAt
+    })
+return certificate
+})
 // update last watched lesson
 export const LastLesson = asyncHandler(async(req,res)=>{
      const {lessonId,enrollmentId}= req.params
@@ -108,7 +132,6 @@ export const LastLesson = asyncHandler(async(req,res)=>{
 export const UpdateWatchedTime = asyncHandler(async(req,res)=>{
      const {enrollmentId,lessonId }= req.params
      const {watchedTime} = req.body
-     console.log(watchedTime)
      const enrollment = await Enrollment.findById(enrollmentId)
      if(!enrollment){
           return res.status(404).json({message:'enrollment not found'})
