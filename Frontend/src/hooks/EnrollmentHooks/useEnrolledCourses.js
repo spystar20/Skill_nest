@@ -1,4 +1,4 @@
-import { fetchEnrolledCourseById, fetchEnrolledCourses } from "@/api/EnrollmentApi";
+import { fetchCertificates, fetchEnrolledCourseById, fetchEnrolledCourses } from "@/api/EnrollmentApi";
 import api from "@/utils/axios";
 import {  useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Variable } from "lucide-react";
@@ -8,7 +8,11 @@ export const useEnrolledCourses = ()=> useQuery({
     queryFn:fetchEnrolledCourses
     
 })
-
+export const useEnrolledCertificate = ()=>useQuery({
+    queryKey:['certificate'],
+    queryFn:()=>fetchCertificates(),
+    select:(data)=>data.certificates
+})
 export const useEnrolledCourseById = (enrollmentId)=>useQuery({
     queryKey:['enrolledCourse',enrollmentId],
     queryFn:()=>fetchEnrolledCourseById(enrollmentId),

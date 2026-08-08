@@ -15,3 +15,7 @@ export const fetchEnrolledCourseById= async(enrollmentId)=>{
     const res = await api.get(`/course/curriculum/enrolled/${enrollmentId}`)
 return res.data
  }
+ export const fetchCertificates = async()=>{
+    const res = await api.get('/course/enroll/certifcates')
+    return res.data
+ }

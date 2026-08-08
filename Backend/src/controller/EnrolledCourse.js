@@ -98,7 +98,7 @@ export const UpdateEnrolledProgress = asyncHandler(async (req, res) => {
      return res.status(200).json({ message: 'lesson marked completed', enrollmentData, progress })
 })
 //  creates certifcate after course is completed
-const createCertificate =  (async(enrollmentId)=>{
+const createCertificate =  async(enrollmentId)=>{
 
       const existingEnrollment = await Enrollment.findById(enrollmentId).populate('userId courseId')
       
@@ -113,6 +113,20 @@ throw new Error('enrolled user not found')
      enrollmentId:enrollmentId,issueDate:existingEnrollment.completedAt
     })
 return certificate
+}
+export const getCertificate = asyncHandler(async(req,res)=>{
+     const user = req.user.UserID
+     const existingEnrollment = await Enrollment.find({userId:user})
+     if(existingEnrollment.length===0){
+          return res.status(404).json({message:'enrollment not found'})
+     }
+     const enrollmentIds = existingEnrollment.map(enrollment=>enrollment._id)
+   const certificates = await certficateModel.find({enrollmentId:{$in:enrollmentIds}}).populate({path:'enrollmentId',populate:{path:'courseId'}})
+     if(certificates.length ===0){
+          return res.status(404).json({message:'no certificates issued'})
+     }
+     console.log(certificates)
+     return res.status(200).json({certificates})
 })
 // update last watched lesson
 export const LastLesson = asyncHandler(async(req,res)=>{
