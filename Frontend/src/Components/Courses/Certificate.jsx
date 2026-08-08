@@ -4,6 +4,7 @@ import { GoArrowDownRight } from 'react-icons/go'
 import badge from '../../assets/badge.png'
 import certificate from '../../assets/certificate.png'
 const Certificate = () => {
+
   return (
     <div className="flex min-h-screen w-full items-center justify-center bg-white p-3 sm:p-6 md:p-10 relative">
       {/* OUTER CERTIFICATE */}

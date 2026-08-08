@@ -28,7 +28,8 @@ const Sidebar = () => {
          <li ><NavLink to='/dashboard/student/my-courses' className={({isActive}) => `flex items-center justify-start gap-2 text-lg px-3 py-1 hover:translate-x-1 hover:bg-neutral-200 hover:text-[#0a1931] ${isActive ?'bg-white/70 text-[#0a1931]' :''} rounded-l-full transition-all duration-200 ease-in cursor-pointer` }> <ImBook className='w-4 h-4 '/><span>My Courses</span></NavLink></li>
           <li className='flex items-center justify-start gap-2 text-lg  px-3 py-1 hover:translate-x-1 hover:bg-neutral-200 hover:text-[#0a1931] rounded-l-full transition-all duration-200 ease-in cursor-pointer'><MdPlayLesson className='w-4 h-4'/><span>Continue Learning</span></li>
            <li className='flex items-center justify-start gap-2 text-lg px-3 py-1 hover:translate-x-1 hover:bg-neutral-200 hover:text-[#0a1931] rounded-l-full transition-all duration-200 ease-in cursor-pointer'><FaBookmark className='w-4 h-4 '/><span>BookMark</span></li>
-            <li className='flex items-center justify-start gap-2 text-lg px-3 py-1 hover:translate-x-1 hover:bg-neutral-200 hover:text-[#0a1931] rounded-l-full transition-all duration-200 ease-in cursor-pointer'><PiCertificateFill className='w-4 h-4 '/><span>Certificate</span></li>
+            <li ><NavLink to='/dashboard/student/certificate' className={({isActive}) => `flex items-center justify-start gap-2 text-lg px-3 py-1 hover:translate-x-1 hover:bg-neutral-200 hover:text-[#0a1931] ${isActive ?'bg-white/70 text-[#0a1931]' :''} rounded-l-full transition-all duration-200 ease-in cursor-pointer` }>
+              <PiCertificateFill className='w-4 h-4 '/><span>Certificate</span></NavLink></li>
     </ul>
     </div>
 {user?.role ==='teacher' &&(
