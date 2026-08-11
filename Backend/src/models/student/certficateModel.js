@@ -4,7 +4,7 @@ const certificateSchema = new mongoose.Schema({
     type:mongoose.Schema.Types.ObjectId,ref:'Enrollment',required:true,unique:true
  },
  issueDate:{
-    type:Date,default:Date.now()
+    type:Date,default:Date.now
  },
  pdfUrl:{
     type:String,default:null

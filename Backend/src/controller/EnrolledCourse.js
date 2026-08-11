@@ -4,6 +4,9 @@ import Enrollment from "../models/Teacher/Enrollment.js";
 import userModel from "../models/user.model.js";
 import Lesson from '../models/Teacher/Lesson.js'
 import certficateModel from "../models/student/certficateModel.js";
+import { getCertificatePdf } from "../utils/certificateGenerator.js";
+import cloudinary from "../utils/cloudinary.js";
+import fs from 'fs'
 export const Enroll = asyncHandler(async (req, res) => {
      const userId = req.user.UserID
      const  {courseId}  = req.params
@@ -112,6 +115,16 @@ throw new Error('enrolled user not found')
  const certificate =   await certficateModel.create({
      enrollmentId:enrollmentId,issueDate:existingEnrollment.completedAt
     })
+       const issueDate = new Date(certificate.issueDate).toLocaleDateString('en-GB',{day:'2-digit',month:'long',year:'numeric'})
+
+    const pdfPath= await getCertificatePdf({studentName: `${existingEnrollment.userId.firstName} ${existingEnrollment.userId.lastName}`.trim(),courseName:existingEnrollment.courseId.title,issueDate:issueDate})
+  const uploadedPdf = await cloudinary.uploader.upload(pdfPath,{
+     resource_type:'raw',folder:'skillnest/certificates'
+  })
+  
+   certificate.pdfUrl = uploadedPdf.secure_url
+   await certificate.save()
+   fs.unlinkSync(pdfPath)
 return certificate
 }
 export const getCertificate = asyncHandler(async(req,res)=>{

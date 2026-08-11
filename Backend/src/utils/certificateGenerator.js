@@ -2,7 +2,7 @@
 import puppeteer from 'puppeteer'
 import path from 'path'
 import fs from 'fs'
-
+import os from 'os'
 export const getCertificatePdf = async ({ studentName, courseName, issueDate }) => {
 const browser = await puppeteer.launch({ headless: true })
 try {
@@ -287,13 +287,17 @@ for successfully completing the ${courseName}
 </html>
 `
 await page.setContent(html,{ waitUntil: 'networkidle0' })
+const fileName = `certificate-${Date.now()}.pdf`
+const pathName = (os.tmpdir(),fileName)
+console.log(pathName,fileName)
 await page.pdf({
-path: 'certificate-test.pdf',
+path: pathName,
 width: '1000px',
 height: '550px',
 printBackground: true
 })
 console.log('Certificate PDF generated successfully')
+return pathName
 } finally {
 await browser.close()
 }
