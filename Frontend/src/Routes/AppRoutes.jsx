@@ -55,6 +55,7 @@ const AppRoutes = () => {
           <Route path='/dashboard/teacher/add-course' element={<AddCourse />} />
           <Route path='/dashboard/teacher/courses/:courseId/edit' element={<CourseBuilder />} />
           <Route path='/courseBuilder/:courseId/section/:sectionId/lesson/:lessonId' element={<LessonEditor />} />
+          <Route path='/certificate' element={<Certificate/>}/>
         </Route>
         <Route element={<DashboardLayout />}>
           <Route path='/profile' element={<Profile />} />
@@ -63,7 +64,7 @@ const AppRoutes = () => {
           <Route path='/dashboard/student/certificate' element={<CertificatesShowcase/>}/>
           <Route path='/security' element={<Security />} />
          <Route path='/courses/:course_name/:enrollmentId/learn' element={<CoursePlayer />} />
-
+ 
 
         </Route>
       </Routes>

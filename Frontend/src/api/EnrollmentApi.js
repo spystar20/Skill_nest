@@ -19,3 +19,7 @@ return res.data
     const res = await api.get('/course/enroll/certifcates')
     return res.data
  }
+ export const getDownloadedCertificate = async(certificateId)=>{
+    const res = await api.get(`/student/certificate/${certificateId}/download`,{responseType:'blob'})
+    return res.data
+ }

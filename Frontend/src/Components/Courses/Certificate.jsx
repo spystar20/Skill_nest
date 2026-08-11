@@ -14,10 +14,11 @@ const Certificate = () => {
           w-full max-w-[1000px] relative
           bg-white p-2 sm:p-3
           shadow-lg shadow-black 
-          bg-[radial-gradient(circle_at_20%_15%,rgba(170,210,235,0.45),transparent_30%),radial-gradient(circle_at_75%_70%,rgba(220,235,245,0.5),transparent_35%),repeating-linear-gradient(90deg,rgba(70,100,120,0.07)_0_1px,transparent_1px_50px),repeating-linear-gradient(0deg,rgba(70,100,120,0.07)_0_1px,transparent_1px_50px)]
+        
         "
+        style={{background:`url(${'https://i.pinimg.com/1200x/30/20/9d/30209d19e0415c95e5683885d490aaaf.jpg'})`,backgroundPosition:'top',backgroundSize:'cover',backgroundRepeat:'no-repeat'}}
       >
-<img
+{/* <img
   src={certificate}
   alt="Certificate decoration"
   className="
@@ -36,12 +37,12 @@ const Certificate = () => {
     lg:top-0
     lg:w-48
   "
-/>
+/> */}
   
         <div
           className="
             relative min-h-[530px] w-full
-            overflow-hidden border-2 border-black
+            overflow-hidden  border-black
             p-3 sm:p-4 md:p-6
             bg-[radial-gradient(circle_at_80%_55%,rgba(147,197,253,0.55),transparent_45%),#f5faff]
           "

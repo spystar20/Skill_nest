@@ -7,6 +7,7 @@ import certficateModel from "../models/student/certficateModel.js";
 import { getCertificatePdf } from "../utils/certificateGenerator.js";
 import cloudinary from "../utils/cloudinary.js";
 import fs from 'fs'
+import axios from 'axios'
 export const Enroll = asyncHandler(async (req, res) => {
      const userId = req.user.UserID
      const  {courseId}  = req.params
@@ -140,6 +141,33 @@ export const getCertificate = asyncHandler(async(req,res)=>{
      }
      console.log(certificates)
      return res.status(200).json({certificates})
+})
+export const downloadCertificate = asyncHandler(async(req,res)=>{
+     const userId = req.user.UserID
+     const {certificateId}= req.params
+     const certificate = await certficateModel.findById(certificateId).populate({path:'enrollmentId', populate:[{path:'userId'},{path:'courseId'}]})
+     if(!certificate){
+          return res.status(404).json({message:'certificate not found'})
+     }
+      const enrollment = certificate.enrollmentId
+      if(!enrollment){
+    return res.status(404).json({message:'enrollment not found'})
+      }
+      if(enrollment.userId._id.toString() !== userId.toString()){
+          return res.status(403).json({message:'please enroll first'})
+      }
+      if(!certificate.pdfUrl){
+          return res.status(404).json({message:'pdf not found'})
+      }
+      const pdfUrl = await axios.get(certificate.pdfUrl,{
+          responseType:'arraybuffer'
+      })
+      const studentName = `${enrollment.userId.firstName} ${enrollment.userId.lastName}`.trim()
+      const fileName = `${studentName}-skillnest-certificate.pdf`
+      res.setHeader('Content-Type','application/pdf')
+      res.setHeader('Content-Disposition',`attachment; filename="${fileName}"`)
+  
+      return res.send(pdfUrl.data)
 })
 // update last watched lesson
 export const LastLesson = asyncHandler(async(req,res)=>{

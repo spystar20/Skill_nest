@@ -1,4 +1,4 @@
-import { fetchCertificates, fetchEnrolledCourseById, fetchEnrolledCourses } from "@/api/EnrollmentApi";
+import { fetchCertificates, fetchEnrolledCourseById, fetchEnrolledCourses, getDownloadedCertificate } from "@/api/EnrollmentApi";
 import api from "@/utils/axios";
 import {  useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Variable } from "lucide-react";
@@ -46,4 +46,12 @@ export const updateLessonProgress = ()=>{
     })
         }
     })
+}
+export const useDownloadCertificate = ()=> {
+return useMutation({
+    mutationFn:async({certificateId})=>{
+        const res = await api.get(`/student/certificate/${certificateId}/download`,{responseType:'blob'})
+         return res.data
+    }
+})
 }

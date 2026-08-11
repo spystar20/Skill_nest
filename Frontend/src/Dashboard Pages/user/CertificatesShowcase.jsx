@@ -1,13 +1,59 @@
 
-import React from 'react'
+import React, { useState } from 'react'
 import { FiAward } from 'react-icons/fi'
 import { FaDownload } from 'react-icons/fa'
-import { useEnrolledCertificate } from '@/hooks/EnrollmentHooks/useEnrolledCourses'
-
+import { useDownloadCertificate, useEnrolledCertificate } from '@/hooks/EnrollmentHooks/useEnrolledCourses'
+import { Document, Page, pdfjs } from 'react-pdf'
+import 'react-pdf/dist/Page/AnnotationLayer.css'
+import 'react-pdf/dist/Page/TextLayer.css'
+pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+  'pdfjs-dist/build/pdf.worker.min.mjs',
+  import.meta.url
+).toString()
 const CertificatesShowcase = () => {
+  const CertificatePdfPreview = ({ pdfUrl, width }) => {
+  return (
+    <Document
+      file={pdfUrl}
+      loading={
+        <div className="flex h-full items-center justify-center text-sm text-slate-500">
+          Loading certificate...
+        </div>
+      }
+      error={
+        <div className="flex h-full items-center justify-center text-sm text-red-500">
+          Unable to load certificate
+        </div>
+      }
+    >
+      <Page
+        pageNumber={1}
+        width={width}
+        renderTextLayer={false}
+        renderAnnotationLayer={false}
+      />
+    </Document>
+  )
+}
 
+const [selectedCertificate,setSelectedCertificate]=useState(null)
   const { data: certificates } = useEnrolledCertificate()
-
+const { mutate:downloadCertificate}=useDownloadCertificate()
+const handleDownload = (certificateId)=>{
+  downloadCertificate({certificateId}
+    ,{onSuccess:(data)=>{
+const blob = new Blob([data],{type:'application/pdf'})
+const url = window.URL.createObjectURL(blob)
+const link = document.createElement('a')
+link.href=url
+link.download='skillnest-certificate.pdf'
+ document.body.appendChild(link)
+ link.click()
+ link.remove()
+ window.URL.revokeObjectURL(url)
+    }}
+  )
+}
   return (
     <div className="min-h-screen w-full bg-white px-3 py-5 sm:px-5 md:px-6 lg:px-8">
 
@@ -50,13 +96,13 @@ const CertificatesShowcase = () => {
 
               {/* PDF PREVIEW */}
 
-              <div className="h-[180px] w-full overflow-hidden rounded-lg border border-black/20 bg-slate-100">
-
-                <iframe
-                  src={certificate?.pdfUrl}
-                  title="Certificate Preview"
-                  className="h-full w-full border-0"
-                />
+              <div onClick={()=>setSelectedCertificate(certificate)} className="h-[170px] w-full overflow-hidden rounded-lg border flex justify-center items-center border-black/20 bg-slate-100">
+<div className="pointer-events-none">
+  <CertificatePdfPreview
+    pdfUrl={certificate?.pdfUrl}
+    width={340}
+  />
+</div>
 
               </div>
 
@@ -86,18 +132,38 @@ const CertificatesShowcase = () => {
 
                 {/* DOWNLOAD */}
 
-                <a
-                  href={certificate?.pdfUrl}
-                  download
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <div
+                  onClick={()=>handleDownload(certificate?._id)}
                   className="flex w-full shrink-0 items-center justify-center gap-2 rounded-lg border border-black/20 px-3 py-2 text-sm transition hover:brightness-95 sm:w-auto"
                 >
                   <FaDownload className="text-sm" />
-                </a>
+                </div>
 
               </div>
-
+ {selectedCertificate && (
+  <div
+    className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
+    onClick={() => setSelectedCertificate(null)}
+  >
+    <div
+      className="relative h-[90vh] w-full max-w-5xl overflow-hidden rounded-xl bg-white shadow-2xl"
+      onClick={(e) => e.stopPropagation()}
+    >
+      <button
+        onClick={() => setSelectedCertificate(null)}
+        className="absolute right-3 top-3 z-10 rounded-full bg-black px-3 py-1 text-lg text-white"
+      >
+        ×
+      </button>
+<div className="flex h-full w-full items-center justify-center overflow-auto bg-slate-100 p-4">
+  <CertificatePdfPreview
+    pdfUrl={selectedCertificate.pdfUrl}
+    width={900}
+  />
+</div>
+    </div>
+  </div>
+)}
             </div>
 
           ))}
