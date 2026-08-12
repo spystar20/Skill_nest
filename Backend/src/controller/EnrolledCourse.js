@@ -149,7 +149,7 @@ export const getCertificateById = asyncHandler(async(req,res)=>{
      if(!existingEnrollment){
           return res.status(404).json({message:'enrolled user not found'})
      }
-     const certificate = await certficateModel.findOne({enrollmentId:enrollmentId})
+     const certificate = await certficateModel.findOne({enrollmentId:enrollmentId}).populate({path:"enrollmentId",populate:[{path:'userId'},{path:'courseId'}]})
      if(!certificate){
       return res.status(404).json({message:'certificate not found'})
      }

@@ -23,3 +23,7 @@ return res.data
     const res = await api.get(`/student/certificate/${certificateId}/download`,{responseType:'blob'})
     return res.data
  }
+ export const fetchCertificateById =async(enrollmentId)=>{
+   const res = await api.get(`/student/enrollment/${enrollmentId}/certificate`)
+   return res.data
+ }

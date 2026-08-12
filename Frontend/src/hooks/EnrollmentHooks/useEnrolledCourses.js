@@ -1,4 +1,4 @@
-import { fetchCertificates, fetchEnrolledCourseById, fetchEnrolledCourses, getDownloadedCertificate } from "@/api/EnrollmentApi";
+import { fetchCertificateById, fetchCertificates, fetchEnrolledCourseById, fetchEnrolledCourses, getDownloadedCertificate } from "@/api/EnrollmentApi";
 import api from "@/utils/axios";
 import {  useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Variable } from "lucide-react";
@@ -9,14 +9,14 @@ export const useEnrolledCourses = ()=> useQuery({
     
 })
 export const useEnrolledCertificate = ()=>useQuery({
-    queryKey:['certificate'],
+    queryKey:['certificates'],
     queryFn:()=>fetchCertificates(),
     select:(data)=>data.certificates
 })
 export const useEnrolledCourseById = (enrollmentId)=>useQuery({
     queryKey:['enrolledCourse',enrollmentId],
     queryFn:()=>fetchEnrolledCourseById(enrollmentId),
-enabled:!!enrollmentId
+enabled:!!enrollmentId,
 })
 export const useUpdateLastWatched = ()=>{
     const queryClient = useQueryClient()
@@ -55,3 +55,9 @@ return useMutation({
     }
 })
 }
+export const useCertificateByEnrollment = (enrollmentId,isCompleted)=>useQuery({
+    queryKey:['certificate',enrollmentId],
+    queryFn:()=>fetchCertificateById(enrollmentId),
+    enabled:!!enrollmentId && isCompleted,
+    select:(data)=>data.certificate
+})

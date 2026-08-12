@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
-
 import { usetoggletab } from '../Store/UseToggleTab'
 import { FaFolderOpen } from "react-icons/fa";
 import { CiCirclePlus } from "react-icons/ci";
@@ -8,14 +7,14 @@ import { FiExternalLink } from "react-icons/fi";
 import Quill from 'quill'
 import "quill/dist/quill.snow.css"; // Quill's default styling
 import { resourceIcons } from '@/utils/ResourceIcon'
-import { updateLessonProgress, useEnrolledCourseById, useUpdateLastWatched } from '@/hooks/EnrollmentHooks/useEnrolledCourses'
+import { updateLessonProgress, useCertificateByEnrollment, useEnrolledCourseById, useUpdateLastWatched } from '@/hooks/EnrollmentHooks/useEnrolledCourses'
 import Dataset from '@/utils/Dataset'
 import { useEnrolledCurriculum } from '@/hooks/CoursesHooks/useCourse'
 import { useMarkLessonComplete } from '@/hooks/CoursesHooks/courseMutation'
 import CourseHeader from './CoursePlayerComponents.jsx/CourseHeader'
 import VideoPlayer from './CoursePlayerComponents.jsx/VideoPlayer'
 import CourseSidebar from './CoursePlayerComponents.jsx/CourseSidebar'
-import api from '@/utils/axios';
+import CertificateModal from './CoursePlayerComponents.jsx/CertificateModal';
 
 const CoursePlayer = () => {
 
@@ -33,22 +32,10 @@ const CoursePlayer = () => {
   const { mutate: MarkComplete } = useMarkLessonComplete()
   const {mutate:LastWatched}=useUpdateLastWatched()
   const {mutate:useWatchedTime}=updateLessonProgress()
-  const [img,setimg]=useState(null)
-  const handleCertificate = async(enrollmentId)=>{
-    try{
-if(completedLessons?.length===totalLesson){
-     const res = await api.get(`/student/enrollment/${enrollmentId}/certificate`)
-     console.log(res)
-     setimg(res?.data?.certificate?.pdfUrl)
-     return res.data
-}
-    }catch(Err){
-      console.log(Err)
-    }
-  }
-  useEffect(()=>{
-    handleCertificate(enrollmentId)
-  })
+  const isCourseCompleted = completedLessons?.length === totalLesson
+  const {data:certificate}=useCertificateByEnrollment(enrollmentId,isCourseCompleted)
+const [showCertificatePopup, setShowCertificatePopup] = useState(false)
+
   const timeRef = useRef(0)
  const currentSection = curriculum?.find(section =>
   section?.lesson?.some(
@@ -85,22 +72,23 @@ const isLastLesson = currentSectionIndex === (curriculum?.length -1) && currentL
 
   }
   // access next lesson
-  const handleNext = () => {
-
-    if (currentLessonIndex < currentSection.lesson.length - 1) {
-      const nextLesson = currentSection.lesson[currentLessonIndex + 1]
-      setCurrentCourse(nextLesson)
-    }
-    if (currentLessonIndex === currentSection.lesson.length - 1) {
-      if (currentSectionIndex < curriculum.length - 1) {
-        const nextSection = curriculum[currentSectionIndex + 1]
-        const nextLesson = nextSection?.lesson?.[0]
-        setCurrentCourse(nextLesson)
-openModule(`module${currentSectionIndex+2}`)
-      }
-    }
-    handleLastWatched(currentCourse?._id)
+const handleNext = () => {
+  if (currentLessonIndex < currentSection.lesson.length - 1) {
+    const nextLesson = currentSection.lesson[currentLessonIndex + 1]
+    setCurrentCourse(nextLesson)
+    handleLastWatched(nextLesson._id)
+    return
   }
+
+  if (currentSectionIndex < curriculum.length - 1) {
+    const nextSection = curriculum[currentSectionIndex + 1]
+    const nextLesson = nextSection?.lesson?.[0]
+
+    setCurrentCourse(nextLesson)
+    openModule(`module${currentSectionIndex + 2}`)
+    handleLastWatched(nextLesson._id)
+  }
+}
   // marks lesson complete
   const handleMarkComplete = (lessonId) => {
     if(!completedLessons.includes(lessonId)){
@@ -112,6 +100,10 @@ openModule(`module${currentSectionIndex+2}`)
     MarkComplete({ enrollmentId, lessonId, courseId, sectionId }, {
       onSuccess: (data) => {
         setCompletedLessons(data?.enrollmentData?.completedLessons)
+        if( data?.enrollmentData?.completedLessons?.length ===totalLesson){
+setShowCertificatePopup(true)
+return
+        }
         handleNext()
       }
     })
@@ -207,7 +199,7 @@ useEffect(() => {
 
               {/* VIDEO */}
 
-<VideoPlayer  handleWatch={handleWatchTime} timeRef={timeRef} lesson={currentCourse} completedLessons={completedLessons} disableNext={isLastLesson} disablePrev={isFirstLesson} handleNext={handleNext} handlePrevious={handlePrevious} handleEnded={()=>handleMarkComplete(currentCourse?._id)}/>
+<VideoPlayer  handleWatch={handleWatchTime} timeRef={timeRef} lesson={currentCourse} completedLessons={completedLessons} disableNext={isLastLesson} disablePrev={isFirstLesson} handleNext={handleNext} handlePrevious={handlePrevious} handleEnded={()=>handleMarkComplete(currentCourse?._id)} handleMarkComplete={()=>handleMarkComplete(currentCourse?._id)}/>
 
               {/* LESSON INFORMATION */}
               <div className="mt-5 overflow-hidden rounded-xl bg-white shadow-sm">
@@ -368,9 +360,9 @@ useEffect(() => {
         </div>
 
       </div>
-      {/* <div className='bg-black min-h-screen w-full absolute inset-5'>
-<iframe src={img} frameborder="0"></iframe>
-      </div> */}
+      {showCertificatePopup && (
+  <CertificateModal pdfUrl={certificate?.pdfUrl} closeCertificate={()=>setShowCertificatePopup(false)}/>
+)}
     </Dataset>
 
 

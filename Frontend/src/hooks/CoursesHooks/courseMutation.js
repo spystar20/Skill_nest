@@ -247,15 +247,21 @@ export const useMarkLessonComplete = () => {
         },
         onSuccess: async (_, variables) => {
             await Promise.all([
-                await queryClient.invalidateQueries({
+                 queryClient.invalidateQueries({
                     queryKey:['enrolledCourse',variables.enrollmentId]
                 }),
-                await queryClient.invalidateQueries({
+                 queryClient.invalidateQueries({
                     queryKey: ['sections', variables.courseId]
                 }),
-                await queryClient.invalidateQueries({
+                 queryClient.invalidateQueries({
                     queryKey: ['lessons', variables.sectionId]
-                })
+                }),
+                 queryClient.invalidateQueries({
+                    queryKey:['ceritificates']
+                }),
+                queryClient.invalidateQueries({
+  queryKey: ['certificate', variables.enrollmentId]
+})
 
             ])
         }
