@@ -142,6 +142,19 @@ export const getCertificate = asyncHandler(async(req,res)=>{
      console.log(certificates)
      return res.status(200).json({certificates})
 })
+export const getCertificateById = asyncHandler(async(req,res)=>{
+     const userId = req.user.UserID
+     const {enrollmentId} = req.params
+     const existingEnrollment = await Enrollment.findOne({userId:userId,_id:enrollmentId})
+     if(!existingEnrollment){
+          return res.status(404).json({message:'enrolled user not found'})
+     }
+     const certificate = await certficateModel.findOne({enrollmentId:enrollmentId})
+     if(!certificate){
+      return res.status(404).json({message:'certificate not found'})
+     }
+     return res.status(200).json({certificate})
+})
 export const downloadCertificate = asyncHandler(async(req,res)=>{
      const userId = req.user.UserID
      const {certificateId}= req.params

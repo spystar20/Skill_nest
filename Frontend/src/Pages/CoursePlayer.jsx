@@ -15,6 +15,7 @@ import { useMarkLessonComplete } from '@/hooks/CoursesHooks/courseMutation'
 import CourseHeader from './CoursePlayerComponents.jsx/CourseHeader'
 import VideoPlayer from './CoursePlayerComponents.jsx/VideoPlayer'
 import CourseSidebar from './CoursePlayerComponents.jsx/CourseSidebar'
+import api from '@/utils/axios';
 
 const CoursePlayer = () => {
 
@@ -32,6 +33,22 @@ const CoursePlayer = () => {
   const { mutate: MarkComplete } = useMarkLessonComplete()
   const {mutate:LastWatched}=useUpdateLastWatched()
   const {mutate:useWatchedTime}=updateLessonProgress()
+  const [img,setimg]=useState(null)
+  const handleCertificate = async(enrollmentId)=>{
+    try{
+if(completedLessons?.length===totalLesson){
+     const res = await api.get(`/student/enrollment/${enrollmentId}/certificate`)
+     console.log(res)
+     setimg(res?.data?.certificate?.pdfUrl)
+     return res.data
+}
+    }catch(Err){
+      console.log(Err)
+    }
+  }
+  useEffect(()=>{
+    handleCertificate(enrollmentId)
+  })
   const timeRef = useRef(0)
  const currentSection = curriculum?.find(section =>
   section?.lesson?.some(
@@ -351,6 +368,9 @@ useEffect(() => {
         </div>
 
       </div>
+      {/* <div className='bg-black min-h-screen w-full absolute inset-5'>
+<iframe src={img} frameborder="0"></iframe>
+      </div> */}
     </Dataset>
 
 
