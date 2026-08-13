@@ -34,7 +34,7 @@ const CoursePlayer = () => {
   const {mutate:useWatchedTime}=updateLessonProgress()
   const isCourseCompleted = completedLessons?.length === totalLesson
   const {data:certificate}=useCertificateByEnrollment(enrollmentId,isCourseCompleted)
-const [showCertificatePopup, setShowCertificatePopup] = useState(false)
+const [showCertificatePopup, setShowCertificatePopup] = useState(true)
 
   const timeRef = useRef(0)
  const currentSection = curriculum?.find(section =>

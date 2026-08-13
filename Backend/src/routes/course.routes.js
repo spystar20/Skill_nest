@@ -3,17 +3,15 @@ import { middleware } from "../middleware/auth.middleware.js"
 import uploads from "../middleware/multer.js"
 import { getCoursebyId ,CreateCoursse, GetCourses, CreateSection, getSection, createLesson, getLesson, updateLesson, getLessonById, DeleteResource, CourseSetting, GetCoursesByTeacherId, UpdateCourseStatus, UpdateSection, DeleteSection, deleteLesson, DeleteCourse, ResourceUpload, GetCourseCategories, getCourseCurriculum, getEnrolledCurriculum,} from "../controller/controller.course.js"
 import { Enroll, EnrolledCourse, getCertificate, LastLesson, UpdateWatchedTime } from '../controller/EnrolledCourse.js'
-import { createOrder, verifyPayment } from '../controller/controller.payment.js'
+import { addItems, createOrder, verifyPayment } from '../controller/controller.payment.js'
 import { optionalAuth } from '../middleware/optionalAuth.middleware.js'
 export const router = express.Router()
 
 // courses
 router.get('/',optionalAuth,GetCourses)
+router.get('/enrolled',middleware,EnrolledCourse)
 router.get('/category',optionalAuth,GetCourseCategories)
 router.post('/createNew',middleware,uploads.single("thumbnail"),CreateCoursse)
-router.post('/payment/verify',middleware,verifyPayment)
-router.get('/enrolled',middleware,EnrolledCourse)
-router.post('/buy-course/:courseId',middleware,createOrder)
 router.get('/:courseId',optionalAuth,getCoursebyId)
 router.put('/:courseId/status',middleware,UpdateCourseStatus)
 router.delete('/:courseId',middleware,DeleteCourse)
@@ -41,4 +39,8 @@ router.delete('/lesson/:lessonId/resource/:resourceId/delete',middleware,DeleteR
 router.put('/lesson/:lessonId/update',uploads.single('video'),middleware,updateLesson)
 router.put('/lesson/:lessonId/setting',middleware,CourseSetting)
 
+// ecommerce
+router.post('/payment/verify',middleware,verifyPayment)
+router.post('/buy-course/:courseId',middleware,createOrder)
+router.post('/:courseId/cart/new',middleware,addItems)
 export default router

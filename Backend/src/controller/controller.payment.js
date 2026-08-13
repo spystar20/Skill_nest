@@ -1,9 +1,11 @@
 import { asyncHandler } from "../middleware/asyncHandler.middleware.js";
-import PaymentModel from "../models/PaymentModel.js";
 import Course from "../models/Teacher/Course.js";
 import { razorpay } from "../../Config/razorpay.js";
 import crypto from 'crypto'
 import Enrollment from "../models/Teacher/Enrollment.js";
+import PaymentModel from "../models/Ecommerce/PaymentModel.js";
+import CartModel from "../models/Ecommerce/CartModel.js";
+import userModel from '../models/user.model.js'
 export const createOrder = asyncHandler(async(req,res)=>{
 const {courseId}=req.params
 const userId= req.user.UserID
@@ -39,4 +41,33 @@ await Enrollment.create({
 }
 
 return res.status(201).json({message:'course purchased'})
+})
+
+export const addItems=asyncHandler(async(req,res)=>{
+    const userId =req.user.UserID
+    const {courseId}=req.params
+    const existingUser = await userModel.findById(userId)
+    if(!existingUser){
+        return res.status(404).json({message:'user not found'})
+    }
+    const course = await Course.findById(courseId)
+    if(!course){
+        return res.status(404).json({message:'course not found'})
+    }
+    const cart = await CartModel.findOne({userId:existingUser._id})
+    if(cart && cart.items.includes(courseId)){
+        return res.status(403).json({message:'item already added'})
+    }
+    if(!cart){
+      
+const cartDocument = await CartModel.create({
+    userId,items:[courseId]
+})
+return res.status(200).json({message:'cart updated',cartDocument})
+    }
+    if(cart && !cart.items.includes(courseId)){
+        cart.items.push(courseId)
+        await cart.save()
+    }
+    return res.status(200).json({message:'cart Updated',cart})
 })

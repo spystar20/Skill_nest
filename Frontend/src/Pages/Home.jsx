@@ -22,12 +22,12 @@ import Autoplay from "embla-carousel-autoplay";
 import { BsTwitterX } from 'react-icons/bs';
 import ProjectCard from '@/utils/ProjectCard';
 const Home = () => {
-
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [
     AutoScroll({ speed: 0.3, startDelay: 1000 })],
   );
   const [show, hide] = React.useState(false)
   const ShowFeature = () => {
+    
     hide(!show)
   }
   const [selectedIndex, setSelectedIndex] = useState(0);
