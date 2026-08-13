@@ -11,6 +11,7 @@ import { LiaChalkboardTeacherSolid } from 'react-icons/lia';
 import { IoIosLogOut } from 'react-icons/io';
 import api from '@/utils/axios';
 import { toast } from 'sonner';
+import { MdOutlineShoppingCart } from 'react-icons/md';
 const Navbar = () => {
 
   const [open, setopen] = useState(false)
@@ -178,14 +179,17 @@ setUser(null)
           <li className="cursor-pointer hover:bg-gradient-to-tr hover:from-[#95b1ee] hover:to-[#728ccd] rounded-full transition-all duration-300 hover:text-white hover:-translate-y-0.5 py-2 px-5 capitalize"><Link to='/teach'>{user?.role ==='teacher' ? 'teach on skillnest' : 'teacher dashboard'}</Link> </li>
         </ul>
 
-       
       
 { (user) ?(
        <>
        {/* {user-profile} */}
+       <div className='flex items-center gap-5'>
+        <Link to="/cart" className="relative">
+  <MdOutlineShoppingCart className="text-2xl transition-transform duration-200 hover:scale-110" />
+</Link>
         <div className='relative '>
           <div className='flex gap-2 items-center cursor-pointer ' onClick={toggleProfile}>
-            <img src={user?.avatar} alt="user.img" className='w-12 h-12 rounded-full border border-gray-50/15' />
+            <img src={user?.avatar} alt="user.img" className='w-9 h-9 rounded-full border border-gray-50/15' />
             <div className='flex flex-col  '>
               <h1 className='text-base font-medium capitalize'>{user?.firstName}</h1>
               <span className='text-xs text-white/45 font-light'>{user?.email}</span>
@@ -199,6 +203,8 @@ setUser(null)
           </div>
 
         </div>
+        
+</div>
         </>
 ) :(
   <>
@@ -219,65 +225,8 @@ transition-all duration-300 hover:scale-95  cursor-pointer box'>sign up</button>
         </div>
         </>
         ) }
-      </div>
-      {/* mobile-menu */}
-      {/* <div className="lg:hidden  w-full py-6 font-heading flex justify-between px-4 items-center text-white backdrop-blur-lg  bg-opacity-40 relative ">
-        <div className="flex items-center justify-between gap-2">
-          <GiNestBirds className="text-white text-4xl" />
-          <span className="text-3xl font-semibold text-white flex gap-0">
-            Skill <span className='font-span capitalize'>nest</span>
-          </span>
-          <span className="w-2 h-2 bg-[#1e3a8a] rounded-full mt-3"></span>
-        </div>
-        <MenuIcon onClick={toggleMenu} className='text-8xl font-semibold ' />
 
       </div>
-
-      <div className={`fixed inset-0 z-50 flex flex-col px-4 py-6
-transition-all duration-400 ease-in-out
-${openMenu
-          ? "opacity-100 visible bg-black/95"
-          : "opacity-0 invisible bg-black/0"
-        }`}>
-        <div className="  w-full  font-heading flex justify-between items-center text-white backdrop-blur-lg  bg-opacity-40 mb-9 " >
-          <div className="flex items-center justify-between gap-2">
-            <GiNestBirds className="text-white text-4xl" />
-            <span className="text-3xl font-semibold text-white flex gap-0">
-              Skill <span className='font-span capitalize'>nest</span>
-            </span>
-            <span className="w-2 h-2 bg-[#1e3a8a] rounded-full mt-3"></span>
-          </div>
-
-          <span><IoCloseSharp className={`text-3xl font-semibold transition-all duration-500 ${openMenu ? 'rotate-0' : 'rotate-180'}`} onClick={toggleMenu} /></span>
-
-        </div>
-
-        <div className='text-gray-900 font-body font-medium text-xl flex flex-col justify-between flex-1 w-full'>
-          <ul className='flex flex-col gap-4'>
-            <li className={`p-3 border-2 border-gray-300 rounded-lg flex  justify-start font-medium text-gray-300 font-heading transition-all duration-500 ease-in-out ${openMenu ? 'translate-x-0' : 'translate-x-3'}`}><Link to="/">Home</Link></li>
-            <li className={`p-3 border-2 border-gray-300 rounded-lg flex  justify-start font-medium text-gray-300 font-heading transition-all delay-100 duration-500 ease-in-out ${openMenu ? 'translate-x-0' : 'translate-x-3'}`}><Link to="/">Courses</Link></li>
-            <li className={`p-3 border-2 border-gray-300 rounded-lg flex  justify-start font-medium text-gray-300 font-heading transition-all delay-200 duration-500 ease-in-out ${openMenu ? 'translate-x-0' : 'translate-x-3'}`}><Link to="/">About</Link></li>
-            <li className={`p-3 border-2 border-gray-300 rounded-lg flex  justify-start font-medium text-gray-300 font-heading transition-all delay-300 duration-500 ease-in-out ${openMenu ? 'translate-x-0' : 'translate-x-3'}`}><Link to="/">Teach</Link></li>
-
-          </ul>
-
-{(user) ?(<><div></div></>):(     <div className='flex flex-col gap-3 mt-auto '>
-
-            <Link to="/login"><button className='w-full
-px-6 py-2 rounded-full font-normal text-xl capitalize text-gray-300 border-2 border-gray-300  hover:border-[#0e0929]
-hover:bg-gradient-to-tr  shadow-lg shadow-black/10 transition-all duration-300   cursor-pointer'>Log In</button></Link>
-            <Link to="/signup" ><button className=' w-full
-px-6 py-2 rounded-full font-normal text-xl capitalize text-white
-bg-gradient-to-tr from-[#0e0929] via-[#1c1450] to-[#2a1f75]
-hover:opacity-90
-shadow-lg shadow-black/10
-transition-all duration-300 hover:scale-95  cursor-pointer box'>sign up</button></Link>
-          </div>
-          )
-}     
-        </div>
-
-      </div> */}
 {/* Mobile Navbar */}
 <div className="lg:hidden w-full py-6 px-4 flex justify-between items-center text-white">
   <div className="flex items-center gap-2">

@@ -1,3 +1,4 @@
+import jwt from 'jsonwebtoken'
 export const middleware = (req, res, next) => {
   try {
     console.log("1. middleware hit");

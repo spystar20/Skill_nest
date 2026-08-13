@@ -43,6 +43,7 @@ await Enrollment.create({
 return res.status(201).json({message:'course purchased'})
 })
 
+// adds course to cart
 export const addItems=asyncHandler(async(req,res)=>{
     const userId =req.user.UserID
     const {courseId}=req.params
@@ -55,19 +56,34 @@ export const addItems=asyncHandler(async(req,res)=>{
         return res.status(404).json({message:'course not found'})
     }
     const cart = await CartModel.findOne({userId:existingUser._id})
-    if(cart && cart.items.includes(courseId)){
+    if(cart && cart.items.some(item=>item.courseId.toString()===courseId)){
         return res.status(403).json({message:'item already added'})
     }
     if(!cart){
       
 const cartDocument = await CartModel.create({
-    userId,items:[courseId]
+    userId,items:[{courseId}]
 })
 return res.status(200).json({message:'cart updated',cartDocument})
     }
-    if(cart && !cart.items.includes(courseId)){
-        cart.items.push(courseId)
+    if(cart && !cart.items.some(item=>item.courseId.toString()===courseId)){
+        cart.items.push({courseId})
         await cart.save()
     }
     return res.status(200).json({message:'cart Updated',cart})
+})
+
+// fetches cart courses
+export const fetchCartItems = asyncHandler(async(req,res)=>{
+    const userId = req.user.UserID
+   
+    const cart = await CartModel.findOne({userId:userId}).populate("items.courseId").lean()
+    if(!cart){
+        return res.status(404).json({message:'cart items not found'})
+    }
+    if(cart.items.length===0){
+        return res.status(200).json({cart:[]})
+    }
+   
+    return res.status(200).json({cart})
 })
