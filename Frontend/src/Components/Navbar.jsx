@@ -14,6 +14,7 @@ import { toast } from 'sonner';
 import { MdOutlineShoppingCart } from 'react-icons/md';
 const Navbar = () => {
 
+console.log(getSecond(numbers))
   const [open, setopen] = useState(false)
   const [openMenu, setOpenMenu] = useState(false)
   const [openProfile,setOpenProfile] = useState(false)
