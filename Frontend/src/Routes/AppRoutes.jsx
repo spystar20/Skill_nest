@@ -29,6 +29,7 @@ import Loader from '@/utils/Loader'
 import EnrolledCourses from '@/Dashboard Pages/user/EnrolledCourses'
 import Certificate from '@/Components/Courses/Certificate'
 import CertificatesShowcase from '@/Dashboard Pages/user/CertificatesShowcase'
+import Cart from '@/Pages/EcommercePages/Cart'
 
 const AppRoutes = () => {
   return (
@@ -41,6 +42,7 @@ const AppRoutes = () => {
           <Route path='/courses' element={<Courses />} />
           <Route path='/courses/:course_name/:course_id' element={<CourseDetails />} />
           <Route path='/Teach' element={<Teach />} />
+          <Route path='/cart' element={<Cart/>}/>
         </Route>
         <Route element={<AuthLayout />}>
 
