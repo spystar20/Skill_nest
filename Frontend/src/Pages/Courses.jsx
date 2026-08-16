@@ -16,6 +16,7 @@ import { useCategories, useFilteredCourse } from '@/hooks/CoursesHooks/useCourse
 import { useBuyCourse, useFreeCourse } from '@/hooks/CoursesHooks/courseMutation';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
+import { useAddCartItem } from '@/hooks/CoursesHooks/cart/useCart';
 const Courses = () => {
   const [openFilter, SetOpenFilter] = useState(false)
   const [showSort, setShowSort] = useState(false)
@@ -24,6 +25,7 @@ const Courses = () => {
   const navigate = useNavigate()
  const {mutate:buyCourse}=useBuyCourse()
  const{mutate:freeCourse}=useFreeCourse()
+ const {mutate:addToCart}=useAddCartItem()
   const handleToggleFilter = () => {
     SetOpenFilter(!openFilter)
   }
@@ -110,6 +112,14 @@ const {
               }, 1000);
       }})
     }
+   }
+   const handleCart=(courseId)=>{
+    console.log(courseId)
+addToCart({courseId},{
+  onSuccess:()=>{
+    toast.success('item added to cart')
+  }
+})
    }
   return (
     <div className='min-h-screen bg-white w-full font-[Outfit]'>
@@ -211,29 +221,11 @@ transition-all duration-300 px-1  md:px-4  flex items-center justify-center roun
               {courses?.map((course, index) => {
                 return (
 
-                  <ProjectCard onBuy={()=>handleEnrollment(course)} status={course.enrollment?.status ?? null}    img={course.thumbnail} enrollmentId={course.enrollment?._id} price={course.price} key={index} category={course.category} course_desc={course.desc} course_id={course._id} course_name={course.title} chapters={12} duration={course.duration} level={course.difficulty} rating={5} instructor_img={course.thumbnail} instructor_name={course.instructor.firstName} />
+                  <ProjectCard onBuy={()=>handleEnrollment(course)} status={course.enrollment?.status ?? null}    img={course.thumbnail} enrollmentId={course.enrollment?._id} price={course.price} key={index} category={course.category} course_desc={course.desc} course_id={course._id} course_name={course.title} chapters={12} duration={course.duration} level={course.difficulty} handleCart={()=>handleCart(course._id)} rating={5} instructor_img={course.thumbnail} instructor_name={course.instructor.firstName} />
                 )
               })}
 
             </div>
-            {/* <div className='flex justify-center py-6'>
-              <Pagination
-                count={Math.ceil(FinalArr.length / itemsPerPage)}
-                page={page}
-                onChange={(e, value) => setPage(value)}
-                shape="rounded"
-                sx={{
-                  "& .MuiPaginationItem-root.Mui-selected": {
-                    backgroundColor: "rgb(244 114 182)", // tailwind pink-400
-                    color: "white",
-                  },
-                  "& .MuiPaginationItem-root.Mui-selected:hover": {
-                    backgroundColor: "rgb(236 72 153)", // tailwind pink-500 for hover
-                  }
-                }}
-              />
-
-            </div> */}
           </div>)}
       </div>
     </div>

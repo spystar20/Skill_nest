@@ -7,10 +7,14 @@ import {
   FaLock,
   FaShieldAlt,
   FaHeart,
+  FaRegBookmark,
 } from "react-icons/fa";
 import { CiClock1 } from "react-icons/ci";
 import { PiBookDuotone } from "react-icons/pi";
 import { FiTrendingUp } from "react-icons/fi";
+import { RiDeleteBinLine } from "react-icons/ri";
+import CartCourseCard from "./Cart/CartCourseCard";
+import { usefetchCartItems } from "@/hooks/CoursesHooks/cart/useCart";
 
 const mockCartItems = [
   {
@@ -60,7 +64,7 @@ const mockCartItems = [
   },
 ];
 
-const formatTime = (seconds) => {
+export const formatTime = (seconds) => {
   const hours = Math.floor(seconds / 3600);
   const minutes = Math.floor((seconds % 3600) / 60);
 
@@ -72,6 +76,8 @@ const formatTime = (seconds) => {
 };
 
 const Cart = () => {
+  const {data:items}=usefetchCartItems()
+  console.log(items)
   const cartItems = mockCartItems;
 
   const subtotal = cartItems.reduce((total, item) => {
@@ -128,71 +134,7 @@ const Cart = () => {
               {/* COURSE LIST */}
               <div className="flex flex-col gap-5">
                 {cartItems.map((course) => (
-               <div key={course.id} className={`cards rounded-lg md:rounded-4xl grid grid-cols-3 gap-6 p-2 md:p-5 `}>
-                      <div className="relative group cursor-pointer">
-                        <img src={course.img} className="aspect-square object-cover rounded-2xl shadow group-hover:brightness-50 transition-all ease-in duration-200" alt="" />
-                        <span className="py-2 px-4 text-sm shadow-lg bg-primary/80 backdrop-blur rounded-full absolute top-3 left-3 text-white font-body">
-                          {course.category}
-                        </span>
-                        <div className="gap-5 items-center justify-start absolute bottom-1 right-0 z-40 text-xl text-text p-5 hidden group-hover:flex">
-                          <span className="bg-card p-2 rounded-full hover:scale-110 ease-in duration-200 transition-all">
-                            <FaHeart onClick={(e) => { toggleLike(id); stopNavigation(e) }} className="" />
-                          </span>
-                        
-                        </div>
-                      </div>
-                
-                    <div className="flex flex-col gap-2 md:gap-4 py-4 col-span-2">
-                      <div className="flex flex-col text-left flex-wrap">
-                        <h2 className="text-sm md:text-base font-semibold leading-snug font-heading text-text">{course.course_name}</h2>
-                        <p className="text-xs/4 md:text-xs mt-1 text-wrap font-body text-text-light line-clamp-1">{course.course_desc}</p>
-                      </div>
-                      <div className="flex items-center justify-start flex-wrap gap-2">
-                        <span className="p-1 md:py-1 md:px-2.5 text-xs lg:text-sm font-medium shadow-sm font-body rounded-sm md:rounded-full capitalize bg-page text-text-light flex flex-row gap-1 md:gap-2 items-center">
-                          <span><PiBookDuotone className="text-sm" /></span>{course.chapters}
-                        </span>
-                        <span className="p-1 md:py-1 md:px-2.5 text-xs lg:text-sm font-medium shadow-sm font-body rounded-sm md:rounded-full bg-page text-text-light flex flex-row gap-1 items-center">
-                          <span><CiClock1 className="text-sm" /></span>{formatTime(course.duration)}
-                        </span>
-                        <span className="p-1 md:py-1 md:px-2.5 text-xs lg:text-sm font-medium shadow-sm rounded-sm md:rounded-full bg-accent text-white flex gap-1 md:gap-2 items-center">
-                          <FiTrendingUp className="text-sm" />{course.level}
-                        </span>
-                        <span className="p-1 md:py-1 md:px-2.5 text-xs lg:text-sm font-medium shadow-sm rounded-sm md:rounded-full flex gap-1 md:gap-2 items-center text-yellow-500 bg-yellow-100">
-                          <FaStar className="text-sm" />{course.rating}
-                        </span>
-                      </div>
-                      <div className="hidden md:flex justify-start items-center gap-3">
-                        <div><img src={course.instructor_img} className="object-cover w-8 md:w-12 rounded-full aspect-[1]" alt="" /></div>
-                        <div className="flex flex-col justify-start items-start capitalize font-[outfit]">
-                          <span className="text-sm md:text-lg font-semibold md:font-medium text-text">{course.instructor_name}</span>
-                          <span className="font-medium text-xs md:text-sm text-text-light">instructor</span>
-                        </div>
-                      </div>
-                      <div className="flex flex-col mt-2 md:flex-row md:items-center gap-2 items-start justify-between">
-                        {course.price === 0 && (
-                          <>
-                            <div className="flex items-center gap-3">
-                              {course.price === 0 ? (
-                                <span className="text-xl font-semibold text-success">Free</span>
-                              ) : (
-                                <span className="text-2xl font-semibold text-primary">₹{price}</span>
-                              )}
-                            </div>
-                         
-                          </>
-                        )}
-                        {( course.price !== 0) && (
-                          <>
-                            <div className="flex items-center gap-3">
-                              <span className="text-lg md:text-2xl font-semibold text-primary">₹{course.price}</span>
-                            </div>
-                       
-                          </>
-                        )}
-                     
-                      </div>
-                    </div>
-                  </div>
+            <CartCourseCard course={course}/>
                 ))}
               </div>
 

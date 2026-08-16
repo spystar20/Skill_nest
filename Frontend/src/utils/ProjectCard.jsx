@@ -8,7 +8,7 @@ import { PiBookDuotone } from 'react-icons/pi'
 import { Link } from 'react-router-dom'
 import { formatTime } from './formatDuration'
 
-const ProjectCard = ({ img, category, enrollmentId, course_id, course_name, course_desc, chapters, duration, level, rating, instructor_img, instructor_name, price, id, className = '', onBuy, status }) => {
+const ProjectCard = ({ img, category, enrollmentId, course_id, course_name, course_desc, chapters, duration, level, rating, instructor_img, instructor_name, price, id, className = '', onBuy, status,handleCart }) => {
   const { Liked, toggleLike } = toggleStore()
   const stopNavigation = (e) => {
     e.preventDefault()
@@ -26,8 +26,8 @@ const ProjectCard = ({ img, category, enrollmentId, course_id, course_name, cour
             <span className="bg-card p-2 rounded-full hover:scale-110 ease-in duration-200 transition-all">
               <FaHeart onClick={(e) => { toggleLike(id); stopNavigation(e) }} className={`${Liked.includes(id) ? 'text-success' : 'text-text'}`} />
             </span>
-            <span className="bg-card p-2 rounded-full hover:scale-110 ease-in duration-200 transition-all">
-              <FaCartArrowDown onClick={(e) => stopNavigation(e)} />
+            <span onClick={(e) => {stopNavigation(e),handleCart()}} className="bg-card p-2 rounded-full hover:scale-110 ease-in duration-200 transition-all">
+              <FaCartArrowDown  />
             </span>
           </div>
         </div>
