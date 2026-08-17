@@ -1,5 +1,6 @@
 import api from "@/utils/axios"
 import { QueryClient, useMutation, useQuery } from "@tanstack/react-query"
+import { fetchCart } from "./cartApi"
 
 export const useAddCartItem = ()=>{
     const queryClient = new QueryClient()

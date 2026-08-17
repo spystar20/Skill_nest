@@ -1,91 +1,25 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import {
-  FaStar,
-  FaTrash,
+
   FaArrowLeft,
   FaLock,
   FaShieldAlt,
-  FaHeart,
-  FaRegBookmark,
+ 
 } from "react-icons/fa";
-import { CiClock1 } from "react-icons/ci";
 import { PiBookDuotone } from "react-icons/pi";
-import { FiTrendingUp } from "react-icons/fi";
-import { RiDeleteBinLine } from "react-icons/ri";
+
 import CartCourseCard from "./Cart/CartCourseCard";
 import { usefetchCartItems } from "@/hooks/CoursesHooks/cart/useCart";
+import { MdOutlineShoppingCart } from "react-icons/md";
 
-const mockCartItems = [
-  {
-    id: "1",
-    course_name: "MERN Stack Development",
-    course_desc:
-      "Build full-stack applications using MongoDB, Express, React and Node.js.",
-    img: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800",
-    instructor_name: "John Doe",
-    instructor_img:
-      "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200",
-    rating: 4.8,
-    chapters: 24,
-    duration: 1820,
-    level: "Intermediate",
-    price: 799,
-  },
-  {
-    id: "2",
-    course_name: "Modern JavaScript",
-    course_desc:
-      "Master modern JavaScript concepts and build stronger frontend applications.",
-    img: "https://images.unsplash.com/photo-1627398242454-45a1465c2479?w=800",
-    instructor_name: "Sarah Wilson",
-    instructor_img:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200",
-    rating: 4.9,
-    chapters: 18,
-    duration: 1260,
-    level: "Beginner",
-    price: 599,
-  },
-  {
-    id: "3",
-    course_name: "Advanced React",
-    course_desc:
-      "Learn advanced React patterns, state management and production architecture.",
-    img: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800",
-    instructor_name: "Alex Morgan",
-    instructor_img:
-      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200",
-    rating: 4.7,
-    chapters: 21,
-    duration: 1500,
-    level: "Advanced",
-    price: 899,
-  },
-];
 
-export const formatTime = (seconds) => {
-  const hours = Math.floor(seconds / 3600);
-  const minutes = Math.floor((seconds % 3600) / 60);
-
-  if (hours > 0) {
-    return `${hours}h ${minutes}m`;
-  }
-
-  return `${minutes}m`;
-};
 
 const Cart = () => {
-  const {data:items}=usefetchCartItems()
-  console.log(items)
-  const cartItems = mockCartItems;
+  const {data:cartData}=usefetchCartItems()
+console.log(cartData?.cart?.items)
+  const cartItems = cartData?.addedCourses
 
-  const subtotal = cartItems.reduce((total, item) => {
-    return total + item.price;
-  }, 0);
-
-  const discount = 0;
-  const total = subtotal - discount;
 
   return (
     <div className="min-h-screen bg-page px-4 pb-20 pt-32 md:px-8 lg:px-12">
@@ -113,7 +47,7 @@ const Cart = () => {
         </div>
 
         {/* ================= CART CONTENT ================= */}
-        {cartItems.length > 0 ? (
+        {cartItems?.length > 0 ? (
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_380px]">
 
             {/* ================= LEFT ================= */}
@@ -133,7 +67,7 @@ const Cart = () => {
 
               {/* COURSE LIST */}
               <div className="flex flex-col gap-5">
-                {cartItems.map((course) => (
+                {cartItems?.map((course) => (
             <CartCourseCard course={course}/>
                 ))}
               </div>
@@ -163,11 +97,11 @@ const Cart = () => {
 
                   <div className="flex items-center justify-between">
                     <span className="text-text-light">
-                      Courses ({cartItems.length})
+                      Courses ({cartItems?.length})
                     </span>
 
                     <span className="font-medium text-text">
-                      ₹{subtotal}
+                      ₹subtotal
                     </span>
                   </div>
 
@@ -177,7 +111,7 @@ const Cart = () => {
                     </span>
 
                     <span className="font-medium text-success">
-                      -₹{discount}
+                      -₹discount
                     </span>
                   </div>
 
@@ -189,7 +123,7 @@ const Cart = () => {
                     </span>
 
                     <span className="font-heading text-2xl font-bold text-primary">
-                      ₹{total}
+                      ₹total
                     </span>
                   </div>
                 </div>
@@ -252,7 +186,7 @@ const Cart = () => {
         )}
 
         {/* ================= TRUST SECTION ================= */}
-        {cartItems.length > 0 && (
+        {cartItems?.length > 0 && (
           <div className="mt-12 grid grid-cols-1 gap-4 md:grid-cols-3">
 
             <div className="rounded-2xl bg-card p-5">
