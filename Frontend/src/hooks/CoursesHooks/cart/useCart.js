@@ -1,9 +1,9 @@
 import api from "@/utils/axios"
-import { QueryClient, useMutation, useQuery } from "@tanstack/react-query"
+import {  useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { fetchCart } from "./cartApi"
 
 export const useAddCartItem = ()=>{
-    const queryClient = new QueryClient()
+    const queryClient =  useQueryClient()
     return useMutation({
        mutationFn:async({courseId})=>{
         const res = await api.post(`/course/${courseId}/cart/new`)
@@ -20,3 +20,17 @@ export const usefetchCartItems = ()=>useQuery({
     queryKey:['cartItems'],
     queryFn:()=>fetchCart()
 })
+export const useRemoveCartItem = ()=>{
+    const queryClient =  useQueryClient()
+    return useMutation({
+        mutationFn:async({courseId})=>{
+            const res = await api.delete(`/course/${courseId}/cart/removeItem`)
+            return res.data
+        },
+        onSuccess:async(_,variable)=>{
+              await queryClient.invalidateQueries({
+            queryKey:['cartItems']
+        })
+        }
+    })
+}

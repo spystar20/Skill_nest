@@ -72,7 +72,23 @@ return res.status(200).json({message:'cart updated',cartDocument})
     }
     return res.status(200).json({message:'cart Updated',cart})
 })
-
+// removes course from cart
+export const removeItems = asyncHandler(async(req,res)=>{
+    const {courseId}= req.params
+    console.log(courseId,"courseId")
+    const userId = req.user.UserID
+    const userCart = await CartModel.findOne({userId:userId})
+    if(!userCart){
+        return res.status(404).json({message:'user cart not found'})
+    }
+   const cartItem= userCart.items.find(item=>item.courseId.toString()===courseId.toString())
+  if(!cartItem){
+return res.status(404).json({message:'item not found in cart'})
+  }
+userCart.items = userCart.items.filter(item=>item.courseId.toString()!==courseId.toString())
+await userCart.save()
+  return res.status(200).json({message:"item removed"})
+})
 // fetches cart courses
 export const fetchCartItems = asyncHandler(async(req,res)=>{
     const userId = req.user.UserID

@@ -7,7 +7,7 @@ import { PiBookDuotone } from 'react-icons/pi'
 import { RiDeleteBinLine } from 'react-icons/ri'
 
 
-const CartCourseCard = ({course}) => {
+const CartCourseCard = ({course,handleRemove}) => {
   return (
  <div  key={course._id} className="cards rounded-lg md:rounded-4xl md:grid grid-cols-3 gap-5 p-3 md:p-5 relative overflow-hidden">
   <div className="relative group cursor-pointer">
@@ -22,7 +22,7 @@ const CartCourseCard = ({course}) => {
       <h2 className="text-base md:text-lg font-semibold leading-snug font-heading text-text">
         {course.title}
       </h2>
-      <p className="text-xs md:text-sm mt-1 text-text-light line-clamp-2 font-body">
+      <p className="text-xs md:text-sm mt-1 text-text-light line-clamp-1 font-body">
         {course.desc}
       </p>
     </div>
@@ -60,10 +60,12 @@ const CartCourseCard = ({course}) => {
       </div>
 
       <div className="flex gap-3 justify-end">
-       
+     {course.price===0?(<button className="transition-all bg-accent font-heading cursor-pointer text-white rounded-full py-1.5 px-5 w-full text-sm md:text-base font-medium hover:bg-primary-light hover:scale-[0.98] ">
+Enroll Now        </button>):( 
         <button className="transition-all bg-accent font-heading cursor-pointer text-white rounded-full py-1.5 px-5 w-full text-sm md:text-base font-medium hover:bg-primary-light hover:scale-[0.98] ">
           Buy Now
         </button>
+        )} 
          <div className="flex gap-2 md:absolute top-3 right-3 z-10">
       <button className="bg-white/80 backdrop-blur-sm hover:bg-white text-text-light p-2 text-lg rounded-full cursor-pointer shadow-sm transition-all duration-200 hover:scale-110">
         <RiDeleteBinLine />
@@ -76,7 +78,7 @@ const CartCourseCard = ({course}) => {
     </div>
 
     <div className="md:flex gap-2 hidden absolute top-3 right-3 z-10">
-      <button className="bg-white/80 backdrop-blur-sm hover:bg-white text-text-light p-2 text-lg rounded-full cursor-pointer shadow-sm transition-all duration-200 hover:scale-110">
+      <button onClick={()=>handleRemove(course._id)} className="bg-white/80 backdrop-blur-sm hover:bg-white text-text-light p-2 text-lg rounded-full cursor-pointer shadow-sm transition-all duration-200 hover:scale-110">
         <RiDeleteBinLine />
       </button>
       <button className="bg-white/80 backdrop-blur-sm hover:bg-white text-text-light p-2 text-lg rounded-full cursor-pointer shadow-sm transition-all duration-200 hover:scale-110">

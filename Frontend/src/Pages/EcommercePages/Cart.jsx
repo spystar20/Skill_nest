@@ -1,26 +1,22 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import {
-
-  FaArrowLeft,
-  FaLock,
-  FaShieldAlt,
- 
-} from "react-icons/fa";
+import { FaArrowLeft, FaLock,FaShieldAlt,} from "react-icons/fa";
 import { PiBookDuotone } from "react-icons/pi";
-
 import CartCourseCard from "./Cart/CartCourseCard";
-import { usefetchCartItems } from "@/hooks/CoursesHooks/cart/useCart";
+import { usefetchCartItems, useRemoveCartItem } from "@/hooks/CoursesHooks/cart/useCart";
 import { MdOutlineShoppingCart } from "react-icons/md";
-
-
-
+import { toast } from "sonner";
 const Cart = () => {
+  const {mutate:deleteItem}=useRemoveCartItem()
   const {data:cartData}=usefetchCartItems()
 console.log(cartData?.cart?.items)
   const cartItems = cartData?.addedCourses
-
-
+  
+const handleRemove  = (courseId)=>{
+  deleteItem({courseId},{onSuccess:()=>{
+    toast.success("course removed")
+  }})
+}
   return (
     <div className="min-h-screen bg-page px-4 pb-20 pt-32 md:px-8 lg:px-12">
       <div className="mx-auto max-w-7xl">
@@ -68,7 +64,7 @@ console.log(cartData?.cart?.items)
               {/* COURSE LIST */}
               <div className="flex flex-col gap-5">
                 {cartItems?.map((course) => (
-            <CartCourseCard course={course}/>
+            <CartCourseCard course={course} handleRemove={handleRemove}/>
                 ))}
               </div>
 

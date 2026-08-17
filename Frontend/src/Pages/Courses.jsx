@@ -117,7 +117,11 @@ const {
     console.log(courseId)
 addToCart({courseId},{
   onSuccess:()=>{
-    toast.success('item added to cart')
+    toast.success('item added to cart',{
+      description:`The Course has been added`,action:{
+        label:'view cart',onClick:()=>navigate('/cart')
+      }
+    })
   }
 })
    }

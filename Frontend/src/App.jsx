@@ -8,7 +8,6 @@ const App = () => {
   return (
     <div className=' bg-black w-full '>
 <Toaster  position="top-center"
-        richColors
         closeButton/>
     <BrowserRouter>
     <ScrollToTop/>
