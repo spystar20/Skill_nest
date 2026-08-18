@@ -1,4 +1,3 @@
-import { popularCourses } from '@/Courses/popularCourse'
 import { toggleStore } from '@/Store/toggleStore'
 import React from 'react'
 import { CiClock1 } from 'react-icons/ci'
@@ -6,7 +5,7 @@ import { FaHeart, FaCartArrowDown, FaStar } from 'react-icons/fa'
 import { FiTrendingUp } from 'react-icons/fi'
 import { PiBookDuotone } from 'react-icons/pi'
 import { Link, useNavigate } from 'react-router-dom'
-import { formatTime } from './formatDuration'
+import { formatTime } from '../../utils/formatDuration'
 import { useAddCartItem } from '@/hooks/CoursesHooks/cart/useCart'
 import { toast } from 'sonner'
 import { useBuyCourse, useFreeCourse } from '@/hooks/CoursesHooks/courseMutation'
@@ -63,11 +62,13 @@ action:{
             <span className="bg-card p-2 rounded-full hover:scale-110 ease-in duration-200 transition-all">
               <FaHeart onClick={(e) => { toggleLike(course?._id); stopNavigation(e) }} className={`${Liked.includes(course?._id) ? 'text-success' : 'text-text'}`} />
             </span>
-
-            <span onClick={(e) => {stopNavigation(e)
+{isItemAdded===false?( <span onClick={(e) => {stopNavigation(e)
               handleAddItem(course?._id,course?.title)}} className="bg-card p-2 rounded-full hover:scale-110 ease-in duration-200 transition-all">
-            {isItemAdded===false?<FaCartArrowDown/>:<BsFillCartCheckFill/>}
-            </span>
+      <FaCartArrowDown/>
+            </span>):( <Link to='/cart'  className="bg-card p-2 rounded-full hover:scale-110 ease-in duration-200 transition-all">
+   <BsFillCartCheckFill/>
+            </Link>)}
+          
           </div>
         </div>
       </Link>

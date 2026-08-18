@@ -20,7 +20,7 @@ import { testimonials } from '../Courses/testimonials';
 import Fade from "embla-carousel-fade";
 import Autoplay from "embla-carousel-autoplay";
 import { BsTwitterX } from 'react-icons/bs';
-import ProjectCard from '@/utils/ProjectCard';
+import ProjectCard from '@/Pages/Course/ProjectCard';
 const Home = () => {
 
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [

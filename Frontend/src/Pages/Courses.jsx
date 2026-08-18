@@ -3,7 +3,7 @@ import { FaSearch, FaSortAlphaDownAlt } from "react-icons/fa";
 import { MdOutlineKeyboardArrowDown } from 'react-icons/md';
 import { IoFilterSharp, IoTime } from "react-icons/io5";
 import Pagination from '@mui/material/Pagination';
-import ProjectCard from '@/utils/ProjectCard';
+import ProjectCard from '@/Pages/Course/ProjectCard';
 import api from '@/utils/axios';
 import { Import } from 'lucide-react';
 import FilterComponent from '@/utils/FilterComponent';
