@@ -106,3 +106,30 @@ export const fetchCartItems = asyncHandler(async(req,res)=>{
    }))
     return res.status(200).json({cart,addedCourses})
 })
+
+ export const cartOrder = asyncHandler(async(req,res)=>{
+    const userId = req.user.UserID
+    const userCart = await CartModel.findOne({userId:userId})
+    if(!userCart){
+        return res.status(404).json({message:'cart not found'})
+    }
+    if(userCart.items.length===0){
+        return res.status(403).json({message:"cart is empty"})
+    }
+   
+ const coursePrice =  await Promise.all( userCart.items.map( async item=>{
+        const course = await Course.findById(item.courseId)
+        if(!course){
+            return res.status(404).json({message:'course not found'})
+        }
+        return course.price
+    }))
+
+const subtotal = coursePrice.reduce((acc,price)=>acc+price,0)
+const discount = 0
+const total = subtotal-discount
+const order = await razorpay.orders.create({amount:total*100,currency:"INR",receipt:`receipt_Skillnest-${Date.now()}`})
+const payment = await PaymentModel.create({
+    userId:userId,courseId:cou
+})
+ })

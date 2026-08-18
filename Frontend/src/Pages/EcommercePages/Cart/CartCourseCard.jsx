@@ -1,3 +1,5 @@
+import { useRemoveCartItem } from '@/hooks/CoursesHooks/cart/useCart'
+import { useBuyCourse, useFreeCourse } from '@/hooks/CoursesHooks/courseMutation'
 import { formatTime } from '@/utils/formatDuration'
 import React from 'react'
 import { CiClock1 } from 'react-icons/ci'
@@ -5,9 +7,34 @@ import { FaStar, FaRegBookmark } from 'react-icons/fa'
 import { FiTrendingUp } from 'react-icons/fi'
 import { PiBookDuotone } from 'react-icons/pi'
 import { RiDeleteBinLine } from 'react-icons/ri'
+import { toast } from "sonner";
 
 
-const CartCourseCard = ({course,handleRemove}) => {
+const CartCourseCard = ({course}) => {
+    const {mutate:deleteItem}=useRemoveCartItem()
+      const {mutate:buyCourse}=useBuyCourse()
+  const {mutate:freeCourse}=useFreeCourse()
+const handleRemove  = (courseId)=>{
+  deleteItem({courseId},{onSuccess:()=>{
+    toast.success("course removed")
+  }})}
+  const handleEnrollment=(courseId,priceType)=>{
+    const course_id = courseId
+    if(priceType !=='Free'){
+      buyCourse({ courseId:course_id },{onSuccess:()=>{
+        toast.success("Redirecting to payment...")
+          
+      }})
+    }else{
+      
+      freeCourse({course_id},{onSuccess:()=>{
+        toast.success('Course Purchased')
+              setTimeout(() => {
+                navigate('/dashboard/student/my-courses')
+              }, 1000);
+      }})
+    }
+   }
   return (
  <div  key={course._id} className="cards rounded-lg md:rounded-4xl md:grid grid-cols-3 gap-5 p-3 md:p-5 relative overflow-hidden">
   <div className="relative group cursor-pointer">
@@ -60,12 +87,9 @@ const CartCourseCard = ({course,handleRemove}) => {
       </div>
 
       <div className="flex gap-3 justify-end">
-     {course.price===0?(<button className="transition-all bg-accent font-heading cursor-pointer text-white rounded-full py-1.5 px-5 w-full text-sm md:text-base font-medium hover:bg-primary-light hover:scale-[0.98] ">
-Enroll Now        </button>):( 
-        <button className="transition-all bg-accent font-heading cursor-pointer text-white rounded-full py-1.5 px-5 w-full text-sm md:text-base font-medium hover:bg-primary-light hover:scale-[0.98] ">
-          Buy Now
-        </button>
-        )} 
+  
+                <button onClick={() =>  handleEnrollment(course?._id,course?.priceType) } className="transition-all bg-accent font-heading cursor-pointer text-white rounded-full md:py-1.5 py-1 px-5 w-full text-lg box capitalize font-medium hover:bg-primary-light hover:scale-95">{course?.price===0? 'Enoll Now': 'Buy now'}</button>
+              
          <div className="flex gap-2 md:absolute top-3 right-3 z-10">
       <button className="bg-white/80 backdrop-blur-sm hover:bg-white text-text-light p-2 text-lg rounded-full cursor-pointer shadow-sm transition-all duration-200 hover:scale-110">
         <RiDeleteBinLine />

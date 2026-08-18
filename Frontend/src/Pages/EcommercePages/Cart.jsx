@@ -7,16 +7,12 @@ import { usefetchCartItems, useRemoveCartItem } from "@/hooks/CoursesHooks/cart/
 import { MdOutlineShoppingCart } from "react-icons/md";
 import { toast } from "sonner";
 const Cart = () => {
-  const {mutate:deleteItem}=useRemoveCartItem()
   const {data:cartData}=usefetchCartItems()
 console.log(cartData?.cart?.items)
   const cartItems = cartData?.addedCourses
-  
-const handleRemove  = (courseId)=>{
-  deleteItem({courseId},{onSuccess:()=>{
-    toast.success("course removed")
-  }})
-}
+  const subtotal = cartItems?.reduce((acc,curr)=>acc+curr.price,0) || 0
+  const discount = 0
+const total = subtotal-discount
   return (
     <div className="min-h-screen bg-page px-4 pb-20 pt-32 md:px-8 lg:px-12">
       <div className="mx-auto max-w-7xl">
@@ -64,7 +60,7 @@ const handleRemove  = (courseId)=>{
               {/* COURSE LIST */}
               <div className="flex flex-col gap-5">
                 {cartItems?.map((course) => (
-            <CartCourseCard course={course} handleRemove={handleRemove}/>
+            <CartCourseCard course={course} />
                 ))}
               </div>
 
@@ -97,7 +93,7 @@ const handleRemove  = (courseId)=>{
                     </span>
 
                     <span className="font-medium text-text">
-                      ₹subtotal
+                      ₹{subtotal}
                     </span>
                   </div>
 
@@ -107,7 +103,7 @@ const handleRemove  = (courseId)=>{
                     </span>
 
                     <span className="font-medium text-success">
-                      -₹discount
+                      -₹{discount}
                     </span>
                   </div>
 
@@ -119,7 +115,7 @@ const handleRemove  = (courseId)=>{
                     </span>
 
                     <span className="font-heading text-2xl font-bold text-primary">
-                      ₹total
+                      ₹{total}
                     </span>
                   </div>
                 </div>
