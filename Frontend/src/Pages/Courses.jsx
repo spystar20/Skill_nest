@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { FaSearch, FaSortAlphaDownAlt } from "react-icons/fa";
 import { MdOutlineKeyboardArrowDown } from 'react-icons/md';
-import courseCategories from '../data/CourseCategories';
 import { IoFilterSharp, IoTime } from "react-icons/io5";
 import Pagination from '@mui/material/Pagination';
 import ProjectCard from '@/utils/ProjectCard';
@@ -11,21 +10,18 @@ import FilterComponent from '@/utils/FilterComponent';
 import { Slider } from '@mui/material';
 import { RxCross2 } from 'react-icons/rx';
 import FilterChip from '@/utils/FilterChip';
-import { paymentStore } from '@/Store/usePaymentStore';
 import { useCategories, useFilteredCourse } from '@/hooks/CoursesHooks/useCourse';
 import { useBuyCourse, useFreeCourse } from '@/hooks/CoursesHooks/courseMutation';
-import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
-import { useAddCartItem } from '@/hooks/CoursesHooks/cart/useCart';
+import { usefetchCartItems } from '@/hooks/CoursesHooks/cart/useCart';
+import { isItemAdded } from '@/hooks/CoursesHooks/cart/cartUtils';
 const Courses = () => {
   const [openFilter, SetOpenFilter] = useState(false)
   const [showSort, setShowSort] = useState(false)
   const [sliderValue, setSliderValue] = useState([0, 0]);
   const [sortOption, setSortOptions] = useState('newest')
-  const navigate = useNavigate()
- const {mutate:buyCourse}=useBuyCourse()
- const{mutate:freeCourse}=useFreeCourse()
- const {mutate:addToCart}=useAddCartItem()
+const {data:cartItems}=usefetchCartItems()
+
   const handleToggleFilter = () => {
     SetOpenFilter(!openFilter)
   }
@@ -96,35 +92,8 @@ const {
   // const startIndex = (page - 1) * itemsPerPage
   // const endIndex = startIndex + itemsPerPage
   // const CurrentCourse = FinalArr.slice(startIndex, endIndex)
-   const handleEnrollment=(course)=>{
-    const course_id = course?._id
-    if(course?.priceType !=='Free'){
-      buyCourse({ courseId:course_id },{onSuccess:()=>{
-        toast.success("Redirecting to payment...")
-          
-      }})
-    }else{
-      
-      freeCourse({course_id},{onSuccess:()=>{
-        toast.success('Course Purchased')
-              setTimeout(() => {
-                navigate('/dashboard/student/my-courses')
-              }, 1000);
-      }})
-    }
-   }
-   const handleCart=(courseId)=>{
-    console.log(courseId)
-addToCart({courseId},{
-  onSuccess:()=>{
-    toast.success('item added to cart',{
-      description:`The Course has been added`,action:{
-        label:'view cart',onClick:()=>navigate('/cart')
-      }
-    })
-  }
-})
-   }
+  
+  
   return (
     <div className='min-h-screen bg-white w-full font-[Outfit]'>
       <div className='w-full flex flex-col min-h-[320px] gap-3 pt-23 justify-center items-center text-white  home-bg'>
@@ -224,8 +193,7 @@ transition-all duration-300 px-1  md:px-4  flex items-center justify-center roun
             <div className={`grid  gap-4  py-2 md:py-6 grid-cols-1 ${filter ? 'md:grid-cols-3 ' : 'md:grid-cols-4'}`}>
               {courses?.map((course, index) => {
                 return (
-
-                  <ProjectCard onBuy={()=>handleEnrollment(course)} status={course.enrollment?.status ?? null}    img={course.thumbnail} enrollmentId={course.enrollment?._id} price={course.price} key={index} category={course.category} course_desc={course.desc} course_id={course._id} course_name={course.title} chapters={12} duration={course.duration} level={course.difficulty} handleCart={()=>handleCart(course._id)} rating={5} instructor_img={course.thumbnail} instructor_name={course.instructor.firstName} />
+                  <ProjectCard course={course} isItemAdded={isItemAdded(course._id,cartItems?.addedCourses)} />
                 )
               })}
 

@@ -23,7 +23,6 @@ import { BsTwitterX } from 'react-icons/bs';
 import ProjectCard from '@/utils/ProjectCard';
 const Home = () => {
 
-
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [
     AutoScroll({ speed: 0.3, startDelay: 1000 })],
   );
@@ -232,7 +231,7 @@ shadow-xl shadow-black/10' >
           <div className='embla__container  flex  gap-4 px-5 py-10'>
            {featureCourses.map((course,index)=>{return(
 
-             <ProjectCard className='embla_slide basis-full md:basis-1/2 lg:basis-1/4 shrink-0' img={course.img} price={course.price} key={index} category={course.category} course_desc={course.course_desc} course_name={course.course_name} chapters={course.chapters} duration={course.duration} level={course.level} rating={course.rating} instructor_img={course.instructor_img} instructor_name={course.instructor_name} />
+             <ProjectCard className='embla_slide basis-full md:basis-1/2 lg:basis-1/4 shrink-0' key={course?._id} course={course} />
 
          
            )})}
