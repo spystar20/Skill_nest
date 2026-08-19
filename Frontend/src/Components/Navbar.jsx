@@ -40,7 +40,7 @@ setUser(null)
   }
   return (
 
-    <div className='font-["Roboto"] fixed top-0 left-0 w-full z-[9999]  bg-transparent shadow-2xs border-b  shadow-black'>
+    <div className='font-["Roboto"] fixed top-0 left-0 w-full z-[9999]  home-bg shadow-2xs '>
       {/* desktop */}
       {/* student menu */}
       <div className="hidden  w-full py-6 font-heading md:flex justify-between px-12 items-center text-white backdrop-blur-lg  bg-opacity-40 relative ">

@@ -5,11 +5,11 @@ const paymentModel = new mongoose.Schema({
         ref: 'user',
         required: true
     },
-    courseId: {
+    courseId: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'course',
         required: true
-    },
+    }],
 
     razorpayOrderId: {
         type: String, required: true

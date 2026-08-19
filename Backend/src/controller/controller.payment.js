@@ -20,7 +20,7 @@ if(existingCourse){
 const order = await razorpay.orders.create({amount:course.price*100,receipt:`receipt_Skillnest-${Date.now()}`,currency:'INR'})
 
 const payment = await PaymentModel.create({
-    userId:userId,courseId:courseId,status:'created',amount:course.price,razorpayOrderId:order.id,currency:order.currency
+    userId:userId,courseId:[courseId],status:'created',amount:course.price,razorpayOrderId:order.id,currency:order.currency
 })
 return res.status(200).json({order,key:process.env.RAZORPAY_KEY_ID})
 })
@@ -32,7 +32,8 @@ if(generatedSignature !== signature){
     return res.status(403).json({message:'payment unsuccessfull'})
 }
 const payment = await PaymentModel.findOneAndUpdate({razorpayOrderId:orderId},{status:'paid',razorpayPaymentId:paymentId,paidAt:Date.now()},{new:true,runValidators:true})
-const existingEnrollment = await Enrollment.findOne({userId:payment.userId,courseId:payment.courseId})
+
+const existingEnrollment = await Enrollment.findOne({userId:payment.userId,courseId:payment.courseId[0]})
 if(!existingEnrollment){
 await Enrollment.create({
     userId:payment.userId,courseId:payment.courseId,paymentId:payment.razorpayPaymentId
@@ -117,19 +118,32 @@ export const fetchCartItems = asyncHandler(async(req,res)=>{
         return res.status(403).json({message:"cart is empty"})
     }
    
- const coursePrice =  await Promise.all( userCart.items.map( async item=>{
+ const course =  await Promise.all( userCart.items.map( async item=>{
         const course = await Course.findById(item.courseId)
         if(!course){
-            return res.status(404).json({message:'course not found'})
+            return Promise.reject(new Error('course not found'))
         }
-        return course.price
+        return {price:course.price,id:course._id}
     }))
-
+const coursePrice = course.map(item=>item.price)
+const courseIds = course.map(item=>item.id)
 const subtotal = coursePrice.reduce((acc,price)=>acc+price,0)
 const discount = 0
 const total = subtotal-discount
 const order = await razorpay.orders.create({amount:total*100,currency:"INR",receipt:`receipt_Skillnest-${Date.now()}`})
 const payment = await PaymentModel.create({
-    userId:userId,courseId:cou
+    userId:userId,courseId:courseIds,razorpayOrderId:order.id,amount:total,currency:order.currency,status:'created'
 })
+return res.status(200).json({order,key:process.env.RAZORPAY_KEY_ID})
+ })
+ export const verifyCart = asyncHandler(async(req,res)=>{
+    const {orderId,signature,paymentId} = req.body
+    const userId = req.user.UserID
+    const generatedSignature =crypto.createHmac("sha256",process.env.RAZORPAY_SECRET_KEY).update(`${orderId}|${paymentId}`).digest("hex")
+    if(generatedSignature !== signature){
+        return res.status(403).json("credentials not matched")
+    }
+    const payment = await PaymentModel.findOneAndUpdate({razorpayOrderId:orderId},{razorpayPaymentId:paymentId,status:"paid",paidAt:Date.now()},{new:true,runValidators:true})
+
+    const existingEnrollment = await Promise.all(pa)
  })
