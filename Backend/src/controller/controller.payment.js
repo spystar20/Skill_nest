@@ -36,7 +36,7 @@ const payment = await PaymentModel.findOneAndUpdate({razorpayOrderId:orderId},{s
 const existingEnrollment = await Enrollment.findOne({userId:payment.userId,courseId:payment.courseId[0]})
 if(!existingEnrollment){
 await Enrollment.create({
-    userId:payment.userId,courseId:payment.courseId,paymentId:payment.razorpayPaymentId
+    userId:payment.userId,courseId:payment.courseId[0],paymentId:payment.razorpayPaymentId
 })
 
 }
@@ -143,7 +143,24 @@ return res.status(200).json({order,key:process.env.RAZORPAY_KEY_ID})
     if(generatedSignature !== signature){
         return res.status(403).json("credentials not matched")
     }
-    const payment = await PaymentModel.findOneAndUpdate({razorpayOrderId:orderId},{razorpayPaymentId:paymentId,status:"paid",paidAt:Date.now()},{new:true,runValidators:true})
+    const payment = await PaymentModel.findOneAndUpdate({razorpayOrderId:orderId,userId},{razorpayPaymentId:paymentId,status:"paid",paidAt:Date.now()},{new:true,runValidators:true})
+if(!payment){
+    return res.status(404).json({message:"payment not found"})
+}
+ const courseIds = payment.courseId
+    const enrollments = await Promise.all(courseIds.map(async course=>{
+        const enrollment = await Enrollment.findOne({userId:userId,courseId:course})
+        if(!enrollment){
+            Enrollment.create({
+                userId:userId,courseId:course,paymentId:payment.razorpayPaymentId
+            })
+        }
 
-    const existingEnrollment = await Promise.all(pa)
+    }))
+    const cart = await CartModel.findOne({userId:userId})
+    if(cart){
+        cart.items = cart.items.filter(item=>!courseIds.some(courseId=>courseId.toString()===item.courseId.toString()))
+        await cart.save()
+    }
+    return res.status(200).json({message:'courses purchased'})
  })

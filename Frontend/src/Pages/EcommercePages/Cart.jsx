@@ -3,16 +3,17 @@ import { Link } from "react-router-dom";
 import { FaArrowLeft, FaLock,FaShieldAlt,} from "react-icons/fa";
 import { PiBookDuotone } from "react-icons/pi";
 import CartCourseCard from "./Cart/CartCourseCard";
-import { usefetchCartItems, useRemoveCartItem } from "@/hooks/CoursesHooks/cart/useCart";
+import { useCartCheckout, usefetchCartItems, useRemoveCartItem } from "@/hooks/CoursesHooks/cart/useCart";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import { toast } from "sonner";
 const Cart = () => {
   const {data:cartData}=usefetchCartItems()
-console.log(cartData?.cart?.items)
+const {mutate:checkout}=useCartCheckout()
   const cartItems = cartData?.addedCourses
   const subtotal = cartItems?.reduce((acc,curr)=>acc+curr.price,0) || 0
   const discount = 0
 const total = subtotal-discount
+
   return (
     <div className="min-h-screen bg-page px-4 pb-20 pt-32 md:px-8 lg:px-12">
       <div className="mx-auto max-w-7xl">
@@ -121,7 +122,7 @@ const total = subtotal-discount
                 </div>
 
                 {/* CHECKOUT */}
-                <button className="mt-7 w-full cursor-pointer rounded-full bg-accent py-3.5 font-heading text-base font-medium text-white shadow-md transition-all duration-300 hover:scale-[0.98] hover:bg-primary-light">
+                <button onClick={()=>checkout()} className="mt-7 w-full cursor-pointer rounded-full bg-accent py-3.5 font-heading text-base font-medium text-white shadow-md transition-all duration-300 hover:scale-[0.98] hover:bg-primary-light">
                   Proceed to Checkout
                 </button>
 

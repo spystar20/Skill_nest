@@ -26,7 +26,6 @@ export const useBuyCourse = () => {
     return useMutation({
         mutationFn: async ({ courseId }) => {
             const res = await api.post(`/course/buy-course/${courseId}`)
-            console.log(courseId)
             const { order, key } = res.data
             const options = {
                 key,
