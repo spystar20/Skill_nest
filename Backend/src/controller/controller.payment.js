@@ -95,12 +95,9 @@ export const fetchCartItems = asyncHandler(async(req,res)=>{
     const userId = req.user.UserID
    
     const cart = await CartModel.findOne({userId:userId})
-    if(!cart){
-        return res.status(404).json({message:'cart items not found'})
-    }
-    if(cart.items.length===0){
-        return res.status(200).json({cart:[]})
-    }
+  if(!cart || cart.items.length===0){
+    return res.status(200).json({cart:[],addedCourses:[]})
+  }
    const addedCourses = await Promise.all( cart.items.map( async (course)=>{
   const   courseData = await Course.findById(course.courseId).populate('instructor').lean()
     return {...courseData}
