@@ -10,6 +10,7 @@ import { useAddCartItem } from '@/hooks/CoursesHooks/cart/useCart'
 import { toast } from 'sonner'
 import { useBuyCourse, useFreeCourse } from '@/hooks/CoursesHooks/courseMutation'
 import { BsFillCartCheckFill } from 'react-icons/bs'
+import { useAddWishlist } from '@/hooks/CoursesHooks/wishlist/useWishlist'
 
 const ProjectCard = ({ className = '', course ,isItemAdded}) => {
   const { Liked, toggleLike } = toggleStore()
@@ -19,6 +20,14 @@ const ProjectCard = ({ className = '', course ,isItemAdded}) => {
   const {mutate:freeCourse}=useFreeCourse()
   // adding course to cart with id
 const {mutate:addItem}=useAddCartItem()
+const {mutate:addWishlist} =useAddWishlist()
+const handleAddWishlist = (courseId)=>{
+  addWishlist({courseId},{
+    onSuccess:()=>{
+      toast.success("item added to wishlist")
+    }
+  })
+}
 const handleAddItem = (courseId,course_name)=>{
   addItem({courseId},{
     onSuccess:()=>{
@@ -58,12 +67,13 @@ action:{
           <span className="py-2 px-4 text-sm shadow-lg bg-primary/80 backdrop-blur rounded-full absolute top-3 left-3 text-white font-body">
             {course?.category}
           </span>
-          <div className="gap-5 items-center justify-start absolute bottom-1 right-0 z-40 text-xl text-text p-5 hidden group-hover:flex">
+          <div className="gap-5 items-center justify-start absolute bottom-1 right-0 z-40 text-xl text-text p-5 flex">
             <span className="bg-card p-2 rounded-full hover:scale-110 ease-in duration-200 transition-all">
-              <FaHeart onClick={(e) => { toggleLike(course?._id); stopNavigation(e) }} className={`${Liked.includes(course?._id) ? 'text-success' : 'text-text'}`} />
+              <FaHeart onClick={(e) =>{ stopNavigation(e) 
+                handleAddWishlist(course._id)}} className={`${Liked.includes(course?._id) ? 'text-success' : 'text-text'}`} />
             </span>
-{isItemAdded===false?( <span onClick={(e) => {stopNavigation(e)
-              handleAddItem(course?._id,course?.title)}} className="bg-card p-2 rounded-full hover:scale-110 ease-in duration-200 transition-all">
+{isItemAdded===false?( <span onClick={(e) => {stopNavigation(e) 
+  handleAddItem(course?._id,course?.title)}} className="bg-card p-2 rounded-full hover:scale-110 ease-in duration-200 transition-all">
       <FaCartArrowDown/>
             </span>):( <Link to='/cart'  className="bg-card p-2 rounded-full hover:scale-110 ease-in duration-200 transition-all">
    <BsFillCartCheckFill/>

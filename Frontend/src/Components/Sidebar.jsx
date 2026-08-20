@@ -1,5 +1,6 @@
 import { useAuth } from '@/context/AuthContext'
 import React from 'react'
+import { BsHeartFill } from 'react-icons/bs'
 import { FaBell, FaBookmark, FaUnlockAlt, FaUserCircle } from 'react-icons/fa'
 import { GiNestBirds } from 'react-icons/gi'
 import { ImBook } from 'react-icons/im'
@@ -26,6 +27,20 @@ const Sidebar = () => {
     <ul className='flex flex-col font-heading gap-3 '>
         <li className='flex items-center justify-start gap-2 text-lg px-3 py-1 hover:translate-x-1 hover:bg-neutral-200 hover:text-[#0a1931] rounded-l-full transition-all duration-200 ease-in cursor-pointer'><MdDashboard className='w-4 h-4 '/><span>Dashboard</span></li>
          <li ><NavLink to='/dashboard/student/my-courses' className={({isActive}) => `flex items-center justify-start gap-2 text-lg px-3 py-1 hover:translate-x-1 hover:bg-neutral-200 hover:text-[#0a1931] ${isActive ?'bg-white/70 text-[#0a1931]' :''} rounded-l-full transition-all duration-200 ease-in cursor-pointer` }> <ImBook className='w-4 h-4 '/><span>My Courses</span></NavLink></li>
+         <li>
+  <NavLink
+    to="/dashboard/student/wishlist"
+    className={({ isActive }) =>
+      `flex items-center justify-start gap-2 text-lg px-3 py-1
+       hover:translate-x-1 hover:bg-neutral-200 hover:text-[#0a1931]
+       ${isActive ? 'bg-white/70 text-[#0a1931]' : ''}
+       rounded-l-full transition-all duration-200 ease-in cursor-pointer`
+    }
+  >
+    <BsHeartFill className="w-4 h-4" />
+    <span>Wishlist</span>
+  </NavLink>
+</li>
           <li className='flex items-center justify-start gap-2 text-lg  px-3 py-1 hover:translate-x-1 hover:bg-neutral-200 hover:text-[#0a1931] rounded-l-full transition-all duration-200 ease-in cursor-pointer'><MdPlayLesson className='w-4 h-4'/><span>Continue Learning</span></li>
            <li className='flex items-center justify-start gap-2 text-lg px-3 py-1 hover:translate-x-1 hover:bg-neutral-200 hover:text-[#0a1931] rounded-l-full transition-all duration-200 ease-in cursor-pointer'><FaBookmark className='w-4 h-4 '/><span>BookMark</span></li>
             <li ><NavLink to='/dashboard/student/certificate' className={({isActive}) => `flex items-center justify-start gap-2 text-lg px-3 py-1 hover:translate-x-1 hover:bg-neutral-200 hover:text-[#0a1931] ${isActive ?'bg-white/70 text-[#0a1931]' :''} rounded-l-full transition-all duration-200 ease-in cursor-pointer` }>
