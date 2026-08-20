@@ -6,6 +6,7 @@ import Enrollment from "../models/Teacher/Enrollment.js";
 import PaymentModel from "../models/Ecommerce/PaymentModel.js";
 import CartModel from "../models/Ecommerce/CartModel.js";
 import userModel from '../models/user.model.js'
+import WishlistModel from "../models/Ecommerce/WishlistModel.js";
 export const createOrder = asyncHandler(async(req,res)=>{
 const {courseId}=req.params
 const userId= req.user.UserID
@@ -43,6 +44,7 @@ await Enrollment.create({
 
 return res.status(201).json({message:'course purchased'})
 })
+        //    --------CART APIS-------
 
 // adds course to cart
 export const addItems=asyncHandler(async(req,res)=>{
@@ -104,7 +106,7 @@ export const fetchCartItems = asyncHandler(async(req,res)=>{
    }))
     return res.status(200).json({cart,addedCourses})
 })
-
+// cart checkout payment flow
  export const cartOrder = asyncHandler(async(req,res)=>{
     const userId = req.user.UserID
     const userCart = await CartModel.findOne({userId:userId})
@@ -133,6 +135,7 @@ const payment = await PaymentModel.create({
 })
 return res.status(200).json({order,key:process.env.RAZORPAY_KEY_ID})
  })
+//  cart checkout payment verification 
  export const verifyCart = asyncHandler(async(req,res)=>{
     const {orderId,signature,paymentId} = req.body
     const userId = req.user.UserID
@@ -161,3 +164,60 @@ if(!payment){
     }
     return res.status(200).json({message:'courses purchased'})
  })
+  
+                //   -----WISHLIST APIS-----
+// adds item to wishlist
+ export const addWishlistItem = asyncHandler(async(req,res)=>{
+const userId = req.user.UserID
+const {courseId}= req.params
+
+const course = await Course.findById(courseId)
+if(!course){
+    return res.status(404).json({message:"course not found"})
+}
+const existingWishlist = await WishlistModel.findOne({userId:userId})
+if(!existingWishlist){
+WishlistModel.create({
+    userId,courses:[course._id]
+})
+return res.status(200).json({message:'course added to wishlist'})
+}
+const existingCourse = existingWishlist.courses.find(courseId=>courseId.toString()===course._id.toString())
+if(existingCourse){
+    return res.status(403).json({message:'course already added to wishlist'})
+}
+   existingWishlist.courses.push(courseId)
+  await  existingWishlist.save()
+return res.status(200).json({message:'course added to wishlist'})
+ })
+
+//  removes item from wishlist
+export const removeWishlistItem = asyncHandler(async(req,res)=>{
+    const userId = req.user.UserID
+    const {courseId} = req.params
+    const course = await Course.findById(courseId)
+    if(!course){
+        return res.status(404).json({message:"course not found"})
+    }
+    const existingWishlist = await WishlistModel.findOne({userId:userId})
+if(!existingWishlist){
+    return res.status(404).json({message:"wishlist not found"})
+}
+const existingCourse = existingWishlist.courses.find(courseId=>courseId.toString()===course._id.toString())
+if(!existingCourse){
+    return res.status(404).json({message:"course not found in the wishlist"})
+}
+existingWishlist.courses = existingWishlist.courses.filter(courseId=>courseId.toString() !== course._id.toString())
+await existingWishlist.save()
+return res.status(200).json({message:"course removed from the wishlist"})
+})
+export const fetchWishlist = asyncHandler(async(req,res)=>{
+    const userId = req.user.UserID
+    const existingWishlist = await WishlistModel.findOne({userId:userId}).populate({path:"courses",populate:{path:"instructor",select:'firstName avatar'}})
+    if(!existingWishlist){
+        return res.status(200).json({courses:[]})
+    }
+  const wishlistCourses = existingWishlist.courses
+    return res.status(200).json({courses:wishlistCourses})
+})
+
