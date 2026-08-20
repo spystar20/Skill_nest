@@ -21,3 +21,17 @@ await queryClient.invalidateQueries({
 
     })
 }
+export const useRemoveWishlist = ()=>{
+    const queryClient = useQueryClient()
+    return useMutation({
+        mutationFn:async({courseId})=>{
+            const res =  await api.delete(`/course/wishlist/remove/${courseId}`)
+            return res.data
+        },
+        onSuccess:async(_,variable)=>{
+            await queryClient.invalidateQueries({
+    queryKey:['wishlist-courses']
+})
+        }
+    })
+}

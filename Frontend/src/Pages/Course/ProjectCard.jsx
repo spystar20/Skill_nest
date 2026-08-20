@@ -1,4 +1,3 @@
-import { toggleStore } from '@/Store/toggleStore'
 import React from 'react'
 import { CiClock1 } from 'react-icons/ci'
 import { FaHeart, FaCartArrowDown, FaStar } from 'react-icons/fa'
@@ -10,57 +9,79 @@ import { useAddCartItem } from '@/hooks/CoursesHooks/cart/useCart'
 import { toast } from 'sonner'
 import { useBuyCourse, useFreeCourse } from '@/hooks/CoursesHooks/courseMutation'
 import { BsFillCartCheckFill } from 'react-icons/bs'
-import { useAddWishlist } from '@/hooks/CoursesHooks/wishlist/useWishlist'
+import { useAddWishlist, useRemoveWishlist } from '@/hooks/CoursesHooks/wishlist/useWishlist'
+import { useWishlistContext } from '@/context/WishlistContext'
 
-const ProjectCard = ({ className = '', course ,isItemAdded}) => {
-  const { Liked, toggleLike } = toggleStore()
+const ProjectCard = ({ className = '', course, isItemAdded }) => {
   const navigate = useNavigate()
+
   const status = course?.enrollment?.status ?? null
-  const {mutate:buyCourse}=useBuyCourse()
-  const {mutate:freeCourse}=useFreeCourse()
+  // enrollment mutations
+  const { mutate: buyCourse } = useBuyCourse()
+  const { mutate: freeCourse } = useFreeCourse()
   // adding course to cart with id
-const {mutate:addItem}=useAddCartItem()
-const {mutate:addWishlist} =useAddWishlist()
-const handleAddWishlist = (courseId)=>{
-  addWishlist({courseId},{
-    onSuccess:()=>{
-      toast.success("item added to wishlist")
+  const { mutate: addItem } = useAddCartItem()
+  // wishlist toggle mutations
+  const { mutate: addWishlist } = useAddWishlist()
+  const { mutate: removeWishlist } = useRemoveWishlist()
+  const isWishlisted = useWishlistContext()
+  const wishListed = isWishlisted(course?._id)
+  // toggle wishlist
+  const handleWishlistToggle = (courseId) => {
+    if (!wishListed) {
+      addWishlist({ courseId }, {
+        onSuccess: () => {
+          toast.success("course added to wishlist")
+        }
+      })
+    } else if (wishListed) {
+      removeWishlist({ courseId }, {
+        onSuccess: () => {
+          toast.success("course removed from wishlist")
+        }
+      })
     }
-  })
-}
-const handleAddItem = (courseId,course_name)=>{
-  addItem({courseId},{
-    onSuccess:()=>{
-toast.success(`${course_name} has been added to cart`,{
-action:{
-  label:'view cart',onClick:()=>navigate('/cart')
-}})
-    }
-  })
-}
-  const handleEnrollment=(courseId,priceType)=>{
+  }
+// cart function
+  const handleAddItem = (courseId, course_name) => {
+    addItem({ courseId }, {
+      onSuccess: () => {
+        toast.success(`${course_name} has been added to cart`, {
+          action: {
+            label: 'view cart', onClick: () => navigate('/cart')
+          }
+        })
+      }
+    })
+  }
+  //  course purchasing function for both free and paid 
+  const handleEnrollment = (courseId, priceType) => {
     const course_id = courseId
-    if(priceType !=='Free'){
-      buyCourse({ courseId:course_id },{onSuccess:()=>{
-        toast.success("Redirecting to payment...")
-          
-      }})
-    }else{
-      
-      freeCourse({course_id},{onSuccess:()=>{
-        toast.success('Course Purchased')
-              setTimeout(() => {
-                navigate('/dashboard/student/my-courses')
-              }, 1000);
-      }})
+    if (priceType !== 'Free') {
+      buyCourse({ courseId: course_id }, {
+        onSuccess: () => {
+          toast.success("Redirecting to payment...")
+
+        }
+      })
+    } else {
+
+      freeCourse({ course_id }, {
+        onSuccess: () => {
+          toast.success('Course Purchased')
+          setTimeout(() => {
+            navigate('/dashboard/student/my-courses')
+          }, 1000);
+        }
+      })
     }
-   }
-    const stopNavigation = (e) => {
-  e.preventDefault()
-  e.stopPropagation()
-}
+  }
+  const stopNavigation = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+  }
   return (
-    <div  className={`cards rounded-lg md:rounded-4xl p-2 md:p-5 ${className}`}>
+    <div className={`cards rounded-lg md:rounded-4xl p-2 md:p-5 ${className}`}>
       <Link to={`/courses/${course?.title}/${course?._id}`}>
         <div className="relative group cursor-pointer">
           <img src={course?.thumbnail} className="aspect-square object-cover rounded-2xl shadow group-hover:brightness-50 transition-all ease-in duration-200" alt="" />
@@ -68,17 +89,21 @@ action:{
             {course?.category}
           </span>
           <div className="gap-5 items-center justify-start absolute bottom-1 right-0 z-40 text-xl text-text p-5 flex">
-            <span className="bg-card p-2 rounded-full hover:scale-110 ease-in duration-200 transition-all">
-              <FaHeart onClick={(e) =>{ stopNavigation(e) 
-                handleAddWishlist(course._id)}} className={`${Liked.includes(course?._id) ? 'text-success' : 'text-text'}`} />
+            <span onClick={(e) => {
+              stopNavigation(e)
+              handleWishlistToggle(course._id)
+            }} className="bg-card p-2 rounded-full hover:scale-110 ease-in duration-200 transition-all">
+              <FaHeart className={` duration-200 transition-colors ${wishListed ? 'text-accent' : 'text-black'}`} />
             </span>
-{isItemAdded===false?( <span onClick={(e) => {stopNavigation(e) 
-  handleAddItem(course?._id,course?.title)}} className="bg-card p-2 rounded-full hover:scale-110 ease-in duration-200 transition-all">
-      <FaCartArrowDown/>
-            </span>):( <Link to='/cart'  className="bg-card p-2 rounded-full hover:scale-110 ease-in duration-200 transition-all">
-   <BsFillCartCheckFill/>
+            {isItemAdded === false ? (<span onClick={(e) => {
+              stopNavigation(e)
+              handleAddItem(course?._id, course?.title)
+            }} className="bg-card p-2 rounded-full hover:scale-110 ease-in duration-200 transition-all">
+              <FaCartArrowDown />
+            </span>) : (<Link to='/cart' className="text-accent bg-card p-2 rounded-full hover:scale-110 ease-in duration-200 transition-all">
+              <BsFillCartCheckFill />
             </Link>)}
-          
+
           </div>
         </div>
       </Link>
@@ -112,11 +137,11 @@ action:{
           {(course?.price === 0 && status === null) && (
             <>
               <div className="flex items-center gap-3">
-               <span className="text-2xl font-semibold text-primary">{course?.price===0?'Free':`${course?.price}`}</span>
-                
+                <span className="text-2xl font-semibold text-primary">{course?.price === 0 ? 'Free' : `${course?.price}`}</span>
+
               </div>
               <div className="w-full md:w-1/2">
-                <button onClick={(e) => { stopNavigation(e); handleEnrollment(course?._id,course?.priceType) }} className="transition-all bg-accent font-heading cursor-pointer text-white rounded-full md:py-1.5 py-1 px-5 w-full text-lg box capitalize font-medium hover:bg-primary-light hover:scale-95">{course?.price===0? 'Enoll Now': 'Buy now'}</button>
+                <button onClick={(e) => { stopNavigation(e); handleEnrollment(course?._id, course?.priceType) }} className="transition-all bg-accent font-heading cursor-pointer text-white rounded-full md:py-1.5 py-1 px-5 w-full text-lg box capitalize font-medium hover:bg-primary-light hover:scale-95">{course?.price === 0 ? 'Enoll Now' : 'Buy now'}</button>
               </div>
             </>
           )}
@@ -126,15 +151,15 @@ action:{
                 <span className="text-lg md:text-2xl font-semibold text-primary">₹{course?.price}</span>
               </div>
               <div className="w-full md:w-1/2">
-                <button onClick={(e) => { stopNavigation(e); handleEnrollment(course?._id,course?.priceType) }} className="transition-all bg-accent font-heading cursor-pointer text-white rounded-full md:py-1.5 py-1 px-5 w-full text-lg box capitalize font-medium hover:bg-primary-light hover:scale-95">Buy now</button>
+                <button onClick={(e) => { stopNavigation(e); handleEnrollment(course?._id, course?.priceType) }} className="transition-all bg-accent font-heading cursor-pointer text-white rounded-full md:py-1.5 py-1 px-5 w-full text-lg box capitalize font-medium hover:bg-primary-light hover:scale-95">Buy now</button>
               </div>
             </>
           )}
           <>
             {status !== null && (
-               <Link to={`/courses/${course.title}/${course.enrollment?._id}/learn`} className="transition-all bg-accent font-heading cursor-pointer text-white rounded-full md:py-1.5 py-1 px-5 w-full text-lg box capitalize font-medium hover:bg-primary-light hover:scale-95 text-center">
-{status==="not started" ?"Start Learning":status==="in-progress"?'continue learning': "Review Course"}      
-        </Link>
+              <Link to={`/courses/${course.title}/${course.enrollment?._id}/learn`} className="transition-all bg-accent font-heading cursor-pointer text-white rounded-full md:py-1.5 py-1 px-5 w-full text-lg box capitalize font-medium hover:bg-primary-light hover:scale-95 text-center">
+                {status === "not started" ? "Start Learning" : status === "in-progress" ? 'continue learning' : "Review Course"}
+              </Link>
             )}
 
           </>

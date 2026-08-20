@@ -42,6 +42,7 @@
 --color-error: #DC2626;
 }
 
+
 @keyframes fadeIn {
   from {
     opacity: 0;
