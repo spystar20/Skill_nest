@@ -5,7 +5,7 @@ const WishlistContext = createContext()
 export const WishlistProvider = ({children})=>{
 const {data:wishlistData} = useFetchWishlist()
 const isWishlisted = (courseId)=>{
-    return wishlistData?.courses?.some(course=>course?._id.toString() === courseId.toString())
+    return wishlistData?.courses?.some(course=>course?._id.toString() === courseId?.toString())
 }
     return (
      <WishlistContext.Provider value={isWishlisted}>
