@@ -9,6 +9,7 @@ import { asyncHandler } from "../middleware/asyncHandler.middleware.js"
 import { diff } from "util"
 import Enrollment from "../models/Teacher/Enrollment.js"
 import userModel from "../models/user.model.js"
+import ReviewModel from "../models/Ecommerce/ReviewModel.js"
 
 
 export const CreateCoursse = asyncHandler( async (req, res) => {
@@ -365,9 +366,12 @@ export const getCoursebyId =asyncHandler( async (req, res) => {
           return res.status(200).json({course,teacher,enrollment:null})
 
       }
-      const enrollment = userId ?  await Enrollment.findOne({userId:userId,courseId:courseId}) :null
-
-      return res.status(200).json({ course,teacher,enrollment })
+      const enrollments = await Enrollment.find({courseId:courseId}).select('_id userId')
+      const enrollment = userId? enrollments.find(enrollment=>enrollment.userId.toString()===userId.toString()):null
+      const enrollmentIds = enrollments.map(enrollment=>enrollment._id)
+      const reviews = await ReviewModel.find({enrollmentId:{$in:enrollmentIds}}).populate({path:"enrollmentId",select:"userId"})
+   
+      return res.status(200).json({ course,teacher,reviews,enrollment })
    
 })
 export const GetCourses = asyncHandler( async (req, res) => {

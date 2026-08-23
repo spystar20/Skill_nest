@@ -1,7 +1,7 @@
-import asynhandler, { asyncHandler } from '../middleware/asyncHandler.middleware.js'
+import  { asyncHandler } from '../middleware/asyncHandler.middleware.js'
 import enrollmentModel from '../models/Teacher/Enrollment.js'
 import reviewModel from '../models/Ecommerce/ReviewModel.js'
-export const addReview = asynhandler(async(req,res)=>{
+export const addReview = asyncHandler(async(req,res)=>{
     const {enrollmentId} = req.params
     const userId = req.user.UserID
     const {rating,review}=req.body
@@ -56,3 +56,19 @@ export const updateReview = asyncHandler(async(req,res)=>{
     return res.status(200).json({message:"review updated"})
 
 }) 
+export const deleteReview = asyncHandler(async(req,res)=>{
+    const userId = req.user.UserID
+    const {enrollmentId} = req.params
+    const existingEnrollment = await enrollmentModel.findById(enrollmentId)
+    if(!existingEnrollment){
+        return res.status(404).json({message:"enrollment not found"})
+    }
+    if(existingEnrollment.userId.toString()!==userId.toString()){
+        return res.status(403).json({message:"unauthoarized user"})
+    }
+const existingReview = await reviewModel.findOneAndDelete({enrollmentId:existingEnrollment._id})
+if(!existingReview){
+    return res.status(404).json({message:"review not found"})
+}
+return res.status(200).json({message:"review deleted successfully"})
+})
