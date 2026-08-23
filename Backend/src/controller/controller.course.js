@@ -370,16 +370,32 @@ export const getCoursebyId =asyncHandler( async (req, res) => {
       const enrollment = userId? enrollments.find(enrollment=>enrollment.userId.toString()===userId.toString()):null
       const enrollmentIds = enrollments.map(enrollment=>enrollment._id)
       const reviews = await ReviewModel.find({enrollmentId:{$in:enrollmentIds}}).populate({path:"enrollmentId",select:"userId"})
-   
-      return res.status(200).json({ course,teacher,reviews,enrollment })
+   const reviewStat = await ReviewModel.aggregate([
+      {
+        $lookup:{
+         from:"enrollments",
+         localField:"enrollmentId",
+         foreignField:"_id",
+         as:"enrollment"
+        } 
+      },
+      {
+         $unwind:"$enrollment"
+      },{
+         $group:{
+            _id:"$enrollment.courseId",
+            reviewCount:{$sum:1},
+            averageRating:{$avg:"$rating"}
+         }
+      }
+   ])
+      return res.status(200).json({ course,teacher,reviews,enrollment ,reviewStat})
    
 })
 export const GetCourses = asyncHandler( async (req, res) => {
        const {search,category,difficulty,priceType,minPrice,maxPrice,sort}= req.query
        const filter = {status:'published'}
        const userId =req.user?.UserID
-       console.log("REQ USER:", req.user)
-console.log("USER ID:", userId)
        const sortOptions={}
        if(search){
          filter.title = {
@@ -418,6 +434,26 @@ console.log("USER ID:", userId)
          sortOptions.price=-1
        }
       const courses = await Course.find(filter).sort(sortOptions).populate("instructor", "firstName")
+      const reviewStat = await ReviewModel.aggregate([
+         {
+            $lookup:{
+               from:"enrollments",
+               localField:"enrollmentId",
+               foreignField:"_id",
+               as:"enrollment"
+            }
+         },
+         {
+            $unwind:"$enrollment"
+         },
+         {
+            $group:{
+               _id:"$enrollment.courseId",
+               reviewCount:{$sum:1},
+               averageRating:{$avg:"$rating"}
+            }
+         }
+      ])
       const PriceRange = await Course.aggregate([
         { $match:{
             status:'published'
@@ -430,19 +466,15 @@ console.log("USER ID:", userId)
          }}
       ])
       const enrollments = userId ? await Enrollment.find({userId:userId}) : []
-
-      console.log(`coursesss: ${enrollments}`)
      const courseWithStatus =  courses.map((course)=>{
       const enrollment = enrollments.find(enrollment=>enrollment.courseId.toString()===course._id.toString())
-        console.log(
-    "COURSE:",
-    course._id.toString(),
-    "ENROLLMENT:",
-    enrollment
-  )
+      const stats = reviewStat.find(stat=>stat._id.toString()===course._id.toString())
       return {
          ...course.toObject(),
-         enrollment:enrollment?enrollment:null
+         enrollment:enrollment?enrollment:null,
+         reviewCount:stats?.reviewCount || 0,
+         averageRating:stats?.averageRating || 0
+
       }
      })
       return res.status(200).json({ message: "courses sent", courses:courseWithStatus,PriceRange})
