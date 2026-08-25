@@ -1,18 +1,11 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { FaCheckCircle, FaPlayCircle } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import ReviewModal from "./ReviewModal";
 
-const EnrolledCourseCard = ({
-  enrollmentId,
-  className,
-  LessonsLeft,
-  img,
-  course_name,
-  instructor_name,
-  progressPercent = 0,
-  status = "in-progress",
-}) => {
+const EnrolledCourseCard = ({ enrollmentId, className, LessonsLeft,  course}) => {
+const [showReview,setShowReview]=useState(false)
   return (
     <div
       className={`cards flex flex-col gap-4 rounded-2xl border border-border bg-card p-3 shadow-sm transition-all duration-300 hover:shadow-xl ${className}`}
@@ -20,8 +13,8 @@ const EnrolledCourseCard = ({
       {/* Thumbnail */}
       <div className="group relative cursor-pointer overflow-hidden rounded-xl">
         <img
-          src={img}
-          alt={course_name}
+          src={course?.courseId?.thumbnail}
+          alt={course?.courseId?.title}
           className="aspect-[16/10] w-full object-cover transition duration-500 group-hover:scale-105"
         />
 
@@ -30,19 +23,19 @@ const EnrolledCourseCard = ({
         <FaPlayCircle className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-4xl text-white sm:text-5xl" />
 
         {/* Top Badge */}
-        {status === "not-started" && (
+        {course?.status === "not-started" && (
           <span className="absolute left-3 top-3 rounded-full bg-warning px-3 py-1 text-xs font-medium text-white">
             {LessonsLeft} Lessons
           </span>
         )}
 
-        {status === "in-progress" && (
+        {course?.status === "in-progress" && (
           <span className="absolute left-3 top-3 rounded-full bg-primary/90 px-3 py-1 text-xs font-medium text-white backdrop-blur">
             {LessonsLeft} Left
           </span>
         )}
 
-        {status === "completed" && (
+        {course?.status === "completed" && (
           <span className="absolute left-3 top-3 flex items-center gap-1 rounded-full bg-success px-3 py-1 text-xs font-medium text-white">
             <FaCheckCircle />
             Completed
@@ -54,23 +47,23 @@ const EnrolledCourseCard = ({
       <div className="flex flex-col gap-4">
         <div>
           <h2 className="line-clamp-2 font-heading text-lg font-semibold text-text">
-            {course_name}
+            {course?.courseId?.title}
           </h2>
 
           <p className="mt-1 font-body text-sm text-text-light">
-            By {instructor_name}
+            By "khushi"
           </p>
         </div>
 
         {/* NOT STARTED */}
-        {status === "not-started" && (
+        {course?.status === "not-started" && (
           <>
             <p className="font-body text-sm text-text-light">
               Ready to begin your learning journey.
             </p>
 
             <Link
-              to={`/courses/${course_name}/${enrollmentId}/learn`}
+              to={`/courses/${course?.courseId?.title}/${enrollmentId}/learn`}
               className="w-full rounded-full bg-primary py-2.5 text-center font-body font-medium text-white transition hover:bg-primary-light"
             >
               Start Learning
@@ -79,7 +72,7 @@ const EnrolledCourseCard = ({
         )}
 
         {/* IN PROGRESS */}
-        {status === "in-progress" && (
+        {course?.status === "in-progress" && (
           <>
             <div>
               <div className="mb-2 flex justify-between text-sm">
@@ -88,7 +81,7 @@ const EnrolledCourseCard = ({
                 </span>
 
                 <span className="font-body font-semibold text-accent">
-                  {progressPercent}%
+                  {course?.progress}%
                 </span>
               </div>
 
@@ -96,14 +89,14 @@ const EnrolledCourseCard = ({
                 <div
                   className="h-full rounded-full bg-accent transition-all duration-500"
                   style={{
-                    width: `${progressPercent}%`,
+                    width: `${course?.progress}%`,
                   }}
                 />
               </div>
             </div>
 
             <Link
-              to={`/courses/${course_name}/${enrollmentId}/learn`}
+              to={`/courses/${course?.courseId?.title}/${enrollmentId}/learn`}
               className="w-full rounded-full bg-primary py-2.5 text-center font-body font-medium text-white transition hover:bg-primary-light"
             >
               Continue Learning
@@ -112,7 +105,7 @@ const EnrolledCourseCard = ({
         )}
 
         {/* COMPLETED */}
-        {status === "completed" && (
+        {course?.status === "completed" && (
           <>
             <div>
               <div className="mb-2 flex justify-between text-sm">
@@ -131,11 +124,12 @@ const EnrolledCourseCard = ({
             </div>
 
             <Link
-              to={`/courses/${course_name}/${enrollmentId}/learn`}
+            onClick={()=>setShowReview(true)}
               className="w-full rounded-full border border-primary py-2.5 text-center font-body font-medium text-primary transition hover:bg-primary hover:text-white"
             >
               Review Course
             </Link>
+          {showReview &&(  <ReviewModal course={course}/>)}
           </>
         )}
       </div>

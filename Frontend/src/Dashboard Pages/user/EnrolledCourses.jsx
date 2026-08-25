@@ -2,7 +2,7 @@ import { useAuth } from '@/context/AuthContext'
 import { useEnrolledCourses } from '@/hooks/EnrollmentHooks/useEnrolledCourses'
 import api from '@/utils/axios'
 import Dataset from '@/utils/Dataset'
-import EnrolledCourseCard from '@/utils/EnrolledCourseCard'
+import EnrolledCourseCard from '@/Dashboard Pages/user/Enrollment/EnrolledCourseCard'
 import EnrollFilterPill from '@/utils/EnrollFilterPill'
 import ProjectCard from '@/Pages/Course/ProjectCard'
 import React, { useEffect, useState } from 'react'
@@ -105,7 +105,7 @@ transition-all duration-300 px-1  md:px-2  flex items-center justify-center roun
        <div className=' grid gap-5 grid-cols-4  py-4'>
    {enrolledCoursesProgress?.map((course,index)=>(
 <EnrolledCourseCard key={index} course_id={course.courseId._id} enrollmentId={course._id}  status={course.status}
-  className="shrink-0 max-w-[300px]" img={course.courseId.thumbnail} progressPercent={course.progress} instructor_name='khushi' course_name={course.courseId.title}/>
+  className="shrink-0 max-w-[300px]" img={course.courseId.thumbnail} progressPercent={course.progress} instructor_name='khushi' course={course} course_name={course.courseId.title}/>
 ))}
        </div>
     

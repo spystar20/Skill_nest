@@ -88,6 +88,7 @@ const ProjectCard = ({ className = '', course, isItemAdded }) => {
           <span className="py-2 px-4 text-sm shadow-lg bg-primary/80 backdrop-blur rounded-full absolute top-3 left-3 text-white font-body">
             {course?.category}
           </span>
+          {(status ===null) &&(
           <div className="gap-5 items-center justify-start absolute bottom-1 right-0 z-40 text-xl text-text p-5 flex">
             <span onClick={(e) => {
               stopNavigation(e)
@@ -105,6 +106,7 @@ const ProjectCard = ({ className = '', course, isItemAdded }) => {
             </Link>)}
 
           </div>
+)}
         </div>
       </Link>
       <div className="flex flex-col gap-2 md:gap-4 py-4">
