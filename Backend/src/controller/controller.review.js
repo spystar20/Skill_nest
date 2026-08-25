@@ -3,6 +3,8 @@ import enrollmentModel from '../models/Teacher/Enrollment.js'
 import reviewModel from '../models/Ecommerce/ReviewModel.js'
 export const addReview = asyncHandler(async(req,res)=>{
     const {enrollmentId} = req.params
+        console.log(enrollmentId)
+     
     const userId = req.user.UserID
     const {rating,review}=req.body
     const existingEnrollment = await enrollmentModel.findById(enrollmentId)
@@ -71,4 +73,20 @@ if(!existingReview){
     return res.status(404).json({message:"review not found"})
 }
 return res.status(200).json({message:"review deleted successfully"})
+})
+export const fetchReviewById = asyncHandler(async(req,res)=>{
+    const {enrollmentId}= req.params
+    const userId = req.user.UserID
+    const existingEnrollment = await enrollmentModel.findById(enrollmentId)
+    if(!existingEnrollment){
+        return res.status(404).json({message:"enrollment not found"})
+    }
+    if(existingEnrollment.userId.toString()!== userId.toString()){
+        return res.status(403).json({message:"user unauthorized"})
+    }
+    const review = await reviewModel.findOne({enrollmentId:enrollmentId})
+    if(!review){
+        return res.status(404).json({message:"reviews not found"})
+    }
+    return res.status(200).json({review})
 })

@@ -3,6 +3,7 @@ export const router = express.Router()
 import { updateProfile} from "../controller/controller.auth.js"
 import { middleware } from "../middleware/auth.middleware.js"
 import { downloadCertificate, getCertificateById, getEnrolledCoursebyId, UpdateEnrolledProgress } from "../controller/EnrolledCourse.js"
+import { addReview, fetchReviewById } from "../controller/controller.review.js"
 
 
 router.put('/update/profile',middleware,updateProfile)
@@ -10,4 +11,5 @@ router.get('/enrolledCourse/:enrollmentId/learn',middleware,getEnrolledCoursebyI
 router.put('/enrolledCourse/:enrollmentId/:lessonId/completed',middleware,UpdateEnrolledProgress)
 router.get('/certificate/:certificateId/download',middleware,downloadCertificate)
 router.get('/enrollment/:enrollmentId/certificate',middleware,getCertificateById)
+router.post('/enrolled/:enrollmentId/add/review',middleware,addReview)
 export default router

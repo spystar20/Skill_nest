@@ -3,8 +3,9 @@ import React, { useState } from "react";
 import { FaCheckCircle, FaPlayCircle } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import ReviewModal from "./ReviewModal";
-
-const EnrolledCourseCard = ({ enrollmentId, className, LessonsLeft,  course}) => {
+import { FaStar } from "react-icons/fa";
+const EnrolledCourseCard = ({ enrollmentId, className,reviewData,   course}) => {
+  const LessonsLeft = course?.courseId?.lessonCount - course?.completedLessons.length
 const [showReview,setShowReview]=useState(false)
   return (
     <div
@@ -107,29 +108,100 @@ const [showReview,setShowReview]=useState(false)
         {/* COMPLETED */}
         {course?.status === "completed" && (
           <>
-            <div>
+           <div>
               <div className="mb-2 flex justify-between text-sm">
-                <span className="font-body font-medium text-success">
-                  Course Completed
+                <span className="font-body text-text-light">
+                  Progress
                 </span>
 
                 <span className="font-body font-semibold text-success">
-                  100%
+                  {course?.progress}%
                 </span>
               </div>
 
-              <div className="h-2 overflow-hidden rounded-full bg-success/10">
-                <div className="h-full w-full rounded-full bg-success" />
+              <div className="h-2 overflow-hidden rounded-full bg-border">
+                <div
+                  className="h-full rounded-full bg-success transition-all duration-500"
+                  style={{
+                    width: `${course?.progress}%`,
+                  }}
+                />
               </div>
             </div>
+          {/* REVIEW SECTION */}
+<div className="rounded-2xl bg-page p-4">
 
-            <Link
-            onClick={()=>setShowReview(true)}
-              className="w-full rounded-full border border-primary py-2.5 text-center font-body font-medium text-primary transition hover:bg-primary hover:text-white"
-            >
-              Review Course
-            </Link>
-          {showReview &&(  <ReviewModal course={course}/>)}
+  {/* No review yet */}
+  <div className="flex flex-col items-center justify-between gap-4">
+
+    <div>
+      <p className="font-heading text-sm font-semibold text-text">
+        Course Review
+      </p>
+
+      <p className="mt-1 font-body text-xs text-text-light">
+        Share your experience with this course.
+      </p>
+    </div>
+
+    <button
+      onClick={() => setShowReview(true)}
+      className="shrink-0 rounded-full bg-accent px-4 py-2 font-body text-sm font-medium text-white  transition-all hover:scale-[0.98] hover:bg-primary-light w-full"  >
+     Write Review
+    </button>
+
+  </div>
+
+</div>
+         {/* existing review */}
+         <div className="rounded-2xl bg-page p-4">
+
+  <div className="flex items-start justify-between gap-3">
+
+    <div>
+      <p className="font-heading text-sm font-semibold text-text">
+        Your Review
+      </p>
+
+      <div className="mt-2 flex items-center gap-1">
+        {[1, 2, 3, 4, 5].map((star) => (
+          <FaStar
+            key={star}
+            className={`text-sm ${
+              star <= reviewData?.rating
+                ? "text-accent"
+                : "text-text-light/20"
+            }`}
+          />
+        ))}
+
+        <span className="ml-1 text-xs text-text-light">
+          {reviewData?.rating}/5
+        </span>
+      </div>
+    </div>
+
+    <button
+      onClick={() => setShowReview(true)}
+      className="shrink-0 rounded-full bg-card px-4 py-2
+                 font-body text-xs font-medium text-text
+                 transition hover:bg-accent hover:text-white"
+    >
+      Edit
+    </button>
+
+  </div>
+
+  {reviewData?.review && (
+    <p className="mt-3 rounded-xl bg-card p-3 font-body text-sm
+                  leading-relaxed text-text-light">
+      {reviewData.review}
+    </p>
+  )}
+
+</div>
+          
+          {showReview &&(  <ReviewModal course={course} onClose={()=>setShowReview(false)}/>)}
           </>
         )}
       </div>

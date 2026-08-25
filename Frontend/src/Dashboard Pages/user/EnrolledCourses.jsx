@@ -10,12 +10,12 @@ import { FaAngleDoubleLeft, FaSearch } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
 
 const EnrolledCourses = () => {
+  
   const {user}=useAuth
 const {isLoading,isError,data} = useEnrolledCourses()
   const enrolledCoursesProgress = data?.enrolledCoursesProgress || []
 
   const startedCourse = enrolledCoursesProgress.filter(course=>course.completedLessons.length>0)
-
 
   return (
            <Dataset loading={isLoading} error={isError}>
@@ -65,15 +65,8 @@ const {isLoading,isError,data} = useEnrolledCourses()
 ) : (
   <div className="rounded-2xl flex gap-6 box-border">
     {startedCourse.map((course) => (
-      <EnrolledCourseCard
-      status={course.status}
-        key={course._id}
-        progressPercent={course.progress}
-        className="max-w-[300px] shrink-0"
-        img={course.courseId.thumbnail}
-        instructor_name="khushi"
-        course_name={course.courseId.title}
- course_id={course.courseId._id} enrollmentId={course._id}      
+      <EnrolledCourseCard key={course._id} course_id={course.courseId._id} enrollmentId={course._id}  status={course.status}
+  className="shrink-0 max-w-[300px]" img={course.courseId.thumbnail} progressPercent={course.progress} instructor_name='khushi' course={course} course_name={course.courseId.title} 
       />
     ))}
   </div>
@@ -105,7 +98,7 @@ transition-all duration-300 px-1  md:px-2  flex items-center justify-center roun
        <div className=' grid gap-5 grid-cols-4  py-4'>
    {enrolledCoursesProgress?.map((course,index)=>(
 <EnrolledCourseCard key={index} course_id={course.courseId._id} enrollmentId={course._id}  status={course.status}
-  className="shrink-0 max-w-[300px]" img={course.courseId.thumbnail} progressPercent={course.progress} instructor_name='khushi' course={course} course_name={course.courseId.title}/>
+  className="shrink-0 max-w-[300px]" img={course.courseId.thumbnail} progressPercent={course.progress} instructor_name='khushi' course={course} course_name={course.courseId.title} />
 ))}
        </div>
     

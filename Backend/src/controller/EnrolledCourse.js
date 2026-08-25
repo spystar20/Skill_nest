@@ -8,6 +8,7 @@ import { getCertificatePdf } from "../utils/certificateGenerator.js";
 import cloudinary from "../utils/cloudinary.js";
 import fs from 'fs'
 import axios from 'axios'
+import ReviewModel from "../models/Ecommerce/ReviewModel.js";
 export const Enroll = asyncHandler(async (req, res) => {
      const userId = req.user.UserID
      const  {courseId}  = req.params
@@ -40,11 +41,13 @@ export const EnrolledCourse = asyncHandler(async (req, res) => {
      if (!enrolledCourses) {
           return res.status(401).json({ message: 'no course purchased' })
      }
+     const enrollmentIds = enrolledCourses.map(enrolledCourse=>enrolledCourse._id)
+     const review = await ReviewModel.findOne({enrollmentId:{$in:enrollmentIds}})
      const enrolledCoursesProgress = enrolledCourses.map((enrolledCourse) => {
           const totalLesson = enrolledCourse.courseId.lessonCount 
           const completedLessons = enrolledCourse.completedLessons.length
           const progress = totalLesson > 0 ? Math.round((completedLessons / totalLesson) * 100) : 0
-          return { ...enrolledCourse.toObject(), progress }
+          return { ...enrolledCourse.toObject(), progress,review }
      })
      return res.status(200).json({ enrolledCoursesProgress })
 })

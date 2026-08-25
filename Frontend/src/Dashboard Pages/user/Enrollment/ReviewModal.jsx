@@ -1,10 +1,24 @@
+import { useAddReview } from "@/hooks/EnrollmentHooks/review/useReview";
 import React, { useState } from "react";
 import { FaStar, FaTimes } from "react-icons/fa";
+import { toast } from "sonner";
 
 const ReviewModal = ({ course, onClose }) => {
+  const {mutate:addReview,isPending}=useAddReview()
+
+  const enrollmentId = course?._id
+  const course_id = course?.courseId?._id
   const [rating, setRating] = useState(0);
   const [review, setReview] = useState("");
-
+  const submitNewReview = ()=>{
+addReview({enrollmentId,course_id,rating,review},{
+  onSuccess:()=>{
+    toast.success("review added")
+setTimeout(() => {
+  onClose() 
+}, 1000); }
+})
+  }
   return (
     <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black/50 px-4 backdrop-blur-sm">
 
@@ -16,7 +30,7 @@ const ReviewModal = ({ course, onClose }) => {
           onClick={onClose}
           className="absolute right-5 top-5 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-page text-text-light transition-all hover:scale-105 hover:text-text"
         >
-          <FaTimes />
+          <FaTimes  />
         </button>
 
         {/* HEADER */}
@@ -37,14 +51,14 @@ const ReviewModal = ({ course, onClose }) => {
         {/* COURSE */}
         <div className="mb-7 flex items-center gap-4 rounded-2xl bg-page p-3">
           <img
-            src={course?.thumbnail}
+            src={course?.courseId?.thumbnail}
             alt=""
             className="h-16 w-16 rounded-xl object-cover"
           />
 
           <div className="min-w-0">
             <h3 className="truncate font-heading font-semibold text-text">
-              {course?.title}
+              {course?.courseId?.title}
             </h3>
 
             <p className="mt-1 text-xs text-text-light">
@@ -118,15 +132,16 @@ const ReviewModal = ({ course, onClose }) => {
 
           <button
             type="button"
-            disabled={!rating}
+            disabled={!rating || isPending}
+            onClick={submitNewReview}
             className={`rounded-full px-7 py-3 font-heading text-sm font-medium text-white transition-all ${
               rating
                 ? "cursor-pointer bg-accent hover:scale-[0.98] hover:bg-primary-light"
                 : "cursor-not-allowed bg-text-light/30"
             }`}
           >
-            Submit Review
-          </button>
+{isPending?"submitting..":"submit review"}
+    </button>
 
         </div>
 
