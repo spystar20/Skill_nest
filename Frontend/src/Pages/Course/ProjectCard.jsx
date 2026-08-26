@@ -124,9 +124,12 @@ const ProjectCard = ({ className = '', course, isItemAdded }) => {
           <span className="p-1 md:py-1 md:px-2.5 text-xs lg:text-sm font-medium shadow-sm rounded-sm md:rounded-full bg-accent text-white flex gap-1 md:gap-2 items-center">
             <FiTrendingUp className="text-sm" />{course?.difficulty}
           </span>
-          <span className="p-1 md:py-1 md:px-2.5 text-xs lg:text-sm font-medium shadow-sm rounded-sm md:rounded-full flex gap-1 md:gap-2 items-center text-yellow-500 bg-yellow-100">
-            <FaStar className="text-sm" />{5}
-          </span>
+          <span className="p-1 md:py-1 md:px-2.5 text-xs lg:text-sm font-medium shadow-sm rounded-sm md:rounded-full flex gap-1 md:gap-2 items-center text-yellow-600 bg-yellow-100">
+  <FaStar className="text-sm" />
+  {course?.reviewCount > 0
+    ? `${course.averageRating.toFixed(1)} (${course.reviewCount})`
+    : "New"}
+</span>
         </div>
         <div className="hidden md:flex justify-start items-center gap-3">
           <div><img src={course?.thumbnail} className="object-cover w-8 md:w-12 rounded-full aspect-[1]" alt="" /></div>

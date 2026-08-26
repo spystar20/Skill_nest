@@ -369,7 +369,17 @@ export const getCoursebyId =asyncHandler( async (req, res) => {
       const enrollments = await Enrollment.find({courseId:courseId}).select('_id userId')
       const enrollment = userId? enrollments.find(enrollment=>enrollment.userId.toString()===userId.toString()):null
       const enrollmentIds = enrollments.map(enrollment=>enrollment._id)
-      const reviews = await ReviewModel.find({enrollmentId:{$in:enrollmentIds}}).populate({path:"enrollmentId",select:"userId"})
+   const reviews = await ReviewModel.find({enrollmentId:{$in:enrollmentIds}}).populate({path:"enrollmentId",populate:{path:"userId",select:"avatar firstName "}})
+   const formattedReviews = reviews.map(review=>({
+      id:review._id,
+      rating:review.rating,
+      review:review.review,
+  user: {
+    name: `${review.enrollmentId.userId.firstName} ${review.enrollmentId.userId.lastName || ""}`.trim(),
+    avatar: review.enrollmentId.userId.avatar
+  } ,
+  createdAt:review.createdAt
+   }))
    const reviewStat = await ReviewModel.aggregate([
       {
         $lookup:{
@@ -389,7 +399,7 @@ export const getCoursebyId =asyncHandler( async (req, res) => {
          }
       }
    ])
-      return res.status(200).json({ course,teacher,reviews,enrollment ,reviewStat})
+      return res.status(200).json({ course,teacher,formattedReviews,enrollment ,reviewStat})
    
 })
 export const GetCourses = asyncHandler( async (req, res) => {

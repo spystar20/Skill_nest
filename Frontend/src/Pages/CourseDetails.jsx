@@ -26,8 +26,8 @@ const CourseDetails = () => {
   const { isLoading: courseLoading, isError: courseError, data } = useCourseById(course_id)
 const {data:curriculum}=useCurriculum(course_id)
 const section = curriculum?.SectionWithLesson || []
-console.log(curriculum)
   const course = data?.course || []
+  const reviews = data?.formattedReviews || []
   const teacher = data?.teacher || []
 const enrollment = data?.enrollment 
   const handleEnrollment = async () => {
@@ -135,7 +135,7 @@ const enrollment = data?.enrollment
 
           <div className="py-6">
 
-            {!course?.reviews?.length ? (
+            {!reviews?.length ? (
 
               <div className="border border-dashed rounded-2xl p-8 text-center">
 
@@ -157,16 +157,7 @@ const enrollment = data?.enrollment
 
               <div className="space-y-4">
 
-                {course.reviews.map((review) => (
-
-                  <CourseReviews
-                    key={review._id}
-                    id={review._id}
-                    avatar={review.user.avatar}
-                    firstName={review.user.firstName}
-                    rating={review.rating}
-                    comment={review.comment}
-                  />
+                {reviews?.map((review) => ( <CourseReviews key={review._id} id={review._id} avatar={review.user.avatar} name={review.user.name}  review={review}/>
 
                 ))}
 
