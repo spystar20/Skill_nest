@@ -4,8 +4,19 @@ import { FaCheckCircle, FaPlayCircle } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import ReviewModal from "./ReviewModal";
 import { FaStar } from "react-icons/fa";
+import { useDeleteReview } from "@/hooks/EnrollmentHooks/review/useReview";
+import { toast } from "sonner";
 const EnrolledCourseCard = ({ enrollmentId, className,reviewData,   course}) => {
+  const {mutate:deleteReview}=useDeleteReview()
   const LessonsLeft = course?.courseId?.lessonCount - course?.completedLessons.length
+  const handleDeleteReview = ()=>{
+    const course_id = course._id
+    deleteReview({enrollmentId,course_id},{
+      onSuccess:()=>{
+        toast.success("review deleted ")
+      }
+    })
+  }
 const [showReview,setShowReview]=useState(false)
   return (
     <div
@@ -32,7 +43,7 @@ const [showReview,setShowReview]=useState(false)
 
         {course?.status === "in-progress" && (
           <span className="absolute left-3 top-3 rounded-full bg-primary/90 px-3 py-1 text-xs font-medium text-white backdrop-blur">
-            {LessonsLeft} Left
+            {LessonsLeft} Lessons Left
           </span>
         )}
 
@@ -129,6 +140,7 @@ const [showReview,setShowReview]=useState(false)
               </div>
             </div>
           {/* REVIEW SECTION */}
+          {reviewData===null ? (
 <div className="rounded-2xl bg-page p-4">
 
   {/* No review yet */}
@@ -153,55 +165,33 @@ const [showReview,setShowReview]=useState(false)
   </div>
 
 </div>
+):(<>
          {/* existing review */}
-         <div className="rounded-2xl bg-page p-4">
-
-  <div className="flex items-start justify-between gap-3">
-
-    <div>
-      <p className="font-heading text-sm font-semibold text-text">
-        Your Review
-      </p>
-
+        <div className="rounded-xl bg-page p-2">
+  <div className="flex items-start justify-between gap-4">
+    <div className="min-w-0">
+      <p className="font-heading text-sm font-semibold text-text">Your Review</p>
       <div className="mt-2 flex items-center gap-1">
         {[1, 2, 3, 4, 5].map((star) => (
-          <FaStar
-            key={star}
-            className={`text-sm ${
-              star <= reviewData?.rating
-                ? "text-accent"
-                : "text-text-light/20"
-            }`}
-          />
+          <FaStar key={star} className={`text-sm transition-colors ${star <= reviewData?.rating ? "text-accent" : "text-text-light/20"}`} />
         ))}
-
-        <span className="ml-1 text-xs text-text-light">
-          {reviewData?.rating}/5
-        </span>
+        <span className="ml-1 text-xs font-medium text-text-light">{reviewData?.rating}/5</span>
       </div>
     </div>
-
-    <button
-      onClick={() => setShowReview(true)}
-      className="shrink-0 rounded-full bg-card px-4 py-2
-                 font-body text-xs font-medium text-text
-                 transition hover:bg-accent hover:text-white"
-    >
-      Edit
-    </button>
-
+    <div className="flex shrink-0 items-center gap-2">
+      <button type="button" onClick={() => setShowReview(true)} className="rounded-full bg-card px-4 py-2 font-body text-xs font-medium text-text transition-all duration-200 hover:scale-[0.98] hover:bg-accent hover:text-white">Edit</button>
+      <button type="button" onClick={handleDeleteReview} className="rounded-full bg-card px-4 py-2 font-body text-xs font-medium text-text-light transition-all duration-200 hover:scale-[0.98] hover:bg-red-500 hover:text-white">Delete</button>
+    </div>
   </div>
-
   {reviewData?.review && (
-    <p className="mt-3 rounded-xl bg-card p-3 font-body text-sm
-                  leading-relaxed text-text-light">
-      {reviewData.review}
-    </p>
+    <p className=" rounded-xl bg-card p-1 font-body text-sm leading-relaxed text-text-light line-clamp-1 ">{reviewData.review}</p>
   )}
-
 </div>
-          
-          {showReview &&(  <ReviewModal course={course} onClose={()=>setShowReview(false)}/>)}
+</>
+        )} 
+        
+        
+          {showReview &&(  <ReviewModal course={course} isExistingReview={reviewData} onClose={()=>setShowReview(false)}/>)}
           </>
         )}
       </div>

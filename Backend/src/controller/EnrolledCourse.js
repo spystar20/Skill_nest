@@ -42,12 +42,13 @@ export const EnrolledCourse = asyncHandler(async (req, res) => {
           return res.status(401).json({ message: 'no course purchased' })
      }
      const enrollmentIds = enrolledCourses.map(enrolledCourse=>enrolledCourse._id)
-     const review = await ReviewModel.findOne({enrollmentId:{$in:enrollmentIds}})
+     const reviews = await ReviewModel.find({enrollmentId:{$in:enrollmentIds}})
      const enrolledCoursesProgress = enrolledCourses.map((enrolledCourse) => {
           const totalLesson = enrolledCourse.courseId.lessonCount 
           const completedLessons = enrolledCourse.completedLessons.length
           const progress = totalLesson > 0 ? Math.round((completedLessons / totalLesson) * 100) : 0
-          return { ...enrolledCourse.toObject(), progress,review }
+          const review = reviews.find(enrollment=>enrollment.enrollmentId.toString()===enrolledCourse._id.toString())
+          return { ...enrolledCourse.toObject(), progress,review:review||null }
      })
      return res.status(200).json({ enrolledCoursesProgress })
 })

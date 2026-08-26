@@ -1,23 +1,34 @@
-import { useAddReview } from "@/hooks/EnrollmentHooks/review/useReview";
+import { useAddReview, useEditReview } from "@/hooks/EnrollmentHooks/review/useReview";
 import React, { useState } from "react";
 import { FaStar, FaTimes } from "react-icons/fa";
 import { toast } from "sonner";
 
-const ReviewModal = ({ course, onClose }) => {
+const ReviewModal = ({ course, onClose,isExistingReview }) => {
   const {mutate:addReview,isPending}=useAddReview()
-
+const {mutate:updateReview,isPending:isUpdating}=useEditReview()
   const enrollmentId = course?._id
   const course_id = course?.courseId?._id
-  const [rating, setRating] = useState(0);
-  const [review, setReview] = useState("");
-  const submitNewReview = ()=>{
+  const [rating, setRating] = useState(isExistingReview?.rating||0);
+  const [review, setReview] = useState(isExistingReview?.review|| "");
+  const submitReview = ()=>{
+if(isExistingReview ===null){
 addReview({enrollmentId,course_id,rating,review},{
   onSuccess:()=>{
     toast.success("review added")
-setTimeout(() => {
-  onClose() 
-}, 1000); }
-})
+    onClose()
+  
+  }
+})}else{
+ const updatedRating = rating
+ const updatedReview = review
+  updateReview({enrollmentId,course_id,updatedRating,updatedReview},{
+   onSuccess: () => {
+  toast.success("Review updated");
+  onClose();
+}
+  })
+  
+}
   }
   return (
     <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black/50 px-4 backdrop-blur-sm">
@@ -132,15 +143,15 @@ setTimeout(() => {
 
           <button
             type="button"
-            disabled={!rating || isPending}
-            onClick={submitNewReview}
+            disabled={!rating || isPending ||isUpdating}
+            onClick={submitReview}
             className={`rounded-full px-7 py-3 font-heading text-sm font-medium text-white transition-all ${
               rating
                 ? "cursor-pointer bg-accent hover:scale-[0.98] hover:bg-primary-light"
                 : "cursor-not-allowed bg-text-light/30"
             }`}
           >
-{isPending?"submitting..":"submit review"}
+{isPending||isUpdating?"submitting..":"submit review"}
     </button>
 
         </div>
