@@ -6,17 +6,16 @@ const AuthContext = createContext()
 export const AuthProvider = ({children})=>{
     
     const [user,setUser] = useState(null);
-
+//  const [authLoading,setAuthLoading]=useState(true)
     const checkauth = async()=>{
         try{
        const res =  await api.get('/auth/me',{withCredentials:true})
        setUser({
         ...res.data.existingUser,...res.data.Teacher
        })
-       console.log(user)
         }catch(err){
-            console.log(err)
-        }}
+setUser(null)        }
+}
 useEffect(()=>{
     checkauth()
 },[])

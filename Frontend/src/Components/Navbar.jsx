@@ -12,13 +12,13 @@ import { IoIosLogOut } from 'react-icons/io';
 import api from '@/utils/axios';
 import { toast } from 'sonner';
 import { MdOutlineShoppingCart } from 'react-icons/md';
+import Loader from '@/utils/Loader';
 const Navbar = () => {
   const [open, setopen] = useState(false)
   const [openMenu, setOpenMenu] = useState(false)
   const [openProfile,setOpenProfile] = useState(false)
   const { user ,setUser } = useAuth()
   const navigate = useNavigate()
-  console.log(user)
   const toggleMenu = () => {
     setOpenMenu(!openMenu)
   }
@@ -38,6 +38,7 @@ setUser(null)
       console.log(err)
     }
   }
+ 
   return (
 
     <div className='font-["Roboto"] fixed top-0 left-0 w-full z-[9999]  home-bg shadow-2xs '>
