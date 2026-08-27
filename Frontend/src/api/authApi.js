@@ -15,10 +15,7 @@ export const verifyEmail = async(data)=>{
 const res =await api.post("/auth/verify-email",{data})
 return res.data
 }
-export const resetPassword = async(data)=>{
-          const res = await api.post('/auth/reset-password', { data})
-return res.data
-}
+
 
 export const createTeacherProfile=async(data)=>{
             const res = await api.post('/teacher/becomeTeacher',data)

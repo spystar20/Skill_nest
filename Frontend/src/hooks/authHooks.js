@@ -1,4 +1,5 @@
 import { createTeacherProfile, Login, resetPassword, signUp, updateProfile, updateTeacherPorfile, verifyEmail } from "@/api/authApi"
+import api from "@/utils/axios"
 import { useMutation } from "@tanstack/react-query"
 
 export const useSignUp = () => {
@@ -13,12 +14,19 @@ export const useLogin = () => {
 }
 export const useVerifyEmail = () => {
     return useMutation({
-        mutationFn: verifyEmail
+        mutationFn: async({token})=>{
+            const res =await api.post("/auth/verify-email",{token})
+return res.data
+        }
     })
 }
 export const useResetPassword = () => {
     return useMutation({
-        mutationFn: resetPassword
+        mutationFn: async({otp,newpassword,email})=>{
+                      const res = await api.post('/auth/reset-password', {otp,newpassword,email})
+            return res.data
+            
+        }
     })
 }
 export const usecreateTeacherProfile = () => {
