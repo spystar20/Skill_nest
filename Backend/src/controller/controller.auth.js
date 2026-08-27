@@ -40,11 +40,12 @@ export const signup =asyncHandler( async (req, res) => {
 export const Login = asyncHandler(async (req, res) => {
   
       const { email, password, rememberme } = req.body
+      console.log(email,"email",password,"password")
       const existingUser = await user.findOne({ email })
       if (!existingUser) {
          return res.status(401).json({ message: "user not found" })
       }
-    
+    console.log(existingUser.password ,"existing")
       const hashPassword = await bcrypt.compare(password, existingUser.password)
       if (!hashPassword) {
          return res.status(401).json({ message: "incorrect credentials" })
@@ -171,6 +172,7 @@ export const forgotPassword = asyncHandler( async (req, res) => {
 export const resetPassword = asyncHandler( async (req, res) => {
    
       const { otp, newpassword, email } = req.body
+      console.log(otp,"otpc",newpassword,"newpass",email,"email")
       const existingUser = await user.findOne({ email })
       if (!existingUser || !existingUser.resetOTP || !existingUser.resetOTPExpires) {
          return res.status(401).json({ message: "Invalid user" })
@@ -182,10 +184,12 @@ export const resetPassword = asyncHandler( async (req, res) => {
       if (hashedOtp !== existingUser.resetOTP) {
          return res.status(401).json({ message: "Invalid OTP" })
       }
+      console.log(hashedOtp,"hashotp")
       const hashedpassword = await bcrypt.hash(newpassword, 10)
       existingUser.resetOTP = undefined
       existingUser.resetOTPExpires = undefined
       existingUser.password = hashedpassword
+      console.log(hashedpassword)
       await existingUser.save()
       return res.status(200).json({ message: `${user} password changed` })
 

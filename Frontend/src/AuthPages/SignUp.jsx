@@ -71,7 +71,7 @@ const SignUp = () => {
                   <div className='flex items-center justify-center gap-3 my-4 px-12'><span className='flex-1 h-px bg-gray-500'></span><span className='text-sm text-gray-700 capitalize'>or continue with</span><span className='flex-1 h-px bg-gray-500'></span></div>
                   {/* social login */}
                   <div className='flex gap-3 items-center justify-center '>
-                    <a href="http://localhost:3000/auth/google"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQRd6qY47iHxIp0wyHdmkwiVUzUXV4rBzTtNQ&s" className='rounded-full w-7 h-7 cursor-pointer hover:scale-110 hover:brightness-110 transition-all ease-in duration-100' alt="google" /></a>
+                    <a href={`${import.meta.env.VITE_BACKEND_URL}/auth/google`}><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQRd6qY47iHxIp0wyHdmkwiVUzUXV4rBzTtNQ&s" className='rounded-full w-7 h-7 cursor-pointer hover:scale-110 hover:brightness-110 transition-all ease-in duration-100' alt="google" /></a>
                     <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" className='rounded-full w-7 h-7 cursor-pointer hover:scale-110 hover:brightness-110 transition-all ease-in duration-100' alt="google" />
                     <img src="https://img.freepik.com/premium-vector/instagram-vector-logo-icon-social-media-logotype_901408-392.jpg?semt=ais_hybrid&w=740&q=80" className='rounded-full w-7 h-7 cursor-pointer hover:scale-110 hover:brightness-110 transition-all ease-in duration-100' alt="google" />
                   </div>

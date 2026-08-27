@@ -19,7 +19,7 @@ const ResetPassword = () => {
     if(ConfirmPassword !== newpassword){
       return toast.error("Passwords do not match")
     }
-    resetPassword({email, otp,newpassword},{
+    resetPassword({otp,newpassword,email},{
       onSuccess:()=>{
            toast.success("Password updated successfully")
    setTimeout(()=>{
