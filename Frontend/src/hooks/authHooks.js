@@ -1,4 +1,4 @@
-import { createTeacherProfile, Login, resetPassword, signUp, updateProfile, updateTeacherPorfile, verifyEmail } from "@/api/authApi"
+import { createTeacherProfile, Login, signUp, updateProfile, updateTeacherPorfile } from "@/api/authApi"
 import api from "@/utils/axios"
 import { useMutation } from "@tanstack/react-query"
 
