@@ -151,7 +151,7 @@ if(!payment){
     const enrollments = await Promise.all(courseIds.map(async course=>{
         const enrollment = await Enrollment.findOne({userId:userId,courseId:course})
         if(!enrollment){
-            Enrollment.create({
+           await Enrollment.create({
                 userId:userId,courseId:course,paymentId:payment.razorpayPaymentId
             })
         }

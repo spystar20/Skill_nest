@@ -58,7 +58,7 @@ const ProjectCard = ({ className = '', course, isItemAdded }) => {
   const handleEnrollment = (courseId, priceType) => {
     const course_id = courseId
     if (priceType !== 'Free') {
-      buyCourse({ courseId: course_id }, {
+      buyCourse({ course_id }, {
         onSuccess: () => {
           toast.success("Redirecting to payment...")
 

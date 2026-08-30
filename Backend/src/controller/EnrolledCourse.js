@@ -95,7 +95,8 @@ export const UpdateEnrolledProgress = asyncHandler(async (req, res) => {
                }
                     await enrollmentData.save()
 
-           await   createCertificate(enrollmentId)
+           await  createCertificate(enrollmentId)
+           
      } else {
           enrollmentData.status = 'in-progress'
                await enrollmentData.save()
@@ -107,9 +108,9 @@ export const UpdateEnrolledProgress = asyncHandler(async (req, res) => {
 })
 //  creates certifcate after course is completed
 const createCertificate =  async(enrollmentId)=>{
-
+console.log("creating certificate...")
       const existingEnrollment = await Enrollment.findById(enrollmentId).populate('userId courseId')
-      
+      console.log(existingEnrollment,"certifernoll")
      if(!existingEnrollment){
 throw new Error('enrolled user not found')
      }
@@ -120,6 +121,7 @@ throw new Error('enrolled user not found')
  const certificate =   await certficateModel.create({
      enrollmentId:enrollmentId,issueDate:existingEnrollment.completedAt
     })
+    console.log(certificate)
        const issueDate = new Date(certificate.issueDate).toLocaleDateString('en-GB',{day:'2-digit',month:'long',year:'numeric'})
 
     const pdfPath= await getCertificatePdf({studentName: `${existingEnrollment.userId.firstName} ${existingEnrollment.userId.lastName}`.trim(),courseName:existingEnrollment.courseId.title,issueDate:issueDate})
@@ -129,6 +131,7 @@ throw new Error('enrolled user not found')
   
    certificate.pdfUrl = uploadedPdf.secure_url
    await certificate.save()
+   console.log(certificate)
    fs.unlinkSync(pdfPath)
 return certificate
 }

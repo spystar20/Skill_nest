@@ -1,18 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { FaSearch, FaSortAlphaDownAlt } from "react-icons/fa";
-import { MdOutlineKeyboardArrowDown } from 'react-icons/md';
-import { IoFilterSharp, IoTime } from "react-icons/io5";
-import Pagination from '@mui/material/Pagination';
+import { IoFilterSharp } from "react-icons/io5";
 import ProjectCard from '@/Pages/Course/ProjectCard';
-import api from '@/utils/axios';
-import { Import } from 'lucide-react';
+
 import FilterComponent from '@/utils/FilterComponent';
 import { Slider } from '@mui/material';
-import { RxCross2 } from 'react-icons/rx';
 import FilterChip from '@/utils/FilterChip';
 import { useCategories, useFilteredCourse } from '@/hooks/CoursesHooks/useCourse';
-import { useBuyCourse, useFreeCourse } from '@/hooks/CoursesHooks/courseMutation';
-import { useNavigate } from 'react-router-dom';
+
 import { usefetchCartItems } from '@/hooks/CoursesHooks/cart/useCart';
 import { isItemAdded } from '@/hooks/CoursesHooks/cart/cartUtils';
 const Courses = () => {

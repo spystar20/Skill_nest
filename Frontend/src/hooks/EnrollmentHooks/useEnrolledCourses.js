@@ -56,6 +56,7 @@ return useMutation({
 })
 }
 export const useCertificateByEnrollment = (enrollmentId,isCompleted)=>useQuery({
+    
     queryKey:['certificate',enrollmentId],
     queryFn:()=>fetchCertificateById(enrollmentId),
     enabled:!!enrollmentId && isCompleted,

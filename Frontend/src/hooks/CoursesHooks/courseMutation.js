@@ -24,8 +24,8 @@ export const useBuyCourse = () => {
                 const { user } = useAuth()
 
     return useMutation({
-        mutationFn: async ({ courseId }) => {
-            const res = await api.post(`/course/buy-course/${courseId}`)
+        mutationFn: async ({ course_id }) => {
+            const res = await api.post(`/course/buy-course/${course_id}`)
             const { order, key } = res.data
             const options = {
                 key,
@@ -51,7 +51,7 @@ export const useBuyCourse = () => {
         },
         onSuccess:async(_,variables)=>{
 await queryClient.invalidateQueries({
-    queryKey:['course',variables.courseId]
+    queryKey:['course',variables.course_id]
 })
 
         },
