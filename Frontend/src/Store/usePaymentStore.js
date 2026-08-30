@@ -26,7 +26,6 @@ paymentId:response.razorpay_payment_id,
 signature:response.razorpay_signature
 
 })
-    console.log('payment successfull')
 },
 prefill:{
     name:user?.name,

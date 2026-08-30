@@ -22,7 +22,6 @@ export const useUpdateLastWatched = ()=>{
     const queryClient = useQueryClient()
     return useMutation({
         mutationFn:async({enrollmentId,lessonId})=>{
-            console.log(lessonId)
             const res = await api.patch(`/course/enroll/last-watched/${enrollmentId}/${lessonId}`)
         },
  onSuccess:async(_,variables)=>{
@@ -37,7 +36,6 @@ export const updateLessonProgress = ()=>{
     return useMutation({
         mutationFn:async({enrollmentId,lessonId,watchedTime})=>{
             
-            console.log(watchedTime)
             const res = await api.patch(`/course/enroll/Lesson-progress/${enrollmentId}/${lessonId}`,{watchedTime})
         },
         onSuccess:async(_,variables)=>{

@@ -29,7 +29,6 @@ const CourseBuilder = () => {
   const { isLoading: sectionLoading, isError: sectionError, data: section } = useSection(courseId)
   const { isLoading: lessonLoading, isError: lessonError, data: lessons } = useLessons(expandedSection)
   const {data:curriculum}=useCurriculum(courseId)
-  console.log(curriculum)
   const { mutate: publishCourse } = usePublishCourse()
   const { mutate: createSection } = useCreateSection()
   const { mutate: editSectionApi } = useEditSection()
@@ -38,7 +37,6 @@ const CourseBuilder = () => {
   const { mutate: deleteLessonApi } = useDeleteLesson()
   const lessonArr = lessons || []
   const course = data?.course || []
-  console.log(lessonArr)
   const navigate = useNavigate()
   const { user } = useAuth()
 

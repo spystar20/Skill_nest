@@ -78,7 +78,6 @@ return res.status(200).json({message:'cart updated',cartDocument})
 // removes course from cart
 export const removeItems = asyncHandler(async(req,res)=>{
     const {courseId}= req.params
-    console.log(courseId,"courseId")
     const userId = req.user.UserID
     const userCart = await CartModel.findOne({userId:userId})
     if(!userCart){

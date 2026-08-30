@@ -7,7 +7,6 @@ import { useLocation, useSearchParams } from 'react-router-dom';
 const PendingEmailVerification = () => {
 const [searchParams] = useSearchParams()
 const email = searchParams.get("email")
-  console.log(email)
   
 const handleRes = async () => {
   if(!email){

@@ -129,8 +129,7 @@ return {
    ...section,lessons
 }
 }))
-   console.log(section)
-   console.log(SectionWithLesson)
+
    return res.status(200).json({SectionWithLesson})
 })
 // for enrolled students only
@@ -286,7 +285,6 @@ return res.status(200).json({message:'lesson updated'})
 })
 
 export const ResourceUpload =asyncHandler( async(req,res)=>{
-   console.log(req.files[0]);
 const {lessonId}= req.params
 const lesson = await Lesson.findById(lessonId)
 if(!lesson){
@@ -299,7 +297,6 @@ for (let i = 0; i < req.files.length; i++) {
    const result = await cloudinary.uploader.upload(req.files[i].path,{
    resource_type:'raw',folder:'skillnest-courses/pdf'
 }) 
-console.log(result)
 resources.push({
    title:titles[i],url:result.secure_url,type:req.body.type
 })}
@@ -351,9 +348,7 @@ export const getCoursebyId =asyncHandler( async (req, res) => {
   
       const { courseId } = req.params
       const userId = req.user?.UserID
-      console.log(courseId)
       const course = await Course.findById(courseId).populate('instructor', "firstName lastName avatar Bio")
-      console.log(course)
       if (!course) {
          return res.status(401).json({ message: 'course not found' })
       }
@@ -492,7 +487,6 @@ export const GetCourses = asyncHandler( async (req, res) => {
 })
 export const GetCourseCategories = asyncHandler(async(req,res)=>{
    const category = await Course.distinct('category')
-   console.log(category)
    return res.status(200).json({message:'categories sent',category})
 })
 export const GetCoursesByTeacherId = asyncHandler(async(req,res)=>{

@@ -115,9 +115,7 @@ const handleLastWatched = (lessonId)=>{
   )
 }
 const handleWatchTime = (lessonId)=>{
-  console.log(lessonId)
   const watchedTime = timeRef.current
-  console.log(watchedTime)
   useWatchedTime({lessonId,enrollmentId,watchedTime})
 }
 

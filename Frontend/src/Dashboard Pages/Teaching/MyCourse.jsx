@@ -17,7 +17,6 @@ import { useDeleteCourse } from '@/hooks/CoursesHooks/courseMutation';
 
 const MyCourse = () => {
         const { user } = useAuth()
-        console.log(user)
 const [sort, setSort] = useState("");
 
 const {isLoading,isError,data:Course}=useTeacherCourses()

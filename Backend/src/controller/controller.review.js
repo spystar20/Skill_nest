@@ -3,7 +3,6 @@ import enrollmentModel from '../models/Teacher/Enrollment.js'
 import reviewModel from '../models/Ecommerce/ReviewModel.js'
 export const addReview = asyncHandler(async(req,res)=>{
     const {enrollmentId} = req.params
-        console.log(enrollmentId)
      
     const userId = req.user.UserID
     const {rating,review}=req.body

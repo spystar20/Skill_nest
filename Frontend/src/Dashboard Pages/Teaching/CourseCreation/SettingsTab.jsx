@@ -2,7 +2,6 @@ import api from "@/utils/axios";
 import React, { useState } from "react";
 const SettingsTab = ({lessonId}) => {
 const [isPreview,setIsPreview] = useState(false)
-console.log(isPreview)
 const handleChecked = async()=>{
   try{
 

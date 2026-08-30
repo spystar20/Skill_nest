@@ -1,7 +1,6 @@
 import passport from "passport"
 import {Strategy as GoogleStrategy} from "passport-google-oauth20"
 import user from "../models/user.model.js"
-console.log("Callback URL:", `${process.env.URL}/auth/google/callback`)
 passport.use(
     new GoogleStrategy(
         {
@@ -13,7 +12,6 @@ passport.use(
             try{
 const email = profile.emails[0].value
 const existingUser = await user.findOne({email})
-console.log("Existing user:", existingUser);
 
 if(existingUser){
       if(!existingUser.firstName){
@@ -21,7 +19,6 @@ if(existingUser){
     }
     existingUser.googleId = profile.id
     existingUser.email = profile.emails[0].value
-    console.log("Email:", email);
 
     existingUser.avatar =profile.photos[0].value
 
@@ -33,8 +30,7 @@ if(existingUser){
 const fullName = profile.displayName?.trim() || ""
 const names = fullName.split(" ")
 const firstName =names[0] ||  "Google User"
-console.log(firstName)
-console.log(fullName)
+
 const lastName = names.slice(1).join(" ")
 const newUser = await user.create({
     firstName,lastName,email,provider:"google",avatar:profile.photos[0].value,googleId:profile.id,isEmailVerified:true

@@ -668,13 +668,6 @@ export const getCertificatePdf = async ({
 
     })
 
-
-    console.log(
-      'Certificate PDF generated successfully:',
-      pdfPath
-    )
-
-
     return pdfPath
 
 

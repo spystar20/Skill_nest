@@ -25,7 +25,6 @@ export const fetchCategories = async () => {
 // get all section in a course by course id 
 export const fetchSection = async (course_id) => {
     const res = await api.get(`/course/${course_id}/get-section`)
-    console.log('📦 UPDATED SECTIONS FROM API:', res.data)
 
     return res.data.section
 }
@@ -51,6 +50,5 @@ export const fetchUploadedResource = async (lessonId) => {
 //get both section and lessons 
 export const fetchCurriculum = async (courseId) => {
     const res = await api.get(`/course/curriculum/${courseId}`)
-    console.log(res)
     return res.data
 }

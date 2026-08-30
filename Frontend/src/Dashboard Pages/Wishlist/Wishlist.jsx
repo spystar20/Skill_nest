@@ -14,7 +14,7 @@ import ProjectCard from "@/Pages/Course/ProjectCard";
 const Wishlist = () => {
 
 const {data:wishlistData,isLoading,isError}  = useFetchWishlist()
-console.log(wishlistData)
+
   const courses = wishlistData?.courses || [];
 
   if (isLoading) {
