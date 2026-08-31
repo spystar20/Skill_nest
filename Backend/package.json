@@ -6,7 +6,9 @@
   "type": "module",
   "scripts": {
     "start": "node app.js",
-    "dev": "node app.js"
+    "dev": "node app.js",
+      "build": "npx puppeteer browsers install chrome"
+
   },
   "author": "",
   "license": "ISC",
