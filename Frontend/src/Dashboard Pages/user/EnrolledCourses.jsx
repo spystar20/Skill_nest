@@ -8,6 +8,7 @@ import ProjectCard from '@/Pages/Course/ProjectCard'
 import React, { useEffect, useState } from 'react'
 import { FaAngleDoubleLeft, FaSearch } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
+import DashboardPageHeader from '../DashboardComponents/DashboardPageHeader'
 
 const EnrolledCourses = () => {
   
@@ -21,18 +22,12 @@ const {isLoading,isError,data} = useEnrolledCourses()
            <Dataset loading={isLoading} error={isError}>
 
     <div className='w-full bg-neutral-100 min-h-screen overflow-x-hidden px-2 md:px-8 py-3 flex flex-col gap-6 '>
-   <div className='flex justify-between items-center'> 
-    <h2 className='text-3xl font-bold font-heading'>Learning</h2>
-    <Link to='/'>
-    <span className='cursor-pointer flex gap-2 items-center hover:scale-105 duration-300 transition-all ease-in'>
-      <FaAngleDoubleLeft />Back to Home</span>
-      </Link>
-      </div>
+  
+            <DashboardPageHeader title="My Courses" description="Continue learning from where you left off"/>
+      
 {/* continue course */}
      <div className="w-full">
-  <h4 className="text-gray-600 text-lg mb-3">
-    Continue where you left off and track your progress.
-  </h4>
+
 
   <div className="overflow-x-auto no-scrollbar w-full">
     {startedCourse.length === 0 ? (

@@ -6,6 +6,7 @@ import ReviewModal from "./ReviewModal";
 import { FaStar } from "react-icons/fa";
 import { useDeleteReview } from "@/hooks/EnrollmentHooks/review/useReview";
 import { toast } from "sonner";
+import DashboardPageHeader from "@/Dashboard Pages/DashboardComponents/DashboardPageHeader";
 const EnrolledCourseCard = ({ enrollmentId, className,reviewData,   course}) => {
   const {mutate:deleteReview}=useDeleteReview()
   const LessonsLeft = course?.courseId?.lessonCount - course?.completedLessons.length

@@ -31,6 +31,7 @@ import Certificate from '@/Components/Courses/Certificate'
 import CertificatesShowcase from '@/Dashboard Pages/user/CertificatesShowcase'
 import Cart from '@/Pages/EcommercePages/Cart'
 import Wishlist from '@/Dashboard Pages/Wishlist/Wishlist'
+import Dashboard from '@/Dashboard Pages/Dashboard/Dashboard'
 
 const AppRoutes = () => {
   return (
@@ -61,6 +62,7 @@ const AppRoutes = () => {
           <Route path='/certificate' element={<Certificate/>}/>
         </Route>
         <Route element={<DashboardLayout />}>
+        <Route path='/dashboard/student' element={<Dashboard/>}/>
           <Route path='/profile' element={<Profile />} />
           <Route path='/dashboard/teacher/my-courses' element={<MyCourse />} />
           <Route path='/dashboard/student/wishlist' element={<Wishlist/>}/>
