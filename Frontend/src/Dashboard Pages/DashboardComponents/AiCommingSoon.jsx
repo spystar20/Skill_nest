@@ -1,25 +1,30 @@
 import React from 'react'
 
-const AiCommingSoon = () => {
+const AiComingSoon = () => {
   return (
-<div style={{backgroundImage:`url(https://i.pinimg.com/1200x/3b/94/0a/3b940af68cd22a8d7677a22db3ea0d15.jpg)`}}  className="bg-[#0A1931] rounded-xl p-5 text-white relative max-h-[345px]">
-   
-  <div className="flex items-center gap-2 z-8">
-    <h3 className="font-semibold">Meet Your AI Study Buddy
-</h3>
-  </div>
+    <div
+      style={{
+        backgroundImage: `url(https://i.pinimg.com/1200x/52/07/75/52077535fade26f1753e3de16a97748c.jpg)`,
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat"
+      }}
+      className="bg-[#0A1931] rounded-xl p-5 text-white flex flex-col items-center h-[345px]"
+    >
+      <div className="flex items-center gap-2 z-10">
+        <h3 className="font-semibold text-xl">
+          Meet Your AI Study Buddy
+        </h3>
+      </div>
 
-  <p className="text-sm text-white/60 mt-2">
-Stuck on a concept? Ask SkillNest AI for explanations, examples, and coding guidance.  </p>
+      <p className="text-sm text-center text-white/60 mt-2">
+        Get instant help with concepts, examples, and coding questions.
+      </p>
 
-  <button className="mt-5 w-full rounded-lg bg-white/10 px-4 py-2.5 text-sm text-white hover:bg-white/15 transition">
-    Ask AI
-  </button>
-
-  <p className="text-xs text-[#7C8FD6] mt-3 text-center">
-    Coming soon
-  </p>
-</div>  )
+      <button className="mt-5 w-full capitalize rounded-lg font-medium bg-popover px-4 py-2.5 text-sm text-button hover:bg-white/85 transition">
+        Coming soon
+      </button>
+    </div>
+  )
 }
 
-export default AiCommingSoon
+export default AiComingSoon
