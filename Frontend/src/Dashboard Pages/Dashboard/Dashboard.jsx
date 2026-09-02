@@ -28,37 +28,8 @@ const Dashboard = () => {
 
   <div className=''>
     <div className='grid grid-cols-[3fr_1.5fr]'>
-<div className="bg-white rounded-lg p-5">
-  <div className="flex items-center justify-between mb-5">
-    <div>
-      <h2 className="text-xl font-semibold font-heading">
-        Learning Activity
-      </h2>
-
-      <p className="text-sm text-neutral-500 mt-1">
-        Track your learning time over the selected period.
-      </p>
-    </div>
-
-    <div className="flex items-center gap-1 bg-neutral-100 p-1 rounded-lg">
-      {periods.map((item) => (
-        <button
-          key={item}
-          onClick={() => setPeriod(item)}
-          className={`px-3 py-1.5 text-sm rounded-md capitalize transition-all ${
-            period === item
-              ? "bg-[#0A1931] text-white"
-              : "text-neutral-600 hover:text-[#0A1931]"
-          }`}
-        >
-          {item}
-        </button>
-      ))}
-    </div>
+<LearningChart period={period} periods={periods} setPeriod={setPeriod}/>
   </div>
-
-  <LearningChart period={period} />
-</div>    </div>
 </div>
   </div>
     </div>
