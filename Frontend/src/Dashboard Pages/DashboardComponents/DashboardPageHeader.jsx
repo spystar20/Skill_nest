@@ -1,30 +1,30 @@
 import React from 'react'
 import { FaAngleDoubleLeft } from 'react-icons/fa'
+import { RiHome3Line } from 'react-icons/ri'
 import { Link } from 'react-router-dom'
 
-
-const DashboardPageHeader = ({title,description}) => {
+const DashboardPageHeader = ({ title, description }) => {
   return (
-  <div className="flex items-center justify-between">
+    <div className="flex items-center justify-between">
       <div>
-        <h1 className="text-2xl md:text-3xl font-bold font-heading text-text">
+        <h1 className="text-2xl md:text-3xl font-bold text-[#0A1931]" style={{ fontFamily: 'Outfit, sans-serif' }}>
           {title}
         </h1>
-
         {description && (
-          <p className="mt-1 text-sm md:text-base text-text-light font-body">
+          <p className="mt-1 text-sm md:text-base text-[#6B7280]" style={{ fontFamily: 'Inter, sans-serif' }}>
             {description}
           </p>
         )}
       </div>
-
-      <Link
+  <Link
         to="/"
-        className="hidden md:flex items-center gap-2 font-body  hover:scale-105 transition-all duration-300"  >
-        <FaAngleDoubleLeft />
-        <span>Back to Home</span>
+        className="w-9 h-9 flex items-center justify-center rounded-lg border text-white border-[#E5E7EB] bg-black hover:text-[#0A1931] hover:bg-[#F8FAFC] hover:border-[#111827]/20 shadow-xs transition-all duration-200"
+        title="Go to Home"
+      >
+        <RiHome3Line className="text-xl" />
       </Link>
-    </div>  )
+    </div>
+  )
 }
 
-export default DashboardPageHeader
+export default DashboardPageHeader;
