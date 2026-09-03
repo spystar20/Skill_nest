@@ -18,7 +18,7 @@ const DashboardPageHeader = ({ title, description }) => {
       </div>
   <Link
         to="/"
-        className="w-9 h-9 flex items-center justify-center rounded-lg border text-white border-[#E5E7EB] bg-black hover:text-[#0A1931] hover:bg-[#F8FAFC] hover:border-[#111827]/20 shadow-xs transition-all duration-200"
+        className="w-9 h-9 hidden md:flex items-center justify-center rounded-lg border text-white border-[#E5E7EB] bg-black hover:text-[#0A1931] hover:bg-[#F8FAFC] hover:border-[#111827]/20 shadow-xs transition-all duration-200"
         title="Go to Home"
       >
         <RiHome3Line className="text-xl" />

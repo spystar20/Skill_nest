@@ -14,7 +14,7 @@ const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false)
 
   const navClass = ({ isActive }) =>
-    `flex items-center justify-start gap-2 rounded-l-full px-3 py-2 text-lg font-medium transition-all duration-200 ease-in hover:translate-x-1 hover:bg-neutral-200/95 hover:text-[#0a1931] ${isActive ? 'bg-neutral-200 text-[#0a1931]' : 'text-white'}`
+    `flex items-center justify-start gap-2 rounded-l-full px-3 py-2 text-lg font-medium transition-all duration-200 ease-in hover:translate-x-1 hover:bg-neutral-200/95 hover:text-[#0a1931] ${isActive ? 'bg-page text-[#0a1931]' : 'text-white'}`
 
   const mobileNavClass = ({ isActive }) =>
     `flex items-center gap-3 rounded-lg px-4 py-3 text-base font-medium transition-all duration-200 ${isActive ? 'bg-white text-[#0a1931]' : 'text-white hover:bg-white/10'}`
@@ -37,7 +37,7 @@ const Sidebar = () => {
           <div className="flex flex-col gap-3 border-b border-white/10 py-6">
             <h2 className="px-4 font-body text-xs font-semibold uppercase tracking-wider text-white/50">Learning</h2>
             <ul className="flex flex-col gap-1">
-              <li><NavLink to="/dashboard/student" className={navClass}><MdDashboard className="h-4 w-4 shrink-0" /><span>Dashboard</span></NavLink></li>
+              <li><NavLink to="/dashboard/student/" className={navClass}><MdDashboard className="h-4 w-4 shrink-0" /><span>Dashboard</span></NavLink></li>
               <li><NavLink to="/dashboard/student/my-courses" className={navClass}><ImBook className="h-4 w-4 shrink-0" /><span>My Courses</span></NavLink></li>
               <li><NavLink to="/dashboard/student/wishlist" className={navClass}><BsHeartFill className="h-4 w-4 shrink-0" /><span>Wishlist</span></NavLink></li>
               <li><NavLink to="/dashboard/student/continue-learning" className={navClass}><MdPlayLesson className="h-4 w-4 shrink-0" /><span>Continue Learning</span></NavLink></li>
