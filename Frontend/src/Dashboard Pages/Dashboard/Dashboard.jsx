@@ -7,6 +7,7 @@ import DashboardStat from '../DashboardComponents/DashboardStat';
 import { PiClockUser } from 'react-icons/pi';
 import LearningChart from '../DashboardComponents/LearningChart';
 import AiCommingSoon from '../DashboardComponents/AiCommingSoon';
+import StreakCard from './StreakCard';
 
 const Dashboard = () => {
   const { user } = useAuth()
@@ -49,8 +50,9 @@ const Dashboard = () => {
         <div className="lg:col-span-2 bg-white rounded-xl border border-[#E5E7EB] shadow-sm overflow-hidden">
           <LearningChart period={period} periods={periods} setPeriod={setPeriod} />
         </div>
-   <aside>
+   <aside className='flex flex-col gap-5'>
     <AiCommingSoon/>
+    <StreakCard/>
    </aside>
       </main>
     </div>

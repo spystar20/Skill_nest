@@ -8,7 +8,7 @@ const AiComingSoon = () => {
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat"
       }}
-      className="bg-[#0A1931] rounded-xl p-5 text-white flex flex-col items-center h-[345px]"
+      className="bg-[#0A1931] rounded-xl p-5 text-white flex flex-col items-center h-[185px]"
     >
       <div className="flex items-center gap-2 z-10">
         <h3 className="font-semibold text-xl">
