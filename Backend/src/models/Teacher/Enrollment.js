@@ -15,6 +15,12 @@ type:String ,
      type:mongoose.Schema.Types.ObjectId,ref:'lesson',
      default:null
     },
+    learningActivity:{
+        date:{type:Date,default:Date.now()},
+        watchedTime:{
+            type:Number,default:0
+        }
+    },
     lessonProgress:[{
         lessonId:{
             type:mongoose.Schema.Types.ObjectId,ref:'lesson',default:null
