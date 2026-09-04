@@ -210,11 +210,20 @@ export const UpdateWatchedTime = asyncHandler(async(req,res)=>{
           return res.status(404).json({message:'enrollment not found'})
      }
      const existingProgress = enrollment.lessonProgress.find(item=>item.lessonId?.toString()===lessonId)
+     const learningTime = watchedTime- (existingProgress?.watchedTime ||0)
+
      if(existingProgress){
           existingProgress.watchedTime = watchedTime
      }else{
   enrollment.lessonProgress.push({lessonId,watchedTime})
+     }
 
+         const today = new Date()
+     const exisitngAcitvity = enrollment.learningActivity.find(item=>item.date.getDate()===today.getDate() && item.date.getMonth()===today.getMonth() && item.date.getFullYear()===today.getFullYear())
+     if(exisitngAcitvity){
+          exisitngAcitvity.watchedTime = exisitngAcitvity.watchedTime + learningTime
+     }else{
+          enrollment.learningActivity.push({date:today,watchedTime:learningTime})
      }
   await enrollment.save()
   return res.status(200).json({message:'lesson progress updated'})
