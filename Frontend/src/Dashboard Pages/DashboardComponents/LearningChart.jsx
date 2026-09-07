@@ -10,17 +10,8 @@ import {
   YAxis
 } from 'recharts'
 
-const data = [
-  { day: 'Mon', hours: 2 },
-  { day: 'Tue', hours: 1 },
-  { day: 'Wed', hours: 3 },
-  { day: 'Thu', hours: 2 },
-  { day: 'Fri', hours: 4 },
-  { day: 'Sat', hours: 1.5 },
-  { day: 'Sun', hours: 3 }
-]
 
-const LearningChart = ({ periods, period, setPeriod }) => {
+const LearningChart = ({ ranges, range, setRange,data }) => {
   return (
     <div className='md:p-5 p-2 bg-card rounded-xl border border-border shadow-sm overflow-hidden'>
       <div className='flex flex-col md:flex-row items-start gap-3 md:items-center md:justify-between mb-5'>
@@ -35,12 +26,12 @@ const LearningChart = ({ periods, period, setPeriod }) => {
         </div>
 
         <div className='flex items-center gap-1 bg-neutral-100 p-1 rounded-lg'>
-          {periods.map((item) => (
+          {ranges.map((item) => (
             <button
               key={item}
-              onClick={() => setPeriod(item)}
+              onClick={() => setRange(item)}
               className={`px-2.5 sm:px-3 py-1.5 text-xs sm:text-sm rounded-md capitalize transition-all ${
-                period === item
+                range === item
                   ? 'bg-primary text-white'
                   : 'text-text-light hover:text-primary'
               }`}
@@ -85,7 +76,7 @@ const LearningChart = ({ periods, period, setPeriod }) => {
             />
 
             <XAxis
-              dataKey='day'
+              dataKey='label'
               axisLine={false}
               tickLine={false}
               tick={{
@@ -105,7 +96,7 @@ const LearningChart = ({ periods, period, setPeriod }) => {
               }}
               domain={[0, 8]}
               ticks={[0, 2, 4, 6, 8]}
-              unit='h'
+              unit='s'
             />
 
             <Tooltip
@@ -127,7 +118,7 @@ const LearningChart = ({ periods, period, setPeriod }) => {
                 fontSize: '13px',
                 fontWeight: 500
               }}
-              formatter={(value) => [`${value}h`, 'Learning']}
+              formatter={(value) => [`${value}s`, 'Learning']}
               cursor={{
                 stroke: '#7C8FD6',
                 strokeWidth: 1,
@@ -137,7 +128,7 @@ const LearningChart = ({ periods, period, setPeriod }) => {
 
             <Area
               type='monotoneX'
-              dataKey='hours'
+              dataKey='watchedTime'
               fill='url(#learningGradient)'
               stroke='none'
               tooltipType='none'
@@ -145,7 +136,7 @@ const LearningChart = ({ periods, period, setPeriod }) => {
 
             <Line
               type='monotoneX'
-              dataKey='hours'
+              dataKey='watchedTime'
               stroke='#7C8FD6'
               strokeWidth={2}
               dot={false}

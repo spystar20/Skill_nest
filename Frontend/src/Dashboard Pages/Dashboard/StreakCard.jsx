@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { LuBadgeCheck, LuCircleCheck, LuFlame } from 'react-icons/lu'
 
-const StreakCard = () => {
+const StreakCard = ({streakCount}) => {
   const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
   const [completedDays, setCompletedDays] = useState({
@@ -21,7 +21,6 @@ const StreakCard = () => {
     }))
   }
 
-  const streakCount = Object.values(completedDays).filter(Boolean).length
 
   return (
     <div className='bg-card rounded-xl border border-border shadow-sm p-3 md:p-5 flex flex-col gap-5 sm:gap-6 transition-all'>

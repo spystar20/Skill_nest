@@ -1,6 +1,5 @@
 import {asyncHandler} from '../middleware/asyncHandler.middleware.js'
 import certficateModel from '../models/student/certficateModel.js'
-import Course from '../models/Teacher/Course.js'
 import enrollmentModel from '../models/Teacher/Enrollment.js'
 export const studentDashboardData = asyncHandler(async(req,res)=>{
     const user = req.user.UserID

@@ -15,5 +15,6 @@ router.get('/enrollment/:enrollmentId/certificate',middleware,getCertificateById
 router.post('/enrolled/:enrollmentId/add/review',middleware,addReview)
 router.patch('/enrolled/:enrollmentId/update/review',middleware,updateReview)
 router.delete('/enrolled/:enrollmentId/delete/review',middleware,deleteReview)
+// dashboard data api
 router.get('/enrolled/dashboard',middleware,studentDashboardData)
 export default router

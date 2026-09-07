@@ -10,12 +10,19 @@ import AiCommingSoon from '../DashboardComponents/AiCommingSoon'
 import StreakCard from './StreakCard'
 import MyCourses from './MyCourses'
 import RecentActivity from './RecentActivity'
+import { useStudentDashboard } from '@/hooks/DahboardHooks/useDashboard'
+import { formatTime } from '@/utils/formatDuration'
 
 const Dashboard = () => {
   const { user } = useAuth()
-  const [period, setPeriod] = useState('week')
-  const periods = ['week', 'month', 'year']
-
+  const ranges = ['week', 'month', 'year']
+  const [range,setRange ]=useState("year")
+const {data:dashboard}=useStudentDashboard(range)
+console.log(dashboard)
+// const graphData = dashboard?.graphData?.map(item=>({
+//   ...item
+//   ,watchedTime:item?.watchedTime/3600
+// }))
   return (
     <div className='w-full min-h-screen bg-page px-2  py-6 md:px-8 md:py-8 flex flex-col gap-8 '>
       <DashboardPageHeader
@@ -25,29 +32,29 @@ const Dashboard = () => {
 
       <section className='grid grid-cols-2  lg:grid-cols-4 gap-2'>
         <DashboardStat
-          title='Ongoing Courses'
-          dataValue='5'
+          title='Enrolled Courses'
+          dataValue={dashboard?.enrolledCourses?.length || 0}
           icon={<HiOutlineBookOpen className='text-xl text-primary' />}
           growth='10%'
         />
 
         <DashboardStat
           title='Completed Courses'
-          dataValue='8'
+          dataValue={dashboard?.completedCourses?.length||0}
           icon={<HiOutlineCheckBadge className='text-xl text-success' />}
           growth='10%'
         />
 
         <DashboardStat
           title='Learning Hours'
-          dataValue='62.7'
+          dataValue={formatTime( dashboard?.totalWatchedTime)}
           icon={<PiClockUser className='text-xl text-accent' />}
           growth='10.8%'
         />
 
         <DashboardStat
           title='Certificates Earned'
-          dataValue='8'
+          dataValue={dashboard?.certificateCount||0}
           icon={<SlBadge className='text-xl text-warning' />}
           growth='10%'
         />
@@ -56,17 +63,18 @@ const Dashboard = () => {
       <main className='grid grid-cols-1 lg:grid-cols-3 gap-8 items-start'>
         <div className='lg:col-span-2 flex flex-col gap-5'>
           <LearningChart
-            period={period}
-            periods={periods}
-            setPeriod={setPeriod}
+            range={range}
+            ranges={ranges}
+            setRange={setRange}
+            data={dashboard?.graphData}
           />
 
-          <MyCourses />
+          <MyCourses  />
         </div>
 
         <aside className='flex flex-col gap-5'>
           <AiCommingSoon />
-          <StreakCard />
+          <StreakCard streakCount={dashboard?.currentStreak||0}/>
           <RecentActivity/>
         </aside>
       </main>
