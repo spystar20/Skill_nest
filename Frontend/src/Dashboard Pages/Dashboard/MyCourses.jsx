@@ -1,7 +1,7 @@
 import React from 'react'
 import EnrolledCourseCard from '../user/Enrollment/EnrolledCourseCard'
 
-const MyCourses = () => {
+const MyCourses = ({courses}) => {
   const sampleCourses = [1, 2, 3]
 
   return (
@@ -30,11 +30,11 @@ const MyCourses = () => {
       </div>
 
       {/* Courses */}
-      {sampleCourses.length > 0 ? (
+      {courses.length > 0 ? (
         <div className='grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5'>
 
-          {sampleCourses.map((item) => (
-            <EnrolledCourseCard key={item} />
+          {courses.map((course) => (
+            <EnrolledCourseCard course={course} key={course._id} />
           ))}
 
         </div>

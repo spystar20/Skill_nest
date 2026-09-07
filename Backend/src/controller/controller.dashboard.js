@@ -4,12 +4,12 @@ import enrollmentModel from '../models/Teacher/Enrollment.js'
 export const studentDashboardData = asyncHandler(async(req,res)=>{
     const user = req.user.UserID
     const {range ="week"}= req.query
-    const existingEnrollment = await enrollmentModel.find({userId:user}).populate("userId","firstName avatar")
+    const existingEnrollment = await enrollmentModel.find({userId:user}).populate({path:"courseId",populate:{path:"instructor",select:"avatar firstName"}})
     if(existingEnrollment.length===0){
         return res.status(404).json({message:"enrolled user not found"})
     }
-
-   const enrolledCourses = existingEnrollment
+const enrolledCourses = existingEnrollment
+   const continueCourses = existingEnrollment.filter(enrolledCourse=>enrolledCourse.status==="in-progress")
    const completedCourses = existingEnrollment.filter(enrolledCourse=>enrolledCourse.completed)
 const today = new Date()
 const startDate = new Date(today)
@@ -34,7 +34,7 @@ const checkDateKey =`${checkDate.getFullYear()}-${checkDate.getMonth()}-${checkD
     return activityDate === checkDateKey && activity.watchedTime>0
   })
 streakData.push({
-    date: checkDateKey,
+    day: checkDate.toLocaleString("en-US",{weekday:"short"}),
     hasActivity
 })
 }
@@ -49,7 +49,6 @@ for(const day of streakData){
 const filteredActivity = learningActivity.filter(learningActivity=> {
  return learningActivity.date>=startDate && today>= learningActivity.date
 })
-console.log(filteredActivity,"af")
 const activityMap = {}
 filteredActivity.forEach(activity=>{
 const date = new Date(activity.date)
@@ -94,5 +93,5 @@ return existingCertificate}))
 
 const certificateCount = certificates.filter(certificate=>certificate!==null).length
 
-    return res.status(200).json({enrolledCourses,completedCourses,totalWatchedTime,certificateCount,graphData,streakData,currentStreak})
+    return res.status(200).json({enrolledCourses,continueCourses,completedCourses,totalWatchedTime,certificateCount,graphData,streakData,currentStreak})
 })                

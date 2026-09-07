@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import DashboardPageHeader from "@/Dashboard Pages/DashboardComponents/DashboardPageHeader";
 const EnrolledCourseCard = ({ enrollmentId, className,reviewData,   course}) => {
   const {mutate:deleteReview}=useDeleteReview()
-  const LessonsLeft = course?.courseId?.lessonCount - course?.completedLessons.length
+  const LessonsLeft = course?.courseId?.lessonCount - course?.completedLessons?.length
   const handleDeleteReview = ()=>{
     const course_id = course._id
     deleteReview({enrollmentId,course_id},{

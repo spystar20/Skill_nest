@@ -12,17 +12,23 @@ import MyCourses from './MyCourses'
 import RecentActivity from './RecentActivity'
 import { useStudentDashboard } from '@/hooks/DahboardHooks/useDashboard'
 import { formatTime } from '@/utils/formatDuration'
+import { useEnrolledCourses } from '@/hooks/EnrollmentHooks/useEnrolledCourses'
 
 const Dashboard = () => {
   const { user } = useAuth()
   const ranges = ['week', 'month', 'year']
   const [range,setRange ]=useState("year")
 const {data:dashboard}=useStudentDashboard(range)
+const {data:courses}=useEnrolledCourses()
 console.log(dashboard)
+console.log(courses)
+const continueCourses  = courses?.enrolledCoursesProgress?.filter(course=>course.status==="in-progress")
+
 // const graphData = dashboard?.graphData?.map(item=>({
 //   ...item
 //   ,watchedTime:item?.watchedTime/3600
 // }))
+
   return (
     <div className='w-full min-h-screen bg-page px-2  py-6 md:px-8 md:py-8 flex flex-col gap-8 '>
       <DashboardPageHeader
@@ -69,13 +75,13 @@ console.log(dashboard)
             data={dashboard?.graphData}
           />
 
-          <MyCourses  />
+          <MyCourses courses={continueCourses || []}  />
         </div>
 
         <aside className='flex flex-col gap-5'>
           <AiCommingSoon />
-          <StreakCard streakCount={dashboard?.currentStreak||0}/>
-          <RecentActivity/>
+          <StreakCard streakCount={dashboard?.currentStreak||0} streakData={dashboard?.streakData ||[]}/>
+          <RecentActivity />
         </aside>
       </main>
     </div>

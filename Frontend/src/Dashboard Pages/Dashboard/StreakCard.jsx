@@ -1,25 +1,8 @@
 import React, { useState } from 'react'
 import { LuBadgeCheck, LuCircleCheck, LuFlame } from 'react-icons/lu'
 
-const StreakCard = ({streakCount}) => {
-  const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+const StreakCard = ({streakCount,streakData}) => {
 
-  const [completedDays, setCompletedDays] = useState({
-    Sun: true,
-    Mon: true,
-    Tue: true,
-    Wed: true,
-    Thu: true,
-    Fri: false,
-    Sat: false
-  })
-
-  const toggleDay = (day) => {
-    setCompletedDays((prev) => ({
-      ...prev,
-      [day]: !prev[day]
-    }))
-  }
 
 
   return (
@@ -55,21 +38,18 @@ const StreakCard = ({streakCount}) => {
 
       {/* Days */}
       <div className='grid grid-cols-7 gap-1 sm:gap-2 pt-2 border-t border-border'>
-        {days.map((day) => {
-          const isComplete = completedDays[day]
-
+        {streakData.map((streak,index) => {
           return (
             <button
-              key={day}
+              key={index}
               type='button'
-              onClick={() => toggleDay(day)}
               className='flex flex-col items-center gap-1.5 sm:gap-2 py-2 px-0.5 sm:px-1 rounded-xl transition-all hover:bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-accent/20'
             >
               <span className='text-[10px] sm:text-xs font-semibold text-text-light font-body uppercase tracking-wide sm:tracking-wider'>
-                {day}
+                {streak.day}
               </span>
 
-              {isComplete ? (
+              {streak.hasActivity===true ? (
                 <span className='text-xl sm:text-2xl text-accent transition-transform active:scale-95'>
                   <LuBadgeCheck />
                 </span>
