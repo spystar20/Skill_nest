@@ -8,11 +8,13 @@ import { PiClockUser } from 'react-icons/pi'
 import LearningChart from '../DashboardComponents/LearningChart'
 import AiCommingSoon from '../DashboardComponents/AiCommingSoon'
 import StreakCard from './StreakCard'
-import MyCourses from './MyCourses'
+import MyCourses from './CoursesShowcase'
 import RecentActivity from './RecentActivity'
 import { useStudentDashboard } from '@/hooks/DahboardHooks/useDashboard'
 import { formatTime } from '@/utils/formatDuration'
 import { useEnrolledCourses } from '@/hooks/EnrollmentHooks/useEnrolledCourses'
+import EnrolledCourseCard from '../user/Enrollment/EnrolledCourseCard'
+import CoursesShowcase from './CoursesShowcase'
 
 const Dashboard = () => {
   const { user } = useAuth()
@@ -24,13 +26,15 @@ console.log(dashboard)
 console.log(courses)
 const continueCourses  = courses?.enrolledCoursesProgress?.filter(course=>course.status==="in-progress")
 
+const recentCourses = courses?.enrolledCoursesProgress
+  ?.slice(0, 3)
 // const graphData = dashboard?.graphData?.map(item=>({
 //   ...item
 //   ,watchedTime:item?.watchedTime/3600
 // }))
 
   return (
-    <div className='w-full min-h-screen bg-page px-2  py-6 md:px-8 md:py-8 flex flex-col gap-8 '>
+    <div className='w-full min-h-screen bg-page px-2  py-6 md:px-8 md:py-8 flex flex-col gap-5 '>
       <DashboardPageHeader
         title={`Welcome back, ${user?.firstName || 'Learner'}`}
         description='Manage your learning, track your progress, and keep growing.'
@@ -67,7 +71,7 @@ const continueCourses  = courses?.enrolledCoursesProgress?.filter(course=>course
       </section>
 
       <main className='grid grid-cols-1 lg:grid-cols-3 gap-8 items-start'>
-        <div className='lg:col-span-2 flex flex-col gap-5'>
+        <div className='lg:col-span-2 flex flex-col gap-3.5'>
           <LearningChart
             range={range}
             ranges={ranges}
@@ -75,12 +79,29 @@ const continueCourses  = courses?.enrolledCoursesProgress?.filter(course=>course
             data={dashboard?.graphData}
           />
 
-          <MyCourses courses={continueCourses || []}  />
+          <CoursesShowcase title={`enrolled Courses`} desc={`View your enrolled courses and keep track of your learning journey.`} courses={recentCourses || []}  />
+          <CoursesShowcase title={`Recommended for You`} desc={`Explore courses selected to help you build new skills and keep learning.`} />
         </div>
 
-        <aside className='flex flex-col gap-5'>
+        <aside className='flex flex-col gap-3.5'>
           <AiCommingSoon />
           <StreakCard streakCount={dashboard?.currentStreak||0} streakData={dashboard?.streakData ||[]}/>
+          <div  className='bg-card rounded-xl border border-border shadow-sm p-3 md:p-4  flex flex-col gap-5'>
+  <div className='flex justify-between items-center gap-3'>
+        <h2 className='text-base sm:text-lg font-semibold text-text font-heading'>
+Continue Learning        </h2>
+
+        <button
+          type='button'
+          className='shrink-0 text-xs sm:text-sm font-medium text-accent hover:text-primary transition-colors'
+        >
+          View All
+        </button>
+      </div> 
+      {continueCourses?.map(course=>(
+      <EnrolledCourseCard  course={course} key={course._id} />
+      ))}
+          </div>
           <RecentActivity />
         </aside>
       </main>

@@ -7,7 +7,7 @@ import { FaStar } from "react-icons/fa";
 import { useDeleteReview } from "@/hooks/EnrollmentHooks/review/useReview";
 import { toast } from "sonner";
 import DashboardPageHeader from "@/Dashboard Pages/DashboardComponents/DashboardPageHeader";
-const EnrolledCourseCard = ({ enrollmentId, className,reviewData,   course}) => {
+const EnrolledCourseCard = ({ enrollmentId, className,reviewData,   course,showReviewUi}) => {
   const {mutate:deleteReview}=useDeleteReview()
   const LessonsLeft = course?.courseId?.lessonCount - course?.completedLessons?.length
   const handleDeleteReview = ()=>{
@@ -139,8 +139,11 @@ const [showReview,setShowReview]=useState(false)
                   }}
                 />
               </div>
+              
             </div>
           {/* REVIEW SECTION */}
+       {showReviewUi && (  
+        <>
           {reviewData===null ? (
 <div className="rounded-2xl bg-page p-4">
 
@@ -190,8 +193,8 @@ const [showReview,setShowReview]=useState(false)
 </div>
 </>
         )} 
-        
-        
+        </>
+      )}   
           {showReview &&(  <ReviewModal course={course} isExistingReview={reviewData} onClose={()=>setShowReview(false)}/>)}
           </>
         )}

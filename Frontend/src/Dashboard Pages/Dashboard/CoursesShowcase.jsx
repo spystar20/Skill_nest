@@ -1,7 +1,8 @@
 import React from 'react'
 import EnrolledCourseCard from '../user/Enrollment/EnrolledCourseCard'
+import { Link } from 'react-router-dom'
 
-const MyCourses = ({courses}) => {
+const CoursesShowcase = ({courses,title,desc,link}) => {
   const sampleCourses = [1, 2, 3]
 
   return (
@@ -12,29 +13,28 @@ const MyCourses = ({courses}) => {
 
         <div>
           <h2 className='text-lg sm:text-xl font-semibold text-text font-heading'>
-            My Courses
-          </h2>
+{title}          </h2>
 
           <p className='text-xs sm:text-sm text-text-light mt-1 font-body'>
-            Continue learning where you left off
+          {desc}
           </p>
         </div>
 
-        <button
+        <Link to={link}
           type='button'
           className='self-start sm:self-auto px-3 sm:px-4 py-2 rounded-lg bg-primary text-white text-xs sm:text-sm font-medium font-body hover:bg-primary-light transition-colors'
         >
           View All
-        </button>
+        </Link>
 
       </div>
 
       {/* Courses */}
-      {courses.length > 0 ? (
+      {courses?.length > 0 ? (
         <div className='grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5'>
 
-          {courses.map((course) => (
-            <EnrolledCourseCard course={course} key={course._id} />
+          {courses?.map((course) => (
+            <EnrolledCourseCard showReviewUi={false} course={course} key={course._id} />
           ))}
 
         </div>
@@ -48,4 +48,4 @@ const MyCourses = ({courses}) => {
   )
 }
 
-export default MyCourses
+export default CoursesShowcase

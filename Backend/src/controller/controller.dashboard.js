@@ -1,6 +1,7 @@
 import {asyncHandler} from '../middleware/asyncHandler.middleware.js'
 import certficateModel from '../models/student/certficateModel.js'
 import enrollmentModel from '../models/Teacher/Enrollment.js'
+import { getRecommendedCourses } from '../utils/getRecommendedCourses.js'
 export const studentDashboardData = asyncHandler(async(req,res)=>{
     const user = req.user.UserID
     const {range ="week"}= req.query
@@ -95,3 +96,10 @@ const certificateCount = certificates.filter(certificate=>certificate!==null).le
 
     return res.status(200).json({enrolledCourses,continueCourses,completedCourses,totalWatchedTime,certificateCount,graphData,streakData,currentStreak})
 })                
+ 
+
+export const recommendedCourses = asyncHandler(async(req,res)=>{
+  const userId = req.user.UserID
+ const result =  await getRecommendedCourses(userId)
+return res.status(200).json({result})
+})
