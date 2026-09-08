@@ -100,6 +100,6 @@ const certificateCount = certificates.filter(certificate=>certificate!==null).le
 
 export const recommendedCourses = asyncHandler(async(req,res)=>{
   const userId = req.user.UserID
- const result =  await getRecommendedCourses(userId)
-return res.status(200).json({result})
+ const courses =  await getRecommendedCourses(userId)
+return res.status(200).json({courses})
 })

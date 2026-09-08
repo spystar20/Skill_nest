@@ -10,11 +10,12 @@ import AiCommingSoon from '../DashboardComponents/AiCommingSoon'
 import StreakCard from './StreakCard'
 import MyCourses from './CoursesShowcase'
 import RecentActivity from './RecentActivity'
-import { useStudentDashboard } from '@/hooks/DahboardHooks/useDashboard'
+import { useRecommendedCourses, useStudentDashboard } from '@/hooks/DahboardHooks/useDashboard'
 import { formatTime } from '@/utils/formatDuration'
 import { useEnrolledCourses } from '@/hooks/EnrollmentHooks/useEnrolledCourses'
 import EnrolledCourseCard from '../user/Enrollment/EnrolledCourseCard'
 import CoursesShowcase from './CoursesShowcase'
+import { RecommendedCourses } from './RecommendedCourses'
 
 const Dashboard = () => {
   const { user } = useAuth()
@@ -22,8 +23,11 @@ const Dashboard = () => {
   const [range,setRange ]=useState("year")
 const {data:dashboard}=useStudentDashboard(range)
 const {data:courses}=useEnrolledCourses()
+const {data:recommended}=useRecommendedCourses()
+console.log(recommended)
 console.log(dashboard)
 console.log(courses)
+const recommendedCourses = recommended?.courses
 const continueCourses  = courses?.enrolledCoursesProgress?.filter(course=>course.status==="in-progress")
 
 const recentCourses = courses?.enrolledCoursesProgress
@@ -79,8 +83,8 @@ const recentCourses = courses?.enrolledCoursesProgress
             data={dashboard?.graphData}
           />
 
-          <CoursesShowcase title={`enrolled Courses`} desc={`View your enrolled courses and keep track of your learning journey.`} courses={recentCourses || []}  />
-          <CoursesShowcase title={`Recommended for You`} desc={`Explore courses selected to help you build new skills and keep learning.`} />
+          <CoursesShowcase title={`enrolled Courses`} desc={`View your enrolled courses and keep track of your learning journey.`} courses={recentCourses || []} enrollment={true}  />
+          <RecommendedCourses title={`Recommended for You`} desc={`Explore courses selected to help you build new skills and keep learning.`} courses={recommendedCourses || []}  />
         </div>
 
         <aside className='flex flex-col gap-3.5'>

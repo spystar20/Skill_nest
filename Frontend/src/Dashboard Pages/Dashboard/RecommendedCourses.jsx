@@ -1,12 +1,10 @@
-import React from 'react'
-import EnrolledCourseCard from '../user/Enrollment/EnrolledCourseCard'
-import { Link } from 'react-router-dom'
 import ProjectCard from '@/Pages/Course/ProjectCard'
+import React from 'react'
+import { Link } from 'react-router-dom'
 
-const CoursesShowcase = ({courses,title,desc,link}) => {
-
+export const RecommendedCourses = ({title,desc,link,courses}) => {
   return (
-    <div className='bg-card rounded-xl border border-border shadow-sm p-3 md:p-5 flex flex-col gap-5'>
+ <div className='bg-card rounded-xl border border-border shadow-sm p-3 md:p-5 flex flex-col gap-5'>
 
       {/* Header */}
       <div className='flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3'>
@@ -31,24 +29,17 @@ const CoursesShowcase = ({courses,title,desc,link}) => {
 
       {/* Courses */}
 
-      {courses?.length > 0 ? (
-        <div className='grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5'>
+  
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5'>
 
           {courses?.map((course) => (
-     
-        <EnrolledCourseCard showReviewUi={false} course={course} key={course._id} />
+        <ProjectCard  course={course} key={course._id} />
         
           ))}
 
         </div>
-      ) : (
-        <div className='py-8 text-center text-text-light text-sm border border-dashed border-border rounded-xl'>
-          No enrolled courses found.
-        </div>
-      )}
+     
 
     </div>
-  )
+      )
 }
-
-export default CoursesShowcase

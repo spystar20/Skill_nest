@@ -17,5 +17,5 @@ router.patch('/enrolled/:enrollmentId/update/review',middleware,updateReview)
 router.delete('/enrolled/:enrollmentId/delete/review',middleware,deleteReview)
 // dashboard data api
 router.get('/enrolled/dashboard',middleware,studentDashboardData)
-router.get('/get/recommended-courses',middleware,recommendedCourses)
+router.get('/recommended-courses',middleware,recommendedCourses)
 export default router

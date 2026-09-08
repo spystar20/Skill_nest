@@ -20,7 +20,21 @@ const RecentActivity = () => {
       title: 'Earned a certificate',
       course: 'JavaScript Fundamentals',
       time: '2 days ago'
+    },
+      {
+      icon: <LuTrophy />,
+      title: 'Earned a certificate',
+      course: 'JavaScript Fundamentals',
+      time: '2 days ago'
     }
+    ,
+      {
+      icon: <LuTrophy />,
+      title: 'Earned a certificate',
+      course: 'JavaScript Fundamentals',
+      time: '2 days ago'
+    },
+    
   ]
 
   return (

@@ -93,7 +93,7 @@ const {
     <div className='min-h-screen bg-white w-full font-[Outfit]'>
       <div className='w-full flex flex-col min-h-[320px] gap-3 pt-23 justify-center items-center text-white  home-bg'>
         <h2 className='text-5xl font-semibold font-[Outfit]  capitalize '>courses</h2>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi, labore.</p>
+        <p className='text-center'>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi, labore.</p>
       </div>
       {/* search and sort */}
       <div className='md:p-6 p-3  flex justify-center gap-2 md:gap-4 items-center shadow-xs font-body'>
@@ -185,7 +185,7 @@ transition-all duration-300 px-1  md:px-4  flex items-center justify-center roun
 } onRemove={ () =>{setFilter(prev => ({ ...prev, minPrice: '' ,maxPrice:''})),setSliderValue([priceRange.min,priceRange.max])}} />
 </div>
           
-            <div className={`grid  gap-4  py-2 md:py-6 grid-cols-1 ${filter ? 'md:grid-cols-3 ' : 'md:grid-cols-4'}`}>
+            <div className={`grid  gap-3  py-2 md:py-6 grid-cols-1 ${filter ? 'md:grid-cols-4 ' : 'md:grid-cols-5'}`}>
               {courses?.map((course, index) => {
                 return (
                   <ProjectCard course={course} isItemAdded={isItemAdded(course._id,cartItems?.addedCourses)} />

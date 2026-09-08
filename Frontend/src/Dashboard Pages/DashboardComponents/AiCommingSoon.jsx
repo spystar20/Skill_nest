@@ -9,7 +9,7 @@ const AiComingSoon = () => {
         backgroundRepeat: 'no-repeat',
         backgroundPosition: 'center'
       }}
-      className='bg-primary rounded-xl p-4 sm:p-5 text-white flex flex-col items-center justify-center h-[180px] w-full'
+      className='bg-primary rounded-xl p-4 sm:p-5 text-white flex flex-col items-center justify-center h-[202px] w-full'
     >
 
       <div className='flex items-center gap-2 z-10 text-center'>

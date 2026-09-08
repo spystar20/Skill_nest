@@ -16,7 +16,7 @@ const HeroSection = ({category,title,desc,lessons,duration,level}) => {
         {title}
       </h1>
 
-      <p className="mt-4 text-lg text-gray-300 leading-8 max-w-3xl">
+      <p className="mt-4 text-lg text-gray-300 md:leading-8 max-w-3xl ">
         {desc}
       </p>
 

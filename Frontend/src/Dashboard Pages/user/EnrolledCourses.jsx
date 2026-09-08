@@ -60,7 +60,7 @@ const {isLoading,isError,data} = useEnrolledCourses()
 ) : (
   <div className="rounded-2xl flex gap-6 box-border">
     {startedCourse.map((course) => (
-      <EnrolledCourseCard key={course._id} course_id={course.courseId._id} enrollmentId={course._id}  status={course.status}
+      <EnrolledCourseCard showReviewUi={true} key={course._id} course_id={course.courseId._id} enrollmentId={course._id}  status={course.status}
   className="shrink-0 max-w-[300px]" img={course.courseId.thumbnail} progressPercent={course.progress} instructor_name='khushi' course={course} course_name={course.courseId.title} reviewData={course.review}
       />
     ))}
