@@ -1,6 +1,7 @@
 import  { asyncHandler } from '../middleware/asyncHandler.middleware.js'
 import enrollmentModel from '../models/Teacher/Enrollment.js'
 import reviewModel from '../models/Ecommerce/ReviewModel.js'
+import { createActivity } from '../services/activity.service.js'
 export const addReview = asyncHandler(async(req,res)=>{
     const {enrollmentId} = req.params
      
@@ -26,6 +27,7 @@ export const addReview = asyncHandler(async(req,res)=>{
    await reviewModel.create({
     enrollmentId:existingEnrollment._id,rating:rating,review:review
    })
+   await createActivity({userId,courseId:existingEnrollment.courseId,type:"review-added"})
 return res.status(200).json({message:"review added "})
 })
 export const updateReview = asyncHandler(async(req,res)=>{
@@ -53,7 +55,7 @@ export const updateReview = asyncHandler(async(req,res)=>{
     existingReview.rating = updatedRating
   existingReview.review= updatedReview
     await existingReview.save()
-
+await createActivity({userId,courseId:existingEnrollment.courseId,type:"review-updated"})
     return res.status(200).json({message:"review updated"})
 
 }) 
@@ -71,6 +73,7 @@ const existingReview = await reviewModel.findOneAndDelete({enrollmentId:existing
 if(!existingReview){
     return res.status(404).json({message:"review not found"})
 }
+await createActivity({userId,courseId:existingEnrollment.courseId,type:"review-deleted"})
 return res.status(200).json({message:"review deleted successfully"})
 })
 export const fetchReviewById = asyncHandler(async(req,res)=>{

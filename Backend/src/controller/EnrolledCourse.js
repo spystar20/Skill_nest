@@ -9,6 +9,7 @@ import cloudinary from "../utils/cloudinary.js";
 import fs from 'fs'
 import axios from 'axios'
 import ReviewModel from "../models/Ecommerce/ReviewModel.js";
+import { createActivity } from "../services/activity.service.js";
 export const Enroll = asyncHandler(async (req, res) => {
      const userId = req.user.UserID
      const  {courseId}  = req.params
@@ -29,7 +30,7 @@ export const Enroll = asyncHandler(async (req, res) => {
      await Enrollment.create({
           userId: userId, courseId: courseId
      })
-
+ await createActivity({userId,type:"enrollment",courseId})
      return res.status(201).json({ message: 'user enrolled scuccessfully' })
 })
 
@@ -122,6 +123,7 @@ throw new Error('enrolled user not found')
  const certificate =   await certficateModel.create({
      enrollmentId:enrollmentId,issueDate:existingEnrollment.completedAt
     })
+
        const issueDate = new Date(certificate.issueDate).toLocaleDateString('en-GB',{day:'2-digit',month:'long',year:'numeric'})
 
     const pdfPath= await getCertificatePdf({studentName: `${existingEnrollment.userId.firstName} ${existingEnrollment.userId.lastName}`.trim(),courseName:existingEnrollment.courseId.title,issueDate:issueDate})

@@ -10,6 +10,7 @@ import { diff } from "util"
 import Enrollment from "../models/Teacher/Enrollment.js"
 import userModel from "../models/user.model.js"
 import ReviewModel from "../models/Ecommerce/ReviewModel.js"
+import { createActivity } from "../services/activity.service.js"
 
 
 export const CreateCoursse = asyncHandler( async (req, res) => {
@@ -42,7 +43,11 @@ export const CreateCoursse = asyncHandler( async (req, res) => {
       const newCourse = await Course.create({
          title, desc, thumbnail, priceType, price:finalPrice, category, difficulty, instructor
       })
-   
+   await createActivity({
+   userId: instructor,
+   courseId: newCourse._id,
+   type: "course-created"
+})
       return res.status(200).json({ message: "course is created", newCourse })
   
 })
@@ -51,7 +56,9 @@ export const DeleteCourse =asyncHandler( async(req,res)=>{
    
 const {courseId}= req.params
 const course = await Course.findByIdAndDelete(courseId)
-
+if(!course){
+   return res.status(404).json({message:"course not found"})
+}
 const section = await Section.find({course:courseId})
 const sectionId = section.map(sec=>sec._id)
 const lesson = await Lesson.deleteMany({section:{
@@ -59,6 +66,7 @@ const lesson = await Lesson.deleteMany({section:{
    
 }})
 await Section.deleteMany({course:courseId})
+await createActivity({courseId,type:"course-deleted",userId:course.instructor})
 return res.status(200).json({message:'course deleted successfully'})
 
 })
@@ -80,6 +88,9 @@ export const CreateSection =asyncHandler( async (req, res) => {
       })
      
       await course.save()
+      await createActivity({userId:req.user.UserID,courseId,type:"section-created",metadeta:{
+         sectionId:sec._id
+      }})
       return res.status(200).json({ message: 'section ceated', sec })
 
 
@@ -91,6 +102,14 @@ export const UpdateSection = asyncHandler(async(req,res)=>{
      const section = await Section.findById(sectionId)
      section.title= title
      await section.save()
+     await createActivity({
+   userId: req.user.UserID,
+   courseId: section.course,
+   type: "section-updated",
+   metadata: {
+      sectionId: section._id
+   }
+})
      return res.status(200).json({message:'section updated'})
   
 })
@@ -106,6 +125,14 @@ export const DeleteSection = asyncHandler(async(req,res)=>{
       lessonCount:-lessonCount,sectionCount:-1
    }
    })
+   await createActivity({
+   userId: req.user.UserID,
+   courseId: section.course,
+   type: "section-deleted",
+   metadata: {
+      sectionId: section._id
+   }
+})
    return res.status(200).json({message:'section deleted'})
 
 })
@@ -170,7 +197,15 @@ export const createLesson =asyncHandler( async (req, res) => {
       const newLesson = await Lesson.create({
          lesson, section:existingSection, order: lessons + 1
       })
-   
+   await createActivity({
+   userId: req.user.UserID,
+   courseId: existingSection.course,
+   type: "lesson-created",
+   metadata: {
+      lessonId: newLesson._id,
+      sectionId: existingSection._id
+   }
+})
    return res.status(200).json({message:"lesson created ",newLesson})
 
 })
@@ -187,6 +222,15 @@ const course = await Course.findByIdAndUpdate(section.course,{
 if(!lesson){
    return res.status(404).json({message:'lesson not found'})
 } 
+await createActivity({
+   userId: req.user.UserID,
+   courseId: section.course,
+   type: "lesson-deleted",
+   metadata: {
+      lessonId: lesson._id,
+      sectionId: section._id
+   }
+})
 return res.status(200).json({message:'lesson deleted successfully'})
 
 })
@@ -280,6 +324,15 @@ const allSection = await Section.find({course:section.course})
 const totalsectionDuration =Math.floor( allSection.reduce((acc,curr)=>acc+(curr.duration || 0),0))
  
 const course = await Course.findByIdAndUpdate(section.course,{duration:totalsectionDuration})
+await createActivity({
+   userId: req.user.UserID,
+   courseId: section.course,
+   type: "lesson-updated",
+   metadata: {
+      lessonId: lesson._id,
+      sectionId: section._id
+   }
+})
 return res.status(200).json({message:'lesson updated'})
  
 })
@@ -312,6 +365,15 @@ resources.push({
    lesson.resources.push(...resources)
 
 await lesson.save()
+const section = await Section.findById(lesson.section)
+await createActivity({
+   userId: req.user.UserID,
+   courseId: section.course,
+   type: "resource-added",
+   metadata: {
+      lessonId: lesson._id
+   }
+})
 return res.status(200).json({message:"pdf uploaded",})
  
 })
@@ -326,6 +388,17 @@ return res.status(404).json({message:"lesson not found"})
 lesson.resources = lesson.resources.filter((i)=> i._id.toString() !== resourceId)
 
 await lesson.save()
+const section = await Section.findById(lesson.section)
+
+await createActivity({
+   userId: req.user.UserID,
+   courseId: section.course,
+   type: "resource-deleted",
+   metadata: {
+      lessonId: lesson._id,
+      resourceId
+   }
+})
 return res.status(200).json({message:'pdf deleted'})
 
 })
@@ -511,6 +584,13 @@ const {status} = req.body
 const course =await Course.findById(courseId)
 course.status = status
 await course.save()
+await createActivity({
+   userId: req.user.UserID,
+   courseId: course._id,
+   type: status === "published"
+      ? "course-published"
+      : "course-unpublished"
+})
 return res.status(200).json({message:'course status updated'})
 
  })

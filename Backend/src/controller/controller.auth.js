@@ -11,6 +11,7 @@ import Course from "../models/Teacher/Course.js"
 import cloudinary from "../utils/cloudinary.js"
 import fs from 'fs'
 import { asyncHandler } from "../middleware/asyncHandler.middleware.js"
+import { createActivity } from "../services/activity.service.js"
 
 export const signup =asyncHandler( async (req, res) => {
    
@@ -236,11 +237,11 @@ export const updateProfile =asyncHandler( async(req,res)=>{
    
 const {firstName,lastName,username,DOB,Gender,Phone,Location,Bio} = req.body
 
-const existingUser = await user.findById(req.user.UserID,req.body,{
+const existingUser = await user.findByIdAndUpdate(req.user.UserID,req.body,{
    new:true,runValidators:true
 })
 await existingUser.save()
-
+await createActivity({userId:existingUser._id,type:"profile-updated"})
 return res.status(200).json({message:"user updated succesfully",existingUser})
 
 }
@@ -277,7 +278,7 @@ export const updateTeacherProfile = asyncHandler( async(req,res)=>{
       const Teacher = await TeacherSchema.findOneAndUpdate({user:req.user.UserID},req.body,{
          new:true, runValidators:true
       })
-
+await createActivity({userId: req.user.UserID,type:"teacher-profile-updated"})
 return res.status(201).json({message:"data updated succesfully",Teacher})
  
 })

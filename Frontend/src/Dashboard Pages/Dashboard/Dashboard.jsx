@@ -10,7 +10,7 @@ import AiCommingSoon from '../DashboardComponents/AiCommingSoon'
 import StreakCard from './StreakCard'
 import MyCourses from './CoursesShowcase'
 import RecentActivity from './RecentActivity'
-import { useRecommendedCourses, useStudentDashboard } from '@/hooks/DahboardHooks/useDashboard'
+import { useRecentActivity, useRecommendedCourses, useStudentDashboard } from '@/hooks/DahboardHooks/useDashboard'
 import { formatTime } from '@/utils/formatDuration'
 import { useEnrolledCourses } from '@/hooks/EnrollmentHooks/useEnrolledCourses'
 import EnrolledCourseCard from '../user/Enrollment/EnrolledCourseCard'
@@ -24,9 +24,8 @@ const Dashboard = () => {
 const {data:dashboard}=useStudentDashboard(range)
 const {data:courses}=useEnrolledCourses()
 const {data:recommended}=useRecommendedCourses()
-console.log(recommended)
-console.log(dashboard)
-console.log(courses)
+const {data:activityData}= useRecentActivity()
+const activities = activityData?.activities || []
 const recommendedCourses = recommended?.courses
 const continueCourses  = courses?.enrolledCoursesProgress?.filter(course=>course.status==="in-progress")
 
@@ -106,7 +105,7 @@ Continue Learning        </h2>
       <EnrolledCourseCard  course={course} key={course._id} />
       ))}
           </div>
-          <RecentActivity />
+          <RecentActivity activities={activities}/>
         </aside>
       </main>
     </div>

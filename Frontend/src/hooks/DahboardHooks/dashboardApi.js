@@ -8,3 +8,7 @@ export const fetchRecommendedCourses = async()=>{
     const res = await api.get('/student/recommended-courses')
     return res.data
 }
+export const fetchRecentActivities = async()=>{
+    const res = await api.get('/student/recent-activities')
+    return res.data
+}

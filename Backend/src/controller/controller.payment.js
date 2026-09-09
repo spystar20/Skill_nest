@@ -7,6 +7,7 @@ import PaymentModel from "../models/Ecommerce/PaymentModel.js";
 import CartModel from "../models/Ecommerce/CartModel.js";
 import userModel from '../models/user.model.js'
 import WishlistModel from "../models/Ecommerce/WishlistModel.js";
+import { createActivity } from "../services/activity.service.js";
 export const createOrder = asyncHandler(async(req,res)=>{
 const {courseId}=req.params
 const userId= req.user.UserID
@@ -39,6 +40,7 @@ if(!existingEnrollment){
 await Enrollment.create({
     userId:payment.userId,courseId:payment.courseId[0],paymentId:payment.razorpayPaymentId
 })
+ await createActivity({userId:payment.userId,type:"enrollment",courseId:payment.courseId[0]})
 
 }
 
@@ -67,11 +69,14 @@ export const addItems=asyncHandler(async(req,res)=>{
 const cartDocument = await CartModel.create({
     userId,items:[{courseId}]
 })
+await createActivity({userId,courseId,type:"cart-added"})
 return res.status(200).json({message:'cart updated',cartDocument})
     }
     if(cart && !cart.items.some(item=>item.courseId.toString()===courseId)){
         cart.items.push({courseId})
         await cart.save()
+        await createActivity({userId,courseId,type:"cart-added"})
+
     }
     return res.status(200).json({message:'cart Updated',cart})
 })
@@ -89,6 +94,8 @@ return res.status(404).json({message:'item not found in cart'})
   }
 userCart.items = userCart.items.filter(item=>item.courseId.toString()!==courseId.toString())
 await userCart.save()
+await createActivity({userId,courseId,type:"cart-removed"})
+
   return res.status(200).json({message:"item removed"})
 })
 // fetches cart courses
@@ -153,6 +160,7 @@ if(!payment){
            await Enrollment.create({
                 userId:userId,courseId:course,paymentId:payment.razorpayPaymentId
             })
+            await createActivity({userId,courseId:course,type:"enrollment"})
         }
 
     }))
@@ -175,10 +183,16 @@ if(!course){
     return res.status(404).json({message:"course not found"})
 }
 const existingWishlist = await WishlistModel.findOne({userId:userId})
+
 if(!existingWishlist){
-WishlistModel.create({
+await WishlistModel.create({
     userId,courses:[course._id]
 })
+  await createActivity({
+        userId,
+        courseId,
+        type: "wishlist-added"
+    })
 return res.status(200).json({message:'course added to wishlist'})
 }
 const existingCourse = existingWishlist.courses.find(courseId=>courseId.toString()===course._id.toString())
@@ -187,6 +201,11 @@ if(existingCourse){
 }
    existingWishlist.courses.push(courseId)
   await  existingWishlist.save()
+    await createActivity({
+        userId,
+        courseId,
+        type: "wishlist-added"
+    })
 return res.status(200).json({message:'course added to wishlist'})
  })
 
@@ -208,6 +227,11 @@ if(!existingCourse){
 }
 existingWishlist.courses = existingWishlist.courses.filter(courseId=>courseId.toString() !== course._id.toString())
 await existingWishlist.save()
+  await createActivity({
+        userId,
+        courseId,
+        type: "wishlist-removed"
+    })
 return res.status(200).json({message:"course removed from the wishlist"})
 })
 export const fetchWishlist = asyncHandler(async(req,res)=>{
