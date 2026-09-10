@@ -37,7 +37,7 @@ export const Enroll = asyncHandler(async (req, res) => {
 export const EnrolledCourse = asyncHandler(async (req, res) => {
      const userId = req.user.UserID
 
-     const enrolledCourses = await Enrollment.find({ userId: userId }).populate('courseId')
+     const enrolledCourses = await Enrollment.find({ userId: userId }).populate({path:"courseId",populate:{path:"instructor",select:"firstName avatar"}})
 
      if (!enrolledCourses) {
           return res.status(401).json({ message: 'no course purchased' })
@@ -53,11 +53,21 @@ export const EnrolledCourse = asyncHandler(async (req, res) => {
      })
      return res.status(200).json({ enrolledCoursesProgress })
 })
-
+ export const getFilteredEnrolledCourses = asyncHandler(async(req,res)=>{
+     const {status} =req.query
+     const filter = {}
+     if(status){
+          filter.status = status 
+     }
+     console.log(filter)
+     const enrolledCourses = await Enrollment.find(filter).sort({createdAt:-1}).populate({path:"courseId",populate:{path:"instructor",select:"firstName avatar"}})
+     console.log(enrolledCourses)
+     return res.status(200).json({enrolledCourses})
+ })
 export const getEnrolledCoursebyId = asyncHandler(async (req, res) => {
 
      const { enrollmentId } = req.params
-     const enrollment = await Enrollment.findById(enrollmentId).populate('courseId')
+     const enrollment = await Enrollment.findById(enrollmentId).populate({path:'courseId',populate:{path:"instructor",select:"avatar firstName"}})
      if (!enrollment) {
           return res.status(401).json({ message: 'enrolled user not found' })
      }

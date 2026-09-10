@@ -1,5 +1,5 @@
 import {  fetchCategories, fetchCourseById, fetchCurriculum, fetchFilteredCourses, fetchLesson, fetchLessonById, fetchSection, fetchTeacherCourses, fetchUploadedResource } from "@/api/CourseApi";
-import { fetchEnrolledCurriculum } from "@/api/EnrollmentApi";
+import { fetchEnrolledCurriculum } from "@/hooks/EnrollmentHooks/EnrollmentApi";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
 export const useFilteredCourse = (filters)=>useQuery({

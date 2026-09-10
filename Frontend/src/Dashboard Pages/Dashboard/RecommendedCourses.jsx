@@ -2,7 +2,7 @@ import ProjectCard from '@/Pages/Course/ProjectCard'
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-export const RecommendedCourses = ({title,desc,link,courses}) => {
+export const RecommendedCourses = ({title,desc, link = '/courses',courses}) => {
   return (
  <div className='bg-card rounded-xl border border-border shadow-sm p-3 md:px-5 md:py-7 flex flex-col gap-5'>
 
@@ -19,7 +19,6 @@ export const RecommendedCourses = ({title,desc,link,courses}) => {
         </div>
 
         <Link to={link}
-          type='button'
           className='self-start sm:self-auto px-3 sm:px-4 py-2 rounded-lg bg-primary text-white text-xs sm:text-sm font-medium font-body hover:bg-primary-light transition-colors'
         >
           View All

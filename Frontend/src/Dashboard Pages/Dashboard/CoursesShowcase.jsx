@@ -3,8 +3,8 @@ import EnrolledCourseCard from '../user/Enrollment/EnrolledCourseCard'
 import { Link } from 'react-router-dom'
 import ProjectCard from '@/Pages/Course/ProjectCard'
 
-const CoursesShowcase = ({courses,title,desc,link}) => {
-
+const CoursesShowcase = ({courses,title,desc,link,enrollmentId}) => {
+console.log(courses)
   return (
     <div className='bg-card rounded-xl border border-border shadow-sm p-3 md:p-5 flex flex-col gap-5'>
 
@@ -34,9 +34,9 @@ const CoursesShowcase = ({courses,title,desc,link}) => {
       {courses?.length > 0 ? (
         <div className='grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5'>
 
-          {courses?.map((course) => (
+          {courses.map((course) => (
      
-        <EnrolledCourseCard showReviewUi={false} course={course} key={course._id} />
+        <EnrolledCourseCard showReviewUi={false} enrollmentId={course._id} course={course} key={course._id} />
         
           ))}
 

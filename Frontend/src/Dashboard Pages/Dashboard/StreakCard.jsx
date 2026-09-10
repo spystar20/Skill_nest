@@ -49,7 +49,7 @@ const StreakCard = ({streakCount,streakData}) => {
                 {streak.day}
               </span>
 
-              {streak.hasActivity===true ? (
+              {streak.hasActivity ? (
                 <span className='text-xl sm:text-2xl text-accent transition-transform active:scale-95'>
                   <LuBadgeCheck />
                 </span>

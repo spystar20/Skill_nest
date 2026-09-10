@@ -1,6 +1,6 @@
-import { activityIcons, activityMessages } from '@/utils/utils.activity'
+import { activityIcons, activityMessages, relativeTime } from '@/utils/utils.activity'
 import React from 'react'
-import { LuBookOpenCheck, LuTrophy } from 'react-icons/lu'
+import { LuBookOpenCheck } from 'react-icons/lu'
 
 const RecentActivity = ({activities}) => {
 
@@ -24,6 +24,7 @@ const RecentActivity = ({activities}) => {
       {/* Activities */}
       <div className='flex flex-col gap-4'>
        {activities.map((activity) => {
+
           const Icon = activityIcons[activity.type] || LuBookOpenCheck
 return (
   <div
@@ -46,7 +47,7 @@ return (
       )}
 
       <p className='text-[11px] sm:text-xs text-text-light mt-1'>
-        {new Date(activity.createdAt).toLocaleString()}
+        {relativeTime(activity.createdAt)}
       </p>
     </div>
   </div>

@@ -1,4 +1,4 @@
-import React from 'react'
+
 import {
   Area,
   CartesianGrid,
@@ -10,8 +10,7 @@ import {
   YAxis
 } from 'recharts'
 
-
-const LearningChart = ({ ranges, range, setRange,data }) => {
+const LearningChart = ({ ranges, range, setRange, data = [] }) => {
   return (
     <div className='md:p-5 p-2 bg-card rounded-xl border border-border shadow-sm overflow-hidden'>
       <div className='flex flex-col md:flex-row items-start gap-3 md:items-center md:justify-between mb-5'>
@@ -29,6 +28,7 @@ const LearningChart = ({ ranges, range, setRange,data }) => {
           {ranges.map((item) => (
             <button
               key={item}
+              type='button'
               onClick={() => setRange(item)}
               className={`px-2.5 sm:px-3 py-1.5 text-xs sm:text-sm rounded-md capitalize transition-all ${
                 range === item
@@ -143,7 +143,7 @@ const LearningChart = ({ ranges, range, setRange,data }) => {
               activeDot={{
                 r: 5,
                 fill: '#7C8FD6',
-                stroke: '#FFFFFF',
+                stroke:'#FFFFFF',
                 strokeWidth: 2
               }}
             />

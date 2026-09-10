@@ -8,7 +8,6 @@ import { PiClockUser } from 'react-icons/pi'
 import LearningChart from '../DashboardComponents/LearningChart'
 import AiCommingSoon from '../DashboardComponents/AiCommingSoon'
 import StreakCard from './StreakCard'
-import MyCourses from './CoursesShowcase'
 import RecentActivity from './RecentActivity'
 import { useRecentActivity, useRecommendedCourses, useStudentDashboard } from '@/hooks/DahboardHooks/useDashboard'
 import { formatTime } from '@/utils/formatDuration'
@@ -101,9 +100,18 @@ Continue Learning        </h2>
           View All
         </button>
       </div> 
+      {continueCourses?.length === 0 ?(
+         <div className='py-8 text-center text-text-light text-sm border border-dashed border-border rounded-xl'>
+No courses in progress
+Start learning from your enrolled courses.       
+ </div>
+      ):(
+        <>
       {continueCourses?.map(course=>(
-      <EnrolledCourseCard  course={course} key={course._id} />
+      <EnrolledCourseCard enrollmentId={course._id}  course={course} key={course._id} />
       ))}
+      </>
+      )}
           </div>
           <RecentActivity activities={activities}/>
         </aside>

@@ -1,4 +1,3 @@
-import React from 'react'
 import { FaArrowTrendUp } from 'react-icons/fa6'
 
 const DashboardStat = ({ title, icon, growth, dataValue }) => {

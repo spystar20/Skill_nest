@@ -2,7 +2,7 @@ import express from "express"
 export const router = express.Router()
 import { updateProfile} from "../controller/controller.auth.js"
 import { middleware } from "../middleware/auth.middleware.js"
-import { downloadCertificate, getCertificateById, getEnrolledCoursebyId, UpdateEnrolledProgress } from "../controller/EnrolledCourse.js"
+import { downloadCertificate, getCertificateById, getEnrolledCoursebyId, getFilteredEnrolledCourses, UpdateEnrolledProgress } from "../controller/EnrolledCourse.js"
 import { addReview, deleteReview, updateReview } from "../controller/controller.review.js"
 import { fetchRecentActivity, recommendedCourses, studentDashboardData } from "../controller/controller.dashboard.js"
 
@@ -19,4 +19,5 @@ router.delete('/enrolled/:enrollmentId/delete/review',middleware,deleteReview)
 router.get('/enrolled/dashboard',middleware,studentDashboardData)
 router.get('/recommended-courses',middleware,recommendedCourses)
 router.get('/recent-activities',middleware,fetchRecentActivity)
+ router.get('/filtered/enrollmentCourses',middleware,getFilteredEnrolledCourses)
 export default router

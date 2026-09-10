@@ -6,11 +6,11 @@ import { FaStar } from "react-icons/fa";
 import { useDeleteReview } from "@/hooks/EnrollmentHooks/review/useReview";
 import { toast } from "sonner";
 import DashboardPageHeader from "@/Dashboard Pages/DashboardComponents/DashboardPageHeader";
+import { useFilteredEnrolledCourses } from "@/hooks/EnrollmentHooks/useEnrolledCourses";
 
 const EnrolledCourseCard = ({ enrollmentId, className, reviewData, course, showReviewUi }) => {
   const { mutate: deleteReview } = useDeleteReview()
   const LessonsLeft = course?.courseId?.lessonCount - course?.completedLessons?.length
-
   const handleDeleteReview = () => {
     const course_id = course._id
     deleteReview({ enrollmentId, course_id }, {
@@ -27,6 +27,7 @@ const EnrolledCourseCard = ({ enrollmentId, className, reviewData, course, showR
       className={`cards flex flex-col gap-2.5 rounded-xl border border-border bg-card p-2.5 max-w-xs shadow-sm transition-all duration-300 hover:shadow-md ${className}`}
     >
       {/* Thumbnail */}
+      <Link to={`/courses/${course?.courseId?.title}/${enrollmentId}/learn`}>
       <div className="group relative cursor-pointer overflow-hidden rounded-lg">
         <img
           src={course?.courseId?.thumbnail}
@@ -58,7 +59,7 @@ const EnrolledCourseCard = ({ enrollmentId, className, reviewData, course, showR
           </span>
         )}
       </div>
-
+      </Link>
       {/* Content */}
       <div className="flex flex-col gap-2">
         <div>
@@ -67,7 +68,7 @@ const EnrolledCourseCard = ({ enrollmentId, className, reviewData, course, showR
           </h2>
 
           <p className="mt-0.5 font-body text-[11px] text-text-light">
-            By "khushi"
+            By  {course?.courseId?.instructor?.firstName}
           </p>
         </div>
 
@@ -197,8 +198,11 @@ const EnrolledCourseCard = ({ enrollmentId, className, reviewData, course, showR
               </>
             )}
             {showReview && (<ReviewModal course={course} isExistingReview={reviewData} onClose={() => setShowReview(false)} />)}
+                  
           </>
+
         )}
+   
       </div>
     </div>
   );
