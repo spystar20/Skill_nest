@@ -9,5 +9,5 @@ export const getRecentActivities = async (userId) => {
     return await activityModel.find({ userId })
         .populate("courseId", "title thumbnail")
         .sort({ createdAt: -1 })
-        .limit(10)
+        .limit(6)
 }

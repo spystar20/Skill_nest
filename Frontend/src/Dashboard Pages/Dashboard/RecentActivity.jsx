@@ -1,42 +1,8 @@
-import { activityMessages } from '@/utils/utils.activity'
+import { activityIcons, activityMessages } from '@/utils/utils.activity'
 import React from 'react'
 import { LuBookOpenCheck, LuTrophy } from 'react-icons/lu'
 
 const RecentActivity = ({activities}) => {
-  // const activities = [
-  //   {
-  //     icon: <LuBookOpenCheck />,
-  //     title: 'Completed a lesson',
-  //     course: 'React Hooks',
-  //     time: '2 hours ago'
-  //   },
-  //   {
-  //     icon: <LuBookOpenCheck />,
-  //     title: 'Completed a lesson',
-  //     course: 'Node.js Authentication',
-  //     time: 'Yesterday'
-  //   },
-  //   {
-  //     icon: <LuTrophy />,
-  //     title: 'Earned a certificate',
-  //     course: 'JavaScript Fundamentals',
-  //     time: '2 days ago'
-  //   },
-  //     {
-  //     icon: <LuTrophy />,
-  //     title: 'Earned a certificate',
-  //     course: 'JavaScript Fundamentals',
-  //     time: '2 days ago'
-  //   }
-  //   ,
-  //     {
-  //     icon: <LuTrophy />,
-  //     title: 'Earned a certificate',
-  //     course: 'JavaScript Fundamentals',
-  //     time: '2 days ago'
-  //   },
-    
-  // ]
 
   return (
     <div className='bg-card rounded-xl border border-border shadow-sm p-3 md:p-4  flex flex-col gap-5'>
@@ -57,13 +23,15 @@ const RecentActivity = ({activities}) => {
 
       {/* Activities */}
       <div className='flex flex-col gap-4'>
-       {activities.map((activity) => (
+       {activities.map((activity) => {
+          const Icon = activityIcons[activity.type] || LuBookOpenCheck
+return (
   <div
     key={activity._id}
     className='flex items-start gap-3'
   >
     <span className='shrink-0 p-2 rounded-lg bg-accent/10 text-accent text-base sm:text-lg'>
-      <LuBookOpenCheck />
+      <Icon />
     </span>
 
     <div className='min-w-0 flex-1'>
@@ -82,7 +50,8 @@ const RecentActivity = ({activities}) => {
       </p>
     </div>
   </div>
-))}
+)
+})}
       </div>
 
     </div>

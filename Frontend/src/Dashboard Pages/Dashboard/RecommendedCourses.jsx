@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 
 export const RecommendedCourses = ({title,desc,link,courses}) => {
   return (
- <div className='bg-card rounded-xl border border-border shadow-sm p-3 md:p-5 flex flex-col gap-5'>
+ <div className='bg-card rounded-xl border border-border shadow-sm p-3 md:px-5 md:py-7 flex flex-col gap-5'>
 
       {/* Header */}
       <div className='flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3'>

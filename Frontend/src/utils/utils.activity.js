@@ -1,3 +1,19 @@
+import {
+  LuBookOpenCheck,
+  LuShoppingCart,
+  LuHeart,
+  LuStar,
+  LuUserRound,
+  LuBookOpen,
+  LuCircleCheck,
+  LuTrash2,
+  LuPencil,
+  LuLayers,
+  LuFilePlus,
+  LuFileMinus,
+  LuUpload
+} from "react-icons/lu"
+
 export const activityMessages = {
   "course-created": "Created a new course",
   "course-deleted": "Deleted a course",
@@ -28,4 +44,32 @@ export const activityMessages = {
 
   "profile-updated": "Updated your profile",
   "teacher-profile-updated": "Updated your teacher profile"
+}
+export const activityIcons = {
+  "enrollment": LuBookOpenCheck,
+  "cart-added": LuShoppingCart,
+  "cart-removed": LuShoppingCart,
+  "wishlist-added": LuHeart,
+  "wishlist-removed": LuHeart,
+  "review-added": LuStar,
+  "review-updated": LuPencil,
+  "review-deleted": LuTrash2,
+  "profile-updated": LuUserRound,
+  "teacher-profile-updated": LuUserRound,
+
+  "course-created": LuBookOpen,
+  "course-deleted": LuTrash2,
+  "course-published": LuCircleCheck,
+  "course-unpublished": LuCircleCheck,
+
+  "section-created": LuLayers,
+  "section-updated": LuPencil,
+  "section-deleted": LuTrash2,
+
+  "lesson-created": LuFilePlus,
+  "lesson-updated": LuPencil,
+  "lesson-deleted": LuTrash2,
+
+  "resource-added": LuUpload,
+  "resource-deleted": LuTrash2
 }
