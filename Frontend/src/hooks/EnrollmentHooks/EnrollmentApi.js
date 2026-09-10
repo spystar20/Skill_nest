@@ -12,6 +12,7 @@ export const fetchEnrolledCourseById= async(enrollmentId)=>{
 
  }
  export const fetchFilteredEnrolledCourses = async(params)=>{
+   console.log(params,"par")
    const res = await api.get('/student/filtered/enrollmentCourses',{params})
    return res.data
  }

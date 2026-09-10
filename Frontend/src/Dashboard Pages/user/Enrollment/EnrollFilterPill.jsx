@@ -9,7 +9,7 @@ const EnrollFilterPill = ({ filter,setStatus }) => {
   return (
     <button
       type='button'
-      onClick={()=>{setStatus(filter),handleToggle}}
+      onClick={()=>{setStatus(filter==="all-status"?"":filter),handleToggle}}
       className={`px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-medium font-body border transition-all duration-200 ${
         isActive
           ? 'bg-primary text-white border-primary shadow-sm'

@@ -8,18 +8,21 @@ import {  FaSearch } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
 import DashboardPageHeader from '../DashboardComponents/DashboardPageHeader'
 import React, { useState } from 'react'
+import { LuBook } from 'react-icons/lu'
 
 const EnrolledCourses = () => {
   const { user } = useAuth()
   const { isLoading, isError, data } = useEnrolledCourses()
   const enrolledCoursesProgress = data?.enrolledCoursesProgress || []
   const params = {}
-  const {data:fc}=useFilteredEnrolledCourses(params)
-  console.log(fc)
+ 
   const [status,setStatus]=useState("")
 if(status){
   params.status = status
 }
+ const {data:filteredCourse}=useFilteredEnrolledCourses(params)
+ console.log(filteredCourse?.enrolledCourses)
+ const courses = filteredCourse?.enrolledCourses
   const startedCourse = enrolledCoursesProgress.filter(
     course => course.completedLessons.length > 0
   )
@@ -121,7 +124,22 @@ const filter = [
 
           {/* Enrolled Courses */}
           <div className='grid grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-2 md:gap-5 py-4'>
-            {enrolledCoursesProgress?.map(course => (
+            {courses?.length ===0 ?(  <div className='col-span-full flex min-h-[220px] flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-card px-6 py-10 text-center shadow-sm'>
+    <div className='mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-accent/10 text-2xl text-primary'>
+      <LuBook/>
+    </div>
+
+    <h3 className='font-heading text-lg font-semibold text-text'>
+      No courses found for this status
+    </h3>
+
+    <p className='mt-2 max-w-md font-body text-sm text-text-light'>
+      You don't have any courses in this category yet. Explore your enrolled
+      courses or start learning something new.
+    </p>
+  </div>):(
+  <>
+            {courses?.map(course => (
               <EnrolledCourseCard
                 showReviewUi={true}
                 key={course._id}
@@ -137,6 +155,8 @@ const filter = [
                 reviewData={course.review}
               />
             ))}
+            </>
+)}
           </div>
 
         </div>

@@ -8,9 +8,12 @@ export const useEnrolledCourses = ()=> useQuery({
     queryFn:fetchEnrolledCourses
     
 })
-export const useFilteredEnrolledCourses = (filter)=>useQuery({
+export const useFilteredEnrolledCourses = (filter)=>useQuery
+({
+  
     queryKey:['filteredEnrollment',filter],
-    queryFn:()=>fetchFilteredEnrolledCourses(filter)
+    queryFn:()=>fetchFilteredEnrolledCourses(filter),
+    enabled:!!filter
 })
 export const useEnrolledCertificate = ()=>useQuery({
     queryKey:['certificates'],
