@@ -565,11 +565,46 @@ export const GetCourseCategories = asyncHandler(async(req,res)=>{
 export const GetCoursesByTeacherId = asyncHandler(async(req,res)=>{
   
       const instructor = req.user.UserID
+      const {search,sort}=req.query
       if(!instructor){
                   return res.status(404).json({message:'teacher not found'})
-
       }
-      const courses = await Course.find({instructor})
+      const filter = {
+         instructor:instructor
+      }
+      const sortOptions={}
+      if(search){
+         filter.title = {$regex:search,$options:"i"}
+      }
+      if(sort==="newest"){
+sortOptions.createdAt=-1
+      }
+      if(sort==="oldest"){
+         sortOptions.createdAt=1
+      }
+      if(sort==='popular'){
+ const courses = await Course.aggregate([
+   {$match:filter},
+   {
+      $lookup:{
+         from:"enrollments",
+         localField:'_id',
+         foreignField:"courseId",
+         as:'enrollments'
+      }
+   },
+   {
+      $addFields:{
+         studentCount:{$size:'$enrollments'}
+      }
+   },{
+      $sort:{
+         studentCount:-1
+      }
+   }
+ ])
+      }
+      const courses = await Course.find(filter).sort(sortOptions)
       if(!courses){
          return res.status(404).json({message:'courses not found'})
       }

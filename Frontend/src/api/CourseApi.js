@@ -1,8 +1,8 @@
 import api from "@/utils/axios"
 
 // fetch teacher's courses
-export const fetchTeacherCourses = async () => {
-    const res = await api.get('/teacher/dashboard/my-courses')
+export const fetchTeacherCourses = async (params) => {
+    const res = await api.get('/teacher/dashboard/my-courses',{params})
     return res?.data?.courses
 }
 // filtered courses

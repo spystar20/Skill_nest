@@ -54,13 +54,19 @@ export const EnrolledCourse = asyncHandler(async (req, res) => {
      return res.status(200).json({ enrolledCoursesProgress })
 })
  export const getFilteredEnrolledCourses = asyncHandler(async(req,res)=>{
-     const {status} =req.query
-     const filter = {}
+     const {status,search} =req.query
+     const filter = {
+          userId:req.user.UserID
+     }
      if(status){
           filter.status = status 
      }
-     console.log(filter)
-     const enrolledCourses = await Enrollment.find({userId:req.user.UserID ,...filter}).sort({createdAt:-1}).populate({path:"courseId",populate:{path:"instructor",select:"firstName avatar"}})
+     if(search){
+          const course = await Course.find({title:{$regex:search,$options:"i"}})
+          filter.courseId = {$in:course.map(course=>course._id)}
+     }
+
+     const enrolledCourses = await Enrollment.find(filter).sort({createdAt:-1}).populate({path:"courseId",populate:{path:"instructor",select:"firstName avatar"}})
 console.log(enrolledCourses)
      return res.status(200).json({enrolledCourses})
  })

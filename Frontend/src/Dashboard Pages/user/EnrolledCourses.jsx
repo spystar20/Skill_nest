@@ -7,7 +7,7 @@ import EnrollFilterPill from '@/Dashboard Pages/user/Enrollment/EnrollFilterPill
 import {  FaSearch } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
 import DashboardPageHeader from '../DashboardComponents/DashboardPageHeader'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { LuBook } from 'react-icons/lu'
 
 const EnrolledCourses = () => {
@@ -17,14 +17,24 @@ const EnrolledCourses = () => {
   const params = {}
  
   const [status,setStatus]=useState("")
+  const [search,setSearch]=useState('')
+  const [ debouncedSearch,setDebouncedSearch]=useState("")
 if(status){
   params.status = status
 }
+if(debouncedSearch){
+  params.search = debouncedSearch
+}
+useEffect(()=>{
+  setTimeout(() => {
+    setDebouncedSearch(search)
+  }, 600);
+},[search])
  const {data:filteredCourse}=useFilteredEnrolledCourses(params)
  console.log(filteredCourse?.enrolledCourses)
  const courses = filteredCourse?.enrolledCourses
   const startedCourse = enrolledCoursesProgress.filter(
-    course => course.completedLessons.length > 0
+    course => course.status === "in-progress"
   )
 const filter = [
   'all-status','in-progress','completed','not-started'
@@ -32,7 +42,7 @@ const filter = [
 
   return (
     <Dataset loading={isLoading} error={isError}>
-      <div className='w-full min-h-screen bg-page px-2 py-6 md:px-8 md:py-8 flex flex-col gap-5'>
+      <div className='w-full min-h-screen bg-page px-2 py-6 md:px-8 md:py-8 flex flex-col gap-5 z-[560]'>
 
         <DashboardPageHeader
           title='My Courses'
@@ -111,6 +121,8 @@ const filter = [
             <div className='w-full lg:w-auto overflow-hidden rounded-full border-2 flex justify-between items-center'>
               <input
                 type='text'
+                value={search}
+                onChange={(e)=>setSearch(e.target.value)}
                 className='w-full lg:w-[280px] h-9 border-none outline-none placeholder:capitalize placeholder:font-[Roboto] placeholder:text-gray-900 placeholder:font-light px-3 md:px-4'
                 placeholder='search desired courses'
               />

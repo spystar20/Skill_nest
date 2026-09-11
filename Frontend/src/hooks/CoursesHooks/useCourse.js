@@ -37,9 +37,10 @@ export const useUploadedResources = (lessonId)=>useQuery({
     queryFn:()=>fetchUploadedResource(lessonId),
     enabled:!!lessonId
 })
-export const useTeacherCourses = ()=>useQuery({
-    queryKey:['coursesTeacher'],
-    queryFn:()=>fetchTeacherCourses()
+export const useTeacherCourses = (params)=>useQuery({
+    queryKey:['coursesTeacher',params],
+    queryFn:()=>fetchTeacherCourses(params),
+    enabled:!!params
 })
 
 export const useCurriculum = (courseId)=>useQuery({

@@ -40,8 +40,6 @@ const Sidebar = () => {
               <li><NavLink to="/dashboard/student/" className={navClass}><MdDashboard className="h-4 w-4 shrink-0" /><span>Dashboard</span></NavLink></li>
               <li><NavLink to="/dashboard/student/my-courses" className={navClass}><ImBook className="h-4 w-4 shrink-0" /><span>My Courses</span></NavLink></li>
               <li><NavLink to="/dashboard/student/wishlist" className={navClass}><BsHeartFill className="h-4 w-4 shrink-0" /><span>Wishlist</span></NavLink></li>
-              <li><NavLink to="/dashboard/student/continue-learning" className={navClass}><MdPlayLesson className="h-4 w-4 shrink-0" /><span>Continue Learning</span></NavLink></li>
-              <li><NavLink to="/dashboard/student/bookmarks" className={navClass}><FaBookmark className="h-4 w-4 shrink-0" /><span>Bookmarks</span></NavLink></li>
               <li><NavLink to="/dashboard/student/certificate" className={navClass}><PiCertificateFill className="h-4 w-4 shrink-0" /><span>Certificates</span></NavLink></li>
             </ul>
           </div>
