@@ -11,6 +11,7 @@ import Enrollment from "../models/Teacher/Enrollment.js"
 import userModel from "../models/user.model.js"
 import ReviewModel from "../models/Ecommerce/ReviewModel.js"
 import { createActivity } from "../services/activity.service.js"
+import mongoose from "mongoose"
 
 
 export const CreateCoursse = asyncHandler( async (req, res) => {
@@ -570,7 +571,7 @@ export const GetCoursesByTeacherId = asyncHandler(async(req,res)=>{
                   return res.status(404).json({message:'teacher not found'})
       }
       const filter = {
-         instructor:instructor
+         instructor:new mongoose.Types.ObjectId(instructor)
       }
       const sortOptions={}
       if(search){
@@ -583,28 +584,30 @@ sortOptions.createdAt=-1
          sortOptions.createdAt=1
       }
       if(sort==='popular'){
- const courses = await Course.aggregate([
-   {$match:filter},
-   {
-      $lookup:{
-         from:"enrollments",
-         localField:'_id',
-         foreignField:"courseId",
-         as:'enrollments'
+sortOptions.studentCount=-1
+
       }
-   },
-   {
-      $addFields:{
-         studentCount:{$size:'$enrollments'}
-      }
-   },{
-      $sort:{
-         studentCount:-1
-      }
-   }
- ])
-      }
-      const courses = await Course.find(filter).sort(sortOptions)
+
+
+      const courses = await Course.aggregate([
+         {
+            $match:filter
+         },{
+            $lookup:{
+               from:"enrollments",
+               localField:"_id",
+               foreignField:"courseId",
+               as:"enrollments"
+            }
+         },
+         {
+            $addFields:{
+               studentCount:{$size:"$enrollments"
+               }}
+         },{
+            $sort:sortOptions
+         }
+      ])
       if(!courses){
          return res.status(404).json({message:'courses not found'})
       }

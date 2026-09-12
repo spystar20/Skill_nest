@@ -1,7 +1,7 @@
 
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { FaAngleDoubleLeft, FaSearch } from 'react-icons/fa'
+import {  FaSearch } from 'react-icons/fa'
 import { FiPlus } from 'react-icons/fi'
 import { PiBooks, PiPencil, PiStudentFill } from 'react-icons/pi'
 import { ImBin } from 'react-icons/im'
@@ -14,6 +14,7 @@ import Dataset from '@/utils/Dataset'
 import { useTeacherCourses } from '@/hooks/CoursesHooks/useCourse'
 import { useDeleteCourse } from '@/hooks/CoursesHooks/courseMutation'
 import DashboardPageHeader from '../DashboardComponents/DashboardPageHeader'
+import AiComingSoon from '../DashboardComponents/AiCommingSoon'
 
 const MyCourse = () => {
   const [sort, setSort] = useState('')
@@ -161,7 +162,7 @@ onClick={handleSearch}
                       <div className="mt-3 flex flex-wrap gap-x-4 gap-y-2 font-body text-xs text-text-light sm:text-sm">
                         <span className="flex items-center gap-1.5">
                           <PiStudentFill />
-                          120 Students
+                          {course.studentCount || 0} Students
                         </span>
 
                         <span className="flex items-center gap-1.5">
@@ -222,6 +223,7 @@ onClick={handleSearch}
 
         {/* FUTURE RIGHT-SIDE CARDS */}
         <div className="basis-1/4">
+        <AiComingSoon/>
         </div>
       </div>
     </div>
