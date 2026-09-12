@@ -573,7 +573,9 @@ export const GetCoursesByTeacherId = asyncHandler(async(req,res)=>{
       const filter = {
          instructor:new mongoose.Types.ObjectId(instructor)
       }
-      const sortOptions={}
+      const sortOptions={
+         createdAt:-1
+      }
       if(search){
          filter.title = {$regex:search,$options:"i"}
       }

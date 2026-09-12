@@ -32,6 +32,9 @@ import CertificatesShowcase from '@/Dashboard Pages/user/CertificatesShowcase'
 import Cart from '@/Pages/EcommercePages/Cart'
 import Wishlist from '@/Dashboard Pages/Wishlist/Wishlist'
 import Dashboard from '@/Dashboard Pages/Dashboard/Dashboard'
+import TeacherDashboard from '@/Dashboard Pages/Teaching/TeacherDashboard/TeacherDashboard'
+import TeacherAnalytics from '@/Dashboard Pages/Teaching/Analytics/TeacherAnalytics'
+import InstructorStudents from '@/Dashboard Pages/Teaching/InstructorStudents/InstructorStudents'
 
 const AppRoutes = () => {
   return (
@@ -70,8 +73,9 @@ const AppRoutes = () => {
           <Route path='/dashboard/student/certificate' element={<CertificatesShowcase/>}/>
           <Route path='/security' element={<Security />} />
          <Route path='/courses/:course_name/:enrollmentId/learn' element={<CoursePlayer />} />
- 
-
+ <Route path='/instructor/dashboard' element={<TeacherDashboard/>}/>
+<Route path='/instructor/analytics' element={<TeacherAnalytics/>}/>
+<Route path='/instructor/students' element={<InstructorStudents/>}/>
         </Route>
       </Routes>
     </Suspense>

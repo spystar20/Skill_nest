@@ -48,10 +48,10 @@ const Sidebar = () => {
             <div className="flex flex-col gap-3 border-b border-white/10 py-6">
               <h2 className="px-4 font-body text-xs font-semibold uppercase tracking-wider text-white/50">Teaching</h2>
               <ul className="flex flex-col gap-1">
-                <li><NavLink to="/dashboard/instructor" className={navClass}><FaUserCircle className="h-4 w-4 shrink-0" /><span>Instructor Dashboard</span></NavLink></li>
+                <li><NavLink to='/teaching/dashboard' className={navClass}><FaUserCircle className="h-4 w-4 shrink-0" /><span>Instructor Dashboard</span></NavLink></li>
                 <li><NavLink to="/dashboard/teacher/my-courses" className={navClass}><FaUnlockAlt className="h-4 w-4 shrink-0" /><span>My Courses</span></NavLink></li>
-                <li><NavLink to="/dashboard/teacher/students" className={navClass}><FaUserCircle className="h-4 w-4 shrink-0" /><span>Students</span></NavLink></li>
-                <li><NavLink to="/dashboard/teacher/analytics" className={navClass}><FaBell className="h-4 w-4 shrink-0" /><span>Analytics</span></NavLink></li>
+                <li><NavLink to="/instructor/students" className={navClass}><FaUserCircle className="h-4 w-4 shrink-0" /><span>Students</span></NavLink></li>
+                <li><NavLink to="/instructor/analytics" className={navClass}><FaBell className="h-4 w-4 shrink-0" /><span>Analytics</span></NavLink></li>
               </ul>
             </div>
           )}
@@ -146,10 +146,10 @@ const Sidebar = () => {
               </h2>
 
               <ul className="flex flex-col gap-1">
-                <li><NavLink onClick={closeMenu} to="/dashboard/instructor" className={mobileNavClass}><FaUserCircle /><span>Instructor Dashboard</span></NavLink></li>
+                <li><NavLink onClick={closeMenu} to="/instructor/dashboard" className={mobileNavClass}><FaUserCircle /><span>Instructor Dashboard</span></NavLink></li>
                 <li><NavLink onClick={closeMenu} to="/dashboard/teacher/my-courses" className={mobileNavClass}><FaUnlockAlt /><span>My Courses</span></NavLink></li>
                 <li><NavLink onClick={closeMenu} to="/dashboard/teacher/students" className={mobileNavClass}><FaUserCircle /><span>Students</span></NavLink></li>
-                <li><NavLink onClick={closeMenu} to="/dashboard/teacher/analytics" className={mobileNavClass}><FaBell /><span>Analytics</span></NavLink></li>
+                <li><NavLink onClick={closeMenu} to="/instructor/analytics" className={mobileNavClass}><FaBell /><span>Analytics</span></NavLink></li>
               </ul>
             </div>
           )}

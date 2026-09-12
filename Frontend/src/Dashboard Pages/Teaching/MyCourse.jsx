@@ -17,7 +17,7 @@ import DashboardPageHeader from '../DashboardComponents/DashboardPageHeader'
 import AiComingSoon from '../DashboardComponents/AiCommingSoon'
 
 const MyCourse = () => {
-  const [sort, setSort] = useState('')
+  const [sort, setSort] = useState('newest')
 const [search,setSearch ]= useState('')
 const [debouncedSearch,setDebouncedSearch]=useState('')
 const params ={}
@@ -120,7 +120,7 @@ onClick={handleSearch}
                 label="Sort By"
                 onChange={(e) => setSort(e.target.value)}
               >
-                <MenuItem value="newest">Newest</MenuItem>
+                <MenuItem  value="newest">Newest</MenuItem>
                 <MenuItem value="oldest">Oldest</MenuItem>
                 <MenuItem value="popular">Most Popular</MenuItem>
               </Select>
@@ -222,9 +222,38 @@ onClick={handleSearch}
         </div>
 
         {/* FUTURE RIGHT-SIDE CARDS */}
-        <div className="basis-1/4">
-        <AiComingSoon/>
-        </div>
+    <div className="flex basis-1/4 flex-col gap-6">
+  {/* STATS CARD */}
+  <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
+    <h3 className="font-heading text-lg font-semibold text-text">Overview</h3>
+    <div className="mt-4 grid grid-cols-2 gap-3">
+      <div className="rounded-xl bg-page p-3 border border-border">
+        <p className="text-xs text-text-light">Total Students</p>
+        <p className="mt-1 text-lg font-bold text-text">1,240</p>
+      </div>
+      <div className="rounded-xl bg-page p-3 border border-border">
+        <p className="text-xs text-text-light">Avg. Rating</p>
+        <p className="mt-1 text-lg font-bold text-text">4.9 ★</p>
+      </div>
+    </div>
+  </div>
+
+  {/* QUICK ACTIONS */}
+  <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
+    <h3 className="font-heading text-lg font-semibold text-text">Quick Actions</h3>
+    <div className="mt-3 flex flex-col gap-2">
+      <button className="w-full rounded-xl border border-border bg-page px-4 py-2.5 text-left text-sm font-medium text-text transition hover:border-primary hover:text-primary">
+        + Post Announcement
+      </button>
+      <button className="w-full rounded-xl border border-border bg-page px-4 py-2.5 text-left text-sm font-medium text-text transition hover:border-primary hover:text-primary">
+        + Create Assignment
+      </button>
+    </div>
+  </div>
+
+  {/* AI SIDEBAR CARD */}
+  <AiComingSoon />
+</div>
       </div>
     </div>
   )
