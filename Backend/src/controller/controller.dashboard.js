@@ -7,6 +7,8 @@ import TeacherSchema from '../models/Teacher/TeacherSchema.js'
 import Course from '../models/Teacher/Course.js'
 import Enrollment from '../models/Teacher/Enrollment.js'
 import mongoose from 'mongoose'
+import ReviewModel from '../models/Ecommerce/ReviewModel.js'
+import PaymentModel from '../models/Ecommerce/PaymentModel.js'
 export const studentDashboardData = asyncHandler(async (req, res) => {
   const user = req.user.UserID
   const { range = "week" } = req.query
@@ -140,6 +142,47 @@ export const teacherDashboardData = asyncHandler(async (req, res) => {
     }
   ])
   const studentCount = totalStudents[0]?.count || 0
- 
-  return res.status(200).json({ activeCourses,studentCount })
+ const review = await ReviewModel.aggregate([
+{
+  $lookup:{
+    from:'enrollments',
+    localField:'enrollmentId',
+    foreignField:'_id',
+    as:'enrollments'
+  }
+},{
+  $lookup:{
+    from:'courses',
+    localField:'enrollments.courseId',
+    foreignField:'_id',
+    as:'courses'
+  }
+},{
+  $match:{
+    'courses.instructor':new mongoose.Types.ObjectId(userId)
+  }
+},{
+  $group:{
+    _id:null,averageRating:{$avg:'$rating'}
+  }
+}
+ ])
+const averageReview = review[0]?.averageRating || 0
+const revenue = await PaymentModel.aggregate([
+  {
+    $lookup:{
+      from:'courses',foreignField:'_id',localField:'courseId',as:"courses"
+    }
+  },{
+    $match:{
+      'courses.instructor':new mongoose.Types.ObjectId(userId)
+    }
+  },{
+    $group:{
+      _id:null,totalRevenue:{$sum:'$amount'}
+    }
+  }
+])
+const totalRevenue = revenue[0]?.totalRevenue || 0
+  return res.status(200).json({ activeCourses,studentCount ,averageReview,totalRevenue})
 })
