@@ -9,6 +9,7 @@ import Enrollment from '../models/Teacher/Enrollment.js'
 import mongoose from 'mongoose'
 import ReviewModel from '../models/Ecommerce/ReviewModel.js'
 import PaymentModel from '../models/Ecommerce/PaymentModel.js'
+import activityModel from '../models/activityModel.js'
 export const studentDashboardData = asyncHandler(async (req, res) => {
   const user = req.user.UserID
   const { range = "week" } = req.query
@@ -184,5 +185,20 @@ const revenue = await PaymentModel.aggregate([
   }
 ])
 const totalRevenue = revenue[0]?.totalRevenue || 0
-  return res.status(200).json({ activeCourses,studentCount ,averageReview,totalRevenue})
+const activities =await activityModel.aggregate([
+  {
+    $lookup:{
+      from:"courses",foreignField:"_id",localField:'courseId',as:'courses'
+    }
+  },{
+    $match:{
+      'courses.instructor':new mongoose.Types.ObjectId(userId)
+    }
+  },{
+    $sort:{'createdAt':-1}
+  },{
+    $limit:5
+  }
+])
+  return res.status(200).json({ activeCourses,studentCount ,averageReview,totalRevenue,activities})
 })
