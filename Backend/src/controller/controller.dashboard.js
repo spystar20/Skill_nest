@@ -190,7 +190,13 @@ const activities =await activityModel.aggregate([
     $lookup:{
       from:"courses",foreignField:"_id",localField:'courseId',as:'courses'
     }
-  },{
+  },
+  {
+    $lookup:{
+      from:'users',foreignField:'_id',localField:'userId',as:"user"
+    }
+  },
+  {
     $match:{
       'courses.instructor':new mongoose.Types.ObjectId(userId)
     }
@@ -198,6 +204,17 @@ const activities =await activityModel.aggregate([
     $sort:{'createdAt':-1}
   },{
     $limit:5
+  },
+  {
+$unwind:'$user'
+  },
+  {
+    $project:{
+      type:1,
+      userName:{
+        // $concat:['$user.firstName',' ','$user.lastName']
+      }
+    }
   }
 ])
   return res.status(200).json({ activeCourses,studentCount ,averageReview,totalRevenue,activities})
