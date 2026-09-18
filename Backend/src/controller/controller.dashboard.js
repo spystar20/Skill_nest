@@ -220,13 +220,53 @@ $unwind:'$user'
 ])
 const performance = await Course.aggregate([
   {
+    $match:{
+      'instructor':new mongoose.Types.ObjectId(userId)
+    }
+  },
+  {
     $lookup:{
       from:'enrollments',foreignField:'courseId',localField:'_id',as:'enrollment'
     }
-  },{
+  },
+  {
     $lookup:{
       from:'coursereviews',foreignField:'enrollmentId',localField:'enrollment._id',as:"reviews"
     }
+  },
+  {
+  $addFields: {
+    averageRating: { $avg: '$reviews.rating' }
+  }
+},{
+  $addFields:{
+    studentIds:{
+      $map:{
+         input: { $ifNull: ["$enrollment", []] },as:'student',in:'$$student.userId'
+      }
+    }
+  }
+},{
+  $addFields:{
+    studentIds:{
+      $setUnion:['$studentIds',[]]
+    }
+  }
+},{
+$set:{
+  studentCount:{$size:'$studentIds'}
+}
+}
+  ,{
+    $project:{
+      title:1,
+studentCount:1,averageRating:1   }
+  },{
+    $sort:{
+      studentCount:-1
+    }
+  },{
+    $limit:3
   }
 ])
 const recentCourses = await Course.find({instructor:userId}).populate('instructor','firstName avatar').sort({createdAt:-1}).limit(3)
