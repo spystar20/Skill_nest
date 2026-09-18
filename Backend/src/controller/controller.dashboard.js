@@ -142,6 +142,7 @@ export const teacherDashboardData = asyncHandler(async (req, res) => {
       $count:"count"
     }
   ])
+
   const studentCount = totalStudents[0]?.count || 0
  const review = await ReviewModel.aggregate([
 {
@@ -212,10 +213,22 @@ $unwind:'$user'
     $project:{
       type:1,
       userName:{
-        // $concat:['$user.firstName',' ','$user.lastName']
+        $concat:['$user.firstName',' ','$user.lastName']
       }
     }
   }
 ])
-  return res.status(200).json({ activeCourses,studentCount ,averageReview,totalRevenue,activities})
+const performance = await Course.aggregate([
+  {
+    $lookup:{
+      from:'enrollments',foreignField:'courseId',localField:'_id',as:'enrollment'
+    }
+  },{
+    $lookup:{
+      from:'coursereviews',foreignField:'enrollmentId',localField:'enrollment._id',as:"reviews"
+    }
+  }
+])
+const recentCourses = await Course.find({instructor:userId}).populate('instructor','firstName avatar').sort({createdAt:-1}).limit(3)
+  return res.status(200).json({ activeCourses,studentCount ,averageReview,totalRevenue,activities,recentCourses,performance})
 })
