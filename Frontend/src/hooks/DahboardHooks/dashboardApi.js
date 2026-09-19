@@ -12,3 +12,7 @@ export const fetchRecentActivities = async()=>{
     const res = await api.get('/student/recent-activities')
     return res.data
 }
+export const fetchTeacherDashboardData = async()=>{
+    const res = await api.get('/teacher/dashboard/data')
+    return res.data
+}

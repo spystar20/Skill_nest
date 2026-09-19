@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { fetchRecentActivities, fetchRecommendedCourses, getStudentDashboardData } from "./dashboardApi";
+import { fetchRecentActivities, fetchRecommendedCourses, fetchTeacherDashboardData, getStudentDashboardData } from "./dashboardApi";
 
 export const useStudentDashboard = (range)=>useQuery({
     queryKey:['studentDashboardData',range],
@@ -12,4 +12,8 @@ export const useRecommendedCourses = ()=>useQuery({
 export const useRecentActivity =()=>useQuery({
     queryKey:['user-activity'],
     queryFn:()=>fetchRecentActivities()
+})
+export const useTeacherDashboard = ()=>useQuery({
+    queryKey:['teacher-dashboard'],
+    queryFn:()=>fetchTeacherDashboardData()
 })

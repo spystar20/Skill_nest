@@ -18,6 +18,8 @@ import { formatDistanceToNow } from 'date-fns'
 import Dataset from '@/utils/Dataset'
 import { useTeacherCourses } from '@/hooks/CoursesHooks/useCourse'
 import DashboardPageHeader from '@/Dashboard Pages/DashboardComponents/DashboardPageHeader'
+import { useTeacherDashboard } from '@/hooks/DahboardHooks/useDashboard'
+import StatCard from './StatCard'
 
 const TeacherDashboard = () => {
   const { isLoading, isError, data: courses } = useTeacherCourses({
@@ -25,34 +27,40 @@ const TeacherDashboard = () => {
     sort: 'newest'
   })
 
+  const {data:teacherData}=useTeacherDashboard()
+
   const stats = [
     {
       title: 'Total Revenue',
       value: '$12,450',
       change: '+14%',
       icon: FiDollarSign,
-      color: 'text-success bg-success/10'
+      color: 'text-success bg-success/10',
+      value:teacherData?.totalRevenue
     },
     {
       title: 'Total Students',
       value: '1,280',
       change: '+8%',
       icon: FiUsers,
-      color: 'text-primary bg-primary/10'
+      color: 'text-primary bg-primary/10',
+      value:teacherData?.studentCount
     },
     {
       title: 'Active Courses',
       value: '12',
       change: '+2',
       icon: FiBookOpen,
-      color: 'text-accent bg-accent/10'
+      color: 'text-accent bg-accent/10',
+      value:teacherData?.activeCourses
     },
     {
       title: 'Average Rating',
       value: '4.8',
       change: '★★★★★',
       icon: FiStar,
-      color: 'text-warning bg-warning/10'
+      color: 'text-warning bg-warning/10',
+      value:teacherData?.averageReview
     }
   ]
 
@@ -97,7 +105,7 @@ const TeacherDashboard = () => {
       path: '/dashboard/teacher/discussions'
     }
   ]
-
+console.log(teacherData)
   return (
     <div className="min-h-screen w-full bg-page px-3 py-5 sm:px-5 md:px-8">
       <DashboardPageHeader
@@ -111,43 +119,7 @@ const TeacherDashboard = () => {
           const Icon = stat.icon
 
           return (
-            <div
-              key={stat.title}
-              className="flex items-center justify-between rounded-2xl border border-border bg-card p-4 shadow-sm transition-all duration-200 hover:shadow-md sm:p-5"
-            >
-              <div className="min-w-0">
-                <p className="font-body text-xs font-medium text-text-light">
-                  {stat.title}
-                </p>
-
-                <h3 className="mt-1 font-heading text-2xl font-bold text-text">
-                  {stat.value}
-                </h3>
-
-                <span
-                  className={`mt-1 inline-flex items-center gap-1 font-body text-xs font-medium ${
-                    stat.title === 'Average Rating'
-                      ? 'text-warning'
-                      : 'text-success'
-                  }`}
-                >
-                  {stat.title === 'Average Rating' ? (
-                    stat.change
-                  ) : (
-                    <>
-                      <FiTrendingUp />
-                      {stat.change}
-                    </>
-                  )}
-                </span>
-              </div>
-
-              <div
-                className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl ${stat.color}`}
-              >
-                <Icon className="text-xl" />
-              </div>
-            </div>
+           <StatCard title={stat.title} value={stat.value} Icon={stat.icon} color={stat.color}/>
           )
         })}
       </div>
@@ -314,7 +286,7 @@ const TeacherDashboard = () => {
             </div>
 
             <div className="mt-4 space-y-3">
-              {courses?.slice(0, 3).map((course, index) => (
+              {teacherData?.performance?.map((course, index) => (
                 <div
                   key={course._id}
                   className="flex items-center gap-3 rounded-xl border border-border bg-page p-3"
@@ -336,7 +308,7 @@ const TeacherDashboard = () => {
 
                       <span className="flex items-center gap-1 text-warning">
                         <FiStar />
-                        4.8
+                      {course.averageRating || 'No ratings'}
                       </span>
                     </div>
                   </div>

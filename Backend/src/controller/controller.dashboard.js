@@ -270,5 +270,7 @@ studentCount:1,averageRating:1   }
   }
 ])
 const recentCourses = await Course.find({instructor:userId}).populate('instructor','firstName avatar').sort({createdAt:-1}).limit(3)
-  return res.status(200).json({ activeCourses,studentCount ,averageReview,totalRevenue,activities,recentCourses,performance})
+const draftCourses = await Course.countDocuments({instructor:userId,status:'draft'})
+ 
+  return res.status(200).json({ activeCourses,studentCount ,averageReview,totalRevenue,activities,recentCourses,performance,draftCourses})
 })
