@@ -104,7 +104,7 @@ const TeacherDashboard = () => {
       tag: 'Support',
       path: '/dashboard/teacher/discussions'
     }
-  ]
+  ] 
 console.log(teacherData)
   return (
     <div className="min-h-screen w-full bg-page px-3 py-5 sm:px-5 md:px-8">
