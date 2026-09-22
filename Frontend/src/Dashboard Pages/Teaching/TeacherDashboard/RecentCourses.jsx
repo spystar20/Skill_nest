@@ -1,11 +1,11 @@
 import React from 'react'
-import { PiPencil } from 'react-icons/pi'
+import { PiBooks, PiPencil, PiStudentFill } from 'react-icons/pi'
 import { Link } from 'react-router-dom'
 
-const RecentCourses = () => {
+const RecentCourses = ({course}
+) => {
   return (
    <div
-                      key={course._id}
                       className="flex flex-col gap-3 rounded-xl border border-border bg-page p-3 transition hover:shadow-sm sm:flex-row sm:items-center sm:justify-between"
                     >
                       <div className="flex min-w-0 items-center gap-3">

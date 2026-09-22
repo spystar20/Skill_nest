@@ -2,7 +2,7 @@ import { activityIcons, activityMessages, relativeTime } from '@/utils/utils.act
 import React from 'react'
 import { LuBookOpenCheck } from 'react-icons/lu'
 
-const RecentActivity = ({activities}) => {
+const RecentActivity = ({activities,role}) => {
 
   return (
     <div className='bg-card rounded-xl border border-border shadow-sm p-3 md:p-4  flex flex-col gap-5'>
@@ -23,7 +23,7 @@ const RecentActivity = ({activities}) => {
 
       {/* Activities */}
       <div className='flex flex-col gap-4'>
-       {activities.map((activity) => {
+       {activities?.map((activity) => {
 
           const Icon = activityIcons[activity.type] || LuBookOpenCheck
 return (
@@ -36,8 +36,11 @@ return (
     </span>
 
     <div className='min-w-0 flex-1'>
+     
       <p className='text-xs sm:text-sm font-medium text-text truncate'>
-        {activityMessages[activity.type]}
+         {role==='teacher'?(
+        `${activity.userName} ${activityMessages[activity.type]}`
+        ):(`${activityMessages[activity.type]}`)}
       </p>
 
       {activity.courseId && (

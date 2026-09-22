@@ -113,7 +113,7 @@ Start learning from your enrolled courses.
       </>
       )}
           </div>
-          <RecentActivity activities={activities}/>
+          <RecentActivity role="student" activities={activities}/>
         </aside>
       </main>
     </div>

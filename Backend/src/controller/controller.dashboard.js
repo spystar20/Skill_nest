@@ -214,7 +214,12 @@ $unwind:'$user'
       type:1,
       userName:{
         $concat:['$user.firstName',' ','$user.lastName']
-      }
+      },
+      courseId:{
+id:{$arrayElemAt:['$courses._id',0]},
+title:{$arrayElemAt:['$courses.title',0]}
+      },
+      createdAt:1
     }
   }
 ])

@@ -6,20 +6,22 @@ import {
   FiBookOpen,
   FiDollarSign,
   FiStar,
-  FiTrendingUp,
   FiMessageSquare,
   FiBell,
   FiArrowUpRight,
   FiCheckCircle
 } from 'react-icons/fi'
-import { PiPencil, PiStudentFill, PiBooks } from 'react-icons/pi'
-import { formatDistanceToNow } from 'date-fns'
+
 
 import Dataset from '@/utils/Dataset'
 import { useTeacherCourses } from '@/hooks/CoursesHooks/useCourse'
 import DashboardPageHeader from '@/Dashboard Pages/DashboardComponents/DashboardPageHeader'
 import { useTeacherDashboard } from '@/hooks/DahboardHooks/useDashboard'
 import StatCard from './StatCard'
+import RecentCourses from './RecentCourses'
+import AiComingSoon from '@/Dashboard Pages/DashboardComponents/AiCommingSoon'
+import RecentActivity from '@/Dashboard Pages/Dashboard/RecentActivity'
+import CoursePerformance from './CoursePerformance'
 
 const TeacherDashboard = () => {
   const { isLoading, isError, data: courses } = useTeacherCourses({
@@ -32,7 +34,6 @@ const TeacherDashboard = () => {
   const stats = [
     {
       title: 'Total Revenue',
-      value: '$12,450',
       change: '+14%',
       icon: FiDollarSign,
       color: 'text-success bg-success/10',
@@ -40,7 +41,6 @@ const TeacherDashboard = () => {
     },
     {
       title: 'Total Students',
-      value: '1,280',
       change: '+8%',
       icon: FiUsers,
       color: 'text-primary bg-primary/10',
@@ -48,7 +48,6 @@ const TeacherDashboard = () => {
     },
     {
       title: 'Active Courses',
-      value: '12',
       change: '+2',
       icon: FiBookOpen,
       color: 'text-accent bg-accent/10',
@@ -56,56 +55,12 @@ const TeacherDashboard = () => {
     },
     {
       title: 'Average Rating',
-      value: '4.8',
       change: '★★★★★',
       icon: FiStar,
       color: 'text-warning bg-warning/10',
       value:teacherData?.averageReview
     }
   ]
-
-  const recentActivities = [
-    {
-      id: 1,
-      type: 'enrollment',
-      message: 'Sarah Jenkins enrolled in React Fundamentals',
-      time: new Date(Date.now() - 1000 * 60 * 15)
-    },
-    {
-      id: 2,
-      type: 'review',
-      message: 'Alex M. left a 5-star review on Node.js Essentials',
-      time: new Date(Date.now() - 1000 * 60 * 120)
-    },
-    {
-      id: 3,
-      type: 'question',
-      message: 'New question asked in Chapter 3: Async/Await',
-      time: new Date(Date.now() - 1000 * 60 * 240)
-    }
-  ]
-
-  const pendingTasks = [
-    {
-      id: 1,
-      task: 'Complete draft course',
-      tag: 'Draft',
-      path: '/dashboard/teacher/add-course'
-    },
-    {
-      id: 2,
-      task: 'Review unpublished course content',
-      tag: 'Review',
-      path: '/dashboard/teacher/courses'
-    },
-    {
-      id: 3,
-      task: 'Check recent student questions',
-      tag: 'Support',
-      path: '/dashboard/teacher/discussions'
-    }
-  ] 
-console.log(teacherData)
   return (
     <div className="min-h-screen w-full bg-page px-3 py-5 sm:px-5 md:px-8">
       <DashboardPageHeader
@@ -221,44 +176,7 @@ console.log(teacherData)
               <Dataset loading={isLoading} error={isError}>
                 <div className="space-y-3">
                   {courses?.map((course) => (
-                    <div
-                      key={course._id}
-                      className="flex flex-col gap-3 rounded-xl border border-border bg-page p-3 transition hover:shadow-sm sm:flex-row sm:items-center sm:justify-between"
-                    >
-                      <div className="flex min-w-0 items-center gap-3">
-                        <img
-                          src={course.thumbnail}
-                          alt={course.title}
-                          className="h-16 w-24 shrink-0 rounded-lg object-cover"
-                        />
-
-                        <div className="min-w-0">
-                          <h4 className="line-clamp-1 font-heading text-sm font-semibold text-text">
-                            {course.title}
-                          </h4>
-
-                          <div className="mt-1 flex flex-wrap items-center gap-3 font-body text-xs text-text-light">
-                            <span className="flex items-center gap-1">
-                              <PiStudentFill />
-                              {course.studentCount || 0}
-                            </span>
-
-                            <span className="flex items-center gap-1">
-                              <PiBooks />
-                              {course.lessonCount || 0} lessons
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-
-                      <Link
-                        to={`/dashboard/teacher/courses/${course._id}/edit`}
-                        aria-label={`Edit ${course.title}`}
-                        className="flex h-8 w-8 shrink-0 items-center justify-center self-end rounded-full bg-primary text-white transition hover:bg-primary-light sm:self-center"
-                      >
-                        <PiPencil className="text-xs" />
-                      </Link>
-                    </div>
+                   <RecentCourses key={course._id} course={course}/>
                   ))}
                 </div>
               </Dataset>
@@ -286,35 +204,8 @@ console.log(teacherData)
             </div>
 
             <div className="mt-4 space-y-3">
-              {teacherData?.performance?.map((course, index) => (
-                <div
-                  key={course._id}
-                  className="flex items-center gap-3 rounded-xl border border-border bg-page p-3"
-                >
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 font-heading text-sm font-semibold text-primary">
-                    {index + 1}
-                  </span>
-
-                  <div className="min-w-0 flex-1">
-                    <p className="line-clamp-1 font-body text-sm font-medium text-text">
-                      {course.title}
-                    </p>
-
-                    <div className="mt-1 flex flex-wrap items-center gap-3 text-xs text-text-light">
-                      <span className="flex items-center gap-1">
-                        <PiStudentFill />
-                        {course.studentCount || 0} students
-                      </span>
-
-                      <span className="flex items-center gap-1 text-warning">
-                        <FiStar />
-                      {course.averageRating || 'No ratings'}
-                      </span>
-                    </div>
-                  </div>
-
-                  <FiArrowUpRight className="shrink-0 text-text-light" />
-                </div>
+              {teacherData?.performance?.map((course,index) => (
+              <CoursePerformance key={course._id} index={index} course={course}/>
               ))}
             </div>
           </div>
@@ -322,6 +213,7 @@ console.log(teacherData)
 
         {/* RIGHT COLUMN */}
         <div className="flex basis-full flex-col gap-6 lg:basis-1/3">
+        <AiComingSoon/>
           {/* ACTION REQUIRED */}
           <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
             <div className="flex items-center justify-between">
@@ -338,66 +230,40 @@ console.log(teacherData)
             </div>
 
             <div className="mt-4 space-y-3">
-              {pendingTasks.map((item) => (
-                <Link
-                  key={item.id}
-                  to={item.path}
-                  className="flex items-center justify-between gap-3 rounded-xl border border-border bg-page p-3 transition hover:border-accent hover:bg-accent/5"
-                >
-                  <span className="font-body text-xs font-medium text-text">
-                    {item.task}
-                  </span>
+              {teacherData?.draftCourses > 0 ? (
+  <Link
+    to="/dashboard/teacher/courses"
+    className="flex items-center justify-between gap-3 rounded-xl border border-border bg-page p-3 transition hover:border-accent hover:bg-accent/5"
+  >
+    <div>
+      <p className="font-body text-xs font-medium text-text">
+        Complete your draft course
+      </p>
+      <p className="mt-1 font-body text-[10px] text-text-light">
+        {teacherData.draftCourses} course
+        {teacherData.draftCourses > 1 ? 's' : ''} waiting to be completed
+      </p>
+    </div>
 
-                  <span className="shrink-0 rounded-full bg-primary/10 px-2 py-0.5 font-body text-[10px] font-semibold text-primary">
-                    {item.tag}
-                  </span>
-                </Link>
-              ))}
+    <span className="shrink-0 rounded-full bg-primary/10 px-2 py-0.5 font-body text-[10px] font-semibold text-primary">
+      Continue
+    </span>
+  </Link>
+) : (
+  <div className="rounded-xl border border-border bg-page p-3">
+    <p className="font-body text-xs font-medium text-text">
+      You're all caught up
+    </p>
+    <p className="mt-1 font-body text-[10px] text-text-light">
+      No draft courses need your attention.
+    </p>
+  </div>
+)}
             </div>
           </div>
 
           {/* RECENT ACTIVITY */}
-          <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
-            <h3 className="font-heading text-base font-semibold text-text">
-              Recent Activity
-            </h3>
-
-            <div className="mt-4 space-y-4">
-              {recentActivities.map((activity) => (
-                <div
-                  key={activity.id}
-                  className="flex items-start gap-3 border-b border-border/50 pb-3 last:border-none last:pb-0"
-                >
-                  <div className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
-                    {activity.type === 'enrollment' && (
-                      <FiUsers className="text-[10px]" />
-                    )}
-
-                    {activity.type === 'review' && (
-                      <FiStar className="text-[10px]" />
-                    )}
-
-                    {activity.type === 'question' && (
-                      <FiMessageSquare className="text-[10px]" />
-                    )}
-                  </div>
-
-                  <div className="min-w-0">
-                    <p className="font-body text-xs leading-relaxed text-text">
-                      {activity.message}
-                    </p>
-
-                    <span className="font-body text-[10px] text-text-light">
-                      {formatDistanceToNow(activity.time, {
-                        addSuffix: true
-                      })}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
+  <RecentActivity activities={teacherData?.activities} role="teacher"/>
           {/* DASHBOARD TIP */}
           <div className="rounded-2xl border border-primary/10 bg-primary/[0.03] p-5">
             <div className="flex items-start gap-3">
