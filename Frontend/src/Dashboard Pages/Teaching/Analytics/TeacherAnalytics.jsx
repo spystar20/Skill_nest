@@ -14,6 +14,7 @@ import { PiStudentFill, PiBooks } from 'react-icons/pi'
 import DashboardPageHeader from '@/Dashboard Pages/DashboardComponents/DashboardPageHeader'
 import { useTeacherAnalytics } from '@/hooks/DahboardHooks/useDashboard'
 import StatCard from '../TeacherDashboard/StatCard'
+import RecentReviews from './RecentReviews'
 
 const TeacherAnalytics = () => {
   const [period, setPeriod] = useState('30')
@@ -94,30 +95,6 @@ const {data:Analytics}=useTeacherAnalytics()
       completion: '58%',
       rating: '4.6',
       revenue: '$1,600'
-    }
-  ]
-
-  const reviews = [
-    {
-      id: 1,
-      name: 'Alex M.',
-      course: 'Node.js Essentials',
-      rating: 5,
-      text: 'Really clear explanations and practical examples.'
-    },
-    {
-      id: 2,
-      name: 'Sarah J.',
-      course: 'React Fundamentals',
-      rating: 5,
-      text: 'The project-based lessons made React much easier to understand.'
-    },
-    {
-      id: 3,
-      name: 'David K.',
-      course: 'MongoDB Masterclass',
-      rating: 4,
-      text: 'Good course structure and useful database examples.'
     }
   ]
 
@@ -422,32 +399,8 @@ const {data:Analytics}=useTeacherAnalytics()
           </div>
 
           <div className="mt-5 space-y-4">
-            {reviews.map((review) => (
-              <div
-                key={review.id}
-                className="border-b border-border pb-4 last:border-none last:pb-0"
-              >
-                <div className="flex items-center justify-between gap-3">
-                  <div>
-                    <p className="font-body text-sm font-semibold text-text">
-                      {review.name}
-                    </p>
-                    <p className="font-body text-[10px] text-text-light">
-                      {review.course}
-                    </p>
-                  </div>
-
-                  <div className="flex items-center gap-0.5 text-warning">
-                    {Array.from({ length: review.rating }).map((_, index) => (
-                      <FiStar key={index} className="fill-current text-xs" />
-                    ))}
-                  </div>
-                </div>
-
-                <p className="mt-2 font-body text-xs leading-relaxed text-text-light">
-                  {review.text}
-                </p>
-              </div>
+            {Analytics?.recentReviews?.map((review) => (
+           <RecentReviews review={review} key={review._id}/>
             ))}
           </div>
         </div>

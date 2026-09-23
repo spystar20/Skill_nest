@@ -278,7 +278,7 @@ $unwind:'$course'
         createdAt:-1
       }
     },{
-      limit:3
+      $limit:3
     }
   ])
   return res.status(200).json({ totalRevenue, averageRating, recentReviews })

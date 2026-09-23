@@ -9,6 +9,7 @@ import DashboardPageHeader from "@/Dashboard Pages/DashboardComponents/Dashboard
 import { useFilteredEnrolledCourses } from "@/hooks/EnrollmentHooks/useEnrolledCourses";
 
 const EnrolledCourseCard = ({ enrollmentId, className, reviewData, course, showReviewUi }) => {
+  console.log(reviewData,"rev")
   const { mutate: deleteReview } = useDeleteReview()
   const LessonsLeft = course?.courseId?.lessonCount - course?.completedLessons?.length
   const handleDeleteReview = () => {
@@ -190,7 +191,7 @@ const EnrolledCourseCard = ({ enrollmentId, className, reviewData, course, showR
                         </div>
                       </div>
                       {reviewData?.review && (
-                        <p className="mt-1 rounded-md bg-card p-1 font-body text-[11px] leading-tight text-text-light line-clamp-1">{reviewData.review}</p>
+                        <p className="mt-1 rounded-md bg-card p-1 font-body text-[11px] leading-tight text-text-light line-clamp-1">{reviewData?.review}</p>
                       )}
                     </div>
                   </>

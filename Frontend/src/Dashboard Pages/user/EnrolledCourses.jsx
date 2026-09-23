@@ -12,8 +12,6 @@ import { LuBook } from 'react-icons/lu'
 
 const EnrolledCourses = () => {
   const { user } = useAuth()
-  const { isLoading, isError, data } = useEnrolledCourses()
-  const enrolledCoursesProgress = data?.enrolledCoursesProgress || []
   const params = {}
  
   const [status,setStatus]=useState("")
@@ -30,10 +28,10 @@ useEffect(()=>{
     setDebouncedSearch(search)
   }, 600);
 },[search])
- const {data:filteredCourse}=useFilteredEnrolledCourses(params)
- console.log(filteredCourse?.enrolledCourses)
- const courses = filteredCourse?.enrolledCourses
-  const startedCourse = enrolledCoursesProgress.filter(
+ const {data:filteredCourse,isLoading,isError}=useFilteredEnrolledCourses(params)
+ const courses = filteredCourse?.enrolledCoursesProgress
+
+  const startedCourse = courses?.filter(
     course => course.status === "in-progress"
   )
 const filter = [
@@ -94,7 +92,7 @@ const filter = [
                     instructor_name='khushi'
                     course={course}
                     course_name={course.courseId.title}
-                    reviewData={course.review}
+                    reviewData={course?.review || null}
                   />
                 ))}
               </div>
@@ -105,7 +103,7 @@ const filter = [
         <div className='flex flex-col gap-4 py-6'>
 
           <h3 className='text-xl font-semibold capitalize font-heading'>
-            Enrolled Courses ({enrolledCoursesProgress?.length})
+            Enrolled Courses ({courses?.length})
           </h3>
 
           {/* Search and Filter */}
@@ -152,6 +150,7 @@ const filter = [
   </div>):(
   <>
             {courses?.map(course => (
+              
               <EnrolledCourseCard
                 showReviewUi={true}
                 key={course._id}
@@ -164,7 +163,7 @@ const filter = [
                 instructor_name='khushi'
                 course={course}
                 course_name={course.courseId.title}
-                reviewData={course.review}
+                    reviewData={course?.review }
               />
             ))}
             </>

@@ -259,8 +259,10 @@ export const useMarkLessonComplete = () => {
                 }),
                 queryClient.invalidateQueries({
   queryKey: ['certificate', variables.enrollmentId]
+}),
+queryClient.invalidateQueries({
+    queryKey:['enrolledCourses']
 })
-
             ])
         }
     })
