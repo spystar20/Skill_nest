@@ -287,6 +287,4 @@ const TeacherDashboard = () => {
     </div>
   )
 }
-
 export default TeacherDashboard
-

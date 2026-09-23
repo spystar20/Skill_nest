@@ -12,14 +12,17 @@ import {
 } from 'react-icons/fi'
 import { PiStudentFill, PiBooks } from 'react-icons/pi'
 import DashboardPageHeader from '@/Dashboard Pages/DashboardComponents/DashboardPageHeader'
+import { useTeacherAnalytics } from '@/hooks/DahboardHooks/useDashboard'
+import StatCard from '../TeacherDashboard/StatCard'
 
 const TeacherAnalytics = () => {
   const [period, setPeriod] = useState('30')
+const {data:Analytics}=useTeacherAnalytics()
 
   const stats = [
     {
       title: 'Total Revenue',
-      value: '$12,450',
+      value: Analytics?.totalRevenue || 0,
       change: '+14.2%',
       positive: true,
       icon: FiDollarSign,
@@ -43,7 +46,7 @@ const TeacherAnalytics = () => {
     },
     {
       title: 'Average Rating',
-      value: '4.8',
+      value: Analytics?.averageReview || 0,
       change: '+0.2',
       positive: true,
       icon: FiStar,
@@ -165,35 +168,7 @@ const TeacherAnalytics = () => {
           const Icon = stat.icon
 
           return (
-            <div
-              key={stat.title}
-              className="flex items-center justify-between rounded-2xl border border-border bg-card p-4 shadow-sm transition hover:shadow-md sm:p-5"
-            >
-              <div>
-                <p className="font-body text-xs font-medium text-text-light">
-                  {stat.title}
-                </p>
-
-                <h3 className="mt-1 font-heading text-2xl font-bold text-text">
-                  {stat.value}
-                </h3>
-
-                <span
-                  className={`mt-1 inline-flex items-center gap-1 font-body text-xs font-medium ${
-                    stat.positive ? 'text-success' : 'text-error'
-                  }`}
-                >
-                  {stat.positive ? <FiTrendingUp /> : <FiTrendingDown />}
-                  {stat.change}
-                </span>
-              </div>
-
-              <div
-                className={`flex h-12 w-12 items-center justify-center rounded-2xl ${stat.color}`}
-              >
-                <Icon className="text-xl" />
-              </div>
-            </div>
+         <StatCard title={stat.title} Icon={Icon} value={stat.value} color={stat.color}/>
           )
         })}
       </div>

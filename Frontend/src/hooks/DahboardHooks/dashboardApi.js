@@ -16,3 +16,7 @@ export const fetchTeacherDashboardData = async()=>{
     const res = await api.get('/teacher/dashboard/data')
     return res.data
 }
+export const fetchTeacherAnalytics = async()=>{
+    const res = await api.get('/teacher/analytics')
+    return res.data
+}

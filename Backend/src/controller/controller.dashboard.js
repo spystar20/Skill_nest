@@ -10,6 +10,7 @@ import mongoose from 'mongoose'
 import ReviewModel from '../models/Ecommerce/ReviewModel.js'
 import PaymentModel from '../models/Ecommerce/PaymentModel.js'
 import activityModel from '../models/activityModel.js'
+import { getAverageRating, getTotalRevenue } from '../services/dashboard.service.js'
 export const studentDashboardData = asyncHandler(async (req, res) => {
   const user = req.user.UserID
   const { range = "week" } = req.query
@@ -144,48 +145,8 @@ export const teacherDashboardData = asyncHandler(async (req, res) => {
   ])
 
   const studentCount = totalStudents[0]?.count || 0
- const review = await ReviewModel.aggregate([
-{
-  $lookup:{
-    from:'enrollments',
-    localField:'enrollmentId',
-    foreignField:'_id',
-    as:'enrollments'
-  }
-},{
-  $lookup:{
-    from:'courses',
-    localField:'enrollments.courseId',
-    foreignField:'_id',
-    as:'courses'
-  }
-},{
-  $match:{
-    'courses.instructor':new mongoose.Types.ObjectId(userId)
-  }
-},{
-  $group:{
-    _id:null,averageRating:{$avg:'$rating'}
-  }
-}
- ])
-const averageReview = review[0]?.averageRating || 0
-const revenue = await PaymentModel.aggregate([
-  {
-    $lookup:{
-      from:'courses',foreignField:'_id',localField:'courseId',as:"courses"
-    }
-  },{
-    $match:{
-      'courses.instructor':new mongoose.Types.ObjectId(userId)
-    }
-  },{
-    $group:{
-      _id:null,totalRevenue:{$sum:'$amount'}
-    }
-  }
-])
-const totalRevenue = revenue[0]?.totalRevenue || 0
+const averageReview = await getAverageRating(userId)
+const totalRevenue =await getTotalRevenue(userId)
 const activities =await activityModel.aggregate([
   {
     $lookup:{
@@ -278,4 +239,11 @@ const recentCourses = await Course.find({instructor:userId}).populate('instructo
 const draftCourses = await Course.countDocuments({instructor:userId,status:'draft'})
  
   return res.status(200).json({ activeCourses,studentCount ,averageReview,totalRevenue,activities,recentCourses,performance,draftCourses})
+})
+
+
+export const getTeacherAnalytics = asyncHandler(async(req,res)=>{
+  const userId = req.user.UserID
+  const [ totalRevenue,averageRating]= await Promise.all( [getTotalRevenue(userId),getAverageRating(userId)])
+  return res.status(200).json({totalRevenue,averageRating})
 })
