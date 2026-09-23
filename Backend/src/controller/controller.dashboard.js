@@ -135,115 +135,151 @@ export const teacherDashboardData = asyncHandler(async (req, res) => {
       $match: {
         'courses.instructor': new mongoose.Types.ObjectId(userId)
       }
-    },{
-      $group:{
-        _id:'$userId',count:{$sum:1}
+    }, {
+      $group: {
+        _id: '$userId', count: { $sum: 1 }
       }
-    },{
-      $count:"count"
+    }, {
+      $count: "count"
     }
   ])
 
   const studentCount = totalStudents[0]?.count || 0
-const averageReview = await getAverageRating(userId)
-const totalRevenue =await getTotalRevenue(userId)
-const activities =await activityModel.aggregate([
-  {
-    $lookup:{
-      from:"courses",foreignField:"_id",localField:'courseId',as:'courses'
-    }
-  },
-  {
-    $lookup:{
-      from:'users',foreignField:'_id',localField:'userId',as:"user"
-    }
-  },
-  {
-    $match:{
-      'courses.instructor':new mongoose.Types.ObjectId(userId)
-    }
-  },{
-    $sort:{'createdAt':-1}
-  },{
-    $limit:5
-  },
-  {
-$unwind:'$user'
-  },
-  {
-    $project:{
-      type:1,
-      userName:{
-        $concat:['$user.firstName',' ','$user.lastName']
-      },
-      courseId:{
-id:{$arrayElemAt:['$courses._id',0]},
-title:{$arrayElemAt:['$courses.title',0]}
-      },
-      createdAt:1
-    }
-  }
-])
-const performance = await Course.aggregate([
-  {
-    $match:{
-      'instructor':new mongoose.Types.ObjectId(userId)
-    }
-  },
-  {
-    $lookup:{
-      from:'enrollments',foreignField:'courseId',localField:'_id',as:'enrollment'
-    }
-  },
-  {
-    $lookup:{
-      from:'coursereviews',foreignField:'enrollmentId',localField:'enrollment._id',as:"reviews"
-    }
-  },
-  {
-  $addFields: {
-    averageRating: { $avg: '$reviews.rating' }
-  }
-},{
-  $addFields:{
-    studentIds:{
-      $map:{
-         input: { $ifNull: ["$enrollment", []] },as:'student',in:'$$student.userId'
+  const averageReview = await getAverageRating(userId)
+  const totalRevenue = await getTotalRevenue(userId)
+  const activities = await activityModel.aggregate([
+    {
+      $lookup: {
+        from: "courses", foreignField: "_id", localField: 'courseId', as: 'courses'
+      }
+    },
+    {
+      $lookup: {
+        from: 'users', foreignField: '_id', localField: 'userId', as: "user"
+      }
+    },
+    {
+      $match: {
+        'courses.instructor': new mongoose.Types.ObjectId(userId)
+      }
+    }, {
+      $sort: { 'createdAt': -1 }
+    }, {
+      $limit: 5
+    },
+    {
+      $unwind: '$user'
+    },
+    {
+      $project: {
+        type: 1,
+        userName: {
+          $concat: ['$user.firstName', ' ', '$user.lastName']
+        },
+        courseId: {
+          id: { $arrayElemAt: ['$courses._id', 0] },
+          title: { $arrayElemAt: ['$courses.title', 0] }
+        },
+        createdAt: 1
       }
     }
-  }
-},{
-  $addFields:{
-    studentIds:{
-      $setUnion:['$studentIds',[]]
+  ])
+  const performance = await Course.aggregate([
+    {
+      $match: {
+        'instructor': new mongoose.Types.ObjectId(userId)
+      }
+    },
+    {
+      $lookup: {
+        from: 'enrollments', foreignField: 'courseId', localField: '_id', as: 'enrollment'
+      }
+    },
+    {
+      $lookup: {
+        from: 'coursereviews', foreignField: 'enrollmentId', localField: 'enrollment._id', as: "reviews"
+      }
+    },
+    {
+      $addFields: {
+        averageRating: { $avg: '$reviews.rating' }
+      }
+    }, {
+      $addFields: {
+        studentIds: {
+          $map: {
+            input: { $ifNull: ["$enrollment", []] }, as: 'student', in: '$$student.userId'
+          }
+        }
+      }
+    }, {
+      $addFields: {
+        studentIds: {
+          $setUnion: ['$studentIds', []]
+        }
+      }
+    }, {
+      $set: {
+        studentCount: { $size: '$studentIds' }
+      }
     }
-  }
-},{
-$set:{
-  studentCount:{$size:'$studentIds'}
-}
-}
-  ,{
-    $project:{
-      title:1,
-studentCount:1,averageRating:1   }
-  },{
-    $sort:{
-      studentCount:-1
+    , {
+      $project: {
+        title: 1,
+        studentCount: 1, averageRating: 1
+      }
+    }, {
+      $sort: {
+        studentCount: -1
+      }
+    }, {
+      $limit: 3
     }
-  },{
-    $limit:3
-  }
-])
-const recentCourses = await Course.find({instructor:userId}).populate('instructor','firstName avatar').sort({createdAt:-1}).limit(3)
-const draftCourses = await Course.countDocuments({instructor:userId,status:'draft'})
- 
-  return res.status(200).json({ activeCourses,studentCount ,averageReview,totalRevenue,activities,recentCourses,performance,draftCourses})
+  ])
+  const recentCourses = await Course.find({ instructor: userId }).populate('instructor', 'firstName avatar').sort({ createdAt: -1 }).limit(3)
+  const draftCourses = await Course.countDocuments({ instructor: userId, status: 'draft' })
+
+  return res.status(200).json({ activeCourses, studentCount, averageReview, totalRevenue, activities, recentCourses, performance, draftCourses })
 })
 
 
-export const getTeacherAnalytics = asyncHandler(async(req,res)=>{
+export const getTeacherAnalytics = asyncHandler(async (req, res) => {
   const userId = req.user.UserID
-  const [ totalRevenue,averageRating]= await Promise.all( [getTotalRevenue(userId),getAverageRating(userId)])
-  return res.status(200).json({totalRevenue,averageRating})
+  const [totalRevenue, averageRating] = await Promise.all([getTotalRevenue(userId), getAverageRating(userId)])
+  const recentReviews = await ReviewModel.aggregate([
+    {
+      $lookup: {
+        from: 'enrollments', localField: 'enrollmentId', foreignField: '_id', as: 'enrollments'
+      }
+    }, {
+      $lookup: {
+        from: 'courses', localField: 'enrollments.courseId', foreignField: '_id', as: 'course'
+      }
+    },
+    {
+      $match: {
+        'course.instructor': new mongoose.Types.ObjectId(userId)
+      }
+    },{
+$lookup:{
+  from:'users',localField:'enrollments.userId',foreignField:'_id',as:'user'
+}
+    } ,{
+$unwind:'$course'
+    },{
+      $unwind:'$user'
+    },
+    {
+      $project:{
+ title:'$course.title',userName:{$concat:['$user.firstName' ,' ','$user.lastName']},rating:1,review:1,createdAt:1
+      }
+    },{
+      $sort:{
+        createdAt:-1
+      }
+    },{
+      limit:3
+    }
+  ])
+  return res.status(200).json({ totalRevenue, averageRating, recentReviews })
 })
