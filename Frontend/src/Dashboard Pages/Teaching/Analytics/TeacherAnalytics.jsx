@@ -31,7 +31,7 @@ const {data:Analytics}=useTeacherAnalytics()
     },
     {
       title: 'Total Enrollments',
-      value: '1,280',
+      value: Analytics?.totalEnrollments|| 0,
       change: '+8.4%',
       positive: true,
       icon: FiUsers,
@@ -39,7 +39,7 @@ const {data:Analytics}=useTeacherAnalytics()
     },
     {
       title: 'Course Completion',
-      value: '68.5%',
+      value: (`${Analytics?.courseCompletion}%`),
       change: '+5.2%',
       positive: true,
       icon: FiBookOpen,

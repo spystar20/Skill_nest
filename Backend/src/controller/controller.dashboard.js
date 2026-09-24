@@ -260,26 +260,69 @@ export const getTeacherAnalytics = asyncHandler(async (req, res) => {
       $match: {
         'course.instructor': new mongoose.Types.ObjectId(userId)
       }
-    },{
-$lookup:{
-  from:'users',localField:'enrollments.userId',foreignField:'_id',as:'user'
-}
-    } ,{
-$unwind:'$course'
-    },{
-      $unwind:'$user'
+    }, {
+      $lookup: {
+        from: 'users', localField: 'enrollments.userId', foreignField: '_id', as: 'user'
+      }
+    }, {
+      $unwind: '$course'
+    }, {
+      $unwind: '$user'
     },
     {
-      $project:{
- title:'$course.title',userName:{$concat:['$user.firstName' ,' ','$user.lastName']},rating:1,review:1,createdAt:1
+      $project: {
+        title: '$course.title', userName: { $concat: ['$user.firstName', ' ', '$user.lastName'] }, rating: 1, review: 1, createdAt: 1
       }
-    },{
-      $sort:{
-        createdAt:-1
+    }, {
+      $sort: {
+        createdAt: -1
       }
-    },{
-      $limit:3
+    }, {
+      $limit: 3
     }
   ])
-  return res.status(200).json({ totalRevenue, averageRating, recentReviews })
+  const enrollments = await Enrollment.aggregate([
+    {
+      $lookup: {
+        from: 'courses', foreignField: '_id', localField: 'courseId', as: 'course'
+      }
+    }, {
+      $unwind: '$course'
+    }, {
+      $match: {
+        'course.instructor': new mongoose.Types.ObjectId(userId)
+      }
+    }, {
+      $count: 'totalEnrollments'
+    }
+  ])
+  const totalEnrollments = enrollments[0]?.totalEnrollments || 0
+  const progressData = await Enrollment.aggregate([
+    {
+      $lookup: {
+        from: "courses", foreignField: '_id', localField: 'courseId', as: 'course'
+      }
+    }, {
+      $unwind: '$course'
+    }, {
+      $match: {
+        'course.instructor': new mongoose.Types.ObjectId(userId)
+      }
+    }, {
+    $set:{
+      totalcompletedLessons:{$size:'$completedLessons'},
+      totalLessons:'$course.lessonCount'
+    }
+    },
+    
+    {
+      $group:{
+        _id:null,totalCompletedLessons:{$sum:'$totalcompletedLessons'},totalLessons:{$sum:'$totalLessons'}
+      }
+    }
+  ])
+  const totalCompletedLessons = progressData[0]?.totalCompletedLessons ||0
+  const totalLessons = progressData[0]?.totalLessons || 0 
+  const courseCompletion  = Math.round((totalCompletedLessons/totalLessons)*100)
+  return res.status(200).json({ totalRevenue, averageRating, recentReviews, totalEnrollments, courseCompletion })
 })
