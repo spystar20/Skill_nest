@@ -15,11 +15,14 @@ import DashboardPageHeader from '@/Dashboard Pages/DashboardComponents/Dashboard
 import { useTeacherAnalytics } from '@/hooks/DahboardHooks/useDashboard'
 import StatCard from '../TeacherDashboard/StatCard'
 import RecentReviews from './RecentReviews'
+import RevenueChart from './RevenueChart'
 
 const TeacherAnalytics = () => {
-  const [period, setPeriod] = useState('30')
-const {data:Analytics}=useTeacherAnalytics()
-
+  const [period, setPeriod] = useState('7')
+const {data:Analytics}=useTeacherAnalytics({period})
+const revenueData = Analytics?.chartData?.map(data=>({
+  label:data._id,revenue:data.totalRevenue
+})) || []
   const stats = [
     {
       title: 'Total Revenue',
@@ -54,15 +57,6 @@ const {data:Analytics}=useTeacherAnalytics()
       color: 'text-warning bg-warning/10'
     }
   ]
-
-  const revenueData = [
-    { month: 'Apr', revenue: '$2,140' },
-    { month: 'May', revenue: '$2,680' },
-    { month: 'Jun', revenue: '$1,920' },
-    { month: 'Jul', revenue: '$2,850' },
-    { month: 'Aug', revenue: '$2,860' }
-  ]
-
   const courses = [
     {
       id: 1,
@@ -153,55 +147,7 @@ const {data:Analytics}=useTeacherAnalytics()
       {/* MAIN ANALYTICS GRID */}
       <div className="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-3">
         {/* REVENUE CHART */}
-        <div className="rounded-2xl border border-border bg-card p-4 shadow-sm sm:p-6 xl:col-span-2">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <h3 className="font-heading text-lg font-semibold text-text">
-                Revenue Overview
-              </h3>
-              <p className="mt-1 font-body text-xs text-text-light">
-                Revenue generated from your courses.
-              </p>
-            </div>
-
-            <div className="flex items-center gap-2 font-body text-xs text-success">
-              <FiTrendingUp />
-              14.2% this period
-            </div>
-          </div>
-
-          <div className="mt-8 flex h-64 items-end gap-3 sm:gap-5">
-            {revenueData.map((item) => (
-              <div
-                key={item.month}
-                className="flex h-full flex-1 flex-col items-center justify-end gap-2"
-              >
-                <span className="font-body text-[10px] font-medium text-text-light">
-                  {item.revenue}
-                </span>
-
-                <div
-                  className={`w-full max-w-16 rounded-t-xl bg-primary transition-all duration-300 hover:bg-primary-light ${
-                    item.month === 'Aug'
-                      ? 'h-[88%]'
-                      : item.month === 'Jul'
-                        ? 'h-[84%]'
-                        : item.month === 'Jun'
-                          ? 'h-[58%]'
-                          : item.month === 'May'
-                            ? 'h-[76%]'
-                            : 'h-[62%]'
-                  }`}
-                />
-
-                <span className="font-body text-[10px] font-medium text-text-light">
-                  {item.month}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-
+<RevenueChart data={revenueData}/>
         {/* ENROLLMENT SUMMARY */}
         <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
           <div className="flex items-start justify-between">

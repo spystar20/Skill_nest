@@ -17,7 +17,7 @@ export const useTeacherDashboard = ()=>useQuery({
     queryKey:['teacher-dashboard'],
     queryFn:()=>fetchTeacherDashboardData()
 })
-export const useTeacherAnalytics = ()=>useQuery({
-    queryKey:['teacher-analytics'],
-    queryFn:()=>fetchTeacherAnalytics()
+export const useTeacherAnalytics = (params)=>useQuery({
+    queryKey:['teacher-analytics',params],
+    queryFn:()=>fetchTeacherAnalytics(params)
 })

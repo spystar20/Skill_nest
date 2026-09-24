@@ -245,6 +245,7 @@ export const teacherDashboardData = asyncHandler(async (req, res) => {
 
 export const getTeacherAnalytics = asyncHandler(async (req, res) => {
   const userId = req.user.UserID
+  const {period}= req.query
   const [totalRevenue, averageRating] = await Promise.all([getTotalRevenue(userId), getAverageRating(userId)])
   const recentReviews = await ReviewModel.aggregate([
     {
@@ -323,6 +324,42 @@ export const getTeacherAnalytics = asyncHandler(async (req, res) => {
   ])
   const totalCompletedLessons = progressData[0]?.totalCompletedLessons ||0
   const totalLessons = progressData[0]?.totalLessons || 0 
-  const courseCompletion  = Math.round((totalCompletedLessons/totalLessons)*100)
-  return res.status(200).json({ totalRevenue, averageRating, recentReviews, totalEnrollments, courseCompletion })
+  const courseCompletion  = totalLessons>0 ? Math.round((totalCompletedLessons/totalLessons)*100):0
+  const startDate= new Date()
+  const endDate = new Date()
+  startDate.setDate(startDate.getDate()-period)
+  let dateFormat
+  if(period <=30){
+dateFormat = '%Y-%m-%d'
+  }else if(period <=90){
+    dateFormat='%Y-%U'
+  }else{
+    dateFormat='%Y-%m'
+  }
+  const chartData = await PaymentModel.aggregate([
+    {
+      $lookup:{
+        from:'courses',foreignField:'_id',localField:'courseId',as:"course"
+      }
+    },{
+      $match:{
+        'course.instructor':new mongoose.Types.ObjectId(userId)
+      }
+    },{
+      $match:{
+        createdAt:{
+          $gte:startDate,$lte:endDate
+        }
+      }
+    },{
+      $group:{
+        _id:{
+          $dateToString:{
+            format:dateFormat,date:'$createdAt'
+          }
+        },totalRevenue:{$sum:'$amount'}
+      }
+    }
+  ])
+  return res.status(200).json({ totalRevenue, averageRating, recentReviews, totalEnrollments, courseCompletion ,chartData})
 })
