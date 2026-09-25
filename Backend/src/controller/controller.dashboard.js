@@ -361,5 +361,27 @@ dateFormat = '%Y-%m-%d'
       }
     }
   ])
+  // enrollment overview
+  const overviewEnrollment = await Enrollment.aggregate([
+    {
+      $lookup:{
+        from:'courses',localField:'courseId',foreignField:'_id',as:'course'
+      }
+    },{
+      $unwind:'$course'
+    },{
+      $match:{
+        'course.instructor':new mongoose.Types.ObjectId(user)
+      }
+    },{
+      $match:{
+        createdAt:{
+          $gte:startDate,$lte:endDate
+        }
+      }
+    },{
+
+    }
+  ])
   return res.status(200).json({ totalRevenue, averageRating, recentReviews, totalEnrollments, courseCompletion ,chartData})
 })
