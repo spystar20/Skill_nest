@@ -328,14 +328,6 @@ export const getTeacherAnalytics = asyncHandler(async (req, res) => {
   const startDate= new Date()
   const endDate = new Date()
   startDate.setDate(startDate.getDate()-period)
-  let dateFormat
-  if(period <=30){
-dateFormat = '%Y-%m-%d'
-  }else if(period <=90){
-    dateFormat='%Y-%U'
-  }else{
-    dateFormat='%Y-%m'
-  }
   const chartData = await PaymentModel.aggregate([
     {
       $lookup:{
@@ -354,8 +346,8 @@ dateFormat = '%Y-%m-%d'
     },{
       $group:{
         _id:{
-          $dateToString:{
-            format:dateFormat,date:'$createdAt'
+          $dateTrunc:{
+            date:'$createdAt',unit:period<=30?'day':period<=90?'week':'month'
           }
         },totalRevenue:{$sum:'$amount'}
       }
@@ -371,7 +363,7 @@ dateFormat = '%Y-%m-%d'
       $unwind:'$course'
     },{
       $match:{
-        'course.instructor':new mongoose.Types.ObjectId(user)
+        'course.instructor':new mongoose.Types.ObjectId(userId)
       }
     },{
       $match:{
@@ -380,8 +372,18 @@ dateFormat = '%Y-%m-%d'
         }
       }
     },{
-
+$group:{
+  _id:{
+    $dateTrunc:{
+      date:'$createdAt',unit:period<=30?'day':period<=90?'week':'month'
+    }
+  },enrollment:{$sum:1}
+}
+    },{
+      $sort:{
+        _id:1
+      }
     }
   ])
-  return res.status(200).json({ totalRevenue, averageRating, recentReviews, totalEnrollments, courseCompletion ,chartData})
+  return res.status(200).json({ totalRevenue, averageRating, recentReviews, totalEnrollments, courseCompletion ,chartData,overviewEnrollment})
 })
