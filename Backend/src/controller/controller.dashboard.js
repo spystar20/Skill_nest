@@ -385,5 +385,58 @@ $group:{
       }
     }
   ])
-  return res.status(200).json({ totalRevenue, averageRating, recentReviews, totalEnrollments, courseCompletion ,chartData,overviewEnrollment})
+
+  // returning students 
+  const studentGrowth = await Enrollment.aggregate([
+    {
+      $lookup:{
+        from:'courses',foreignField:'_id',localField:'courseId',as:'course'
+      }
+    }, 
+    {
+      $unwind:'$course'
+    },
+    {
+      
+      $match:{'course.instructor':new mongoose.Types.ObjectId(userId),
+        'createdAt':{
+          $gte:startDate,$lte:endDate
+        }
+      }
+    }, 
+   {
+    $lookup:{
+      from:'enrollments',foreignField:'userId',localField:'userId',as:'previousEnrollment'
+    }
+   },{
+    $lookup:{
+      from:'courses',foriengField:'_id',localField:'previousEnrollment.courseId',as:'previousCourses'
+    }
+   },{
+    $set:{
+      previousTeacherCourses:{
+        $filter:{
+          input:"previousCourses",as:'course',cond:{
+            eq:[
+              '$$course.instructor',new mongoose.Types.ObjectId(userId)
+            ]
+          }
+        }
+      }
+    }
+   }
+  //  {
+  //   $set:{
+  //     previousEnrollment:{$filter:{
+  //       input:'$previousEnrollment',as:'enrollment',cond:{$lt:['$$enrollment.createdAt',startDate]}
+  //     }}
+  //   }
+  //  }
+//  {
+// $group:{
+//   _id:'$userId'
+// }
+//     }
+  ])
+  return res.status(200).json({ totalRevenue, averageRating, recentReviews, totalEnrollments, courseCompletion ,chartData,overviewEnrollment,studentGrowth})
 })

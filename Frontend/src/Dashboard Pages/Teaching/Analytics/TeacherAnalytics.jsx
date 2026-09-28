@@ -91,7 +91,7 @@ const revenueData = Analytics?.chartData?.map(data=>({
       revenue: '$1,600'
     }
   ]
-
+const enrollmentTotal = Analytics?.overviewEnrollment?.reduce((acc,curr)=>acc+curr?.enrollment,0) ||0
   return (
     <div className="min-h-screen w-full bg-page px-3 py-5 sm:px-5 md:px-8">
       <DashboardPageHeader
@@ -167,8 +167,7 @@ const revenueData = Analytics?.chartData?.map(data=>({
 
           <div className="mt-6">
             <p className="font-heading text-3xl font-bold text-text">
-              1,280
-            </p>
+{enrollmentTotal}            </p>
 
             <p className="mt-1 flex items-center gap-1 font-body text-xs font-medium text-success">
               <FiTrendingUp />
