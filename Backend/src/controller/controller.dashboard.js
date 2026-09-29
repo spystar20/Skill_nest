@@ -245,7 +245,7 @@ export const teacherDashboardData = asyncHandler(async (req, res) => {
 
 export const getTeacherAnalytics = asyncHandler(async (req, res) => {
   const userId = req.user.UserID
-  const {period}= req.query
+  const { period } = req.query
   const [totalRevenue, averageRating] = await Promise.all([getTotalRevenue(userId), getAverageRating(userId)])
   const recentReviews = await ReviewModel.aggregate([
     {
@@ -310,78 +310,78 @@ export const getTeacherAnalytics = asyncHandler(async (req, res) => {
         'course.instructor': new mongoose.Types.ObjectId(userId)
       }
     }, {
-    $set:{
-      totalcompletedLessons:{$size:'$completedLessons'},
-      totalLessons:'$course.lessonCount'
-    }
+      $set: {
+        totalcompletedLessons: { $size: '$completedLessons' },
+        totalLessons: '$course.lessonCount'
+      }
     },
-    
+
     {
-      $group:{
-        _id:null,totalCompletedLessons:{$sum:'$totalcompletedLessons'},totalLessons:{$sum:'$totalLessons'}
+      $group: {
+        _id: null, totalCompletedLessons: { $sum: '$totalcompletedLessons' }, totalLessons: { $sum: '$totalLessons' }
       }
     }
   ])
-  const totalCompletedLessons = progressData[0]?.totalCompletedLessons ||0
-  const totalLessons = progressData[0]?.totalLessons || 0 
-  const courseCompletion  = totalLessons>0 ? Math.round((totalCompletedLessons/totalLessons)*100):0
-  const startDate= new Date()
+  const totalCompletedLessons = progressData[0]?.totalCompletedLessons || 0
+  const totalLessons = progressData[0]?.totalLessons || 0
+  const courseCompletion = totalLessons > 0 ? Math.round((totalCompletedLessons / totalLessons) * 100) : 0
+  const startDate = new Date()
   const endDate = new Date()
-  startDate.setDate(startDate.getDate()-period)
+  startDate.setDate(startDate.getDate() - period)
   const chartData = await PaymentModel.aggregate([
     {
-      $lookup:{
-        from:'courses',foreignField:'_id',localField:'courseId',as:"course"
+      $lookup: {
+        from: 'courses', foreignField: '_id', localField: 'courseId', as: "course"
       }
-    },{
-      $match:{
-        'course.instructor':new mongoose.Types.ObjectId(userId)
+    }, {
+      $match: {
+        'course.instructor': new mongoose.Types.ObjectId(userId)
       }
-    },{
-      $match:{
-        createdAt:{
-          $gte:startDate,$lte:endDate
+    }, {
+      $match: {
+        createdAt: {
+          $gte: startDate, $lte: endDate
         }
       }
-    },{
-      $group:{
-        _id:{
-          $dateTrunc:{
-            date:'$createdAt',unit:period<=30?'day':period<=90?'week':'month'
+    }, {
+      $group: {
+        _id: {
+          $dateTrunc: {
+            date: '$createdAt', unit: period <= 30 ? 'day' : period <= 90 ? 'week' : 'month'
           }
-        },totalRevenue:{$sum:'$amount'}
+        }, totalRevenue: { $sum: '$amount' }
       }
     }
   ])
   // enrollment overview
   const overviewEnrollment = await Enrollment.aggregate([
     {
-      $lookup:{
-        from:'courses',localField:'courseId',foreignField:'_id',as:'course'
+      $lookup: {
+        from: 'courses', localField: 'courseId', foreignField: '_id', as: 'course'
       }
-    },{
-      $unwind:'$course'
-    },{
-      $match:{
-        'course.instructor':new mongoose.Types.ObjectId(userId)
+    }, {
+      $unwind: '$course'
+    }, {
+      $match: {
+        'course.instructor': new mongoose.Types.ObjectId(userId)
       }
-    },{
-      $match:{
-        createdAt:{
-          $gte:startDate,$lte:endDate
+    }, {
+      $match: {
+        createdAt: {
+          $gte: startDate, $lte: endDate
         }
       }
-    },{
-$group:{
-  _id:{
-    $dateTrunc:{
-      date:'$createdAt',unit:period<=30?'day':period<=90?'week':'month'
-    }
-  },enrollment:{$sum:1}
-}
-    },{
-      $sort:{
-        _id:1
+    }, {
+      $group: {
+        _id: {
+          $dateTrunc: {
+            date: '$createdAt', unit: period <= 30 ? 'day' : period <= 90 ? 'week' : 'month'
+          }
+        }, enrollment: { $sum: 1 }
+      }
+    }, {
+      $sort: {
+        _id: 1
       }
     }
   ])
@@ -389,72 +389,81 @@ $group:{
   // returning students 
   const studentGrowth = await Enrollment.aggregate([
     {
-      $lookup:{
-        from:'courses',foreignField:'_id',localField:'courseId',as:'course'
+      $lookup: {
+        from: 'courses', foreignField: '_id', localField: 'courseId', as: 'course'
       }
-    }, 
-    {
-      $unwind:'$course'
     },
     {
-      
-      $match:{'course.instructor':new mongoose.Types.ObjectId(userId),
-        'createdAt':{
-          $gte:startDate,$lte:endDate
+      $unwind: '$course'
+    },
+    {
+
+      $match: {
+        'course.instructor': new mongoose.Types.ObjectId(userId),
+        'createdAt': {
+          $gte: startDate, $lte: endDate
         }
       }
-    }, 
-   {
-    $lookup:{
-      from:'enrollments',foreignField:'userId',localField:'userId',as:'previousEnrollment'
-    }
-   },{
-    $lookup:{
-      from:'courses',foreignField:'_id',localField:'previousEnrollment.courseId',as:'previousCourses'
-    }
-   },
-   {
-    $set:{
-      previousTeacherCourses:{
-        $filter:{
-          input:"$previousCourses",as:'course',cond:{
-            $eq:[
-              '$$course.instructor',new mongoose.Types.ObjectId(userId)
-            ]
+    },
+    {
+      $lookup: {
+        from: 'enrollments', let: {
+          studentId: '$userId', currentEnrollmentId: '$_id'
+        }, pipeline: [{
+ $match:{
+  $expr:{
+$and:[
+  {
+    $eq:['$userId','$$studentId'],
+  },{
+        $ne:['$_id','$$currentEnrollmentId']
+
+  }
+]
+  }
+ }
+      }],
+       as: 'previousEnrollment'
+      }
+    }, {
+      $lookup: {
+        from: 'courses', foreignField: '_id', localField: 'previousEnrollment.courseId', as: 'previousCourses'
+      }
+    },
+    {
+      $set: {
+        previousTeacherCourses: {
+          $filter: {
+            input: "$previousCourses", as: 'course', cond: {
+              $eq: [
+                '$$course.instructor', new mongoose.Types.ObjectId(userId)
+              ]
+            }
           }
         }
       }
-    }
-   },
-   {
-    $set:{
-      studentType:{
-        $cond:{
-          if:{$gt:[{$size:'$previousTeacherCourses'},0]},
-          then:'returning',else:'new'
+    },
+    {
+      $set: {
+        studentType: {
+          $cond: {
+            if: { $gt: [{ $size: '$previousTeacherCourses' }, 0] },
+            then: 'returning', else: 'new'
+          }
         }
       }
+    }, {
+      $group: {
+        _id: "$userId", studentType: { $first: '$studentType' }
+      }
+    }, {
+      $group: {
+        _id: '$studentType', count: { $sum: 1 }
+      }
     }
-   },{
-    $group:{
-      _id:"$userId",studentType:{$first:'$studentType'}
-    }
-   },{
-    $group:{
-      _id:'$studentType',count:{$sum:1}    }
-   }
-  //  {
-  //   $set:{
-  //     previousEnrollment:{$filter:{
-  //       input:'$previousEnrollment',as:'enrollment',cond:{$lt:['$$enrollment.createdAt',startDate]}
-  //     }}
-  //   }
-  //  }
-//  {
-// $group:{
-//   _id:'$userId'
-// }
-//     }
+
   ])
-  return res.status(200).json({ totalRevenue, averageRating, recentReviews, totalEnrollments, courseCompletion ,chartData,overviewEnrollment,studentGrowth})
+  const newStudent= studentGrowth?.find(item=>item._id==='new')?.count || 0 
+  const returningStudent = studentGrowth?.find(item._id==='returning')?.count || 0 
+  return res.status(200).json({ totalRevenue, averageRating, recentReviews, totalEnrollments, courseCompletion, chartData, overviewEnrollment, newStudent,returningStudent })
 })
