@@ -435,6 +435,13 @@ $group:{
         }
       }
     }
+   },{
+    $group:{
+      _id:"$userId",studentType:{$first:'$studentType'}
+    }
+   },{
+    $group:{
+      _id:'$studentType',count:{$sum:1}    }
    }
   //  {
   //   $set:{
