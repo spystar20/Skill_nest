@@ -410,17 +410,28 @@ $group:{
     }
    },{
     $lookup:{
-      from:'courses',foriengField:'_id',localField:'previousEnrollment.courseId',as:'previousCourses'
+      from:'courses',foreignField:'_id',localField:'previousEnrollment.courseId',as:'previousCourses'
     }
-   },{
+   },
+   {
     $set:{
       previousTeacherCourses:{
         $filter:{
-          input:"previousCourses",as:'course',cond:{
-            eq:[
+          input:"$previousCourses",as:'course',cond:{
+            $eq:[
               '$$course.instructor',new mongoose.Types.ObjectId(userId)
             ]
           }
+        }
+      }
+    }
+   },
+   {
+    $set:{
+      studentType:{
+        $cond:{
+          if:{$gt:[{$size:'$previousTeacherCourses'},0]},
+          then:'returning',else:'new'
         }
       }
     }
