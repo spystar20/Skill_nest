@@ -464,6 +464,6 @@ $and:[
 
   ])
   const newStudent= studentGrowth?.find(item=>item._id==='new')?.count || 0 
-  const returningStudent = studentGrowth?.find(item._id==='returning')?.count || 0 
+  const returningStudent = studentGrowth?.find(item=>item._id==='returning')?.count || 0 
   return res.status(200).json({ totalRevenue, averageRating, recentReviews, totalEnrollments, courseCompletion, chartData, overviewEnrollment, newStudent,returningStudent })
 })
