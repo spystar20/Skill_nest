@@ -186,8 +186,22 @@ export const teacherDashboardData = asyncHandler(async (req, res) => {
   
   const recentCourses = await Course.find({ instructor: userId }).populate('instructor', 'firstName avatar').sort({ createdAt: -1 }).limit(3)
   const draftCourses = await Course.countDocuments({ instructor: userId, status: 'draft' })
-
-  return res.status(200).json({ activeCourses, studentCount, averageReview, totalRevenue, activities, recentCourses, coursePerformance, draftCourses })
+const studentEngagement= await Enrollment.aggregate([
+  {
+$lookup:{
+  from:'courses',foreignField:'_id',localField:'courseId',as:'course'
+}
+  },{
+    $match:{
+      'course.instructor':new mongoose.Types.ObjectId(userId)
+    }
+  },{
+    $group:{
+      _id:null,totalLesson:{$sum:{$size:'$completedLessons'}}
+    }
+  }
+])
+  return res.status(200).json({ activeCourses, studentCount, averageReview, totalRevenue, activities, recentCourses, coursePerformance, draftCourses,studentEngagement })
 })
 
 
