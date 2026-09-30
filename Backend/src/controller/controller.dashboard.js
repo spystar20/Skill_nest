@@ -10,7 +10,7 @@ import mongoose from 'mongoose'
 import ReviewModel from '../models/Ecommerce/ReviewModel.js'
 import PaymentModel from '../models/Ecommerce/PaymentModel.js'
 import activityModel from '../models/activityModel.js'
-import { getAverageRating, getTotalRevenue } from '../services/dashboard.service.js'
+import { getAverageRating, getCoursePerformance, getTotalRevenue } from '../services/dashboard.service.js'
 export const studentDashboardData = asyncHandler(async (req, res) => {
   const user = req.user.UserID
   const { range = "week" } = req.query
@@ -118,7 +118,7 @@ export const fetchRecentActivity = asyncHandler(async (req, res) => {
   const activities = await getRecentActivities(userId)
   return res.status(200).json({ activities })
 })
-
+// teacher dashboard data
 export const teacherDashboardData = asyncHandler(async (req, res) => {
   const userId = req.user.UserID
 
@@ -145,8 +145,7 @@ export const teacherDashboardData = asyncHandler(async (req, res) => {
   ])
 
   const studentCount = totalStudents[0]?.count || 0
-  const averageReview = await getAverageRating(userId)
-  const totalRevenue = await getTotalRevenue(userId)
+  const [averageReview,totalRevenue,coursePerformance]= await Promise.all([getAverageRating(userId),getTotalRevenue(userId),getCoursePerformance(userId)])
   const activities = await activityModel.aggregate([
     {
       $lookup: {
@@ -184,69 +183,18 @@ export const teacherDashboardData = asyncHandler(async (req, res) => {
       }
     }
   ])
-  const performance = await Course.aggregate([
-    {
-      $match: {
-        'instructor': new mongoose.Types.ObjectId(userId)
-      }
-    },
-    {
-      $lookup: {
-        from: 'enrollments', foreignField: 'courseId', localField: '_id', as: 'enrollment'
-      }
-    },
-    {
-      $lookup: {
-        from: 'coursereviews', foreignField: 'enrollmentId', localField: 'enrollment._id', as: "reviews"
-      }
-    },
-    {
-      $addFields: {
-        averageRating: { $avg: '$reviews.rating' }
-      }
-    }, {
-      $addFields: {
-        studentIds: {
-          $map: {
-            input: { $ifNull: ["$enrollment", []] }, as: 'student', in: '$$student.userId'
-          }
-        }
-      }
-    }, {
-      $addFields: {
-        studentIds: {
-          $setUnion: ['$studentIds', []]
-        }
-      }
-    }, {
-      $set: {
-        studentCount: { $size: '$studentIds' }
-      }
-    }
-    , {
-      $project: {
-        title: 1,
-        studentCount: 1, averageRating: 1
-      }
-    }, {
-      $sort: {
-        studentCount: -1
-      }
-    }, {
-      $limit: 3
-    }
-  ])
+  
   const recentCourses = await Course.find({ instructor: userId }).populate('instructor', 'firstName avatar').sort({ createdAt: -1 }).limit(3)
   const draftCourses = await Course.countDocuments({ instructor: userId, status: 'draft' })
 
-  return res.status(200).json({ activeCourses, studentCount, averageReview, totalRevenue, activities, recentCourses, performance, draftCourses })
+  return res.status(200).json({ activeCourses, studentCount, averageReview, totalRevenue, activities, recentCourses, coursePerformance, draftCourses })
 })
 
 
 export const getTeacherAnalytics = asyncHandler(async (req, res) => {
   const userId = req.user.UserID
   const { period } = req.query
-  const [totalRevenue, averageRating] = await Promise.all([getTotalRevenue(userId), getAverageRating(userId)])
+  const [totalRevenue, averageRating,coursePerformance] = await Promise.all([getTotalRevenue(userId), getAverageRating(userId),getCoursePerformance(userId)])
   const recentReviews = await ReviewModel.aggregate([
     {
       $lookup: {
@@ -465,5 +413,5 @@ $and:[
   ])
   const newStudent= studentGrowth?.find(item=>item._id==='new')?.count || 0 
   const returningStudent = studentGrowth?.find(item=>item._id==='returning')?.count || 0 
-  return res.status(200).json({ totalRevenue, averageRating, recentReviews, totalEnrollments, courseCompletion, chartData, overviewEnrollment, newStudent,returningStudent })
+  return res.status(200).json({ totalRevenue, averageRating, recentReviews, totalEnrollments, courseCompletion, chartData, overviewEnrollment, newStudent,returningStudent ,coursePerformance})
 })

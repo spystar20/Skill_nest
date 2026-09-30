@@ -5,18 +5,15 @@ import {
   FiUsers,
   FiBookOpen,
   FiStar,
-  FiTrendingUp,
-  FiTrendingDown,
   FiCalendar,
-  FiArrowUpRight
 } from 'react-icons/fi'
-import { PiStudentFill, PiBooks } from 'react-icons/pi'
 import DashboardPageHeader from '@/Dashboard Pages/DashboardComponents/DashboardPageHeader'
 import { useTeacherAnalytics } from '@/hooks/DahboardHooks/useDashboard'
 import StatCard from '../TeacherDashboard/StatCard'
 import RecentReviews from './RecentReviews'
 import RevenueChart from './RevenueChart'
 import EnrollmentSummary from './EnrollmentSummary'
+import CoursePerformanceCard from './CoursePerformanceCard'
 
 const TeacherAnalytics = () => {
   const [period, setPeriod] = useState('7')
@@ -56,40 +53,6 @@ const revenueData = Analytics?.chartData?.map(data=>({
       positive: true,
       icon: FiStar,
       color: 'text-warning bg-warning/10'
-    }
-  ]
-  const courses = [
-    {
-      id: 1,
-      title: 'React Fundamentals',
-      students: 1240,
-      completion: '74%',
-      rating: '4.8',
-      revenue: '$5,420'
-    },
-    {
-      id: 2,
-      title: 'Node.js Essentials',
-      students: 842,
-      completion: '69%',
-      rating: '4.7',
-      revenue: '$3,280'
-    },
-    {
-      id: 3,
-      title: 'MongoDB Masterclass',
-      students: 615,
-      completion: '63%',
-      rating: '4.9',
-      revenue: '$2,150'
-    },
-    {
-      id: 4,
-      title: 'Master Tailwind CSS',
-      students: 384,
-      completion: '58%',
-      rating: '4.6',
-      revenue: '$1,600'
     }
   ]
 const enrollmentTotal = Analytics?.overviewEnrollment?.reduce((acc,curr)=>acc+curr?.enrollment,0) ||0
@@ -154,75 +117,7 @@ const enrollmentTotal = Analytics?.overviewEnrollment?.reduce((acc,curr)=>acc+cu
       </div>
 
       {/* COURSE PERFORMANCE */}
-      <div className="mt-6 rounded-2xl border border-border bg-card p-4 shadow-sm sm:p-6">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h3 className="font-heading text-lg font-semibold text-text">
-              Course Performance
-            </h3>
-            <p className="mt-1 font-body text-xs text-text-light">
-              Compare your courses by students, completion, ratings, and revenue.
-            </p>
-          </div>
-
-          <button
-            type="button"
-            className="flex items-center gap-1 self-start font-body text-xs font-semibold text-primary transition hover:text-primary-light"
-          >
-            View Details
-            <FiArrowUpRight />
-          </button>
-        </div>
-
-        <div className="mt-5 overflow-x-auto">
-          <div className="min-w-[720px]">
-            <div className="grid grid-cols-[2fr_1fr_1fr_1fr_1fr] gap-4 border-b border-border px-3 pb-3 font-body text-[11px] font-semibold uppercase tracking-wide text-text-light">
-              <span>Course</span>
-              <span>Students</span>
-              <span>Completion</span>
-              <span>Rating</span>
-              <span>Revenue</span>
-            </div>
-
-            <div className="divide-y divide-border">
-              {courses.map((course) => (
-                <div
-                  key={course.id}
-                  className="grid grid-cols-[2fr_1fr_1fr_1fr_1fr] items-center gap-4 px-3 py-4"
-                >
-                  <div className="flex min-w-0 items-center gap-3">
-                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                      <PiBooks />
-                    </div>
-
-                    <span className="truncate font-body text-sm font-medium text-text">
-                      {course.title}
-                    </span>
-                  </div>
-
-                  <span className="flex items-center gap-1 font-body text-xs text-text-light">
-                    <PiStudentFill />
-                    {course.students}
-                  </span>
-
-                  <span className="font-body text-xs font-medium text-text">
-                    {course.completion}
-                  </span>
-
-                  <span className="flex items-center gap-1 font-body text-xs font-medium text-warning">
-                    <FiStar />
-                    {course.rating}
-                  </span>
-
-                  <span className="font-body text-xs font-semibold text-text">
-                    {course.revenue}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
+      <CoursePerformanceCard courses={Analytics?.coursePerformance}/>
 
       {/* BOTTOM GRID */}
       <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">

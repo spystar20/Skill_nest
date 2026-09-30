@@ -204,7 +204,7 @@ const TeacherDashboard = () => {
             </div>
 
             <div className="mt-4 space-y-3">
-              {teacherData?.performance?.map((course,index) => (
+              {teacherData?.coursePerformance?.slice(0,3).map((course,index) => (
               <CoursePerformance key={course._id} index={index} course={course}/>
               ))}
             </div>
