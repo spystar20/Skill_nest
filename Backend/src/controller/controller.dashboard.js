@@ -186,22 +186,8 @@ export const teacherDashboardData = asyncHandler(async (req, res) => {
   
   const recentCourses = await Course.find({ instructor: userId }).populate('instructor', 'firstName avatar').sort({ createdAt: -1 }).limit(3)
   const draftCourses = await Course.countDocuments({ instructor: userId, status: 'draft' })
-const studentEngagement= await Enrollment.aggregate([
-  {
-$lookup:{
-  from:'courses',foreignField:'_id',localField:'courseId',as:'course'
-}
-  },{
-    $match:{
-      'course.instructor':new mongoose.Types.ObjectId(userId)
-    }
-  },{
-    $group:{
-      _id:null,totalLesson:{$sum:{$size:'$completedLessons'}}
-    }
-  }
-])
-  return res.status(200).json({ activeCourses, studentCount, averageReview, totalRevenue, activities, recentCourses, coursePerformance, draftCourses,studentEngagement })
+
+  return res.status(200).json({ activeCourses, studentCount, averageReview, totalRevenue, activities, recentCourses, coursePerformance, draftCourses, })
 })
 
 
@@ -427,5 +413,20 @@ $and:[
   ])
   const newStudent= studentGrowth?.find(item=>item._id==='new')?.count || 0 
   const returningStudent = studentGrowth?.find(item=>item._id==='returning')?.count || 0 
-  return res.status(200).json({ totalRevenue, averageRating, recentReviews, totalEnrollments, courseCompletion, chartData, overviewEnrollment, newStudent,returningStudent ,coursePerformance})
+  const studentEngagement= await Enrollment.aggregate([
+  {
+$lookup:{
+  from:'courses',foreignField:'_id',localField:'courseId',as:'course'
+}
+  },{
+    $match:{
+      'course.instructor':new mongoose.Types.ObjectId(userId)
+    }
+  },{
+    $group:{
+      _id:null,totalLesson:{$sum:{$size:'$completedLessons'}}
+    }
+  }
+])
+  return res.status(200).json({ totalRevenue, averageRating, recentReviews, totalEnrollments, courseCompletion, chartData, overviewEnrollment, newStudent,returningStudent ,coursePerformance,studentEngagement})
 })

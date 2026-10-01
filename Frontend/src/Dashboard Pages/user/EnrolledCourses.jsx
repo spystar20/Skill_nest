@@ -50,7 +50,7 @@ const filter = [
         {/* Continue Course */}
         <div className='w-full'>
           <div className='overflow-x-auto no-scrollbar w-full'>
-            {startedCourse.length === 0 ? (
+            {startedCourse?.length === 0 ? (
               <div className='w-full min-h-[220px] rounded-3xl border border-dashed border-gray-300 bg-white flex flex-col items-center justify-center text-center px-6 py-10 shadow-sm'>
 
                 <div className='w-[280px] max-w-full h-34 rounded-2xl bg-indigo-50 flex items-center justify-center mb-5 overflow-hidden'>
@@ -79,7 +79,7 @@ const filter = [
               </div>
             ) : (
               <div className='rounded-2xl flex gap-4 md:gap-6 box-border'>
-                {startedCourse.map(course => (
+                {startedCourse?.map(course => (
                   <EnrolledCourseCard
                     showReviewUi={true}
                     key={course._id}
