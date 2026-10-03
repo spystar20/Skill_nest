@@ -423,8 +423,22 @@ $lookup:{
       'course.instructor':new mongoose.Types.ObjectId(userId)
     }
   },{
+$unwind:'$course'
+  },
+  {
+$addFields:{
+ totalCompletedLesson:{ $size:{$ifNull:['$completedLessons',[]]}},totalLessons:'$course.lessonCount'}
+  }
+  ,{
+    $addFields:{
+      average:{
+        $multiply:[{$divide:['$totalCompletedLesson','$totalLessons']},100]
+      }
+    }
+  },
+  {
     $group:{
-      _id:null,totalLesson:{$sum:{$size:'$completedLessons'}}
+      _id:null,totalLesson:{$sum:'$totalCompletedLesson'},averageCompletion:{$avg:'$average'}
     }
   }
 ])
