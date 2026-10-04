@@ -427,6 +427,13 @@ $unwind:'$course'
   },
   {
 $addFields:{
+  progressLearner:{
+
+  }
+}
+  },
+  {
+$addFields:{
  totalCompletedLesson:{ $size:{$ifNull:['$completedLessons',[]]}},totalLessons:'$course.lessonCount'}
   }
   ,{
@@ -442,5 +449,68 @@ $addFields:{
     }
   }
 ])
-  return res.status(200).json({ totalRevenue, averageRating, recentReviews, totalEnrollments, courseCompletion, chartData, overviewEnrollment, newStudent,returningStudent ,coursePerformance,studentEngagement})
+const inProgressLearners = await Enrollment.aggregate([
+{
+  $lookup:{
+    from:'courses',foreignField:'_id',localField:"courseId",as:'course'
+  }
+},{
+  $match:{
+    'course.instructor':new mongoose.Types.ObjectId(userId)
+  }
+},{
+  $unwind:"$course"
+},{
+  $addFields:{
+completedLessonCount:{
+  $size:'$completedLessons'
+},
+lessonCount:'$course.lessonCount'
+  }
+},
+{
+  $match:{$expr:{
+    $and:[{
+      $gt:['$completedLessonCount',0]},
+     { $lt:['$completedLessonCount','$lessonCount']
+    }]
+  }
+  }
+},{
+$group:{
+  _id:'$userId',learners:{$sum:1}
+}
+}
+])
+const learnerCount = inProgressLearners[0]?.learners
+const averageLearningTime = await Enrollment.aggregate([
+  {
+    $lookup:{
+from:'courses',foreignField:'_id',localField:'courseId',as:'course'
+    }
+  },{
+    $match:{
+      'course.instructor':new mongoose.Types.ObjectId(userId)
+    }
+  },{
+    $unwind:'$course'
+  },
+  {
+$addFields:{
+  totalWatchedTime:{
+    $sum:'$learningActivity.watchedTime'
+  }
+}
+  },
+  {
+  $group:{
+    _id:'$userId',learningTime:{$sum:'$totalWatchedTime'}
+  }
+  },{
+    $group:{
+      _id:null,averageLearningTime:{$avg:'$learningTime'}
+    }
+  }
+])
+  return res.status(200).json({ totalRevenue, averageRating, recentReviews, totalEnrollments, courseCompletion, chartData, overviewEnrollment, newStudent,returningStudent ,coursePerformance,studentEngagement,learnerCount,averageLearningTime})
 })
