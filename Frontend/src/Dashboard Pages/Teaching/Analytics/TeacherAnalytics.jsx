@@ -14,6 +14,7 @@ import RecentReviews from './RecentReviews'
 import RevenueChart from './RevenueChart'
 import EnrollmentSummary from './EnrollmentSummary'
 import CoursePerformanceCard from './CoursePerformanceCard'
+import EngagementStats from './EngagementStats'
 
 const TeacherAnalytics = () => {
   const [period, setPeriod] = useState('7')
@@ -136,43 +137,7 @@ const enrollmentTotal = Analytics?.overviewEnrollment?.reduce((acc,curr)=>acc+cu
             <FiCalendar className="text-text-light" />
           </div>
 
-          <div className="mt-6 grid grid-cols-2 gap-3">
-            <div className="rounded-xl border border-border bg-page p-4">
-              <p className="font-body text-xs text-text-light">
-                Lessons Completed
-              </p>
-              <p className="mt-1 font-heading text-xl font-bold text-text">
-                8,420
-              </p>
-            </div>
-
-            <div className="rounded-xl border border-border bg-page p-4">
-              <p className="font-body text-xs text-text-light">
-                Avg. Completion
-              </p>
-              <p className="mt-1 font-heading text-xl font-bold text-text">
-                68.5%
-              </p>
-            </div>
-
-            <div className="rounded-xl border border-border bg-page p-4">
-              <p className="font-body text-xs text-text-light">
-                Active Learners
-              </p>
-              <p className="mt-1 font-heading text-xl font-bold text-text">
-                746
-              </p>
-            </div>
-
-            <div className="rounded-xl border border-border bg-page p-4">
-              <p className="font-body text-xs text-text-light">
-                Avg. Learning Time
-              </p>
-              <p className="mt-1 font-heading text-xl font-bold text-text">
-                3.4h
-              </p>
-            </div>
-          </div>
+       <EngagementStats averageCompletion={ Math.round(Analytics?.studentEngagement[0]?.averageCompletion)} InprogressLearner={Analytics?.learnerCount} averageLearningTime={   Math.round(Analytics?.averageLearningTime[0]?.averageLearningTime)} lessonCompleted={Analytics?.studentEngagement[0]?.totalLesson}/>
         </div>
 
         {/* RECENT REVIEWS */}
