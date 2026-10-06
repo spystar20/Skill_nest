@@ -2,6 +2,8 @@ import mongoose from "mongoose"
 import PaymentModel from "../models/Ecommerce/PaymentModel.js"
 import ReviewModel from "../models/Ecommerce/ReviewModel.js"
 import Course from "../models/Teacher/Course.js"
+import Enrollment from "../models/Teacher/Enrollment.js"
+
 
 export const getTotalRevenue = async(userId)=>{
     const revenue = await PaymentModel.aggregate([
@@ -21,6 +23,23 @@ export const getTotalRevenue = async(userId)=>{
 ])
 const totalRevenue = revenue[0]?.totalRevenue || 0
 return totalRevenue
+}
+export const getTotalEnrollments = async(userId)=>{
+  return await Enrollment.aggregate([
+    {
+      $lookup: {
+        from: 'courses', foreignField: '_id', localField: 'courseId', as: 'course'
+      }
+    }, {
+      $unwind: '$course'
+    }, {
+      $match: {
+        'course.instructor': new mongoose.Types.ObjectId(userId)
+      }
+    }, {
+      $count: 'totalEnrollments'
+    }
+  ])
 }
 export const getAverageRating = async(userId)=>{
      const review = await ReviewModel.aggregate([
@@ -50,6 +69,32 @@ export const getAverageRating = async(userId)=>{
  ])
 const averageReview = review[0]?.averageRating || 0
 return averageReview
+}
+export const getAverageProgressData = async(userId)=>{
+  return await Enrollment.aggregate([
+    {
+      $lookup: {
+        from: "courses", foreignField: '_id', localField: 'courseId', as: 'course'
+      }
+    }, {
+      $unwind: '$course'
+    }, {
+      $match: {
+        'course.instructor': new mongoose.Types.ObjectId(userId)
+      }
+    }, {
+      $set: {
+        totalcompletedLessons: { $size: '$completedLessons' },
+        totalLessons: '$course.lessonCount'
+      }
+    },
+
+    {
+      $group: {
+        _id: null, totalCompletedLessons: { $sum: '$totalcompletedLessons' }, totalLessons: { $sum: '$totalLessons' }
+      }
+    }
+  ])
 }
 export const getCoursePerformance = async(userId)=>{
   const coursePerformance = await Course.aggregate([
@@ -131,4 +176,39 @@ $divide:[{
     }
   ])
   return coursePerformance
+}
+export const getProgressLearners = async(userId)=>{
+  return await Enrollment.aggregate([
+{
+  $lookup:{
+    from:'courses',foreignField:'_id',localField:"courseId",as:'course'
+  }
+},{
+  $match:{
+    'course.instructor':new mongoose.Types.ObjectId(userId)
+  }
+},{
+  $unwind:"$course"
+},{
+  $addFields:{
+completedLessonCount:{
+  $size:'$completedLessons'
+},
+lessonCount:'$course.lessonCount'
+  }
+},
+{
+  $match:{$expr:{
+    $and:[{
+      $gt:['$completedLessonCount',0]},
+     { $lt:['$completedLessonCount','$lessonCount']
+    }]
+  }
+  }
+},{
+$group:{
+  _id:'$userId',learners:{$sum:1}
+}
+}
+])
 }

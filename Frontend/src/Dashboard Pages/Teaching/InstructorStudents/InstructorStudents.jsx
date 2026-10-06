@@ -12,8 +12,12 @@ import {
   FiChevronRight
 } from 'react-icons/fi'
 import DashboardPageHeader from '@/Dashboard Pages/DashboardComponents/DashboardPageHeader'
+import { useTeacherStudents } from '@/hooks/DahboardHooks/useDashboard'
+import StudentsStat from './StudentsStat'
 
 const InstructorStudents = () => {
+  const {data:teacherData} = useTeacherStudents()
+  console.log(teacherData)
   const [search, setSearch] = useState('')
   const [courseFilter, setCourseFilter] = useState('all')
   const [statusFilter, setStatusFilter] = useState('all')
@@ -111,34 +115,7 @@ const InstructorStudents = () => {
   }, [search, courseFilter, statusFilter])
 
   const courses = [...new Set(students.map((student) => student.course))]
-
-  const stats = [
-    {
-      title: 'Total Students',
-      value: '1,280',
-      icon: FiUsers,
-      color: 'text-primary bg-primary/10'
-    },
-    {
-      title: 'Active Students',
-      value: '746',
-      icon: FiTrendingUp,
-      color: 'text-success bg-success/10'
-    },
-    {
-      title: 'Completed',
-      value: '318',
-      icon: FiCheckCircle,
-      color: 'text-accent bg-accent/10'
-    },
-    {
-      title: 'Avg. Progress',
-      value: '68.5%',
-      icon: FiBookOpen,
-      color: 'text-warning bg-warning/10'
-    }
-  ]
-
+ 
   return (
     <div className="min-h-screen w-full bg-page px-3 py-5 sm:px-5 md:px-8">
       <DashboardPageHeader
@@ -147,34 +124,7 @@ const InstructorStudents = () => {
       />
 
       {/* STATS */}
-      <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {stats.map((stat) => {
-          const Icon = stat.icon
-
-          return (
-            <div
-              key={stat.title}
-              className="flex items-center justify-between rounded-2xl border border-border bg-card p-4 shadow-sm transition hover:shadow-md sm:p-5"
-            >
-              <div>
-                <p className="font-body text-xs font-medium text-text-light">
-                  {stat.title}
-                </p>
-
-                <h3 className="mt-1 font-heading text-2xl font-bold text-text">
-                  {stat.value}
-                </h3>
-              </div>
-
-              <div
-                className={`flex h-12 w-12 items-center justify-center rounded-2xl ${stat.color}`}
-              >
-                <Icon className="text-xl" />
-              </div>
-            </div>
-          )
-        })}
-      </div>
+     <StudentsStat totalEnrollments={teacherData?.totalEnrollments || 0} inProgressLearners={teacherData?.learnerCount || 0}  completedEnrollments={teacherData?.completedCourseCount || 0} averageProgres={teacherData?.courseCompletion || 0 } />
 
       {/* STUDENT LIST */}
       <div className="mt-6 rounded-2xl border border-border bg-card p-4 shadow-sm sm:p-6">

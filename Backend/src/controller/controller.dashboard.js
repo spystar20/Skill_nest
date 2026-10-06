@@ -3,14 +3,13 @@ import certficateModel from '../models/student/certficateModel.js'
 import enrollmentModel from '../models/Teacher/Enrollment.js'
 import { getRecentActivities } from '../services/activity.service.js'
 import { getRecommendedCourses } from '../services/recommended.service.js'
-import TeacherSchema from '../models/Teacher/TeacherSchema.js'
 import Course from '../models/Teacher/Course.js'
 import Enrollment from '../models/Teacher/Enrollment.js'
 import mongoose from 'mongoose'
 import ReviewModel from '../models/Ecommerce/ReviewModel.js'
 import PaymentModel from '../models/Ecommerce/PaymentModel.js'
 import activityModel from '../models/activityModel.js'
-import { getAverageRating, getCoursePerformance, getTotalRevenue } from '../services/dashboard.service.js'
+import { getAverageProgressData, getAverageRating, getCoursePerformance, getProgressLearners, getTotalEnrollments, getTotalRevenue } from '../services/dashboard.service.js'
 export const studentDashboardData = asyncHandler(async (req, res) => {
   const user = req.user.UserID
   const { range = "week" } = req.query
@@ -194,7 +193,12 @@ export const teacherDashboardData = asyncHandler(async (req, res) => {
 export const getTeacherAnalytics = asyncHandler(async (req, res) => {
   const userId = req.user.UserID
   const { period } = req.query
-  const [totalRevenue, averageRating,coursePerformance] = await Promise.all([getTotalRevenue(userId), getAverageRating(userId),getCoursePerformance(userId)])
+  const [totalRevenue, averageRating,coursePerformance,inProgressLearners,enrollments,progressData] = await Promise.all([getTotalRevenue(userId), getAverageRating(userId),getCoursePerformance(userId),getProgressLearners(userId)],getTotalEnrollments(userId),getAverageProgressData(userId))
+  const learnerCount = inProgressLearners[0]?.learners
+  const totalEnrollments = enrollments[0]?.totalEnrollments || 0
+    const totalCompletedLessons = progressData[0]?.totalCompletedLessons || 0
+  const totalLessons = progressData[0]?.totalLessons || 0
+  const courseCompletion = totalLessons > 0 ? Math.round((totalCompletedLessons / totalLessons) * 100) : 0
   const recentReviews = await ReviewModel.aggregate([
     {
       $lookup: {
@@ -230,49 +234,6 @@ export const getTeacherAnalytics = asyncHandler(async (req, res) => {
       $limit: 3
     }
   ])
-  const enrollments = await Enrollment.aggregate([
-    {
-      $lookup: {
-        from: 'courses', foreignField: '_id', localField: 'courseId', as: 'course'
-      }
-    }, {
-      $unwind: '$course'
-    }, {
-      $match: {
-        'course.instructor': new mongoose.Types.ObjectId(userId)
-      }
-    }, {
-      $count: 'totalEnrollments'
-    }
-  ])
-  const totalEnrollments = enrollments[0]?.totalEnrollments || 0
-  const progressData = await Enrollment.aggregate([
-    {
-      $lookup: {
-        from: "courses", foreignField: '_id', localField: 'courseId', as: 'course'
-      }
-    }, {
-      $unwind: '$course'
-    }, {
-      $match: {
-        'course.instructor': new mongoose.Types.ObjectId(userId)
-      }
-    }, {
-      $set: {
-        totalcompletedLessons: { $size: '$completedLessons' },
-        totalLessons: '$course.lessonCount'
-      }
-    },
-
-    {
-      $group: {
-        _id: null, totalCompletedLessons: { $sum: '$totalcompletedLessons' }, totalLessons: { $sum: '$totalLessons' }
-      }
-    }
-  ])
-  const totalCompletedLessons = progressData[0]?.totalCompletedLessons || 0
-  const totalLessons = progressData[0]?.totalLessons || 0
-  const courseCompletion = totalLessons > 0 ? Math.round((totalCompletedLessons / totalLessons) * 100) : 0
   const startDate = new Date()
   const endDate = new Date()
   startDate.setDate(startDate.getDate() - period)
@@ -449,40 +410,6 @@ $addFields:{
     }
   }
 ])
-const inProgressLearners = await Enrollment.aggregate([
-{
-  $lookup:{
-    from:'courses',foreignField:'_id',localField:"courseId",as:'course'
-  }
-},{
-  $match:{
-    'course.instructor':new mongoose.Types.ObjectId(userId)
-  }
-},{
-  $unwind:"$course"
-},{
-  $addFields:{
-completedLessonCount:{
-  $size:'$completedLessons'
-},
-lessonCount:'$course.lessonCount'
-  }
-},
-{
-  $match:{$expr:{
-    $and:[{
-      $gt:['$completedLessonCount',0]},
-     { $lt:['$completedLessonCount','$lessonCount']
-    }]
-  }
-  }
-},{
-$group:{
-  _id:'$userId',learners:{$sum:1}
-}
-}
-])
-const learnerCount = inProgressLearners[0]?.learners
 const averageLearningTime = await Enrollment.aggregate([
   {
     $lookup:{
@@ -513,4 +440,33 @@ $addFields:{
   }
 ])
   return res.status(200).json({ totalRevenue, averageRating, recentReviews, totalEnrollments, courseCompletion, chartData, overviewEnrollment, newStudent,returningStudent ,coursePerformance,studentEngagement,learnerCount,averageLearningTime})
+})
+export const getTeacherStudents  = asyncHandler(async(req,res)=>{
+  const userId = req.user.UserID
+  const [enrollments,inProgressLearners,progressData]= await Promise.all([getTotalEnrollments(userId),getProgressLearners(userId),getAverageProgressData(userId)])
+    const learnerCount = inProgressLearners[0]?.learners
+  const totalEnrollments = enrollments[0]?.totalEnrollments || 0
+    const totalCompletedLessons = progressData[0]?.totalCompletedLessons || 0
+  const totalLessons = progressData[0]?.totalLessons || 0
+    const courseCompletion = totalLessons > 0 ? Math.round((totalCompletedLessons / totalLessons) * 100) : 0
+
+  const completedEnrollments = await Enrollment.aggregate([
+    {
+    $lookup:{
+      from:'courses',foreignField:'_id',localField:'courseId',as:'course'
+    }
+    },{
+      $match:{
+       $and:[ {'course.instructor':new mongoose.Types.ObjectId(userId)
+       },
+       {'completed':true}]
+      }
+    },{
+      $group:{
+        _id:null,totalCompleted:{$sum:1}
+      }
+    }
+  ])
+  const completedCourseCount = completedEnrollments[0]?.totalCompleted
+  return res.status(200).json({learnerCount,totalEnrollments,completedCourseCount,courseCompletion})
 })
