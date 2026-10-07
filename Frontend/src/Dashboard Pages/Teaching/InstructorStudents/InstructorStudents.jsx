@@ -1,11 +1,9 @@
 
-import { useMemo, useState } from 'react'
+import {  useState } from 'react'
 import {
   FiSearch,
   FiUsers,
-  FiCheckCircle,
-  FiBookOpen,
-  FiTrendingUp,
+
   FiEye,
   FiMail,
   FiChevronLeft,
@@ -14,107 +12,16 @@ import {
 import DashboardPageHeader from '@/Dashboard Pages/DashboardComponents/DashboardPageHeader'
 import { useTeacherStudents } from '@/hooks/DahboardHooks/useDashboard'
 import StudentsStat from './StudentsStat'
+import { FormControl, InputLabel, MenuItem, Paper, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
 
 const InstructorStudents = () => {
-  const {data:teacherData} = useTeacherStudents()
+    const [statusFilter, setStatusFilter] = useState('all')
+
+  const {data:teacherData} = useTeacherStudents({status:statusFilter})
   console.log(teacherData)
   const [search, setSearch] = useState('')
   const [courseFilter, setCourseFilter] = useState('all')
-  const [statusFilter, setStatusFilter] = useState('all')
   const [currentPage, setCurrentPage] = useState(1)
-
-  const students = [
-    {
-      id: 1,
-      name: 'Sarah Jenkins',
-      email: 'sarah.jenkins@example.com',
-      course: 'React Fundamentals',
-      progress: 74,
-      enrolled: 'Aug 28, 2026',
-      status: 'Active'
-    },
-    {
-      id: 2,
-      name: 'Alex Morgan',
-      email: 'alex.morgan@example.com',
-      course: 'Node.js Essentials',
-      progress: 91,
-      enrolled: 'Aug 22, 2026',
-      status: 'Active'
-    },
-    {
-      id: 3,
-      name: 'David Kumar',
-      email: 'david.kumar@example.com',
-      course: 'MongoDB Masterclass',
-      progress: 100,
-      enrolled: 'Aug 14, 2026',
-      status: 'Completed'
-    },
-    {
-      id: 4,
-      name: 'Emily Carter',
-      email: 'emily.carter@example.com',
-      course: 'React Fundamentals',
-      progress: 48,
-      enrolled: 'Aug 10, 2026',
-      status: 'Active'
-    },
-    {
-      id: 5,
-      name: 'Michael Brown',
-      email: 'michael.brown@example.com',
-      course: 'Master Tailwind CSS',
-      progress: 32,
-      enrolled: 'Aug 5, 2026',
-      status: 'Active'
-    },
-    {
-      id: 6,
-      name: 'Priya Sharma',
-      email: 'priya.sharma@example.com',
-      course: 'Node.js Essentials',
-      progress: 100,
-      enrolled: 'Jul 28, 2026',
-      status: 'Completed'
-    },
-    {
-      id: 7,
-      name: 'James Wilson',
-      email: 'james.wilson@example.com',
-      course: 'React Fundamentals',
-      progress: 17,
-      enrolled: 'Jul 24, 2026',
-      status: 'Inactive'
-    },
-    {
-      id: 8,
-      name: 'Ananya Singh',
-      email: 'ananya.singh@example.com',
-      course: 'MongoDB Masterclass',
-      progress: 62,
-      enrolled: 'Jul 19, 2026',
-      status: 'Active'
-    }
-  ]
-
-  const filteredStudents = useMemo(() => {
-    return students.filter((student) => {
-      const matchesSearch =
-        student.name.toLowerCase().includes(search.toLowerCase()) ||
-        student.email.toLowerCase().includes(search.toLowerCase())
-
-      const matchesCourse =
-        courseFilter === 'all' || student.course === courseFilter
-
-      const matchesStatus =
-        statusFilter === 'all' || student.status === statusFilter
-
-      return matchesSearch && matchesCourse && matchesStatus
-    })
-  }, [search, courseFilter, statusFilter])
-
-  const courses = [...new Set(students.map((student) => student.course))]
  
   return (
     <div className="min-h-screen w-full bg-page px-3 py-5 sm:px-5 md:px-8">
@@ -176,76 +83,79 @@ const InstructorStudents = () => {
             </select>
 
             {/* STATUS FILTER */}
-            <select
-              value={statusFilter}
-              onChange={(e) => {
-                setStatusFilter(e.target.value)
-                setCurrentPage(1)
+            <FormControl
+              size="small"
+              sx={{
+                width: '100%',
+                maxWidth: 180
               }}
-              className="rounded-full border border-border bg-page px-4 py-2.5 font-body text-xs text-text outline-none transition focus:border-accent"
             >
-              <option value="all">All Status</option>
-              <option value="Active">Active</option>
-              <option value="Completed">Completed</option>
-              <option value="Inactive">Inactive</option>
-            </select>
+              <InputLabel>Status</InputLabel>
+
+              <Select onChange={(e)=>setStatusFilter(e.target.value)}
+              value={statusFilter}
+                label="Status"
+            >
+                <MenuItem  value="completed">Completed</MenuItem>
+                <MenuItem value="not-started">Inactive</MenuItem>
+                <MenuItem value="in-progress">Active</MenuItem>
+              </Select>
+            </FormControl>
           </div>
         </div>
 
         {/* DESKTOP TABLE */}
         <div className="mt-5 hidden overflow-x-auto lg:block">
-          <table className="w-full min-w-[800px]">
-            <thead>
-              <tr className="border-b border-border text-left">
-                <th className="px-3 pb-3 font-body text-[11px] font-semibold uppercase tracking-wide text-text-light">
-                  Student
-                </th>
-                <th className="px-3 pb-3 font-body text-[11px] font-semibold uppercase tracking-wide text-text-light">
-                  Course
-                </th>
-                <th className="px-3 pb-3 font-body text-[11px] font-semibold uppercase tracking-wide text-text-light">
-                  Progress
-                </th>
-                <th className="px-3 pb-3 font-body text-[11px] font-semibold uppercase tracking-wide text-text-light">
-                  Enrolled
-                </th>
-                <th className="px-3 pb-3 font-body text-[11px] font-semibold uppercase tracking-wide text-text-light">
-                  Status
-                </th>
-                <th className="px-3 pb-3 text-right font-body text-[11px] font-semibold uppercase tracking-wide text-text-light">
-                  Action
-                </th>
-              </tr>
-            </thead>
+       
+          <TableContainer component={Paper}>
+<Table>
+<TableHead>
+  <TableRow>
+    <TableCell>
+      Student
+    </TableCell>
+     <TableCell>
+      Course
+    </TableCell>
+     <TableCell>
+      Progress
+    </TableCell>
+     <TableCell>
+      Enrolled
+    </TableCell>
+     <TableCell>
+      Status
+    </TableCell>
+    <TableCell>
+      Action
+    </TableCell>
+  </TableRow>
 
-            <tbody className="divide-y divide-border">
-              {filteredStudents.map((student) => (
-                <tr key={student.id} className="transition hover:bg-page/60">
-                  <td className="px-3 py-4">
-                    <div className="flex items-center gap-3">
-                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 font-heading text-sm font-semibold text-primary">
-                        {student.name.charAt(0)}
-                      </div>
+</TableHead>
+<TableBody>
+  {teacherData?.studentData?.map((student)=>(
+<TableRow key={student._id}>
+  <TableCell>
+  <div className="flex items-center gap-3">
+    {student.avatar ?(<img src={student.avatar} className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10  "/>                    ):(   <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 font-heading text-sm font-semibold text-primary">
+                        {student.username.charAt(0)}
+                      </div>)}
+                   
 
                       <div className="min-w-0">
                         <p className="font-body text-sm font-semibold text-text">
-                          {student.name}
+                          {student.username}
                         </p>
                         <p className="truncate font-body text-[11px] text-text-light">
                           {student.email}
                         </p>
                       </div>
-                    </div>
-                  </td>
-
-                  <td className="px-3 py-4">
-                    <span className="font-body text-xs text-text">
-                      {student.course}
-                    </span>
-                  </td>
-
-                  <td className="px-3 py-4">
-                    <div className="flex w-28 items-center gap-2">
+                    </div>  </TableCell>
+                    <TableCell>
+                      {student.title}
+                    </TableCell>
+                    <TableCell>
+ <div className="flex w-28 items-center gap-2">
                       <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-page">
                         <div
                           className="h-full rounded-full bg-primary"
@@ -254,17 +164,15 @@ const InstructorStudents = () => {
                       </div>
 
                       <span className="font-body text-[11px] font-medium text-text-light">
-                        {student.progress}%
+                        {Math.round(student.progress)}%
                       </span>
                     </div>
-                  </td>
+                    </TableCell>
+                    <TableCell>
 
-                  <td className="px-3 py-4 font-body text-xs text-text-light">
-                    {student.enrolled}
-                  </td>
-
-                  <td className="px-3 py-4">
-                    <span
+                    </TableCell>
+                    <TableCell>
+    <span
                       className={`rounded-full px-2.5 py-1 font-body text-[10px] font-semibold ${
                         student.status === 'Active'
                           ? 'bg-success/10 text-success'
@@ -275,13 +183,12 @@ const InstructorStudents = () => {
                     >
                       {student.status}
                     </span>
-                  </td>
-
-                  <td className="px-3 py-4">
-                    <div className="flex justify-end gap-2">
+                    </TableCell>
+                    <TableCell>
+                        <div className="flex justify-end gap-2">
                       <button
                         type="button"
-                        aria-label={`View ${student.name}`}
+                        aria-label={`View ${student.username}`}
                         className="flex h-8 w-8 items-center justify-center rounded-full border border-border bg-page text-text transition hover:border-accent hover:text-primary"
                       >
                         <FiEye className="text-sm" />
@@ -289,17 +196,18 @@ const InstructorStudents = () => {
 
                       <button
                         type="button"
-                        aria-label={`Email ${student.name}`}
+                        aria-label={`Email ${student.username}`}
                         className="flex h-8 w-8 items-center justify-center rounded-full border border-border bg-page text-text transition hover:border-accent hover:text-primary"
                       >
                         <FiMail className="text-sm" />
                       </button>
                     </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                    </TableCell>
+</TableRow>
+  ))}
+</TableBody>
+</Table>
+          </TableContainer>
         </div>
 
         {/* MOBILE / TABLET CARDS */}

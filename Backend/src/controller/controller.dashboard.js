@@ -443,6 +443,8 @@ $addFields:{
 })
 export const getTeacherStudents  = asyncHandler(async(req,res)=>{
   const userId = req.user.UserID
+  const {status="all"}= req.query
+  const statusMatch = status !== "all"? {status}:{} 
   const [enrollments,inProgressLearners,progressData]= await Promise.all([getTotalEnrollments(userId),getProgressLearners(userId),getAverageProgressData(userId)])
     const learnerCount = inProgressLearners[0]?.learners
   const totalEnrollments = enrollments[0]?.totalEnrollments || 0
@@ -468,5 +470,36 @@ export const getTeacherStudents  = asyncHandler(async(req,res)=>{
     }
   ])
   const completedCourseCount = completedEnrollments[0]?.totalCompleted
-  return res.status(200).json({learnerCount,totalEnrollments,completedCourseCount,courseCompletion})
+  const studentData = await Enrollment.aggregate([
+    {
+      $lookup:{
+        from:'courses',localField:'courseId',foreignField:'_id',as:'course'
+      }
+    },{
+      $match:{
+        'course.instructor':new mongoose.Types.ObjectId(userId),...statusMatch
+      }
+    },{
+      $lookup:{
+        from:"users",localField:"userId",foreignField:'_id',as:'user'
+      }
+    },{
+      $unwind:'$course'
+    },{
+      $unwind:'$user'
+    },
+    {
+$addFields:{
+  progress:{
+     $multiply:[{ $divide:[{$size:'$completedLessons'},'$course.lessonCount']},100]
+  }
+}
+    },
+    {
+      $project:{
+        _id:'$user._id',username:{$concat:['$user.firstName',' ','$user.lastName']},title:'$course.title',email:'$user.email',status:1,createdAt:1,progress:1,avatar:'$user.avatar'
+      }
+    }
+  ])
+  return res.status(200).json({learnerCount,totalEnrollments,completedCourseCount,courseCompletion,studentData})
 })

@@ -20,7 +20,7 @@ export const fetchTeacherAnalytics = async(params)=>{
     const res = await api.get('/teacher/analytics',{params})
     return res.data
 }
-export const fetchTeacherStudents = async()=>{
-    const res = await api.get('/teacher/students')
+export const fetchTeacherStudents = async(params)=>{
+    const res = await api.get('/teacher/students',{params})
     return res.data
 }
