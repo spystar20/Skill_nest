@@ -443,8 +443,11 @@ $addFields:{
 })
 export const getTeacherStudents  = asyncHandler(async(req,res)=>{
   const userId = req.user.UserID
-  const {status="all"}= req.query
+  const {status="all",title='all'}= req.query
   const statusMatch = status !== "all"? {status}:{} 
+const courseTitle = title !=='all'?{'course.title':title}:{}
+  const courses = await Course.find({instructor:userId},{title:1})
+  console.log(courses)
   const [enrollments,inProgressLearners,progressData]= await Promise.all([getTotalEnrollments(userId),getProgressLearners(userId),getAverageProgressData(userId)])
     const learnerCount = inProgressLearners[0]?.learners
   const totalEnrollments = enrollments[0]?.totalEnrollments || 0
@@ -486,6 +489,10 @@ export const getTeacherStudents  = asyncHandler(async(req,res)=>{
     },{
       $unwind:'$course'
     },{
+$match:{
+  ...courseTitle
+}
+    },{
       $unwind:'$user'
     },
     {
@@ -497,9 +504,10 @@ $addFields:{
     },
     {
       $project:{
-        _id:'$user._id',username:{$concat:['$user.firstName',' ','$user.lastName']},title:'$course.title',email:'$user.email',status:1,createdAt:1,progress:1,avatar:'$user.avatar'
+        _id:'$_id',username:{$concat:['$user.firstName',' ','$user.lastName']},title:'$course.title',email:'$user.email',status:1,createdAt:1,progress:1,avatar:'$user.avatar'
       }
     }
   ])
-  return res.status(200).json({learnerCount,totalEnrollments,completedCourseCount,courseCompletion,studentData})
+
+  return res.status(200).json({learnerCount,totalEnrollments,completedCourseCount,courseCompletion,studentData,courses})
 })

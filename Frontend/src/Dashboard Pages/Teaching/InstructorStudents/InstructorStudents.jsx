@@ -16,13 +16,11 @@ import { FormControl, InputLabel, MenuItem, Paper, Select, Table, TableBody, Tab
 
 const InstructorStudents = () => {
     const [statusFilter, setStatusFilter] = useState('all')
-
-  const {data:teacherData} = useTeacherStudents({status:statusFilter})
-  console.log(teacherData)
   const [search, setSearch] = useState('')
-  const [courseFilter, setCourseFilter] = useState('all')
+  const [courseTitle, setCourseTitle] = useState('all')
   const [currentPage, setCurrentPage] = useState(1)
- 
+   const {data:teacherData} = useTeacherStudents({status:statusFilter,title:courseTitle})
+
   return (
     <div className="min-h-screen w-full bg-page px-3 py-5 sm:px-5 md:px-8">
       <DashboardPageHeader
@@ -66,22 +64,23 @@ const InstructorStudents = () => {
             </div>
 
             {/* COURSE FILTER */}
-            <select
-              value={courseFilter}
-              onChange={(e) => {
-                setCourseFilter(e.target.value)
-                setCurrentPage(1)
-              }}
-              className="rounded-full border border-border bg-page px-4 py-2.5 font-body text-xs text-text outline-none transition focus:border-accent"
-            >
-              <option value="all">All Courses</option>
-              {courses.map((course) => (
-                <option key={course} value={course}>
-                  {course}
-                </option>
-              ))}
-            </select>
+<FormControl  size="small"
+              sx={{
+                width: '100%',
+                maxWidth: 180
+              }}>
+                <InputLabel>All Courses</InputLabel>
+                <Select onChange={(e)=>{setCourseTitle(e.target.value),      setCurrentPage(1)}
+} value={courseTitle} label=' Courses'>
+                                    <MenuItem value='all'> Courses</MenuItem>
 
+                {teacherData?.courses?.map((course)=>(
+                  
+                                    <MenuItem key={course._id} value={course.title}>{course.title}</MenuItem>
+                  
+                ))}
+                </Select>
+              </FormControl>
             {/* STATUS FILTER */}
             <FormControl
               size="small"
@@ -96,9 +95,10 @@ const InstructorStudents = () => {
               value={statusFilter}
                 label="Status"
             >
+                <MenuItem value="all">All Status</MenuItem>
                 <MenuItem  value="completed">Completed</MenuItem>
-                <MenuItem value="not-started">Inactive</MenuItem>
-                <MenuItem value="in-progress">Active</MenuItem>
+                <MenuItem value="not-started">Not Started</MenuItem>
+                <MenuItem value="in-progress">In Progress</MenuItem>
               </Select>
             </FormControl>
           </div>
@@ -169,14 +169,14 @@ const InstructorStudents = () => {
                     </div>
                     </TableCell>
                     <TableCell>
-
+  {new Date(student.createdAt).toLocaleDateString('en-IN',{day:"numeric",month:'short',year:'numeric'})}
                     </TableCell>
                     <TableCell>
     <span
                       className={`rounded-full px-2.5 py-1 font-body text-[10px] font-semibold ${
-                        student.status === 'Active'
+                        student.status === 'in-progress'
                           ? 'bg-success/10 text-success'
-                          : student.status === 'Completed'
+                          : student.status === 'completed'
                             ? 'bg-accent/10 text-primary'
                             : 'bg-page text-text-light'
                       }`}
@@ -212,20 +212,20 @@ const InstructorStudents = () => {
 
         {/* MOBILE / TABLET CARDS */}
         <div className="mt-5 grid gap-3 lg:hidden">
-          {filteredStudents.map((student) => (
+          {teacherData?.studentData?.map((student) => (
             <div
-              key={student.id}
+              key={student._id}
               className="rounded-xl border border-border bg-page p-4"
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="flex min-w-0 items-center gap-3">
                   <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 font-heading text-sm font-semibold text-primary">
-                    {student.name.charAt(0)}
+                    {student.username.charAt(0)}
                   </div>
 
                   <div className="min-w-0">
                     <p className="truncate font-body text-sm font-semibold text-text">
-                      {student.name}
+                      {student.username}
                     </p>
                     <p className="truncate font-body text-[11px] text-text-light">
                       {student.email}
@@ -249,7 +249,7 @@ const InstructorStudents = () => {
               <div className="mt-4">
                 <div className="flex items-center justify-between">
                   <span className="font-body text-xs text-text-light">
-                    {student.course}
+                    {student.title}
                   </span>
 
                   <span className="font-body text-xs font-semibold text-text">
@@ -267,7 +267,7 @@ const InstructorStudents = () => {
 
               <div className="mt-4 flex items-center justify-between border-t border-border pt-3">
                 <span className="font-body text-[11px] text-text-light">
-                  Enrolled {student.enrolled}
+                  {/* Enrolled {student.enrolled} */}
                 </span>
 
                 <div className="flex gap-2">
@@ -291,7 +291,7 @@ const InstructorStudents = () => {
         </div>
 
         {/* EMPTY STATE */}
-        {filteredStudents.length === 0 && (
+        {teacherData?.studentData?.length === 0 && (
           <div className="flex flex-col items-center justify-center py-16 text-center">
             <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 text-primary">
               <FiUsers className="text-xl" />
@@ -309,12 +309,12 @@ const InstructorStudents = () => {
         )}
 
         {/* PAGINATION */}
-        {filteredStudents.length > 0 && (
+        {teacherData?.studentData?.length > 0 && (
           <div className="mt-5 flex items-center justify-between border-t border-border pt-4">
             <p className="font-body text-xs text-text-light">
               Showing{' '}
               <span className="font-semibold text-text">
-                {filteredStudents.length}
+                {length}
               </span>{' '}
               students
             </p>
