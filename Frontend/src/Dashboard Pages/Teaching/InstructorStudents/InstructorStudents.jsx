@@ -46,7 +46,7 @@ const InstructorStudents = () => {
 
           <div className="flex flex-col gap-3 sm:flex-row">
             {/* SEARCH */}
-            <div className="flex w-full overflow-hidden rounded-full border border-border bg-page transition focus-within:border-accent sm:w-64">
+            <div className="flex w-full overflow-hidden rounded-full border border-border bg-page transition focus-within:border-accent sm:w-64 ">
               <div className="flex items-center pl-4 text-text-light">
                 <FiSearch className="text-sm" />
               </div>
@@ -72,8 +72,7 @@ const InstructorStudents = () => {
                 <InputLabel>All Courses</InputLabel>
                 <Select onChange={(e)=>{setCourseTitle(e.target.value),      setCurrentPage(1)}
 } value={courseTitle} label=' Courses'>
-                                    <MenuItem value='all'> Courses</MenuItem>
-
+                                    <MenuItem value='all'>All Courses</MenuItem>
                 {teacherData?.courses?.map((course)=>(
                   
                                     <MenuItem key={course._id} value={course.title}>{course.title}</MenuItem>

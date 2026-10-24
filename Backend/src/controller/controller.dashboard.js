@@ -193,8 +193,9 @@ export const teacherDashboardData = asyncHandler(async (req, res) => {
 export const getTeacherAnalytics = asyncHandler(async (req, res) => {
   const userId = req.user.UserID
   const { period } = req.query
-  const [totalRevenue, averageRating,coursePerformance,inProgressLearners,enrollments,progressData] = await Promise.all([getTotalRevenue(userId), getAverageRating(userId),getCoursePerformance(userId),getProgressLearners(userId)],getTotalEnrollments(userId),getAverageProgressData(userId))
+  const [totalRevenue, averageRating,coursePerformance,inProgressLearners,enrollments,progressData] = await Promise.all([getTotalRevenue(userId), getAverageRating(userId),getCoursePerformance(userId),getProgressLearners(userId),getTotalEnrollments(userId),getAverageProgressData(userId)])
   const learnerCount = inProgressLearners[0]?.learners
+  // console.log(enrollments)
   const totalEnrollments = enrollments[0]?.totalEnrollments || 0
     const totalCompletedLessons = progressData[0]?.totalCompletedLessons || 0
   const totalLessons = progressData[0]?.totalLessons || 0
@@ -443,7 +444,7 @@ $addFields:{
 })
 export const getTeacherStudents  = asyncHandler(async(req,res)=>{
   const userId = req.user.UserID
-  const {status="all",title='all'}= req.query
+  const {status="all",title='all',search=''}= req.query
   const statusMatch = status !== "all"? {status}:{} 
 const courseTitle = title !=='all'?{'course.title':title}:{}
   const courses = await Course.find({instructor:userId},{title:1})
@@ -494,6 +495,15 @@ $match:{
 }
     },{
       $unwind:'$user'
+    },
+    {
+      $match:{
+        $or:[
+{'user.firstName':{$regex:search,$options:'i'}}, 
+{'user.lastName':{$regex:search,$options:'i'}},
+{'user.email':{$regex:search,$options:'i'},
+}        ]
+      }
     },
     {
 $addFields:{
