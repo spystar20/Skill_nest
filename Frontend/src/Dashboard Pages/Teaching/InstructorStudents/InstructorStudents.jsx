@@ -1,5 +1,5 @@
 
-import {  useState } from 'react'
+import {  useEffect, useState } from 'react'
 import {
   FiSearch,
   FiUsers,
@@ -17,9 +17,16 @@ import { FormControl, InputLabel, MenuItem, Paper, Select, Table, TableBody, Tab
 const InstructorStudents = () => {
     const [statusFilter, setStatusFilter] = useState('all')
   const [search, setSearch] = useState('')
-  const [courseTitle, setCourseTitle] = useState('all')
+  const [debounceSearch,setDebounceSearch]=useState('')
+    const [courseTitle, setCourseTitle] = useState('all')
   const [currentPage, setCurrentPage] = useState(1)
-   const {data:teacherData} = useTeacherStudents({status:statusFilter,title:courseTitle})
+useEffect(()=>{
+const timer =setTimeout(() => {
+  setDebounceSearch(search)
+}, 1000);
+return ()=>clearTimeout(timer)
+},[search])
+   const {data:teacherData} = useTeacherStudents({status:statusFilter,title:courseTitle,search:debounceSearch,page:currentPage,limit:3})
 
   return (
     <div className="min-h-screen w-full bg-page px-3 py-5 sm:px-5 md:px-8">
@@ -90,7 +97,10 @@ const InstructorStudents = () => {
             >
               <InputLabel>Status</InputLabel>
 
-              <Select onChange={(e)=>setStatusFilter(e.target.value)}
+              <Select  onChange={(e) => {
+    setStatusFilter(e.target.value)
+    setCurrentPage(1)
+  }}
               value={statusFilter}
                 label="Status"
             >
@@ -313,7 +323,7 @@ const InstructorStudents = () => {
             <p className="font-body text-xs text-text-light">
               Showing{' '}
               <span className="font-semibold text-text">
-                {length}
+                  {teacherData?.studentData?.length}
               </span>{' '}
               students
             </p>
@@ -327,13 +337,15 @@ const InstructorStudents = () => {
               >
                 <FiChevronLeft />
               </button>
+      <span className="flex h-8 min-w-8 items-center justify-center rounded-full bg-primary px-2 font-body text-xs font-semibold text-white">
+        {currentPage} / {teacherData.totalPages}
+      </span>
 
-              <span className="flex h-8 min-w-8 items-center justify-center rounded-full bg-primary px-2 font-body text-xs font-semibold text-white">
-                {currentPage}
-              </span>
+          
 
               <button
                 type="button"
+disabled={currentPage >= teacherData.totalPages}
                 onClick={() => setCurrentPage((page) => page + 1)}
                 className="flex h-8 w-8 items-center justify-center rounded-full border border-border bg-card text-text transition hover:border-accent hover:text-primary"
               >

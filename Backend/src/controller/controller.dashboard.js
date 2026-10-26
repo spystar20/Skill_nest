@@ -195,7 +195,6 @@ export const getTeacherAnalytics = asyncHandler(async (req, res) => {
   const { period } = req.query
   const [totalRevenue, averageRating,coursePerformance,inProgressLearners,enrollments,progressData] = await Promise.all([getTotalRevenue(userId), getAverageRating(userId),getCoursePerformance(userId),getProgressLearners(userId),getTotalEnrollments(userId),getAverageProgressData(userId)])
   const learnerCount = inProgressLearners[0]?.learners
-  // console.log(enrollments)
   const totalEnrollments = enrollments[0]?.totalEnrollments || 0
     const totalCompletedLessons = progressData[0]?.totalCompletedLessons || 0
   const totalLessons = progressData[0]?.totalLessons || 0
@@ -444,11 +443,13 @@ $addFields:{
 })
 export const getTeacherStudents  = asyncHandler(async(req,res)=>{
   const userId = req.user.UserID
-  const {status="all",title='all',search=''}= req.query
+  const {status="all",title='all',search='',page=1,limit=3}= req.query
   const statusMatch = status !== "all"? {status}:{} 
 const courseTitle = title !=='all'?{'course.title':title}:{}
   const courses = await Course.find({instructor:userId},{title:1})
-  console.log(courses)
+  const currentPage = Math.max(1,Number(page)||1)
+  const pageSize = Math.max(1,Number(limit)||3)
+  const skip = (currentPage-1)*pageSize
   const [enrollments,inProgressLearners,progressData]= await Promise.all([getTotalEnrollments(userId),getProgressLearners(userId),getAverageProgressData(userId)])
     const learnerCount = inProgressLearners[0]?.learners
   const totalEnrollments = enrollments[0]?.totalEnrollments || 0
@@ -502,7 +503,11 @@ $match:{
 {'user.firstName':{$regex:search,$options:'i'}}, 
 {'user.lastName':{$regex:search,$options:'i'}},
 {'user.email':{$regex:search,$options:'i'},
-}        ]
+}   ,
+{'course.title':{$regex:search,$options:'i'}
+}  ,{
+  'status':{$regex:search,$options:'i'}
+}   ]
       }
     },
     {
@@ -516,8 +521,53 @@ $addFields:{
       $project:{
         _id:'$_id',username:{$concat:['$user.firstName',' ','$user.lastName']},title:'$course.title',email:'$user.email',status:1,createdAt:1,progress:1,avatar:'$user.avatar'
       }
+    },
+    {
+      $skip:skip
+    },{
+$limit:pageSize
     }
   ])
-
-  return res.status(200).json({learnerCount,totalEnrollments,completedCourseCount,courseCompletion,studentData,courses})
+  const totalStudentResults = await Enrollment.aggregate([
+        {
+      $lookup:{
+        from:'courses',localField:'courseId',foreignField:'_id',as:'course'
+      }
+    },{
+      $match:{
+        'course.instructor':new mongoose.Types.ObjectId(userId),...statusMatch
+      }
+    },{
+      $lookup:{
+        from:"users",localField:"userId",foreignField:'_id',as:'user'
+      }
+    },{
+      $unwind:'$course'
+    },{
+$match:{
+  ...courseTitle
+}
+    },{
+      $unwind:'$user'
+    },
+    {
+      $match:{
+        $or:[
+{'user.firstName':{$regex:search,$options:'i'}}, 
+{'user.lastName':{$regex:search,$options:'i'}},
+{'user.email':{$regex:search,$options:'i'},
+}   ,
+{'course.title':{$regex:search,$options:'i'}
+}  ,{
+  'status':{$regex:search,$options:'i'}
+}   ]
+      }
+    }
+    ,{
+      $count:"total"
+    }
+  ])
+const totalStudents = totalStudentResults[0]?.total || 0 
+const totalPages = Math.ceil(totalStudents/pageSize)
+  return res.status(200).json({learnerCount,totalEnrollments,completedCourseCount,courseCompletion,studentData,courses,totalStudents,totalPages,currentPage})
 })
