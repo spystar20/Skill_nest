@@ -3,7 +3,7 @@ import React, { Suspense } from 'react'
 import { Route, Routes } from 'react-router-dom'
 
 import { lazy } from 'react'
-const Home = lazy(() => import('@/Pages/Home'))
+const Home = lazy(() => import('@/Pages/Home/Home'))
 const About = lazy(() => import('@/Pages/About'))
 const Courses = lazy(() => import('@/Pages/Courses'))
 const CourseDetails = lazy(() => import('@/Pages/CourseDetails'))

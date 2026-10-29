@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import hero from '../assets/girl.png'
+import hero from '../../assets/girl.png'
 import { TbBooks } from "react-icons/tb";
 import {  GrCertificate } from "react-icons/gr";
 import { MdArrowOutward } from "react-icons/md";
@@ -14,13 +14,14 @@ import { useCallback, useEffect } from 'react';
 import { FaAws , FaGoogle , FaApple ,  FaGitAlt , FaLinkedin  , FaInstagram, FaChalkboardTeacher} from "react-icons/fa";
 import { SiDuolingo, SiSamsung , SiCanva } from "react-icons/si";
 import { TiVendorMicrosoft } from "react-icons/ti";
-import { featureCourses } from '../Courses/featuredCourse';
-import { teachers } from '../Courses/teachers';
-import { testimonials } from '../Courses/testimonials';
+import { featureCourses } from '../../Courses/featuredCourse';
+import { teachers } from '../../Courses/teachers';
+import { testimonials } from '../../Courses/testimonials';
 import Fade from "embla-carousel-fade";
 import Autoplay from "embla-carousel-autoplay";
 import { BsTwitterX } from 'react-icons/bs';
 import ProjectCard from '@/Pages/Course/ProjectCard';
+import { Link } from 'react-router-dom';
 const Home = () => {
  
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [
@@ -69,7 +70,7 @@ const Home = () => {
             <h1 className='text-5xl/15  font-[Merienda] font-bold text-white'>Learn. Create. Thrive.</h1>
             <p className='text-white mt-4'>Learn in-demand skills from top mentors across tech, design, business, and more — all in one place. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptatem, magnam.</p>
              
-            <button className=' transition-all bg-gradient-to-tr from-[#95b1ee] to-[#728ccd] font-[Comic_Relief]  cursor-pointe text-white rounded-lg py-2 px-6 text-xl box capitalize font-medium'>Explore courses</button>
+            <Link to='/courses'><button className=' transition-all bg-gradient-to-tr from-[#95b1ee] to-[#728ccd] font-[Comic_Relief]  cursor-pointer text-white rounded-lg py-2 px-6 text-xl box capitalize font-medium'>Explore courses</button></Link>
           </div>
           <div className='hidden lg:flex'>
             <div className='flex'>
@@ -353,8 +354,6 @@ shadow-xl shadow-black/10' >
   ))}
 </div>
       </div>
-
-      
 </div>
 
     </div>
