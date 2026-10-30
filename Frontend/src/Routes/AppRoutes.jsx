@@ -20,7 +20,7 @@ const Profile = lazy(() => import('@/Dashboard Pages/Profile/Profile'))
 import DashboardLayout from '@/Layout/DashboardLayout'
 const Security = lazy(() => import('@/Dashboard Pages/Security'))
 const BecomeTeacher = lazy(() => import('@/AuthPages/BecomeTeacher'))
-const Teach = lazy(() => import('@/Pages/Teach'))
+const Teach = lazy(() => import('@/Pages/Teach/Teach'))
 const MyCourse = lazy(() => import('@/Dashboard Pages/Teaching/MyCourse'))
 const AddCourse = lazy(() => import('@/Dashboard Pages/Teaching/CourseCreation/AddCourse'))
 const CourseBuilder = lazy(() => import('@/Dashboard Pages/Teaching/CourseCreation/CourseBuilder'))
